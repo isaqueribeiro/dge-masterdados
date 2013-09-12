@@ -19,6 +19,7 @@ as
   declare variable doze Integer;
   declare variable nnnn Integer;
 begin
+
   tres = 30 * 3;
   seis = 30 * 6;
   nove = 30 * 9;
@@ -195,4 +196,5 @@ begin
     where rp.cod_produto = :produto;
 
   end
+
 end 
