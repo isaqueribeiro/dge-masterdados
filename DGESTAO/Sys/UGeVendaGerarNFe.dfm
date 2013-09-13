@@ -10,6 +10,10 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
   Font.Charset = ANSI_CHARSET
   Font.Name = 'Tahoma'
   OldCreateOrder = True
+  OnShow = FormShow
+  DesignSize = (
+    596
+    410)
   PixelsPerInch = 96
   TextHeight = 13
   object Bevel1: TBevel
@@ -145,6 +149,21 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       Font.Style = [fsBold]
       ParentFont = False
     end
+    object lblDataHoraSaida: TLabel
+      Left = 408
+      Top = 24
+      Width = 107
+      Height = 13
+      Caption = 'Data/Hora de Sa'#237'a:'
+      FocusControl = edDataHoraSaida
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Visible = False
+    end
     object dbCodigo: TDBEdit
       Left = 16
       Top = 40
@@ -252,6 +271,23 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       ParentFont = False
       ReadOnly = True
       TabOrder = 5
+    end
+    object edDataHoraSaida: TMaskEdit
+      Left = 408
+      Top = 40
+      Width = 167
+      Height = 21
+      EditMask = '!00/00/0000 00:00:00;1; '
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      MaxLength = 19
+      ParentFont = False
+      TabOrder = 6
+      Text = '  /  /       :  :  '
+      Visible = False
     end
   end
   object GrpBxImposto: TGroupBox
@@ -979,8 +1015,8 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       '')
     GeneratorField.Field = 'CODCONTROL'
     UpdateObject = updVenda
-    Left = 16
-    Top = 304
+    Left = 40
+    Top = 296
     object cdsVendaANO: TSmallintField
       Alignment = taCenter
       FieldName = 'ANO'
@@ -1350,20 +1386,20 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       'where'
       '  ANO = :OLD_ANO and'
       '  CODCONTROL = :OLD_CODCONTROL')
-    Left = 48
-    Top = 304
+    Left = 72
+    Top = 296
   end
   object dtsVenda: TDataSource
     AutoEdit = False
     DataSet = cdsVenda
-    Left = 80
-    Top = 304
+    Left = 104
+    Top = 296
   end
   object TmrAlerta: TTimer
     Enabled = False
     Interval = 500
     OnTimer = TmrAlertaTimer
-    Left = 16
-    Top = 333
+    Left = 40
+    Top = 325
   end
 end

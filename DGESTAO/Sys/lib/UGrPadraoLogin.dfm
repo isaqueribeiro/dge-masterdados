@@ -191,6 +191,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
     Font.Style = []
     ParentFont = False
     TabOrder = 0
+    OnChange = edNomeChange
   end
   object edSenha: TEdit
     Left = 136
@@ -223,6 +224,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
+    OnClick = BtnEntrarClick
     Glyph.Data = {
       36090000424D3609000000000000360000002800000018000000180000000100
       2000000000000009000000000000000000000000000000000000FF00FFFFD017

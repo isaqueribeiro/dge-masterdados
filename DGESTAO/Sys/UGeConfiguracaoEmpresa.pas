@@ -41,11 +41,15 @@ type
     dbEmailAutentica: TDBCheckBox;
     dbEmailConexaoSSL: TDBCheckBox;
     qryConfiguracoes: TIBQuery;
+    IbDtstTabelaNFE_SOLICITA_DH_SAIDA: TSmallintField;
+    TbsNFe: TTabSheet;
+    chkNFE_SolicitaDHSaida: TDBCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure DtSrcTabelaStateChange(Sender: TObject);
     procedure IbDtstTabelaEMPRESAGetText(Sender: TField; var Text: String;
       DisplayText: Boolean);
     procedure btbtnSalvarClick(Sender: TObject);
+    procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
   private
     { Private declarations }
     function GetConfiguracaoCadastrada(sEmpresa : String) : Boolean;
@@ -70,6 +74,8 @@ begin
   AbrirTabelaAuto := True;
 
   tblEmpresa.Open;
+
+  pgcConfigurar.ActivePage := tbsContaEmail;
 end;
 
 procedure TfrmGeConfiguracaoEmpresa.DtSrcTabelaStateChange(
@@ -115,6 +121,17 @@ begin
 
     Result := (not IsEmpty);
   end;
+end;
+
+procedure TfrmGeConfiguracaoEmpresa.IbDtstTabelaNewRecord(
+  DataSet: TDataSet);
+begin
+  IbDtstTabelaEMPRESA.AsString            := GetEmpresaIDDefault;
+  IbDtstTabelaEMAIL_SMTP_PORTA.AsInteger  := PORTA_SMTP_PADRAO;
+  IbDtstTabelaEMAIL_REQUER_AUTENTICACAO.AsInteger := 0;
+  IbDtstTabelaEMAIL_CONEXAO_SSL.AsInteger         := 0;
+
+  IbDtstTabelaNFE_SOLICITA_DH_SAIDA.AsInteger := 0;
 end;
 
 initialization

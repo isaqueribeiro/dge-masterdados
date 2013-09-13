@@ -129,7 +129,7 @@ begin
   qryLotesPendentesNFe.Open;
 
   Auditar;
-  edAno.Text     := FormatDateTime('yyyy', Date);
+//  edAno.Text     := FormatDateTime('yyyy', Date);
   FTipoMovimento := tmNull;
 end;
 
@@ -352,8 +352,8 @@ begin
 
       end
       else
-        ;
-          
+        ShowWarning(sRetorno);
+
       // Gravar LOG
 
       with cdsLOG do

@@ -98,11 +98,14 @@ type
     cdsVendaVALOR_TOTAL_PIS: TIBBCDField;
     cdsVendaVALOR_TOTAL_COFINS: TIBBCDField;
     TmrAlerta: TTimer;
+    edDataHoraSaida: TMaskEdit;
+    lblDataHoraSaida: TLabel;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnCalcularClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TmrAlertaTimer(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     iSerieNFe,
@@ -138,10 +141,19 @@ begin
   try
     with frm do
     begin
+      edDataHoraSaida.Text := FormatDateTime('dd/mm/yyyy hh:mm:ss', GetDateTimeDB);
+
       cdsVenda.Close;
       cdsVenda.ParamByName('anovenda').AsShort   := Ano;
       cdsVenda.ParamByName('numvenda').AsInteger := Numero;
       cdsVenda.Open;
+
+      lblDataEmissao.Visible := not GetSolicitaDHSaidaNFe( cdsVendaCODEMP.AsString );
+      dbDataEmissao.Visible  := not GetSolicitaDHSaidaNFe( cdsVendaCODEMP.AsString );
+      lblHoraEmissao.Visible := not GetSolicitaDHSaidaNFe( cdsVendaCODEMP.AsString );
+      dbHoraEmissao.Visible  := not GetSolicitaDHSaidaNFe( cdsVendaCODEMP.AsString );
+      lblDataHoraSaida.Visible := GetSolicitaDHSaidaNFe( cdsVendaCODEMP.AsString );
+      edDataHoraSaida.Visible  := GetSolicitaDHSaidaNFe( cdsVendaCODEMP.AsString );
 
       if ( not cdsVenda.IsEmpty ) then
       begin
@@ -212,9 +224,31 @@ end;
 procedure TfrmGeVendaGerarNFe.btnConfirmarClick(Sender: TObject);
 var
   bOK : Boolean;
+  sDH : String;
 begin
   if ( ShowConfirm('Confirma a geração da NF-e?') ) then
   begin
+    sDH := FormatDateTime('dd/mm/yyyy', cdsVendaDATAEMISSAO.AsDateTime) + ' ' +
+      FormatDateTime('hh:mm:ss', cdsVendaHORAEMISSAO.AsDateTime);
+
+    // Validar Data/Hora de saída na NF-e
+    if edDataHoraSaida.Visible then
+    begin
+      if not StrIsDateTime(edDataHoraSaida.Text) then
+      begin
+        ShowWarning('Data/Hora de saída inválida!');
+        edDataHoraSaida.SetFocus;
+        Exit;
+      end
+      else
+      if ( StrToDateTime(edDataHoraSaida.Text) < StrToDateTime(sDH) ) then
+      begin
+        ShowWarning('Data/Hora de saída não pode ser menor que da Data/Hora de emissão da NF-e!');
+        edDataHoraSaida.SetFocus;
+        Exit;
+      end;
+    end;
+
     if ( cdsVenda.State = dsEdit ) then
     begin
       cdsVenda.Post;
@@ -228,11 +262,18 @@ begin
     
     Application.ProcessMessages;
 
+    if edDataHoraSaida.Visible then
+      sDH := edDataHoraSaida.Text
+    else
+      sDH := EmptyStr;
+
     if ( DMNFe.GerarNFeOnLine ) then
-      bOK := DMNFe.GerarNFeOnLineACBr ( cdsVendaCODEMP.AsString, cdsVendaCODCLI.AsString, cdsVendaANO.AsInteger, cdsVendaCODCONTROL.AsInteger,
+      bOK := DMNFe.GerarNFeOnLineACBr ( cdsVendaCODEMP.AsString, cdsVendaCODCLI.AsString, sDH,
+               cdsVendaANO.AsInteger, cdsVendaCODCONTROL.AsInteger,
                iSerieNFe, iNumeroNFe, sFileNameXML, sChaveNFE, sProtocoloNFE, sReciboNFE, iNumeroLote, False)
     else
-      bOK := DMNFe.GerarNFeOffLineACBr( cdsVendaCODEMP.AsString, cdsVendaCODCLI.AsString, cdsVendaANO.AsInteger, cdsVendaCODCONTROL.AsInteger,
+      bOK := DMNFe.GerarNFeOffLineACBr( cdsVendaCODEMP.AsString, cdsVendaCODCLI.AsString, sDH,
+               cdsVendaANO.AsInteger, cdsVendaCODCONTROL.AsInteger,
                iSerieNFe, iNumeroNFe, sFileNameXML, sChaveNFE, False);
 
     TmrAlerta.Enabled  := False;
@@ -259,6 +300,13 @@ end;
 procedure TfrmGeVendaGerarNFe.TmrAlertaTimer(Sender: TObject);
 begin
   lblInforme.Visible := not lblInforme.Visible;
+end;
+
+procedure TfrmGeVendaGerarNFe.FormShow(Sender: TObject);
+begin
+  inherited;
+  if ( edDataHoraSaida.Visible and edDataHoraSaida.Enabled ) then
+    edDataHoraSaida.SetFocus;
 end;
 
 end.

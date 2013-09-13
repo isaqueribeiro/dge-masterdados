@@ -1,15 +1,30 @@
 inherited frmGeBancos: TfrmGeBancos
-  Left = 499
-  Top = 273
+  Left = 334
+  Top = 159
+  Height = 510
   ActiveControl = dbCodigo
   Caption = 'Tabela de Bancos'
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
+  inherited Bevel1: TBevel
+    Top = 468
+  end
+  inherited Bevel3: TBevel
+    Top = 429
+  end
+  inherited tlbBotoes: TToolBar
+    Top = 433
+  end
   inherited pgcGuias: TPageControl
+    Height = 429
     ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
+      inherited Bevel4: TBevel
+        Top = 334
+      end
       inherited dbgDados: TDBGrid
+        Height = 334
         Columns = <
           item
             Expanded = False
@@ -33,6 +48,7 @@ inherited frmGeBancos: TfrmGeBancos
           end>
       end
       inherited pnlFiltros: TPanel
+        Top = 338
         inherited grpBxFiltro: TGroupBox
           inherited lbltFiltrar: TLabel
             Width = 37
@@ -43,11 +59,20 @@ inherited frmGeBancos: TfrmGeBancos
     end
     inherited tbsCadastro: TTabSheet
       inherited Bevel8: TBevel
+        Top = 201
         Width = 727
       end
       object Bevel9: TBevel [1]
         Left = 0
-        Top = 201
+        Top = 281
+        Width = 727
+        Height = 4
+        Align = alTop
+        Shape = bsSpacer
+      end
+      object bvl1: TBevel [2]
+        Left = 0
+        Top = 121
         Width = 727
         Height = 4
         Align = alTop
@@ -995,12 +1020,12 @@ inherited frmGeBancos: TfrmGeBancos
       end
       object GrpBxDiretorios: TGroupBox
         Left = 0
-        Top = 125
+        Top = 205
         Width = 727
         Height = 76
         Align = alTop
         Caption = 'Diret'#243'rios de arquivos'
-        TabOrder = 1
+        TabOrder = 2
         object lblRemessa: TLabel
           Left = 16
           Top = 24
@@ -1022,10 +1047,10 @@ inherited frmGeBancos: TfrmGeBancos
           Height = 21
           DataField = 'BCO_DIRETORIO_REMESSA'
           DataSource = DtSrcTabela
-          Font.Charset = DEFAULT_CHARSET
+          Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -11
-          Font.Name = 'MS Sans Serif'
+          Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
           TabOrder = 0
@@ -1037,10 +1062,10 @@ inherited frmGeBancos: TfrmGeBancos
           Height = 21
           DataField = 'BCO_DIRETORIO_RETORNO'
           DataSource = DtSrcTabela
-          Font.Charset = DEFAULT_CHARSET
+          Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -11
-          Font.Name = 'MS Sans Serif'
+          Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
           TabOrder = 1
@@ -1048,12 +1073,12 @@ inherited frmGeBancos: TfrmGeBancos
       end
       object GrpBxConfigCobreBemX: TGroupBox
         Left = 0
-        Top = 205
+        Top = 285
         Width = 727
-        Height = 125
+        Height = 115
         Align = alClient
         Caption = 'Configura'#231#245'es CobreBemX (Boletos)'
-        TabOrder = 2
+        TabOrder = 3
         object lblConfiguracao1: TLabel
           Left = 16
           Top = 24
@@ -1191,6 +1216,170 @@ inherited frmGeBancos: TfrmGeBancos
           TabOrder = 5
         end
       end
+      object GrpBxDadosEmissao: TGroupBox
+        Left = 0
+        Top = 125
+        Width = 727
+        Height = 76
+        Align = alTop
+        Caption = 'Par'#226'metros de emiss'#227'o'
+        TabOrder = 1
+        object lblProtesto: TLabel
+          Left = 16
+          Top = 24
+          Width = 45
+          Height = 13
+          Caption = 'Protesto:'
+          FocusControl = dbProtesto
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblProtestoD: TLabel
+          Left = 76
+          Top = 44
+          Width = 28
+          Height = 13
+          Caption = 'Dia(s)'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblJuros: TLabel
+          Left = 120
+          Top = 24
+          Width = 30
+          Height = 13
+          Caption = 'Juros:'
+          FocusControl = dbJuros
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label2: TLabel
+          Left = 180
+          Top = 44
+          Width = 11
+          Height = 13
+          Caption = '%'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblMora: TLabel
+          Left = 208
+          Top = 24
+          Width = 28
+          Height = 13
+          Caption = 'Mora:'
+          FocusControl = dbMora
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label4: TLabel
+          Left = 268
+          Top = 44
+          Width = 11
+          Height = 13
+          Caption = '%'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblInstrucao: TLabel
+          Left = 288
+          Top = 24
+          Width = 147
+          Height = 13
+          Caption = 'Instru'#231#245'es ao Caixa do banco:'
+          FocusControl = dbInstrucao
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object dbProtesto: TDBEdit
+          Left = 16
+          Top = 40
+          Width = 57
+          Height = 21
+          DataField = 'BCO_DIA_PROTESTO'
+          DataSource = DtSrcTabela
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+        end
+        object dbJuros: TDBEdit
+          Left = 120
+          Top = 40
+          Width = 57
+          Height = 21
+          DataField = 'BCO_PERCENTUAL_JUROS'
+          DataSource = DtSrcTabela
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+        end
+        object dbMora: TDBEdit
+          Left = 208
+          Top = 40
+          Width = 57
+          Height = 21
+          DataField = 'BCO_PERCENTUAL_MORA'
+          DataSource = DtSrcTabela
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 2
+        end
+        object dbInstrucao: TDBEdit
+          Left = 288
+          Top = 40
+          Width = 409
+          Height = 21
+          DataField = 'BCO_MSG_INSTRUCAO'
+          DataSource = DtSrcTabela
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 3
+        end
+      end
     end
   end
   inherited IbDtstTabela: TIBDataSet
@@ -1199,6 +1388,7 @@ inherited frmGeBancos: TfrmGeBancos
     SelectSQL.Strings = (
       'Select'
       '    b.bco_cod'
+      '  , b.empresa'
       '  , b.bco_carteira'
       '  , b.bco_nome'
       '  , b.bco_agencia'
@@ -1214,7 +1404,10 @@ inherited frmGeBancos: TfrmGeBancos
       '  , b.bco_diretorio_remessa'
       '  , b.bco_diretorio_retorno'
       '  , b.bco_sequencial_rem'
-      '  , b.empresa'
+      '  , b.bco_percentual_juros'
+      '  , b.bco_percentual_mora'
+      '  , b.bco_dia_protesto'
+      '  , b.bco_msg_instrucao'
       'from TBBANCO_BOLETO b')
     object IbDtstTabelaBCO_COD: TSmallintField
       DisplayLabel = 'C'#243'digo'
@@ -1313,6 +1506,33 @@ inherited frmGeBancos: TfrmGeBancos
       Origin = 'TBBANCO_BOLETO.BCO_SEQUENCIAL_REM'
       Required = True
     end
+    object IbDtstTabelaBCO_PERCENTUAL_JUROS: TIBBCDField
+      FieldName = 'BCO_PERCENTUAL_JUROS'
+      Origin = '"TBBANCO_BOLETO"."BCO_PERCENTUAL_JUROS"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 2
+    end
+    object IbDtstTabelaBCO_PERCENTUAL_MORA: TIBBCDField
+      FieldName = 'BCO_PERCENTUAL_MORA'
+      Origin = '"TBBANCO_BOLETO"."BCO_PERCENTUAL_MORA"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 2
+    end
+    object IbDtstTabelaBCO_DIA_PROTESTO: TSmallintField
+      FieldName = 'BCO_DIA_PROTESTO'
+      Origin = '"TBBANCO_BOLETO"."BCO_DIA_PROTESTO"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbDtstTabelaBCO_MSG_INSTRUCAO: TIBStringField
+      FieldName = 'BCO_MSG_INSTRUCAO'
+      Origin = '"TBBANCO_BOLETO"."BCO_MSG_INSTRUCAO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 250
+    end
   end
   inherited IbUpdTabela: TIBUpdateSQL
     RefreshSQL.Strings = (
@@ -1333,10 +1553,15 @@ inherited frmGeBancos: TfrmGeBancos
       '  BCO_CONFG_2,'
       '  BCO_SEQUENCIAL_REM,'
       '  BCO_DIRETORIO_REMESSA,'
-      '  BCO_DIRETORIO_RETORNO'
+      '  BCO_DIRETORIO_RETORNO,'
+      '  BCO_PERCENTUAL_JUROS,'
+      '  BCO_PERCENTUAL_MORA,'
+      '  BCO_DIA_PROTESTO,'
+      '  BCO_MSG_INSTRUCAO'
       'from TBBANCO_BOLETO '
       'where'
-      '  BCO_COD = :BCO_COD')
+      '  BCO_COD = :BCO_COD and'
+      '  EMPRESA = :EMPRESA')
     ModifySQL.Strings = (
       'update TBBANCO_BOLETO'
       'set'
@@ -1348,40 +1573,58 @@ inherited frmGeBancos: TfrmGeBancos
       '  BCO_CODIGO_CEDENTE = :BCO_CODIGO_CEDENTE,'
       '  BCO_CONFG_1 = :BCO_CONFG_1,'
       '  BCO_CONFG_2 = :BCO_CONFG_2,'
+      '  BCO_DIA_PROTESTO = :BCO_DIA_PROTESTO,'
       '  BCO_DIRETORIO_REMESSA = :BCO_DIRETORIO_REMESSA,'
       '  BCO_DIRETORIO_RETORNO = :BCO_DIRETORIO_RETORNO,'
       '  BCO_GERAR_BOLETO = :BCO_GERAR_BOLETO,'
+      '  BCO_MSG_INSTRUCAO = :BCO_MSG_INSTRUCAO,'
       '  BCO_NOME = :BCO_NOME,'
       '  BCO_NOSSO_NUM_FINAL = :BCO_NOSSO_NUM_FINAL,'
       '  BCO_NOSSO_NUM_INICIO = :BCO_NOSSO_NUM_INICIO,'
       '  BCO_NOSSO_NUM_PROXIMO = :BCO_NOSSO_NUM_PROXIMO,'
+      '  BCO_PERCENTUAL_JUROS = :BCO_PERCENTUAL_JUROS,'
+      '  BCO_PERCENTUAL_MORA = :BCO_PERCENTUAL_MORA,'
       '  BCO_SEQUENCIAL_REM = :BCO_SEQUENCIAL_REM,'
       '  EMPRESA = :EMPRESA'
       'where'
-      '  BCO_COD = :OLD_BCO_COD')
+      '  BCO_COD = :OLD_BCO_COD and'
+      '  EMPRESA = :OLD_EMPRESA')
     InsertSQL.Strings = (
       'insert into TBBANCO_BOLETO'
       
         '  (BCO_AGENCIA, BCO_CARTEIRA, BCO_CC, BCO_CHAVE, BCO_COD, BCO_CO' +
         'DIGO_CEDENTE, '
       
-        '   BCO_CONFG_1, BCO_CONFG_2, BCO_DIRETORIO_REMESSA, BCO_DIRETORI' +
-        'O_RETORNO, '
+        '   BCO_CONFG_1, BCO_CONFG_2, BCO_DIA_PROTESTO, BCO_DIRETORIO_REM' +
+        'ESSA, BCO_DIRETORIO_RETORNO, '
       
-        '   BCO_GERAR_BOLETO, BCO_NOME, BCO_NOSSO_NUM_FINAL, BCO_NOSSO_NU' +
-        'M_INICIO, '
-      '   BCO_NOSSO_NUM_PROXIMO, BCO_SEQUENCIAL_REM, EMPRESA)'
+        '   BCO_GERAR_BOLETO, BCO_MSG_INSTRUCAO, BCO_NOME, BCO_NOSSO_NUM_' +
+        'FINAL, '
+      
+        '   BCO_NOSSO_NUM_INICIO, BCO_NOSSO_NUM_PROXIMO, BCO_PERCENTUAL_J' +
+        'UROS, BCO_PERCENTUAL_MORA, '
+      '   BCO_SEQUENCIAL_REM, EMPRESA)'
       'values'
       
         '  (:BCO_AGENCIA, :BCO_CARTEIRA, :BCO_CC, :BCO_CHAVE, :BCO_COD, :' +
         'BCO_CODIGO_CEDENTE, '
       
-        '   :BCO_CONFG_1, :BCO_CONFG_2, :BCO_DIRETORIO_REMESSA, :BCO_DIRE' +
-        'TORIO_RETORNO, '
+        '   :BCO_CONFG_1, :BCO_CONFG_2, :BCO_DIA_PROTESTO, :BCO_DIRETORIO' +
+        '_REMESSA, '
       
-        '   :BCO_GERAR_BOLETO, :BCO_NOME, :BCO_NOSSO_NUM_FINAL, :BCO_NOSS' +
-        'O_NUM_INICIO, '
-      '   :BCO_NOSSO_NUM_PROXIMO, :BCO_SEQUENCIAL_REM, :EMPRESA)')
+        '   :BCO_DIRETORIO_RETORNO, :BCO_GERAR_BOLETO, :BCO_MSG_INSTRUCAO' +
+        ', :BCO_NOME, '
+      
+        '   :BCO_NOSSO_NUM_FINAL, :BCO_NOSSO_NUM_INICIO, :BCO_NOSSO_NUM_P' +
+        'ROXIMO, '
+      
+        '   :BCO_PERCENTUAL_JUROS, :BCO_PERCENTUAL_MORA, :BCO_SEQUENCIAL_' +
+        'REM, :EMPRESA)')
+    DeleteSQL.Strings = (
+      'delete from TBBANCO_BOLETO'
+      'where'
+      '  BCO_COD = :OLD_BCO_COD and'
+      '  EMPRESA = :OLD_EMPRESA')
   end
   object dtsEmpresa: TDataSource
     DataSet = tblEmpresa

@@ -22,6 +22,22 @@ const
   SEGMENTO_VAREJO_ATACADO_DS = 'Varejo e Atacado';
   SEGMENTO_MERCADO_CARRO_DS  = 'Comércio de Veículos';
 
+  BOLETO_ARQUIVO_LOGOTIPO = 'Imagens\Emitente.gif';
+  BOLETO_IMAGENS          = 'Imagens\';
+  BOLETO_LICENCAS         = 'Licencas\';
+
+  LAYOUT_BOLETO_ENTREGA = 'Boleto\Boleto.fr3';
+  LAYOUT_BOLETO_CARNE   = 'Boleto\BoletoCarne.fr3';
+
+  CODIGO_BANCO_BRASIL    = 1;
+  CODIGO_BANCO_BRADESCO  = 237;
+  CODIGO_BANCO_CAIXA     = 104;
+  CODIGO_BANCO_HSBC      = 399;
+  CODIGO_BANCO_ITAU      = 341;
+  CODIGO_BANCO_SANTANDER = 33;
+
+  PORTA_SMTP_PADRAO = 587;
+
 implementation
 
 end.
