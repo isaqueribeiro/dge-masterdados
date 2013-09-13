@@ -1,6 +1,6 @@
 inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
-  Left = 523
-  Top = 210
+  Left = 420
+  Top = 178
   Width = 767
   Height = 495
   ActiveControl = nil
@@ -277,10 +277,27 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
             ValueUnchecked = '0'
           end
         end
+        object TbsNFe: TTabSheet
+          Caption = 'NF-e'
+          ImageIndex = 1
+          object chkNFE_SolicitaDHSaida: TDBCheckBox
+            Left = 16
+            Top = 16
+            Width = 329
+            Height = 17
+            Caption = 'Solicitar Data/Hora de sa'#237'da da NF-e para impress'#227'o no DANFE'
+            DataField = 'NFE_SOLICITA_DH_SAIDA'
+            DataSource = DtSrcTabela
+            TabOrder = 0
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
+        end
       end
     end
   end
   inherited IbDtstTabela: TIBDataSet
+    OnNewRecord = IbDtstTabelaNewRecord
     SelectSQL.Strings = (
       'Select'
       '    c.empresa'
@@ -293,6 +310,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  , c.email_conexao_ssl'
       '  , c.email_assunto_padrao'
       '  , c.email_mensagem_padrao'
+      '  , c.nfe_solicita_dh_saida'
       '  , e.rzsoc'
       '  , e.nmfant'
       'from TBCONFIGURACAO c'
@@ -363,6 +381,11 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       ProviderFlags = [pfInUpdate]
       Size = 250
     end
+    object IbDtstTabelaNFE_SOLICITA_DH_SAIDA: TSmallintField
+      FieldName = 'NFE_SOLICITA_DH_SAIDA'
+      Origin = '"TBCONFIGURACAO"."NFE_SOLICITA_DH_SAIDA"'
+      ProviderFlags = [pfInUpdate]
+    end
     object IbDtstTabelaRZSOC: TIBStringField
       FieldName = 'RZSOC'
       Origin = '"TBEMPRESA"."RZSOC"'
@@ -384,8 +407,12 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  EMAIL_SENHA,'
       '  EMAIL_POP,'
       '  EMAIL_SMTP,'
+      '  EMAIL_SMTP_PORTA,'
+      '  EMAIL_REQUER_AUTENTICACAO,'
+      '  EMAIL_CONEXAO_SSL,'
       '  EMAIL_ASSUNTO_PADRAO,'
-      '  EMAIL_MENSAGEM_PADRAO'
+      '  EMAIL_MENSAGEM_PADRAO,'
+      '  NFE_SOLICITA_DH_SAIDA'
       'from TBCONFIGURACAO '
       'where'
       '  EMPRESA = :EMPRESA')
@@ -393,25 +420,35 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       'update TBCONFIGURACAO'
       'set'
       '  EMAIL_ASSUNTO_PADRAO = :EMAIL_ASSUNTO_PADRAO,'
+      '  EMAIL_CONEXAO_SSL = :EMAIL_CONEXAO_SSL,'
       '  EMAIL_CONTA = :EMAIL_CONTA,'
       '  EMAIL_MENSAGEM_PADRAO = :EMAIL_MENSAGEM_PADRAO,'
       '  EMAIL_POP = :EMAIL_POP,'
+      '  EMAIL_REQUER_AUTENTICACAO = :EMAIL_REQUER_AUTENTICACAO,'
       '  EMAIL_SENHA = :EMAIL_SENHA,'
       '  EMAIL_SMTP = :EMAIL_SMTP,'
-      '  EMPRESA = :EMPRESA'
+      '  EMAIL_SMTP_PORTA = :EMAIL_SMTP_PORTA,'
+      '  EMPRESA = :EMPRESA,'
+      '  NFE_SOLICITA_DH_SAIDA = :NFE_SOLICITA_DH_SAIDA'
       'where'
       '  EMPRESA = :OLD_EMPRESA')
     InsertSQL.Strings = (
       'insert into TBCONFIGURACAO'
       
-        '  (EMAIL_ASSUNTO_PADRAO, EMAIL_CONTA, EMAIL_MENSAGEM_PADRAO, EMA' +
-        'IL_POP, '
-      '   EMAIL_SENHA, EMAIL_SMTP, EMPRESA)'
+        '  (EMAIL_ASSUNTO_PADRAO, EMAIL_CONEXAO_SSL, EMAIL_CONTA, EMAIL_M' +
+        'ENSAGEM_PADRAO, '
+      
+        '   EMAIL_POP, EMAIL_REQUER_AUTENTICACAO, EMAIL_SENHA, EMAIL_SMTP' +
+        ', EMAIL_SMTP_PORTA, '
+      '   EMPRESA, NFE_SOLICITA_DH_SAIDA)'
       'values'
       
-        '  (:EMAIL_ASSUNTO_PADRAO, :EMAIL_CONTA, :EMAIL_MENSAGEM_PADRAO, ' +
-        ':EMAIL_POP, '
-      '   :EMAIL_SENHA, :EMAIL_SMTP, :EMPRESA)')
+        '  (:EMAIL_ASSUNTO_PADRAO, :EMAIL_CONEXAO_SSL, :EMAIL_CONTA, :EMA' +
+        'IL_MENSAGEM_PADRAO, '
+      
+        '   :EMAIL_POP, :EMAIL_REQUER_AUTENTICACAO, :EMAIL_SENHA, :EMAIL_' +
+        'SMTP, :EMAIL_SMTP_PORTA, '
+      '   :EMPRESA, :NFE_SOLICITA_DH_SAIDA)')
     DeleteSQL.Strings = (
       'delete from TBCONFIGURACAO'
       'where'

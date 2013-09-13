@@ -376,6 +376,7 @@ type
       Shift: TShiftState);
     procedure BtnTransporteInformeClick(Sender: TObject);
     procedure cdsVendaVolumeNewRecord(DataSet: TDataSet);
+    procedure nmGerarImprimirBoletosClick(Sender: TObject);
   private
     { Private declarations }
     sGeneratorName : String;
@@ -801,6 +802,8 @@ begin
 
     btnGerarBoleto.Enabled   := GetEmitirBoleto and (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_FIN); // and (IbDtstTabelaFORMAPAGTO_COD.AsInteger = GetCondicaoPagtoIDBoleto);
 
+    nmGerarImprimirBoletos.Enabled := (not qryTitulos.IsEmpty) and (IbDtstTabelaSTATUS.AsInteger < STATUS_VND_CAN);
+
     nmImprimirDANFE.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
     nmGerarDANFEXML.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
   end
@@ -811,6 +814,8 @@ begin
     btbtnCancelarVND.Enabled := False;
 
     BtnTransporteInforme.Enabled := False;
+
+    nmGerarImprimirBoletos.Enabled := (not qryTitulos.IsEmpty) and (IbDtstTabelaSTATUS.AsInteger < STATUS_VND_CAN);
 
     nmImprimirDANFE.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
     nmGerarDANFEXML.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
@@ -1493,7 +1498,7 @@ begin
         AbrirTabelaTitulos( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
 
     HabilitarDesabilitar_Btns;
-
+(*
     // Forma de Pagamento: BOLETA BANCÁRIA
 
     if GetEmitirBoleto then
@@ -1501,7 +1506,7 @@ begin
         if ( cdsVendaFormaPagtoFORMAPAGTO_COD.AsInteger = GetCondicaoPagtoIDBoleto ) then
           if ( ShowConfirm('Deseja gerar boletos para os títulos da venda.') ) then
             btnGerarBoleto.Click;
-
+*)
     // Formas de Pagamento que nao seja a prazo
 
     cdsVendaFormaPagto.First;
@@ -1821,7 +1826,8 @@ begin
 
   if ( not qryTitulos.IsEmpty ) then
   begin
-    GerarBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLI.AsString);
+    GerarBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLI.AsString,
+      IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger);
     AbrirTabelaTitulos( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
   end;
 end;
@@ -2260,6 +2266,78 @@ begin
     IbDtstTabela.Close;
     IbDtstTabela.Open;
     IbDtstTabela.Locate('CODCONTROL', sID, []);
+  end;
+end;
+
+procedure TfrmGeVenda.nmGerarImprimirBoletosClick(Sender: TObject);
+
+  function BoletosGerados : Boolean;
+  begin
+    with DMBusiness, qryBusca do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('Select b.nossonumero from TBCONTREC b');
+      SQL.Add('where b.cnpj = ' + QuotedStr(IbDtstTabelaCODCLI.AsString));
+      SQL.Add('  and b.anovenda = ' + IbDtstTabelaANO.AsString);
+      SQL.Add('  and b.numvenda = ' + IbDtstTabelaCODCONTROL.AsString);
+      SQL.Add('  and b.codbanco > 0');
+      Open;
+
+      Result := (Trim(FieldByName('nossonumero').AsString) <> EmptyStr);
+
+      Close;
+    end;
+  end;
+
+var
+  bExisteTitulo,
+  bProsseguir  : Boolean;
+begin
+  if IbDtstTabela.IsEmpty then
+    Exit;
+
+  if (IbDtstTabela.State in [dsEdit, dsInsert]) then
+    Exit;
+
+  if BoletosGerados then
+  begin
+    ReImprimirBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLI.AsString,
+      IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, qryTitulosCODBANCO.AsInteger);
+    Exit;
+  end;
+
+  AbrirTabelaTitulos( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
+  bExisteTitulo := not qryTitulos.IsEmpty;
+
+  try
+    if (not BoletosGerados) and bExisteTitulo then
+    begin
+      bProsseguir := GetEmitirBoleto;
+
+      if bProsseguir then
+        bProsseguir := cdsVendaFormaPagto.Locate('VENDA_PRAZO', 1, []);
+
+      if bProsseguir then
+        bProsseguir := (cdsVendaFormaPagtoFORMAPAGTO_COD.AsInteger = GetCondicaoPagtoIDBoleto);
+
+      if bProsseguir then
+        bProsseguir := ShowConfirm('Deseja gerar boletos para os títulos da venda.');
+
+      if bProsseguir then
+        btnGerarBoleto.Click
+      else
+        Exit;
+    end;
+
+    if (not BoletosGerados) then
+      ShowWarning('Não existem títulos com boletos gerados para o movimento de venda.')
+    else
+      ReImprimirBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLI.AsString,
+        IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, qryTitulosCODBANCO.AsInteger);
+  finally
+    qryTitulos.Filter   := EmptyStr;
+    qryTitulos.Filtered := False;
   end;
 end;
 

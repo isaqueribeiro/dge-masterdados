@@ -64,6 +64,23 @@ type
     dbCodigoCedente: TDBEdit;
     IbDtstTabelaBCO_CODIGO_CEDENTE: TIBStringField;
     imgAjuda: TImage;
+    GrpBxDadosEmissao: TGroupBox;
+    lblProtesto: TLabel;
+    dbProtesto: TDBEdit;
+    bvl1: TBevel;
+    lblProtestoD: TLabel;
+    lblJuros: TLabel;
+    dbJuros: TDBEdit;
+    Label2: TLabel;
+    lblMora: TLabel;
+    dbMora: TDBEdit;
+    Label4: TLabel;
+    lblInstrucao: TLabel;
+    dbInstrucao: TDBEdit;
+    IbDtstTabelaBCO_PERCENTUAL_JUROS: TIBBCDField;
+    IbDtstTabelaBCO_PERCENTUAL_MORA: TIBBCDField;
+    IbDtstTabelaBCO_DIA_PROTESTO: TSmallintField;
+    IbDtstTabelaBCO_MSG_INSTRUCAO: TIBStringField;
     procedure FormCreate(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
     procedure IbDtstTabelaBeforePost(DataSet: TDataSet);
@@ -145,11 +162,16 @@ begin
   inherited;
   IbDtstTabelaEMPRESA.AsString            := GetEmpresaIDDefault;
   IbDtstTabelaBCO_GERAR_BOLETO.Value      := 0;
-  IbDtstTabelaBCO_NOSSO_NUM_INICIO.Value  := FormatFloat('000000', 1);
-  IbDtstTabelaBCO_NOSSO_NUM_FINAL.Value   := FormatFloat('000000', 999999);
-  IbDtstTabelaBCO_NOSSO_NUM_PROXIMO.Value := FormatFloat('000000', 1);
+  IbDtstTabelaBCO_NOSSO_NUM_INICIO.Value  := FormatFloat('0000000', 1);
+  IbDtstTabelaBCO_NOSSO_NUM_FINAL.Value   := FormatFloat('0000000', 999999);
+  IbDtstTabelaBCO_NOSSO_NUM_PROXIMO.Value := FormatFloat('0000000', 1);
   IbDtstTabelaBCO_SEQUENCIAL_REM.Value    := 1;
   IbDtstTabelaBCO_CODIGO_CEDENTE.Clear;
+
+  IbDtstTabelaBCO_PERCENTUAL_JUROS.AsCurrency := 0.0;
+  IbDtstTabelaBCO_PERCENTUAL_MORA.AsCurrency  := 0.0;
+  IbDtstTabelaBCO_DIA_PROTESTO.AsInteger      := 0;
+  IbDtstTabelaBCO_MSG_INSTRUCAO.AsString      := 'Não receber pagamento após o vencimento.';
 end;
 
 procedure TfrmGeBancos.IbDtstTabelaBeforePost(DataSet: TDataSet);

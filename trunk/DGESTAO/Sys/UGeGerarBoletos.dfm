@@ -1,6 +1,6 @@
 object frmGeGerarBoleto: TfrmGeGerarBoleto
-  Left = 549
-  Top = 249
+  Left = 517
+  Top = 186
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Gerar Boletos'
@@ -52,7 +52,7 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
       Top = 4
       Width = 904
       Height = 391
-      ActivePage = tbsClientes
+      ActivePage = tbsTitulos
       Align = alClient
       Images = ImgList
       TabOrder = 0

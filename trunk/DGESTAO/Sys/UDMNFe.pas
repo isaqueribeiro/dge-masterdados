@@ -455,7 +455,7 @@ type
     procedure GuardarLoteNFeVenda(const sCNPJEmitente : String; const Ano, Numero, NumeroLote : Integer; const Recibo : String);
     procedure GuardarLoteNFeEntrada(const sCNPJEmitente : String; const Ano, Numero, NumeroLote : Integer; const Recibo : String);
 
-    procedure GerarNFEACBr(const sCNPJEmitente, sCNPJDestinatario : String; const iAnoVenda, iNumVenda : Integer;
+    procedure GerarNFEACBr(const sCNPJEmitente, sCNPJDestinatario, sDataHoraSaida : String; const iAnoVenda, iNumVenda : Integer;
       var DtHoraEmiss : TDateTime; var iSerieNFe, iNumeroNFe : Integer; var FileNameXML : String);
     procedure GerarNFEEntradaACBr(const sCNPJEmitente : String; const iCodFornecedor : Integer; const iAnoCompra, iNumCompra : Integer;
       var DtHoraEmiss : TDateTime; var iSerieNFe, iNumeroNFe : Integer; var FileNameXML : String);
@@ -478,11 +478,11 @@ type
     function GetInformacaoFisco : String;
     function GetValidadeCertificado(const Informe : Boolean = FALSE) : Boolean;
 
-    function GerarNFeOnLineACBr(const sCNPJEmitente, sCNPJDestinatario : String; const iAnoVenda, iNumVenda : Integer;
+    function GerarNFeOnLineACBr(const sCNPJEmitente, sCNPJDestinatario, sDataHoraSaida : String; const iAnoVenda, iNumVenda : Integer;
       var iSerieNFe, iNumeroNFe  : Integer; var FileNameXML, ChaveNFE, ProtocoloNFE, ReciboNFE : String; var iNumeroLote  : Int64;
       const Imprimir : Boolean = TRUE) : Boolean;
 
-    function GerarNFeOffLineACBr(const sCNPJEmitente, sCNPJDestinatario : String; const iAnoVenda, iNumVenda : Integer;
+    function GerarNFeOffLineACBr(const sCNPJEmitente, sCNPJDestinatario, sDataHoraSaida : String; const iAnoVenda, iNumVenda : Integer;
       var iSerieNFe, iNumeroNFe  : Integer; var FileNameXML, ChaveNFE : String;
       const Imprimir : Boolean = TRUE) : Boolean;
 
@@ -954,7 +954,7 @@ begin
   Result := ( ConfigACBr.edInfoFisco.Text );
 end;
 
-function TDMNFe.GerarNFeOnLineACBr(const sCNPJEmitente, sCNPJDestinatario : String; const iAnoVenda, iNumVenda: Integer;
+function TDMNFe.GerarNFeOnLineACBr(const sCNPJEmitente, sCNPJDestinatario, sDataHoraSaida : String; const iAnoVenda, iNumVenda: Integer;
   var iSerieNFe, iNumeroNFe  : Integer; var FileNameXML, ChaveNFE, ProtocoloNFE, ReciboNFE : String; var iNumeroLote  : Int64;
   const Imprimir : Boolean = TRUE): Boolean;
 var
@@ -964,7 +964,7 @@ begin
 
   try
 
-    GerarNFEACBr(sCNPJEmitente, sCNPJDestinatario, iAnoVenda, iNumVenda, DtHoraEmiss, iSerieNFe, iNumeroNFe, FileNameXML);
+    GerarNFEACBr(sCNPJEmitente, sCNPJDestinatario, sDataHoraSaida, iAnoVenda, iNumVenda, DtHoraEmiss, iSerieNFe, iNumeroNFe, FileNameXML);
 
     iNumeroLote := GetNextID('TBEMPRESA', 'LOTE_NUM_NFE', 'where CNPJ = ' + QuotedStr(sCNPJEmitente) + ' and LOTE_ANO_NFE = ' + qryEmitenteLOTE_ANO_NFE.AsString);
     GuardarLoteNFeVenda(sCNPJEmitente, iAnoVenda, iNumVenda, iNumeroLote, EmptyStr);
@@ -1009,7 +1009,7 @@ begin
 
 end;
 
-function TDMNFe.GerarNFeOffLineACBr(const sCNPJEmitente, sCNPJDestinatario : String; const iAnoVenda, iNumVenda : Integer;
+function TDMNFe.GerarNFeOffLineACBr(const sCNPJEmitente, sCNPJDestinatario, sDataHoraSaida : String; const iAnoVenda, iNumVenda : Integer;
   var iSerieNFe, iNumeroNFe  : Integer; var FileNameXML, ChaveNFE : String;
   const Imprimir : Boolean = TRUE) : Boolean;
 var
@@ -1018,7 +1018,7 @@ begin
 
   try
 
-    GerarNFEACBr(sCNPJEmitente, sCNPJDestinatario, iAnoVenda, iNumVenda, DtHoraEmiss, iSerieNFe, iNumeroNFe, FileNameXML);
+    GerarNFEACBr(sCNPJEmitente, sCNPJDestinatario, sDataHoraSaida, iAnoVenda, iNumVenda, DtHoraEmiss, iSerieNFe, iNumeroNFe, FileNameXML);
 
     Result := True;
 
@@ -1239,7 +1239,8 @@ begin
   end;
 end;
 
-procedure TDMNFe.GerarNFEACBr(const sCNPJEmitente, sCNPJDestinatario : String; const iAnoVenda, iNumVenda : Integer;
+procedure TDMNFe.GerarNFEACBr(const sCNPJEmitente, sCNPJDestinatario, sDataHoraSaida : String;
+  const iAnoVenda, iNumVenda : Integer;
   var DtHoraEmiss : TDateTime; var iSerieNFe, iNumeroNFe : Integer; var FileNameXML : String);
 begin
 
@@ -1281,6 +1282,12 @@ begin
       Ide.cUF       := NotaUtil.UFtoCUF( qryEmitenteEST_SIGLA.AsString );
       Ide.cMunFG    := qryEmitenteCID_IBGE.AsInteger ;
       Ide.finNFe    := fnNormal;
+
+      if (Trim(sDataHoraSaida) <> EmptyStr) then
+      begin
+        Ide.dSaiEnt := StrToDateTime( FormatDateTime('dd/mm/yyyy', StrToDateTime(sDataHoraSaida)) );
+        Ide.hSaiEnt := StrToDateTime( FormatDateTime('hh:mm:ss', StrToDateTime(sDataHoraSaida)) );
+      end;
 
   //     Ide.dhCont := date;
   //     Ide.xJust  := 'Justificativa Contingencia';
@@ -3279,6 +3286,7 @@ begin
             'Emitente:    ' + sCNPJEmitente + #13 +
             'Chave NF-e:  ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].chNFe + #13 +
             'Motivo:      ' + WebServices.Recibo.NFeRetorno.xMotivo + #13 +
+            '             ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].xMotivo + #13 +
             'Mensagem:    ' + WebServices.Recibo.NFeRetorno.xMsg    + #13 +
             '---'     + #13 +                              
             'Data Recibo: ' + FormatDateTime('dd/mm/yyyy', WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].dhRecbto) + #13 +

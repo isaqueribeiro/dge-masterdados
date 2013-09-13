@@ -1,4 +1,6 @@
 inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
+  Left = 540
+  Top = 218
   BorderStyle = bsDialog
   BorderWidth = 4
   Caption = 'Consultar Recibo/Lote NF-e'
@@ -311,6 +313,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
       Width = 25
       Height = 13
       Caption = 'Ano:'
+      Enabled = False
       FocusControl = edAno
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -325,6 +328,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
       Width = 92
       Height = 13
       Caption = 'N'#250'mero do Lote:'
+      Enabled = False
       FocusControl = edNumeroLote
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -405,6 +409,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
       Width = 57
       Height = 21
       Color = clWhite
+      Enabled = False
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -419,6 +424,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
       Width = 97
       Height = 21
       Color = clWhite
+      Enabled = False
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -11

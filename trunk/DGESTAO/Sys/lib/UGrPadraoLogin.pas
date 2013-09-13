@@ -29,9 +29,12 @@ type
     BtnFechar: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure BtnFecharClick(Sender: TObject);
+    procedure BtnEntrarClick(Sender: TObject);
+    procedure edNomeChange(Sender: TObject);
   private
     { Private declarations }
     fCNPJ : Array of String;
+    fContador : Integer;
     procedure CarregarEmpresa;
     procedure SetUsuario(Value : String);
     procedure SetSenha(Value : String);
@@ -45,6 +48,9 @@ type
     property Usuario : String read GetUsuario write SetUsuario;
     property Senha   : String read GetSenha write SetSenha;
     property Empresa : String read GetEmpresa write SetEmpresa;
+    property Contador : Integer read fContador;
+
+    function EfetuarLogin : Boolean; virtual; abstract;
   end;
 
 var
@@ -52,10 +58,7 @@ var
 
 implementation
 
-uses UDMBusiness;
-
-var
-  Contador : Integer;
+uses UDMBusiness, UFuncoes;
 
 {$R *.dfm}
 
@@ -84,11 +87,17 @@ end;
 procedure TfrmGrPadraoLogin.FormCreate(Sender: TObject);
 begin
   inherited;
+  lblSystemName.Caption        := GetInternalName;
+  lblSystemDescription.Caption := GetFileDescription;
+  lblSystemVersion.Caption     := 'Versão ' + GetExeVersion;
+  
   CarregarEmpresa;
   Empresa := GetEmpresaIDDefault;
   
   if ( ImgLogo.Picture.Height = 0 ) then
     ImgLogo.Picture.Icon := Application.Icon;
+
+  fContador := 0;
 end;
 
 procedure TfrmGrPadraoLogin.CarregarEmpresa;
@@ -130,6 +139,23 @@ end;
 procedure TfrmGrPadraoLogin.BtnFecharClick(Sender: TObject);
 begin
   Application.Terminate;
+end;
+
+procedure TfrmGrPadraoLogin.BtnEntrarClick(Sender: TObject);
+begin
+  if EfetuarLogin then
+  begin
+    SetEmpresaIDDefault( Empresa );
+
+    ModalResult := mrOk;
+  end
+  else
+    Inc(fContador);
+end;
+
+procedure TfrmGrPadraoLogin.edNomeChange(Sender: TObject);
+begin
+  pnlMensagem.Caption := EmptyStr;
 end;
 
 end.

@@ -166,6 +166,7 @@ type
   private
     { Private declarations }
     CobreBemX : Variant;
+    FFecharAoGerar : Boolean;
     procedure CarregarBancos;
     procedure GravarBoletosGerados;
     procedure GravarBoletosGeradosACBr(const iProximoNossoNumero : Integer);
@@ -202,7 +203,7 @@ const
   scpErro     = $00000003;
 
   procedure GerarBoleto(const AOwer : TComponent); overload;
-  procedure GerarBoleto(const AOwer : TComponent; const NomeCliente, CNPJ : String); overload;
+  procedure GerarBoleto(const AOwer : TComponent; const NomeCliente, CNPJ : String; iAno, iVenda : Integer); overload;
 
   function ReImprimirBoleto(const AOwer : TComponent; sNomeCliente, sCnpjCliente : String; iAno, iVenda, iBanco : Integer) : Boolean;
 
@@ -224,7 +225,7 @@ begin
   end;
 end;
 
-procedure GerarBoleto(const AOwer : TComponent; const NomeCliente, CNPJ : String); overload;
+procedure GerarBoleto(const AOwer : TComponent; const NomeCliente, CNPJ : String; iAno, iVenda : Integer); overload;
 var
   f : TfrmGeGerarBoleto;
 begin
@@ -236,9 +237,19 @@ begin
     f.IbQryClientes.Open;
 
     if ( f.IbQryClientes.Locate('CNPJ', CNPJ, []) ) then
+    begin
       f.dbgDadosDblClick( f.dbgDados );
+      f.FFecharAoGerar := True;
 
-    f.ShowModal;
+      f.CarregarTitulos(CNPJ, 0);
+
+      f.CdsTitulos.Filter   := 'ANOVENDA = ' + IntToStr(iAno) + ' and NUMVENDA = ' + IntToStr(iVenda);
+      f.CdsTitulos.Filtered := True;
+      f.ShowModal;
+    end
+    else
+      ShowWarning('Títulos não identificados!');
+
   finally
     f.Free;
   end;
@@ -412,7 +423,8 @@ procedure TfrmGeGerarBoleto.FormCreate(Sender: TObject);
 begin
   inherited;
   pgcGuias.ActivePageIndex := 0;
-  CobreBemX := CreateOleObject('CobreBemX.ContaCorrente');
+  CobreBemX      := CreateOleObject('CobreBemX.ContaCorrente');
+  FFecharAoGerar := False;
 end;
 
 procedure TfrmGeGerarBoleto.FormShow(Sender: TObject);
@@ -564,6 +576,8 @@ begin
       {$ENDIF}
       end;
 
+      if FFecharAoGerar then
+        ModalResult := mrOk;
     end;
 
     CdsTitulos.Filtered := False;
@@ -648,8 +662,8 @@ begin
       Boleto.DataProcessamento := FormatDateTime('dd/mm/yyyy', Date);
 
       Boleto.ValorDocumento                := CdsTitulosVALORREC.AsFloat;
-      Boleto.PercentualJurosDiaAtraso      := CdsTitulosPERCENTJUROS.AsFloat;
-      Boleto.PercentualMultaAtraso         := CdsTitulosPERCENTMULTA.AsFloat;
+      Boleto.PercentualJurosDiaAtraso      := CdsTitulosPERCENTJUROS.AsFloat; // Juros - Multa diária
+      Boleto.PercentualMultaAtraso         := CdsTitulosPERCENTMULTA.AsFloat; // Mora  - Multa de atraso
       Boleto.PercentualDesconto            := CdsTitulosPERCENTDESCONTO.AsFloat;
       Boleto.ValorOutrosAcrescimos         := 0;
       Boleto.PadroesBoleto.Demonstrativo   := Trim(edtDemonstrativo.Text) + '<br><br>Venda No. ' +
@@ -1069,7 +1083,7 @@ begin
         // Dados de Cobrança
         ValorDocumento    := CdsTitulosVALORREC.AsCurrency;
         ValorAbatimento   := 0.0;
-        ValorMoraJuros    := CdsTitulosVALORREC.AsCurrency * CdsTitulosPERCENTJUROS.AsCurrency / 100;
+        ValorMoraJuros    := 0.0; // CdsTitulosVALORREC.AsCurrency * CdsTitulosPERCENTJUROS.AsCurrency / 100;
         ValorDesconto     := CdsTitulosVALORREC.AsCurrency * CdsTitulosPERCENTDESCONTO.AsCurrency / 100;
         DataMoraJuros     := GetProximoDiaUtil(Vencimento);
         DataDesconto      := CdsTitulosDTVENC.AsDateTime;
