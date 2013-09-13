@@ -1042,6 +1042,9 @@ begin
     else
     begin
 
+      if ( Trim(cdsTabelaItensCST.AsString) = EmptyStr ) then
+        cdsTabelaItensCST.Clear;
+        
       cdsTabelaItens.Post;
 
       GetToTais(cTotalBruto, cTotalDesconto, cTotalLiquido);

@@ -3727,6 +3727,7 @@ inherited frmGeVenda: TfrmGeVenda
       '  , i.Qtdefinal'
       '  , i.Unid_cod'
       '  , i.Cfop_cod'
+      '  , coalesce(i.Cst, p.Cst) as Cst'
       '  , i.Aliquota'
       '  , i.Aliquota_csosn'
       '  , i.Aliquota_pis'
@@ -3850,6 +3851,13 @@ inherited frmGeVenda: TfrmGeVenda
       FieldName = 'CFOP_COD'
       Origin = 'TVENDASITENS.CFOP_COD'
     end
+    object cdsTabelaItensCST: TIBStringField
+      Alignment = taCenter
+      FieldName = 'CST'
+      Origin = 'TVENDASITENS.CST'
+      ProviderFlags = [pfInUpdate]
+      Size = 3
+    end
     object cdsTabelaItensALIQUOTA: TIBBCDField
       FieldName = 'ALIQUOTA'
       Origin = 'TVENDASITENS.ALIQUOTA'
@@ -3944,12 +3952,6 @@ inherited frmGeVenda: TfrmGeVenda
       Origin = 'TBCFOP.CFOP_DESCRICAO'
       Size = 250
     end
-    object cdsTabelaItensCST: TIBStringField
-      Alignment = taCenter
-      FieldName = 'CST'
-      Origin = 'TBPRODUTO.CST'
-      Size = 3
-    end
     object cdsTabelaItensCSOSN: TIBStringField
       Alignment = taCenter
       FieldName = 'CSOSN'
@@ -4000,6 +4002,7 @@ inherited frmGeVenda: TfrmGeVenda
       '  ALIQUOTA_PIS = :ALIQUOTA_PIS,'
       '  ANO = :ANO,'
       '  CFOP_COD = :CFOP_COD,'
+      '  CST = :CST,'
       '  CODCLI = :CODCLI,'
       '  CODCONTROL = :CODCONTROL,'
       '  CODEMP = :CODEMP,'
@@ -4028,7 +4031,7 @@ inherited frmGeVenda: TfrmGeVenda
       'insert into TVENDASITENS'
       
         '  (ALIQUOTA, ALIQUOTA_COFINS, ALIQUOTA_CSOSN, ALIQUOTA_PIS, ANO,' +
-        ' CFOP_COD, '
+        ' CFOP_COD, CST,'
       
         '   CODCLI, CODCONTROL, CODEMP, CODPROD, DESCONTO, DESCONTO_VALOR' +
         ', DTVENDA, '
@@ -4041,7 +4044,7 @@ inherited frmGeVenda: TfrmGeVenda
       'values'
       
         '  (:ALIQUOTA, :ALIQUOTA_COFINS, :ALIQUOTA_CSOSN, :ALIQUOTA_PIS, ' +
-        ':ANO, :CFOP_COD, '
+        ':ANO, :CFOP_COD, :CST,'
       
         '   :CODCLI, :CODCONTROL, :CODEMP, :CODPROD, :DESCONTO, :DESCONTO' +
         '_VALOR, '

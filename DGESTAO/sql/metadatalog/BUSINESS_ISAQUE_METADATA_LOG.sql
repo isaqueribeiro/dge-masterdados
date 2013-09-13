@@ -9714,3 +9714,137 @@ COMMENT ON COLUMN TBCONTREC.PERCENTJUROS IS
 COMMENT ON COLUMN TBCONTREC.PERCENTMULTA IS
 'Percentual de Mora Mes por atraso.';
 
+
+
+
+/*------ SYSDBA 13/09/2013 15:30:20 --------*/
+
+ALTER TABLE TBCONFIGURACAO
+    ADD NFE_IMPRIMIR_COD_CLIENTE DMN_LOGICO;
+
+COMMENT ON COLUMN TBCONFIGURACAO.NFE_IMPRIMIR_COD_CLIENTE IS
+'NF-e: Imprimir codigo interno do cliente na NF-e:
+0 - Nao
+1 - Sim';
+
+
+
+
+/*------ SYSDBA 13/09/2013 15:30:24 --------*/
+
+UPDATE TBCONFIGURACAO
+SET NFE_IMPRIMIR_COD_CLIENTE = 0;
+
+
+
+
+/*------ SYSDBA 13/09/2013 15:30:33 --------*/
+
+ALTER TABLE TBCONFIGURACAO ADD IBE$$TEMP_COLUMN
+ SMALLINT DEFAULT 0
+;
+
+UPDATE RDB$RELATION_FIELDS F1
+SET
+F1.RDB$DEFAULT_VALUE  = (SELECT F2.RDB$DEFAULT_VALUE
+                         FROM RDB$RELATION_FIELDS F2
+                         WHERE (F2.RDB$RELATION_NAME = 'TBCONFIGURACAO') AND
+                               (F2.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN')),
+F1.RDB$DEFAULT_SOURCE = (SELECT F3.RDB$DEFAULT_SOURCE FROM RDB$RELATION_FIELDS F3
+                         WHERE (F3.RDB$RELATION_NAME = 'TBCONFIGURACAO') AND
+                               (F3.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN'))
+WHERE (F1.RDB$RELATION_NAME = 'TBCONFIGURACAO') AND
+      (F1.RDB$FIELD_NAME = 'NFE_IMPRIMIR_COD_CLIENTE');
+
+ALTER TABLE TBCONFIGURACAO DROP IBE$$TEMP_COLUMN;
+
+
+
+
+/*------ SYSDBA 13/09/2013 16:08:43 --------*/
+
+ALTER TABLE TVENDASITENS
+    ADD CST DMN_VCHAR_03,
+    ADD CSOSN DMN_VCHAR_03;
+
+alter table TVENDASITENS
+alter ANO position 1;
+
+alter table TVENDASITENS
+alter CODCONTROL position 2;
+
+alter table TVENDASITENS
+alter SEQ position 3;
+
+alter table TVENDASITENS
+alter CODPROD position 4;
+
+alter table TVENDASITENS
+alter CODEMP position 5;
+
+alter table TVENDASITENS
+alter CODCLI position 6;
+
+alter table TVENDASITENS
+alter DTVENDA position 7;
+
+alter table TVENDASITENS
+alter QTDE position 8;
+
+alter table TVENDASITENS
+alter PUNIT position 9;
+
+alter table TVENDASITENS
+alter PUNIT_PROMOCAO position 10;
+
+alter table TVENDASITENS
+alter DESCONTO position 11;
+
+alter table TVENDASITENS
+alter DESCONTO_VALOR position 12;
+
+alter table TVENDASITENS
+alter PFINAL position 13;
+
+alter table TVENDASITENS
+alter QTDEFINAL position 14;
+
+alter table TVENDASITENS
+alter UNID_COD position 15;
+
+alter table TVENDASITENS
+alter CFOP_COD position 16;
+
+alter table TVENDASITENS
+alter CST position 17;
+
+alter table TVENDASITENS
+alter CSOSN position 18;
+
+alter table TVENDASITENS
+alter ALIQUOTA position 19;
+
+alter table TVENDASITENS
+alter ALIQUOTA_CSOSN position 20;
+
+alter table TVENDASITENS
+alter ALIQUOTA_PIS position 21;
+
+alter table TVENDASITENS
+alter ALIQUOTA_COFINS position 22;
+
+alter table TVENDASITENS
+alter VALOR_IPI position 23;
+
+alter table TVENDASITENS
+alter PERCENTUAL_REDUCAO_BC position 24;
+
+alter table TVENDASITENS
+alter TOTAL_BRUTO position 25;
+
+alter table TVENDASITENS
+alter TOTAL_DESCONTO position 26;
+
+alter table TVENDASITENS
+alter TOTAL_LIQUIDO position 27;
+

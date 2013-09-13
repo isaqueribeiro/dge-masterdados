@@ -169,6 +169,7 @@ var
   function GetUserFunctionID : Integer;
   function GetLimiteDescontoUser : Currency;
   function GetSolicitaDHSaidaNFe(const sCNPJEmitente : String) : Boolean;
+  function GetImprimirCodClienteNFe(const sCNPJEmitente : String) : Boolean;
   function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
   function SetMovimentoCaixa(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint;
     const AnoLancamento, NumLancamento, SeqPagto : Integer; const Valor : Currency; const TipoMov : TTipoMovimentoCaixa) : Boolean;
@@ -1315,6 +1316,21 @@ begin
     Open;
 
     Result := (FieldByName('nfe_solicita_dh_saida').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
+function GetImprimirCodClienteNFe(const sCNPJEmitente : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select nfe_imprimir_cod_cliente from TBCONFIGURACAO where empresa = ' + QuotedStr(sCNPJEmitente));
+    Open;
+
+    Result := (FieldByName('nfe_imprimir_cod_cliente').AsInteger = 1);
 
     Close;
   end;

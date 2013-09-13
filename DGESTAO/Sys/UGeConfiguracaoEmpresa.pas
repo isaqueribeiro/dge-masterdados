@@ -44,6 +44,8 @@ type
     IbDtstTabelaNFE_SOLICITA_DH_SAIDA: TSmallintField;
     TbsNFe: TTabSheet;
     chkNFE_SolicitaDHSaida: TDBCheckBox;
+    IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE: TSmallintField;
+    chkImprimirCodCliente: TDBCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure DtSrcTabelaStateChange(Sender: TObject);
     procedure IbDtstTabelaEMPRESAGetText(Sender: TField; var Text: String;
@@ -131,7 +133,8 @@ begin
   IbDtstTabelaEMAIL_REQUER_AUTENTICACAO.AsInteger := 0;
   IbDtstTabelaEMAIL_CONEXAO_SSL.AsInteger         := 0;
 
-  IbDtstTabelaNFE_SOLICITA_DH_SAIDA.AsInteger := 0;
+  IbDtstTabelaNFE_SOLICITA_DH_SAIDA.AsInteger    := 0;
+  IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE.AsInteger := 0;
 end;
 
 initialization
