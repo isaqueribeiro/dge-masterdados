@@ -437,6 +437,7 @@ type
     MemoField1: TMemoField;
     SmallintField2: TSmallintField;
     IntegerField3: TIntegerField;
+    frrBoletoEntrega: TfrxReport;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);

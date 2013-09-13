@@ -96,6 +96,9 @@ var
 
   gContaEmail : TContaEmail;
 
+
+  function IfThen(AValue: Boolean; const ATrue: string; AFalse: string = ''): string; overload;
+  function IfThen(AValue: Boolean; const ATrue: TDateTime; AFalse: TDateTime = 0): TDateTime; overload;
   function NetWorkActive(const Alertar : Boolean = FALSE) : Boolean;
 
   procedure ShowInformation(sTitle, sMsg : String); overload;
@@ -211,6 +214,23 @@ const
 implementation
 
 {$R *.dfm}
+
+function IfThen(AValue: Boolean; const ATrue: string;
+  AFalse: string = ''): string;
+begin
+  if AValue then
+    Result := ATrue
+  else
+    Result := AFalse;
+end;
+
+function IfThen(AValue: Boolean; const ATrue: TDateTime; AFalse: TDateTime = 0): TDateTime; 
+begin
+  if AValue then
+    Result := ATrue
+  else
+    Result := AFalse;
+end;
 
 function NetWorkActive(const Alertar : Boolean = FALSE) : Boolean;
 var
