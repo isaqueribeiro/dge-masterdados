@@ -139,6 +139,8 @@ type
     IbQryBancosBCO_PERCENTUAL_MORA: TIBBCDField;
     IbQryBancosBCO_DIA_PROTESTO: TSmallintField;
     IbQryBancosBCO_MSG_INSTRUCAO: TIBStringField;
+    CdsTitulosSERIE: TStringField;
+    CdsTitulosNFE: TLargeintField;
     procedure edtFiltrarKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure dbgDadosDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -767,23 +769,33 @@ end;
 
 procedure TfrmGeGerarBoleto.GravarBoletosGeradosACBr(const iProximoNossoNumero : Integer);
 var
-  Ano  ,
-  Lanc ,
+  pDOC ,
+  pDIG : String;
   I    : Integer;
   N : String;
   Titulo : TACBrTitulo;
 begin
-  CdsTitulos.IndexFieldNames := 'ANOLANC;NUMLANC';
-
   for I := 0 to ACBrBoleto.ListadeBoletos.Count - 1 do
     with ACBrBoleto, ListadeBoletos do
     begin
       Titulo := ListadeBoletos.Objects[I];
 
-      Ano  := 2000 + StrToInt( Copy(Titulo.NumeroDocumento, 1, 2));
-      Lanc := StrToInt(Copy(Titulo.NumeroDocumento, 3, 8));
+      if Pos('-', Titulo.NumeroDocumento) > 0 then
+      begin
+        CdsTitulos.IndexFieldNames := 'NFE;PARCELA';
 
-      if CdsTitulos.FindKey( [Ano, Lanc] ) then
+        pDOC := Copy(Titulo.NumeroDocumento, 1, Pos('-', Titulo.NumeroDocumento) - 1);
+        pDIG := Copy(Titulo.NumeroDocumento, Pos('-', Titulo.NumeroDocumento) + 1, 2);
+      end
+      else
+      begin
+        CdsTitulos.IndexFieldNames := 'ANOLANC;NUMLANC';
+
+        pDOC := IntToStr( 2000 + StrToInt( Copy(Titulo.NumeroDocumento, 1, 2)) );
+        pDIG := Copy(Titulo.NumeroDocumento, 3, 8);
+      end;
+
+      if CdsTitulos.FindKey( [pDOC, pDIG] ) then
         if ( CdsTitulosNOSSONUMERO.AsString <> Titulo.NossoNumero ) then
         begin
           CdsTitulos.Edit;
@@ -1056,7 +1068,10 @@ begin
     begin
 
       Boleto     := ACBrBoleto.CriarTituloNaLista;
-      sDocumento := Copy(CdsTitulosANOLANC.AsString, 3, 2) + FormatFloat('00000000', CdsTitulosNUMLANC.AsInteger) + FormatFloat('000', CdsTitulosPARCELA.AsInteger);
+      if ( CdsTitulosNFE.AsLargeInt > 0 ) then
+        sDocumento := FormatFloat('###0000000', CdsTitulosNFE.AsLargeInt) + '-' + FormatFloat('00', CdsTitulosPARCELA.AsInteger)
+      else
+        sDocumento := Copy(CdsTitulosANOLANC.AsString, 3, 2) + FormatFloat('00000000', CdsTitulosNUMLANC.AsInteger) + FormatFloat('000', CdsTitulosPARCELA.AsInteger);
 
       with Boleto do
       begin

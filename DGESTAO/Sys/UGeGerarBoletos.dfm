@@ -2211,8 +2211,13 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
       '  , r.dataprocessoboleto'
       '  , r.ANOVENDA'
       '  , r.NUMVENDA'
+      '  , v.serie'
+      '  , v.nfe'
       '  , '#39'.'#39' as Gerar'
       'from TBCONTREC r'
+      
+        '  left join TBVENDAS v on (v.ano = r.anovenda and v.codcontrol =' +
+        ' r.numvenda)'
       'where r.baixado = 0'
       '  and r.cnpj = :cnpj'
       '  and coalesce(r.codbanco, 0) = :banco'
@@ -2378,6 +2383,15 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
     end
     object CdsTitulosNUMVENDA: TIntegerField
       FieldName = 'NUMVENDA'
+    end
+    object CdsTitulosSERIE: TStringField
+      FieldName = 'SERIE'
+      ProviderFlags = []
+      Size = 4
+    end
+    object CdsTitulosNFE: TLargeintField
+      FieldName = 'NFE'
+      ProviderFlags = []
     end
     object CdsTitulosGERAR: TStringField
       Alignment = taCenter

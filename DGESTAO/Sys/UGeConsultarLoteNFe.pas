@@ -352,7 +352,42 @@ begin
 
       end
       else
+      begin
         ShowWarning(sRetorno);
+
+        if ShowConfirm('Consulta Recibo', 'Deseja desconsiderar este recibo para que seja enviada uma nova solicitação para emissão de NF-e?') then
+        begin
+          if ( FTipoMovimento = tmNFeEntrada ) then
+          begin
+            with DMBusiness, qryBusca do
+            begin
+              Close;
+              SQL.Clear;
+              SQL.Add('Update TBCOMPRAS Set LOTE_NFE_ANO = null, LOTE_NFE_NUMERO = null, LOTE_NFE_RECIBO = null');
+              SQL.Add('where ANO = ' + qryNFEANOCOMPRA.AsString);
+              SQL.Add('  and CODCONTROL = ' + qryNFENUMCOMPRA.AsString);
+              ExecSQL;
+
+              CommitTransaction;
+            end;
+          end
+          else
+          if ( FTipoMovimento = tmNFeSaida ) then
+          begin
+            with DMBusiness, qryBusca do
+            begin
+              Close;
+              SQL.Clear;
+              SQL.Add('Update TBVENDAS Set LOTE_NFE_ANO = null, LOTE_NFE_NUMERO = null, LOTE_NFE_RECIBO = null');
+              SQL.Add('where ANO = ' + qryNFEANOVENDA.AsString);
+              SQL.Add('  and CODCONTROL = ' + qryNFENUMVENDA.AsString);
+              ExecSQL;
+
+              CommitTransaction;
+            end;
+          end;
+        end;
+      end;
 
       // Gravar LOG
 
