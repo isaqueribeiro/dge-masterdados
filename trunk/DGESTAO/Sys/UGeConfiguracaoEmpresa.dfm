@@ -283,12 +283,37 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
           object chkNFE_SolicitaDHSaida: TDBCheckBox
             Left = 16
             Top = 16
-            Width = 329
+            Width = 377
             Height = 17
             Caption = 'Solicitar Data/Hora de sa'#237'da da NF-e para impress'#227'o no DANFE'
             DataField = 'NFE_SOLICITA_DH_SAIDA'
             DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 0
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
+          object chkImprimirCodCliente: TDBCheckBox
+            Left = 16
+            Top = 40
+            Width = 377
+            Height = 17
+            Caption = 'Imprimir C'#243'digo Interno do Cliente no DANFE da NF-e'
+            DataField = 'NFE_IMPRIMIR_COD_CLIENTE'
+            DataSource = DtSrcTabela
+            Enabled = False
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
             ValueChecked = '1'
             ValueUnchecked = '0'
           end
@@ -311,6 +336,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  , c.email_assunto_padrao'
       '  , c.email_mensagem_padrao'
       '  , c.nfe_solicita_dh_saida'
+      '  , c.nfe_imprimir_cod_cliente'
       '  , e.rzsoc'
       '  , e.nmfant'
       'from TBCONFIGURACAO c'
@@ -384,6 +410,11 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
     object IbDtstTabelaNFE_SOLICITA_DH_SAIDA: TSmallintField
       FieldName = 'NFE_SOLICITA_DH_SAIDA'
       Origin = '"TBCONFIGURACAO"."NFE_SOLICITA_DH_SAIDA"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE: TSmallintField
+      FieldName = 'NFE_IMPRIMIR_COD_CLIENTE'
+      Origin = '"TBCONFIGURACAO"."NFE_IMPRIMIR_COD_CLIENTE"'
       ProviderFlags = [pfInUpdate]
     end
     object IbDtstTabelaRZSOC: TIBStringField

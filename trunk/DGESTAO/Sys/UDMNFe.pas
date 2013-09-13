@@ -1361,7 +1361,8 @@ begin
         Avulsa.dPag    := now;             }
 
       Dest.CNPJCPF           := qryDestinatarioCNPJ.AsString; // FormatFloat('00000000000000', qryDestinatarioCNPJ.AsInteger);
-      Dest.xNome             := qryDestinatarioNOME.AsString;
+      Dest.xNome             := qryDestinatarioNOME.AsString; // +
+        // IfThen(GetImprimirCodClienteNFe(sCNPJEmitente), ' ' + FormatFloat('##00000', qryDestinatarioCODIGO.AsInteger));
 
       if ( qryDestinatarioPESSOA_FISICA.AsInteger = 0 ) then
       begin
