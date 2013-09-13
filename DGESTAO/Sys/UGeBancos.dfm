@@ -1256,7 +1256,7 @@ inherited frmGeBancos: TfrmGeBancos
           Top = 24
           Width = 30
           Height = 13
-          Caption = 'Juros:'
+          Caption = 'Multa:'
           FocusControl = dbJuros
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
@@ -1281,9 +1281,9 @@ inherited frmGeBancos: TfrmGeBancos
         object lblMora: TLabel
           Left = 208
           Top = 24
-          Width = 28
+          Width = 50
           Height = 13
-          Caption = 'Mora:'
+          Caption = 'Mora M'#234's:'
           FocusControl = dbMora
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText

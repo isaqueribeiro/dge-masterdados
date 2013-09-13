@@ -7,7 +7,7 @@ uses
   Dialogs, ToolWin, ComCtrls, ExtCtrls, StdCtrls, Buttons, ImgList, Grids,
   DBGrids, DB, IBCustomDataSet, IBQuery, Mask, DBCtrls, DBClient, Provider,
   ComObj, IBUpdateSQL, IBTable, IBSQL, UGrPadrao, ACBrBoleto,
-  ACBrBoletoFCFR, ACBrBase;
+  ACBrBoletoFCFR, ACBrBase, ACBrUtil;
 
 type
   TfrmGeGerarBoleto = class(TfrmGrPadrao)
@@ -135,6 +135,10 @@ type
     IbQryBancosBCO_CODIGO_CEDENTE: TIBStringField;
     IbQryClientesENDER_DESC: TIBStringField;
     IbQryClientesENDER_NUM: TIBStringField;
+    IbQryBancosBCO_PERCENTUAL_JUROS: TIBBCDField;
+    IbQryBancosBCO_PERCENTUAL_MORA: TIBBCDField;
+    IbQryBancosBCO_DIA_PROTESTO: TSmallintField;
+    IbQryBancosBCO_MSG_INSTRUCAO: TIBStringField;
     procedure edtFiltrarKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure dbgDadosDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -209,7 +213,7 @@ const
 
 implementation
 
-uses UDMBusiness, StrUtils, TypInfo, UConstantesDGE, UFuncoes;
+uses UDMBusiness, StrUtils, TypInfo, DateUtils, UConstantesDGE, UFuncoes;
 
 {$R *.dfm}
 
@@ -278,6 +282,7 @@ begin
         CarregarBancos;
         if ( IbQryBancos.Locate('BCO_COD', iBanco, []) ) then
         begin
+          cmbBancoChange( cmbBanco );
           CarregarTitulos(sCnpjCliente, iBanco);
 
           CdsTitulos.Filter   := 'ANOVENDA = ' + IntToStr(iAno) + ' and NUMVENDA = ' + IntToStr(iVenda);
@@ -429,12 +434,21 @@ end;
 
 procedure TfrmGeGerarBoleto.FormShow(Sender: TObject);
 begin
+  {$IFDEF ACBR}
+  lbltMsgInstrucoes.Enabled := False;
+  edtMsgInstrucoes.Enabled  := False;
+  lbltDemonstrativo.Enabled := False;
+  edtDemonstrativo.Enabled  := False;
+  {$ENDIF}
+
   CarregarBancos;
   if ( pgcGuias.ActivePageIndex = 0 ) then
     edtFiltrar.SetFocus
   else
   if ( pgcGuias.ActivePageIndex = 1 ) then
     dbgTitulos.SetFocus;
+
+  cmbBancoChange(cmbBanco);
 end;
 
 procedure TfrmGeGerarBoleto.btnFecharClick(Sender: TObject);
@@ -537,6 +551,8 @@ begin
     Exit;
   end;
 
+  cmbBancoChange(cmbBanco);
+
   IBanco    := StrToIntDef( Copy(cmbBanco.Text, 1, 3), 0 );
   ICarteira := StrToIntDef( IbQryBancosBCO_CARTEIRA.AsString, 0 );
 
@@ -619,7 +635,10 @@ begin
     IbQryBancos.Open;
 
   if ( IbQryBancos.Locate('BCO_COD', StrToIntDef(Copy(cmbBanco.Text, 1, 3), 0), []) ) then
+  begin
     cmbBanco.Tag := IbQryBancosBCO_COD.AsInteger;
+    edtMsgInstrucoes.Text := '<br>' + Trim(IbQryBancosBCO_MSG_INSTRUCAO.AsString);
+  end;
 end;
 
 function TfrmGeGerarBoleto.InserirBoleto(var Objeto: Variant): Boolean;
@@ -662,8 +681,8 @@ begin
       Boleto.DataProcessamento := FormatDateTime('dd/mm/yyyy', Date);
 
       Boleto.ValorDocumento                := CdsTitulosVALORREC.AsFloat;
-      Boleto.PercentualJurosDiaAtraso      := CdsTitulosPERCENTJUROS.AsFloat; // Juros - Multa diária
-      Boleto.PercentualMultaAtraso         := CdsTitulosPERCENTMULTA.AsFloat; // Mora  - Multa de atraso
+      Boleto.PercentualJurosDiaAtraso      := IbQryBancosBCO_PERCENTUAL_JUROS.AsFloat; // Juros - Multa diária
+      Boleto.PercentualMultaAtraso         := IbQryBancosBCO_PERCENTUAL_MORA.AsFloat;  // Mora  - Multa de atraso
       Boleto.PercentualDesconto            := CdsTitulosPERCENTDESCONTO.AsFloat;
       Boleto.ValorOutrosAcrescimos         := 0;
       Boleto.PadroesBoleto.Demonstrativo   := Trim(edtDemonstrativo.Text) + '<br><br>Venda No. ' +
@@ -724,6 +743,8 @@ begin
         CdsTitulosCODBANCO.Value    := IbQryBancosBCO_COD.Value;
         CdsTitulosNOSSONUMERO.Value := CobreBemX.DocumentosCobranca[i].NossoNumero;
         CdsTitulosDATAPROCESSOBOLETO.Value := GetDateTimeDB;
+        CdsTitulosPERCENTJUROS.AsCurrency  := IbQryBancosBCO_PERCENTUAL_JUROS.AsCurrency;
+        CdsTitulosPERCENTMULTA.AsCurrency  := IbQryBancosBCO_PERCENTUAL_MORA.AsCurrency;
         CdsTitulos.Post;
 
         CommitTransaction;
@@ -769,6 +790,8 @@ begin
           CdsTitulosCODBANCO.Value    := IbQryBancosBCO_COD.Value;
           CdsTitulosNOSSONUMERO.Value := Titulo.NossoNumero;
           CdsTitulosDATAPROCESSOBOLETO.Value := GetDateTimeDB;
+          CdsTitulosPERCENTJUROS.AsCurrency  := IbQryBancosBCO_PERCENTUAL_JUROS.AsCurrency;
+          CdsTitulosPERCENTMULTA.AsCurrency  := IbQryBancosBCO_PERCENTUAL_MORA.AsCurrency;
           CdsTitulos.Post;
 
           CommitTransaction;
@@ -879,7 +902,7 @@ begin
 
     with ACBrBoleto, Banco do
     begin
-      Case iBanco of
+      Case iBanco of 
         CODIGO_BANCO_BRASIL:
           begin
             TipoCobranca          := cobBancoDoBrasil;
@@ -1018,7 +1041,8 @@ end;
 
 function TfrmGeGerarBoleto.InserirBoletoACBr(var iProximoNossoNumero : Integer; const NovosBoletos : Boolean = TRUE) : Boolean;
 var
-  sDocumento : String;
+  sDocumento ,
+  sMensagem  : String;
   Boleto : TACBrTitulo;
 begin
   try
@@ -1083,27 +1107,30 @@ begin
         // Dados de Cobrança
         ValorDocumento    := CdsTitulosVALORREC.AsCurrency;
         ValorAbatimento   := 0.0;
-        ValorMoraJuros    := 0.0; // CdsTitulosVALORREC.AsCurrency * CdsTitulosPERCENTJUROS.AsCurrency / 100;
+        ValorMoraJuros    := (CdsTitulosVALORREC.AsCurrency * IbQryBancosBCO_PERCENTUAL_MORA.AsCurrency / 100) / 30;
         ValorDesconto     := CdsTitulosVALORREC.AsCurrency * CdsTitulosPERCENTDESCONTO.AsCurrency / 100;
         DataMoraJuros     := GetProximoDiaUtil(Vencimento);
         DataDesconto      := CdsTitulosDTVENC.AsDateTime;
         DataAbatimento    := StrToCurrDef(EmptyStr, 0);
-        DataProtesto      := StrToCurrDef(EmptyStr, 0);
-        PercentualMulta   := CdsTitulosPERCENTJUROS.AsCurrency;
-        Mensagem.Text     := StringReplace(Trim(edtMsgInstrucoes.Text), '<br>', '', [rfReplaceAll]);
+        if ( IbQryBancosBCO_DIA_PROTESTO.AsInteger = 0 ) then
+          DataProtesto    := StrToCurrDef(EmptyStr, 0)
+        else
+          DataProtesto    := (Vencimento + IbQryBancosBCO_DIA_PROTESTO.AsInteger);
+        PercentualMulta   := IbQryBancosBCO_PERCENTUAL_JUROS.AsCurrency;  // Percentual de multa por dia de atraso.
 
         OcorrenciaOriginal.Tipo := toRemessaBaixar;
 
         Instrucao1        := '00';
         Instrucao2        := '00';
 
-        ACBrBoleto.AdicionarMensagensPadroes(Boleto, Mensagem);
+        Mensagem.Text := StringReplace(Trim(edtMsgInstrucoes.Text), '<br>', '', [rfReplaceAll]);
       end;
 
       Inc(iProximoNossoNumero);
-      
+
       CdsTitulos.Next;
     end;
+
 
     Result := True;
   except

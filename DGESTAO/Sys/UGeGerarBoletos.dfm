@@ -632,7 +632,7 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
               Expanded = False
               FieldName = 'PERCENTJUROS'
               Title.Alignment = taCenter
-              Title.Caption = '% Juros'
+              Title.Caption = '% Multa'
               Width = 60
               Visible = True
             end
@@ -640,7 +640,7 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
               Expanded = False
               FieldName = 'PERCENTMULTA'
               Title.Alignment = taCenter
-              Title.Caption = '% Multa'
+              Title.Caption = '% Mora'
               Width = 60
               Visible = True
             end
@@ -2511,6 +2511,10 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
       '  , b.bco_sequencial_rem'
       '  , b.bco_diretorio_remessa'
       '  , b.bco_diretorio_retorno'
+      '  , b.bco_percentual_juros'
+      '  , b.bco_percentual_mora'
+      '  , b.bco_dia_protesto'
+      '  , b.bco_msg_instrucao'
       '  , b.empresa'
       '  , e.rzsoc'
       '  , e.nmfant'
@@ -2636,6 +2640,27 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
       Origin = '"TBBANCO_BOLETO"."BCO_DIRETORIO_RETORNO"'
       ProviderFlags = [pfInUpdate]
       Size = 100
+    end
+    object IbQryBancosBCO_PERCENTUAL_JUROS: TIBBCDField
+      FieldName = 'BCO_PERCENTUAL_JUROS'
+      Origin = '"TBBANCO_BOLETO"."BCO_PERCENTUAL_JUROS"'
+      Precision = 18
+      Size = 2
+    end
+    object IbQryBancosBCO_PERCENTUAL_MORA: TIBBCDField
+      FieldName = 'BCO_PERCENTUAL_MORA'
+      Origin = '"TBBANCO_BOLETO"."BCO_PERCENTUAL_MORA"'
+      Precision = 18
+      Size = 2
+    end
+    object IbQryBancosBCO_DIA_PROTESTO: TSmallintField
+      FieldName = 'BCO_DIA_PROTESTO'
+      Origin = '"TBBANCO_BOLETO"."BCO_DIA_PROTESTO"'
+    end
+    object IbQryBancosBCO_MSG_INSTRUCAO: TIBStringField
+      FieldName = 'BCO_MSG_INSTRUCAO'
+      Origin = '"TBBANCO_BOLETO"."BCO_MSG_INSTRUCAO"'
+      Size = 250
     end
     object IbQryBancosRZSOC: TIBStringField
       FieldName = 'RZSOC'

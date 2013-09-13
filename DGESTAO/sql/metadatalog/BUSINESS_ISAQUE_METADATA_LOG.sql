@@ -9682,3 +9682,35 @@ COMMENT ON COLUMN TBBANCO_BOLETO.BCO_PERCENTUAL_JUROS IS
 COMMENT ON COLUMN TBBANCO_BOLETO.BCO_PERCENTUAL_MORA IS
 'Percentual de multa (mora) por atraso.';
 
+
+
+
+/*------ SYSDBA 13/09/2013 08:44:18 --------*/
+
+COMMENT ON COLUMN TBBANCO_BOLETO.BCO_PERCENTUAL_MORA IS
+'Percentual de Mora Mes por atraso.';
+
+
+
+
+/*------ SYSDBA 13/09/2013 08:44:32 --------*/
+
+COMMENT ON COLUMN TBBANCO_BOLETO.BCO_PERCENTUAL_JUROS IS
+'Percentual de multa por dia de atraso.';
+
+
+
+
+/*------ SYSDBA 13/09/2013 08:45:45 --------*/
+
+COMMENT ON COLUMN TBCONTREC.PERCENTJUROS IS
+'Percentual de multa por dia de atraso.';
+
+
+
+
+/*------ SYSDBA 13/09/2013 08:45:49 --------*/
+
+COMMENT ON COLUMN TBCONTREC.PERCENTMULTA IS
+'Percentual de Mora Mes por atraso.';
+

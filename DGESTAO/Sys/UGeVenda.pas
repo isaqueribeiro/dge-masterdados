@@ -2325,7 +2325,10 @@ begin
         bProsseguir := ShowConfirm('Deseja gerar boletos para os títulos da venda.');
 
       if bProsseguir then
-        btnGerarBoleto.Click
+      begin
+        btnGerarBoleto.Click;
+        Exit;
+      end
       else
         Exit;
     end;
