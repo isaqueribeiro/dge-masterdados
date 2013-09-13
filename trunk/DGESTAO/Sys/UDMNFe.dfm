@@ -5163,7 +5163,7 @@ object DMNFe: TDMNFe
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 40401.475989294000000000
-    ReportOptions.LastChange = 41522.997111956000000000
+    ReportOptions.LastChange = 41530.481730752310000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       ''
@@ -5599,6 +5599,7 @@ object DMNFe: TDMNFe
           Font.Style = [fsBold]
           Frame.Typ = [ftRight, ftBottom]
           Frame.Width = 0.500000000000000000
+          HAlign = haCenter
           Memo.UTF8 = (
             '[Titulo."NumeroDocumento"]')
           ParentFont = False
