@@ -141,6 +141,8 @@ type
     IbQryBancosBCO_MSG_INSTRUCAO: TIBStringField;
     CdsTitulosSERIE: TStringField;
     CdsTitulosNFE: TLargeintField;
+    IbQryBancosBCO_LAYOUT_REMESSA: TSmallintField;
+    IbQryBancosBCO_LAYOUT_RETORNO: TSmallintField;
     procedure edtFiltrarKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure dbgDadosDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -760,7 +762,7 @@ begin
   if ( IbQryBancosBCO_NOSSO_NUM_PROXIMO.AsString <> CobreBemX.ProximoNossoNumero ) then
   begin
     IbQryBancos.Edit;
-    IbQryBancosBCO_NOSSO_NUM_PROXIMO.AsString := RightStr( '000000' + CobreBemX.ProximoNossoNumero, 6 );
+    IbQryBancosBCO_NOSSO_NUM_PROXIMO.AsString := RightStr( '0000000' + CobreBemX.ProximoNossoNumero, 6 );
     IbQryBancos.Post;
 
     CommitTransaction;
@@ -959,6 +961,11 @@ begin
 
         else
           raise Exception.Create('Sistema não adapitado para gerar boletos para o banco ' + IbQryBancosBCO_NOME.AsString);
+      end;
+
+      Case IbQryBancosBCO_LAYOUT_REMESSA.AsInteger of
+        240: LayoutRemessa := c240;
+        400: LayoutRemessa := c400;
       end;
 
       ACBrBoletoFCFR.DirLogo        := ExtractFilePath(sAppLogo);

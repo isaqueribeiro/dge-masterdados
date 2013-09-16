@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UGrPadraoCadastro, ImgList, IBCustomDataSet, IBUpdateSQL, DB,
   Mask, DBCtrls, StdCtrls, Buttons, ExtCtrls, Grids, DBGrids, ComCtrls,
-  ToolWin, IBTable;
+  ToolWin, IBTable, RxDBComb;
 
 type
   TfrmGeBancos = class(TfrmGrPadraoCadastro)
@@ -81,6 +81,14 @@ type
     IbDtstTabelaBCO_PERCENTUAL_MORA: TIBBCDField;
     IbDtstTabelaBCO_DIA_PROTESTO: TSmallintField;
     IbDtstTabelaBCO_MSG_INSTRUCAO: TIBStringField;
+    lblLayoutRemessa: TLabel;
+    IbDtstTabelaBCO_LAYOUT_REMESSA: TSmallintField;
+    IbDtstTabelaBCO_LAYOUT_RETORNO: TSmallintField;
+    tblLayout: TIBTable;
+    dtsLayout: TDataSource;
+    dbLayoutRemessa: TDBLookupComboBox;
+    lblLayoutRetorno: TLabel;
+    dbLayoutRetorno: TDBLookupComboBox;
     procedure FormCreate(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
     procedure IbDtstTabelaBeforePost(DataSet: TDataSet);
@@ -155,6 +163,7 @@ begin
   CampoDescricao := 'bco_nome';
 
   tblEmpresa.Open;
+  tblLayout.Open;
 end;
 
 procedure TfrmGeBancos.IbDtstTabelaNewRecord(DataSet: TDataSet);

@@ -2529,6 +2529,8 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
       '  , b.bco_percentual_mora'
       '  , b.bco_dia_protesto'
       '  , b.bco_msg_instrucao'
+      '  , b.bco_layout_remessa'
+      '  , b.bco_layout_retorno'
       '  , b.empresa'
       '  , e.rzsoc'
       '  , e.nmfant'
@@ -2675,6 +2677,16 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
       FieldName = 'BCO_MSG_INSTRUCAO'
       Origin = '"TBBANCO_BOLETO"."BCO_MSG_INSTRUCAO"'
       Size = 250
+    end
+    object IbQryBancosBCO_LAYOUT_REMESSA: TSmallintField
+      FieldName = 'BCO_LAYOUT_REMESSA'
+      Origin = '"TBBANCO_BOLETO"."BCO_LAYOUT_REMESSA"'
+      ProviderFlags = []
+    end
+    object IbQryBancosBCO_LAYOUT_RETORNO: TSmallintField
+      FieldName = 'BCO_LAYOUT_RETORNO'
+      Origin = '"TBBANCO_BOLETO"."BCO_LAYOUT_RETORNO"'
+      ProviderFlags = []
     end
     object IbQryBancosRZSOC: TIBStringField
       FieldName = 'RZSOC'

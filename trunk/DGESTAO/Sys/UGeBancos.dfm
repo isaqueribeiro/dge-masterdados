@@ -1027,23 +1027,39 @@ inherited frmGeBancos: TfrmGeBancos
         Caption = 'Diret'#243'rios de arquivos'
         TabOrder = 2
         object lblRemessa: TLabel
-          Left = 16
+          Left = 104
           Top = 24
-          Width = 104
+          Width = 47
           Height = 13
-          Caption = 'Arquivos de remessa:'
+          Caption = 'Remessa:'
         end
         object lblRetorno: TLabel
+          Left = 448
+          Top = 24
+          Width = 43
+          Height = 13
+          Caption = 'Retorno:'
+        end
+        object lblLayoutRemessa: TLabel
+          Left = 16
+          Top = 24
+          Width = 37
+          Height = 13
+          Caption = 'Layout:'
+          FocusControl = dbLayoutRemessa
+        end
+        object lblLayoutRetorno: TLabel
           Left = 360
           Top = 24
-          Width = 100
+          Width = 37
           Height = 13
-          Caption = 'Arquivos de retorno:'
+          Caption = 'Layout:'
+          FocusControl = dbLayoutRetorno
         end
         object dbRemessa: TDBEdit
-          Left = 16
+          Left = 104
           Top = 40
-          Width = 337
+          Width = 249
           Height = 21
           DataField = 'BCO_DIRETORIO_REMESSA'
           DataSource = DtSrcTabela
@@ -1053,12 +1069,12 @@ inherited frmGeBancos: TfrmGeBancos
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 0
+          TabOrder = 1
         end
         object dbRetorno: TDBEdit
-          Left = 360
+          Left = 448
           Top = 40
-          Width = 337
+          Width = 249
           Height = 21
           DataField = 'BCO_DIRETORIO_RETORNO'
           DataSource = DtSrcTabela
@@ -1068,7 +1084,31 @@ inherited frmGeBancos: TfrmGeBancos
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 1
+          TabOrder = 3
+        end
+        object dbLayoutRemessa: TDBLookupComboBox
+          Left = 16
+          Top = 40
+          Width = 81
+          Height = 21
+          DataField = 'BCO_LAYOUT_REMESSA'
+          DataSource = DtSrcTabela
+          KeyField = 'CODIGO'
+          ListField = 'DESCRICAO'
+          ListSource = dtsLayout
+          TabOrder = 0
+        end
+        object dbLayoutRetorno: TDBLookupComboBox
+          Left = 360
+          Top = 40
+          Width = 81
+          Height = 21
+          DataField = 'BCO_LAYOUT_RETORNO'
+          DataSource = DtSrcTabela
+          KeyField = 'CODIGO'
+          ListField = 'DESCRICAO'
+          ListSource = dtsLayout
+          TabOrder = 2
         end
       end
       object GrpBxConfigCobreBemX: TGroupBox
@@ -1408,6 +1448,8 @@ inherited frmGeBancos: TfrmGeBancos
       '  , b.bco_percentual_mora'
       '  , b.bco_dia_protesto'
       '  , b.bco_msg_instrucao'
+      '  , b.bco_layout_remessa'
+      '  , b.bco_layout_retorno'
       'from TBBANCO_BOLETO b')
     object IbDtstTabelaBCO_COD: TSmallintField
       DisplayLabel = 'C'#243'digo'
@@ -1533,6 +1575,20 @@ inherited frmGeBancos: TfrmGeBancos
       ProviderFlags = [pfInUpdate]
       Size = 250
     end
+    object IbDtstTabelaBCO_LAYOUT_REMESSA: TSmallintField
+      DisplayLabel = 'Layout de Remessa'
+      FieldName = 'BCO_LAYOUT_REMESSA'
+      Origin = '"TBBANCO_BOLETO"."BCO_LAYOUT_REMESSA"'
+      ProviderFlags = [pfInUpdate]
+      Required = True
+    end
+    object IbDtstTabelaBCO_LAYOUT_RETORNO: TSmallintField
+      DisplayLabel = 'Layout de Retorno'
+      FieldName = 'BCO_LAYOUT_RETORNO'
+      Origin = '"TBBANCO_BOLETO"."BCO_LAYOUT_RETORNO"'
+      ProviderFlags = [pfInUpdate]
+      Required = True
+    end
   end
   inherited IbUpdTabela: TIBUpdateSQL
     RefreshSQL.Strings = (
@@ -1637,5 +1693,18 @@ inherited frmGeBancos: TfrmGeBancos
     TableName = 'TBEMPRESA'
     Left = 624
     Top = 40
+  end
+  object tblLayout: TIBTable
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    TableName = 'VW_LAYOUT_REM_RET_BANCO'
+    TableTypes = [ttView]
+    Left = 624
+    Top = 88
+  end
+  object dtsLayout: TDataSource
+    DataSet = tblLayout
+    Left = 656
+    Top = 88
   end
 end
