@@ -9848,3 +9848,42 @@ alter TOTAL_DESCONTO position 26;
 alter table TVENDASITENS
 alter TOTAL_LIQUIDO position 27;
 
+
+
+
+/*------ SYSDBA 14/09/2013 11:12:02 --------*/
+
+ALTER TABLE TBBANCO_BOLETO
+    ADD BCO_LAYOUT_REMESSA DMN_SMALLINT_N,
+    ADD BCO_LAYOUT_RETORNO DMN_SMALLINT_N;
+
+COMMENT ON COLUMN TBBANCO_BOLETO.BCO_LAYOUT_REMESSA IS
+'Layout de Remessa:
+240 - CNAB240 
+400 - CNAB400';
+
+COMMENT ON COLUMN TBBANCO_BOLETO.BCO_LAYOUT_RETORNO IS
+'Layout de Remessa:
+240 - CNAB240 
+400 - CNAB400';
+
+
+
+
+/*------ SYSDBA 16/09/2013 10:06:52 --------*/
+
+create view vw_layout_rem_ret_banco ( Codigo, Descricao )
+as
+Select
+    240 as Codigo
+  , 'cnab240' as Descricao
+from RDB$DATABASE
+
+union
+
+Select
+    400 as Codigo
+  , 'cnab400' as Descricao
+from RDB$DATABASE
+;
+
