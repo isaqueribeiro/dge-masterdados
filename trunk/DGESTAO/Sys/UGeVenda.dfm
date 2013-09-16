@@ -4424,6 +4424,7 @@ inherited frmGeVenda: TfrmGeVenda
   object qryNFE: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    CachedUpdates = True
     SelectSQL.Strings = (
       'Select'
       '    n.EMPRESA'

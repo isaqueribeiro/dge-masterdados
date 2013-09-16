@@ -6,6 +6,7 @@ object DMBusiness: TDMBusiness
   Height = 426
   Width = 706
   object ibdtbsBusiness: TIBDatabase
+    Connected = True
     DatabaseName = 'localhost:BUSINESS'
     Params.Strings = (
       'user_name=SYSDBA'
@@ -34,6 +35,7 @@ object DMBusiness: TDMBusiness
   object ibdtstAjustEstoq: TIBDataSet
     Database = ibdtbsBusiness
     Transaction = ibtrnsctnBusiness
+    CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from TBAJUSTESTOQ'
       'where'
@@ -145,6 +147,7 @@ object DMBusiness: TDMBusiness
   object ibdtstProduto: TIBDataSet
     Database = ibdtbsBusiness
     Transaction = ibtrnsctnBusiness
+    CachedUpdates = True
     SelectSQL.Strings = (
       'select COD, DESCRI, QTDE from TBPRODUTO'
       'order by cod')
@@ -163,12 +166,14 @@ object DMBusiness: TDMBusiness
   object qryBusca: TIBQuery
     Database = ibdtbsBusiness
     Transaction = ibtrnsctnBusiness
+    CachedUpdates = True
     Left = 232
     Top = 56
   end
   object ibdtstUsers: TIBDataSet
     Database = ibdtbsBusiness
     Transaction = ibtrnsctnBusiness
+    CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from TBUSERS'
       'where'
@@ -264,6 +269,7 @@ object DMBusiness: TDMBusiness
   object qryCaixaAberto: TIBDataSet
     Database = ibdtbsBusiness
     Transaction = ibtrnsctnBusiness
+    CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from TBUSERS'
       'where'
