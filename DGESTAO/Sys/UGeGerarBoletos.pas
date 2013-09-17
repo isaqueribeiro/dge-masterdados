@@ -1154,7 +1154,7 @@ begin
           DataProtesto    := (Vencimento + IbQryBancosBCO_DIA_PROTESTO.AsInteger);
         PercentualMulta   := IbQryBancosBCO_PERCENTUAL_JUROS.AsCurrency;  // Percentual de multa por dia de atraso.
 
-        OcorrenciaOriginal.Tipo := toRemessaBaixar;
+        OcorrenciaOriginal.Tipo := toRemessaRegistrar;
 
         Instrucao1        := '00';
         Instrucao2        := '00';
