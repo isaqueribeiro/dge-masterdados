@@ -2196,6 +2196,13 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
       '    r.anolanc'
       '  , r.numlanc'
       '  , r.parcela'
+      '  , coalesce(('
+      '     Select'
+      '       max(x.parcela)'
+      '     from TBCONTREC x'
+      '     where x.anovenda = r.anovenda'
+      '       and x.numvenda = r.numvenda'
+      '    ), r.parcela) as parcela_maxima'
       '  , r.codbanco'
       '  , r.nossonumero'
       '  , r.cnpj'
@@ -2288,6 +2295,10 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
       Origin = 'TBCONTREC.PARCELA'
       ProviderFlags = [pfInUpdate]
       DisplayFormat = '000'
+    end
+    object CdsTitulosPARCELA_MAXIMA: TSmallintField
+      FieldName = 'PARCELA_MAXIMA'
+      ProviderFlags = []
     end
     object CdsTitulosCODBANCO: TIntegerField
       FieldName = 'CODBANCO'

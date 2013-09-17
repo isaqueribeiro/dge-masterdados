@@ -143,6 +143,7 @@ type
     CdsTitulosNFE: TLargeintField;
     IbQryBancosBCO_LAYOUT_REMESSA: TSmallintField;
     IbQryBancosBCO_LAYOUT_RETORNO: TSmallintField;
+    CdsTitulosPARCELA_MAXIMA: TSmallintField;
     procedure edtFiltrarKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure dbgDadosDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -166,11 +167,6 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure dbgTitulosDblClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-
-    function GetAgenciaNumero : String;
-    function GetAgenciaDigito : String;
-    function GetContaNumero : String;
-    function GetContaDigito : String;
   private
     { Private declarations }
     CobreBemX : Variant;
@@ -179,6 +175,11 @@ type
     procedure GravarBoletosGerados;
     procedure GravarBoletosGeradosACBr(const iProximoNossoNumero : Integer);
     procedure UpdateTitulo( iAno : Smallint; iLancamento : Int64; iBanco : Integer; sNossoNumero : String; Data : TDateTime );
+
+    function GetAgenciaNumero : String;
+    function GetAgenciaDigito : String;
+    function GetContaNumero : String;
+    function GetContaDigito : String;
 
     function CarregarTitulos(sCnpj: String; iBanco : Integer) : Boolean;
     function DefinirCedente( Banco, Carteira : Integer; var Objeto : Variant ) : Boolean;
@@ -898,6 +899,8 @@ var
   sAppBoleto,
   sAppPath  : String;
 begin
+  // Esta função deverá ser replicada em: TfrmGeRemessaBoleto.DefinirCedenteACBr()
+  
   try
     sAppPath   := ExtractFilePath(ParamStr(0));
     sAppBoleto := sAppPath + LAYOUT_BOLETO_ENTREGA;
@@ -1063,7 +1066,12 @@ var
   sDocumento ,
   sMensagem  : String;
   Boleto : TACBrTitulo;
+const
+  MSG_REF_NFE = 'Referente a NF-e %s, parcela %s/%s';
+  MSG_REF_DOC = 'Referente ao título %s, parcela %s/%s';
 begin
+  // Esta função deverá ser replicada em: TfrmGeRemessaBoleto.InserirBoletoACBr()
+  
   try
 
     ACBrBoleto.ListadeBoletos.Clear;
@@ -1076,9 +1084,15 @@ begin
 
       Boleto     := ACBrBoleto.CriarTituloNaLista;
       if ( CdsTitulosNFE.AsLargeInt > 0 ) then
-        sDocumento := FormatFloat('###0000000', CdsTitulosNFE.AsLargeInt) + '-' + FormatFloat('00', CdsTitulosPARCELA.AsInteger)
+      begin
+        sMensagem  := Format(MSG_REF_NFE, [FormatFloat('###0000000', CdsTitulosNFE.AsLargeInt), FormatFloat('00', CdsTitulosPARCELA.AsInteger), FormatFloat('00', CdsTitulosPARCELA_MAXIMA.AsInteger)]);
+        sDocumento := FormatFloat('###0000000', CdsTitulosNFE.AsLargeInt) + '-' + FormatFloat('00', CdsTitulosPARCELA.AsInteger);
+      end
       else
+      begin
+        sMensagem  := Format(MSG_REF_DOC, [Copy(CdsTitulosANOLANC.AsString, 3, 2) + FormatFloat('00000000', CdsTitulosNUMLANC.AsInteger), FormatFloat('00', CdsTitulosPARCELA.AsInteger), FormatFloat('00', CdsTitulosPARCELA_MAXIMA.AsInteger)]);
         sDocumento := Copy(CdsTitulosANOLANC.AsString, 3, 2) + FormatFloat('00000000', CdsTitulosNUMLANC.AsInteger) + FormatFloat('000', CdsTitulosPARCELA.AsInteger);
+      end;
 
       with Boleto do
       begin
@@ -1145,7 +1159,7 @@ begin
         Instrucao1        := '00';
         Instrucao2        := '00';
 
-        Mensagem.Text := StringReplace(Trim(edtMsgInstrucoes.Text), '<br>', '', [rfReplaceAll]);
+        Mensagem.Text := sMensagem + #13 + StringReplace(Trim(edtMsgInstrucoes.Text), '<br>', '', [rfReplaceAll]);
       end;
 
       Inc(iProximoNossoNumero);

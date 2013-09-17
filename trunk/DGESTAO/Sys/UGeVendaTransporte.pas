@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UGrPadrao, StdCtrls, Buttons, DBCtrls, ExtCtrls, Mask,
-  rxToolEdit, RXDBCtrl, DB, IBCustomDataSet, IBUpdateSQL, Grids, DBGrids;
+  rxToolEdit, RXDBCtrl, DB, IBCustomDataSet, IBUpdateSQL, Grids, DBGrids,
+  IBQuery;
 
 type
   TfrmGeVendaTransporte = class(TfrmGrPadrao)
@@ -59,6 +60,7 @@ type
     dbgVolumes: TDBGrid;
     dtsVendaVolume: TDataSource;
     btnVolumeCancelar: TBitBtn;
+    qryVolume: TIBQuery;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
     procedure dbTransportadoraButtonClick(Sender: TObject);
@@ -74,6 +76,7 @@ type
     procedure btnVolumeSalvarClick(Sender: TObject);
   private
     { Private declarations }
+    procedure CarregarValorPadrao;
   public
     { Public declarations }
   end;
@@ -207,12 +210,22 @@ procedure TfrmGeVendaTransporte.btnVolumeInserirClick(Sender: TObject);
 var
   Sequencial : Integer;
 begin
+  CarregarValorPadrao;
   GerarSequencial(Sequencial);
 
   dtsVendaVolume.DataSet.Append;
   dtsVendaVolume.DataSet.FieldByName('SEQUENCIAL').Value := Sequencial;
   dtsVendaVolume.DataSet.FieldByName('NUMERO').Value     := FormatFloat('00', Sequencial);
   dbVolumeNumero.SetFocus;
+
+  if ( qryVolume.FieldByName('quantidade').AsCurrency > 0 ) then
+    dbVolumeQtde.Field.Value := qryVolume.FieldByName('quantidade').AsCurrency;
+
+  if ( qryVolume.FieldByName('peso_bruto').AsCurrency > 0 ) then
+    dbVolumePBruto.Field.Value := qryVolume.FieldByName('peso_bruto').AsCurrency;
+
+  if ( qryVolume.FieldByName('peso_liquido').AsCurrency > 0 ) then
+    dbVolumePLiquido.Field.Value := qryVolume.FieldByName('peso_liquido').AsCurrency;
 end;
 
 procedure TfrmGeVendaTransporte.dbVolumePLiquidoExit(Sender: TObject);
@@ -250,6 +263,17 @@ begin
     dtsVendaVolume.DataSet.Post;
     if ( btnVolumeInserir.Visible and btnVolumeInserir.Enabled ) then
       btnVolumeInserir.SetFocus;
+  end;
+end;
+
+procedure TfrmGeVendaTransporte.CarregarValorPadrao;
+begin
+  with qryVolume do
+  begin
+    Close;
+    ParamByName('ano_venda').AsInteger := dtsVendaVolume.DataSet.FieldByName('ANO').AsInteger;
+    ParamByName('num_venda').AsInteger := dtsVendaVolume.DataSet.FieldByName('CODCONTROL').AsInteger;
+    Open;
   end;
 end;
 

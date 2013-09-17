@@ -100,7 +100,7 @@ type
     IbDtstTabelaAPRESENTACAO: TIBStringField;
     IbDtstTabelaDESCRI_APRESENTACAO: TIBStringField;
     IbDtstTabelaPRODUTO_NOVO: TSmallintField;
-    tbsEspecificacaoVeiculo: TTabSheet;
+    TbsEspecificacao: TTabSheet;
     lblApresentacao: TLabel;
     dbApresentacao: TDBEdit;
     dbProdutoNovo: TDBCheckBox;
@@ -121,22 +121,6 @@ type
     dtsCombustivel: TDataSource;
     tblTipoVeiculo: TIBTable;
     dtsTipoVeiculo: TDataSource;
-    lblTipoVeiculo: TLabel;
-    dbTipoVeiculo: TDBLookupComboBox;
-    lblCorVeiculo: TLabel;
-    dbCorVeiculo: TDBLookupComboBox;
-    lblTipoCombustivel: TLabel;
-    dbTipoCombustivel: TDBLookupComboBox;
-    lblRenavam: TLabel;
-    dbRenavam: TDBEdit;
-    lblChassi: TLabel;
-    dbChassi: TDBEdit;
-    lblAnoModelo: TLabel;
-    dbAnoModelo: TDBEdit;
-    lblAnoFabricacao: TLabel;
-    dbAnoFabricacao: TDBEdit;
-    lblKilometragem: TLabel;
-    dbKilometragem: TDBEdit;
     IbDtstTabelaSITUACAO_ATUAL_VEICULO: TIBStringField;
     IbDtstTabelaSITUACAO_HISTORICO_VEICULO: TMemoField;
     lblSituacaoVeiculo: TLabel;
@@ -222,6 +206,36 @@ type
     IbDtstTabelaPRECO_FRAC: TFloatField;
     IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField;
     IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField;
+    pnlVeiculo: TPanel;
+    pnlVolume: TPanel;
+    GrpVolume: TGroupBox;
+    lblPesoBruto: TLabel;
+    dbPesoBruto: TDBEdit;
+    GrpVeiculo: TGroupBox;
+    lblTipoVeiculo: TLabel;
+    dbTipoVeiculo: TDBLookupComboBox;
+    lblRenavam: TLabel;
+    dbRenavam: TDBEdit;
+    lblCorVeiculo: TLabel;
+    dbCorVeiculo: TDBLookupComboBox;
+    lblChassi: TLabel;
+    dbChassi: TDBEdit;
+    lblTipoCombustivel: TLabel;
+    dbTipoCombustivel: TDBLookupComboBox;
+    lblAnoFabricacao: TLabel;
+    dbAnoFabricacao: TDBEdit;
+    lblAnoModelo: TLabel;
+    dbAnoModelo: TDBEdit;
+    lblKilometragem: TLabel;
+    dbKilometragem: TDBEdit;
+    lblPesoLiquido: TLabel;
+    dbPesoLiquido: TDBEdit;
+    lblCubagem: TLabel;
+    dbCubagem: TDBEdit;
+    IbDtstTabelaPESO_BRUTO: TIBBCDField;
+    IbDtstTabelaPESO_LIQUIDO: TIBBCDField;
+    IbDtstTabelaCUBAGEM: TIBBCDField;
+    IbDtstTabelaUSUARIO: TIBStringField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);
@@ -512,7 +526,8 @@ begin
   inherited;
 
   IbDtstTabelaDESCRI_APRESENTACAO.AsString := Trim(IbDtstTabelaDESCRI.AsString + ' ' + IbDtstTabelaAPRESENTACAO.AsString);
-
+  IbDtstTabelaUSUARIO.AsString             := GetUserApp;
+  
   if ( IbDtstTabelaQTDE.AsInteger < 0 ) then
     IbDtstTabelaQTDE.Value := 0;
 
@@ -608,6 +623,9 @@ begin
   IbDtstTabelaPRODUTO_NOVO.Value   := 0;
   IbDtstTabelaPERCENTUAL_MARCKUP.Value := 0;
   IbDtstTabelaPRECO_SUGERIDO.Value     := 0;
+  IbDtstTabelaPESO_BRUTO.AsCurrency    := 0.0;
+  IbDtstTabelaPESO_LIQUIDO.AsCurrency  := 0.0;
+  IbDtstTabelaCUBAGEM.AsCurrency       := 0.0;
 
   IbDtstTabelaFRACIONADOR.Value        := 1;
   IbDtstTabelaVENDA_FRACIONADA.Value   := 0;
@@ -651,34 +669,34 @@ begin
   inherited;
 
   // Configurar Legendas de acordo com o segmento
-  tbsEspecificacaoVeiculo.TabVisible := (GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID);
-  tbsHistoricoVeiculo.TabVisible     := (GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID);
+  pnlVeiculo.Visible             := (GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID);
+  tbsHistoricoVeiculo.TabVisible := (GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID);
 
-  if ( tbsEspecificacaoVeiculo.TabVisible ) then
+  if ( pnlVeiculo.Visible ) then
   begin
     lblReferencia.Caption               := 'Placa:';
     IbDtstTabelaREFERENCIA.DisplayLabel := 'Placa';
   end;
 
-  IbDtstTabelaCOR_VEICULO.Required            := tbsEspecificacaoVeiculo.TabVisible;
-  IbDtstTabelaCOMBUSTIVEL_VEICULO.Required    := tbsEspecificacaoVeiculo.TabVisible;
-  IbDtstTabelaTIPO_VEICULO.Required           := tbsEspecificacaoVeiculo.TabVisible;
-  IbDtstTabelaRENAVAM_VEICULO.Required        := tbsEspecificacaoVeiculo.TabVisible;
-  IbDtstTabelaCHASSI_VEICULO.Required         := tbsEspecificacaoVeiculo.TabVisible;
-  IbDtstTabelaKILOMETRAGEM_VEICULO.Required   := tbsEspecificacaoVeiculo.TabVisible;
-  IbDtstTabelaANO_MODELO_VEICULO.Required     := tbsEspecificacaoVeiculo.TabVisible;
-  IbDtstTabelaANO_FABRICACAO_VEICULO.Required := tbsEspecificacaoVeiculo.TabVisible;
+  IbDtstTabelaCOR_VEICULO.Required            := pnlVeiculo.Visible;
+  IbDtstTabelaCOMBUSTIVEL_VEICULO.Required    := pnlVeiculo.Visible;
+  IbDtstTabelaTIPO_VEICULO.Required           := pnlVeiculo.Visible;
+  IbDtstTabelaRENAVAM_VEICULO.Required        := pnlVeiculo.Visible;
+  IbDtstTabelaCHASSI_VEICULO.Required         := pnlVeiculo.Visible;
+  IbDtstTabelaKILOMETRAGEM_VEICULO.Required   := pnlVeiculo.Visible;
+  IbDtstTabelaANO_MODELO_VEICULO.Required     := pnlVeiculo.Visible;
+  IbDtstTabelaANO_FABRICACAO_VEICULO.Required := pnlVeiculo.Visible;
 
   with dbgDados do
   begin
-    Columns[2].Visible  := not tbsEspecificacaoVeiculo.TabVisible;
-    Columns[4].Visible  := tbsEspecificacaoVeiculo.TabVisible;
-    Columns[5].Visible  := tbsEspecificacaoVeiculo.TabVisible;
-    Columns[6].Visible  := tbsEspecificacaoVeiculo.TabVisible;
-    Columns[7].Visible  := tbsEspecificacaoVeiculo.TabVisible;
-    Columns[8].Visible  := tbsEspecificacaoVeiculo.TabVisible;
-    Columns[9].Visible  := not tbsEspecificacaoVeiculo.TabVisible;
-    Columns[COLUMN_GRUPO].Visible := not tbsEspecificacaoVeiculo.TabVisible;
+    Columns[2].Visible  := not pnlVeiculo.Visible;
+    Columns[4].Visible  := pnlVeiculo.Visible;
+    Columns[5].Visible  := pnlVeiculo.Visible;
+    Columns[6].Visible  := pnlVeiculo.Visible;
+    Columns[7].Visible  := pnlVeiculo.Visible;
+    Columns[8].Visible  := pnlVeiculo.Visible;
+    Columns[9].Visible  := not pnlVeiculo.Visible;
+    Columns[COLUMN_GRUPO].Visible := not pnlVeiculo.Visible;
   end;
 end;
 
@@ -782,10 +800,13 @@ begin
       Exit;
     end
     else
-    if ( (ActiveControl = dbAliquotaCOFINS) and tbsEspecificacaoVeiculo.TabVisible ) then
+    if ( (ActiveControl = dbAliquotaCOFINS) and TbsEspecificacao.TabVisible ) then
     begin
-      pgcMaisDados.ActivePage := tbsEspecificacaoVeiculo;
-      dbTipoVeiculo.SetFocus;
+      pgcMaisDados.ActivePage := TbsEspecificacao;
+      if pnlVeiculo.Visible then
+        dbTipoVeiculo.SetFocus
+      else
+        dbPesoBruto.SetFocus;  
       Exit;
     end
     else

@@ -5163,7 +5163,7 @@ object DMNFe: TDMNFe
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 40401.475989294000000000
-    ReportOptions.LastChange = 41530.481730752310000000
+    ReportOptions.LastChange = 41534.390999918980000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       ''
@@ -5387,6 +5387,7 @@ object DMNFe: TDMNFe
           Memo.UTF8 = (
             '[Titulo."Sacado_NomeSacado"]')
           ParentFont = False
+          WordWrap = False
           VAlign = vaCenter
         end
         object Memo7: TfrxMemoView
@@ -7902,7 +7903,7 @@ object DMNFe: TDMNFe
           Left = 5.303030310000000000
           Top = 941.708410610000000000
           Width = 330.000000000000000000
-          Height = 40.440944880000000000
+          Height = 51.401574800000000000
           ShowHint = False
           BarType = bcCode_2_5_interleaved
           Expression = '<Titulo."CodBarras">'

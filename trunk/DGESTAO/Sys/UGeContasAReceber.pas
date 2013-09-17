@@ -120,6 +120,7 @@ type
     IbDtstTabelaNFE_VENDA: TIBStringField;
     lblNFe: TLabel;
     dbNFe: TDBEdit;
+    IbDtstTabelaEMPRESA: TIBStringField;
     procedure FormCreate(Sender: TObject);
     procedure dbClienteButtonClick(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
@@ -165,7 +166,7 @@ begin
   try
 
     whr :=
-      '( (r.Situacao > 0) and (r.Parcela > 0) ) and (' +
+      '( (r.empresa = ' + QuotedStr(GetEmpresaIDDefault) + ') and (r.Situacao > 0) and (r.Parcela > 0) ) and (' +
       'cast(r.dtvenc as date) between ' + QuotedStr( FormatDateTime('yyyy-mm-dd', frm.e1Data.Date) ) +
       ' and ' + QuotedStr( FormatDateTime('yyyy-mm-dd', frm.e2Data.Date) ) + ')';
 
@@ -209,7 +210,7 @@ begin
   CampoOrdenacao := 'r.dtvenc, c.Nome';
 
   WhereAdditional :=
-    '( (r.Situacao > 0) and (r.Parcela > 0) ) and (' +
+    '( (r.empresa = ' + QuotedStr(GetEmpresaIDDefault) + ') and (r.Situacao > 0) and (r.Parcela > 0) ) and (' +
     'cast(r.dtvenc as date) between ' + QuotedStr( FormatDateTime('yyyy-mm-dd', e1Data.Date) ) +
     ' and ' + QuotedStr( FormatDateTime('yyyy-mm-dd', e2Data.Date) ) + ')';
 
@@ -245,9 +246,10 @@ end;
 procedure TfrmGeContasAReceber.IbDtstTabelaNewRecord(DataSet: TDataSet);
 begin
   inherited;
-  IbDtstTabelaANOLANC.Value := YearOf(Date);
-  IbDtstTabelaPARCELA.Value := 0;
-  IbDtstTabelaDTEMISS.Value := Date;
+  IbDtstTabelaEMPRESA.AsString := GetEmpresaIDDefault;
+  IbDtstTabelaANOLANC.Value    := YearOf(Date);
+  IbDtstTabelaPARCELA.Value    := 0;
+  IbDtstTabelaDTEMISS.Value    := Date;
   IbDtstTabelaFORMA_PAGTO.Value    := GetFormaPagtoIDDefault;
   IbDtstTabelaTIPPAG.Value         := GetFormaPagtoNomeDefault;
   IbDtstTabelaVALORRECTOT.Value     := 0;

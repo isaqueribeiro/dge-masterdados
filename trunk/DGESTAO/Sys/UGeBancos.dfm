@@ -1613,7 +1613,9 @@ inherited frmGeBancos: TfrmGeBancos
       '  BCO_PERCENTUAL_JUROS,'
       '  BCO_PERCENTUAL_MORA,'
       '  BCO_DIA_PROTESTO,'
-      '  BCO_MSG_INSTRUCAO'
+      '  BCO_MSG_INSTRUCAO,'
+      '  BCO_LAYOUT_REMESSA,'
+      '  BCO_LAYOUT_RETORNO'
       'from TBBANCO_BOLETO '
       'where'
       '  BCO_COD = :BCO_COD and'
@@ -1633,6 +1635,8 @@ inherited frmGeBancos: TfrmGeBancos
       '  BCO_DIRETORIO_REMESSA = :BCO_DIRETORIO_REMESSA,'
       '  BCO_DIRETORIO_RETORNO = :BCO_DIRETORIO_RETORNO,'
       '  BCO_GERAR_BOLETO = :BCO_GERAR_BOLETO,'
+      '  BCO_LAYOUT_REMESSA = :BCO_LAYOUT_REMESSA,'
+      '  BCO_LAYOUT_RETORNO = :BCO_LAYOUT_RETORNO,'
       '  BCO_MSG_INSTRUCAO = :BCO_MSG_INSTRUCAO,'
       '  BCO_NOME = :BCO_NOME,'
       '  BCO_NOSSO_NUM_FINAL = :BCO_NOSSO_NUM_FINAL,'
@@ -1654,12 +1658,14 @@ inherited frmGeBancos: TfrmGeBancos
         '   BCO_CONFG_1, BCO_CONFG_2, BCO_DIA_PROTESTO, BCO_DIRETORIO_REM' +
         'ESSA, BCO_DIRETORIO_RETORNO, '
       
-        '   BCO_GERAR_BOLETO, BCO_MSG_INSTRUCAO, BCO_NOME, BCO_NOSSO_NUM_' +
-        'FINAL, '
+        '   BCO_GERAR_BOLETO, BCO_LAYOUT_REMESSA, BCO_LAYOUT_RETORNO, BCO' +
+        '_MSG_INSTRUCAO, '
       
-        '   BCO_NOSSO_NUM_INICIO, BCO_NOSSO_NUM_PROXIMO, BCO_PERCENTUAL_J' +
-        'UROS, BCO_PERCENTUAL_MORA, '
-      '   BCO_SEQUENCIAL_REM, EMPRESA)'
+        '   BCO_NOME, BCO_NOSSO_NUM_FINAL, BCO_NOSSO_NUM_INICIO, BCO_NOSS' +
+        'O_NUM_PROXIMO, '
+      
+        '   BCO_PERCENTUAL_JUROS, BCO_PERCENTUAL_MORA, BCO_SEQUENCIAL_REM' +
+        ', EMPRESA)'
       'values'
       
         '  (:BCO_AGENCIA, :BCO_CARTEIRA, :BCO_CC, :BCO_CHAVE, :BCO_COD, :' +
@@ -1668,14 +1674,15 @@ inherited frmGeBancos: TfrmGeBancos
         '   :BCO_CONFG_1, :BCO_CONFG_2, :BCO_DIA_PROTESTO, :BCO_DIRETORIO' +
         '_REMESSA, '
       
-        '   :BCO_DIRETORIO_RETORNO, :BCO_GERAR_BOLETO, :BCO_MSG_INSTRUCAO' +
-        ', :BCO_NOME, '
+        '   :BCO_DIRETORIO_RETORNO, :BCO_GERAR_BOLETO, :BCO_LAYOUT_REMESS' +
+        'A, :BCO_LAYOUT_RETORNO, '
       
-        '   :BCO_NOSSO_NUM_FINAL, :BCO_NOSSO_NUM_INICIO, :BCO_NOSSO_NUM_P' +
-        'ROXIMO, '
+        '   :BCO_MSG_INSTRUCAO, :BCO_NOME, :BCO_NOSSO_NUM_FINAL, :BCO_NOS' +
+        'SO_NUM_INICIO, '
       
-        '   :BCO_PERCENTUAL_JUROS, :BCO_PERCENTUAL_MORA, :BCO_SEQUENCIAL_' +
-        'REM, :EMPRESA)')
+        '   :BCO_NOSSO_NUM_PROXIMO, :BCO_PERCENTUAL_JUROS, :BCO_PERCENTUA' +
+        'L_MORA, '
+      '   :BCO_SEQUENCIAL_REM, :EMPRESA)')
     DeleteSQL.Strings = (
       'delete from TBBANCO_BOLETO'
       'where'

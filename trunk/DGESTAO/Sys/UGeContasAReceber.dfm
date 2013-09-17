@@ -1,8 +1,9 @@
 inherited frmGeContasAReceber: TfrmGeContasAReceber
-  Left = 673
-  Top = 229
+  Left = 400
+  Top = 104
   Width = 950
   Height = 600
+  ActiveControl = dbCodigo
   Caption = 'Controle de Contas A Receber'
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -94,6 +95,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
   inherited pgcGuias: TPageControl
     Width = 934
     Height = 519
+    ActivePage = tbsCadastro
     OnChange = pgcGuiasChange
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
@@ -1116,6 +1118,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       '    r.Anolanc'
       '  , r.Numlanc'
       '  , r.Parcela'
+      '  , r.Empresa'
       '  , r.Cnpj'
       '  , r.Forma_pagto'
       '  , r.Tippag'
@@ -1173,6 +1176,13 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       DisplayLabel = 'Parcela'
       FieldName = 'PARCELA'
       Origin = 'TBCONTREC.PARCELA'
+    end
+    object IbDtstTabelaEMPRESA: TIBStringField
+      DisplayLabel = 'Empresa'
+      FieldName = 'EMPRESA'
+      Origin = '"TBCONTREC"."EMPRESA"'
+      ProviderFlags = [pfInUpdate]
+      Size = 18
     end
     object IbDtstTabelaCNPJ: TIBStringField
       DisplayLabel = 'Cliente'
@@ -1371,6 +1381,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       'Select '
       '  ANOLANC,'
       '  NUMLANC,'
+      '  EMPRESA,'
       '  CNPJ,'
       '  FORMA_PAGTO,'
       '  TIPPAG,'
@@ -1407,66 +1418,69 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       'update TBCONTREC'
       'set'
       '  ANOLANC = :ANOLANC,'
-      '  NUMLANC = :NUMLANC,'
-      '  PARCELA = :PARCELA,'
+      '  ANOVENDA = :ANOVENDA,'
+      '  BAIXADO = :BAIXADO,'
       '  CNPJ = :CNPJ,'
-      '  FORMA_PAGTO = :FORMA_PAGTO,'
-      '  TIPPAG = :TIPPAG,'
-      '  HISTORIC = :HISTORIC,'
-      '  NUMREC = :NUMREC,'
-      '  DTEMISS = :DTEMISS,'
-      '  DTVENC = :DTVENC,'
-      '  DTREC = :DTREC,'
-      '  DOCBAIX = :DOCBAIX,'
-      '  VALORREC = :VALORREC,'
-      '  VALORMULTA = :VALORMULTA,'
-      '  VALORRECTOT = :VALORRECTOT,'
-      '  NUMCONTRATO = :NUMCONTRATO,'
       '  CODBANCO = :CODBANCO,'
+      '  DATAPROCESSOBOLETO = :DATAPROCESSOBOLETO,'
+      '  DOCBAIX = :DOCBAIX,'
+      '  DTEMISS = :DTEMISS,'
+      '  DTREC = :DTREC,'
+      '  DTVENC = :DTVENC,'
+      '  EMPRESA = :EMPRESA,'
+      '  ENVIADO = :ENVIADO,'
+      '  FORMA_PAGTO = :FORMA_PAGTO,'
+      '  HISTORIC = :HISTORIC,'
       '  NOSSONUMERO = :NOSSONUMERO,'
-      '  REMESSA = :REMESSA,'
-      '  VALORSALDO = :VALORSALDO,'
+      '  NUMCONTRATO = :NUMCONTRATO,'
+      '  NUMLANC = :NUMLANC,'
+      '  NUMREC = :NUMREC,'
+      '  NUMVENDA = :NUMVENDA,'
+      '  PARCELA = :PARCELA,'
+      '  PERCENTDESCONTO = :PERCENTDESCONTO,'
       '  PERCENTJUROS = :PERCENTJUROS,'
       '  PERCENTMULTA = :PERCENTMULTA,'
-      '  PERCENTDESCONTO = :PERCENTDESCONTO,'
-      '  DATAPROCESSOBOLETO = :DATAPROCESSOBOLETO,'
-      '  BAIXADO = :BAIXADO,'
-      '  ENVIADO = :ENVIADO,'
-      '  ANOVENDA = :ANOVENDA,'
-      '  NUMVENDA = :NUMVENDA,'
-      '  SITUACAO = :SITUACAO'
+      '  REMESSA = :REMESSA,'
+      '  SITUACAO = :SITUACAO,'
+      '  TIPPAG = :TIPPAG,'
+      '  VALORMULTA = :VALORMULTA,'
+      '  VALORREC = :VALORREC,'
+      '  VALORRECTOT = :VALORRECTOT,'
+      '  VALORSALDO = :VALORSALDO'
       'where'
       '  ANOLANC = :OLD_ANOLANC and'
       '  NUMLANC = :OLD_NUMLANC')
     InsertSQL.Strings = (
       'insert into TBCONTREC'
       
-        '  (ANOLANC, NUMLANC, PARCELA, CNPJ, FORMA_PAGTO, TIPPAG, HISTORI' +
-        'C, NUMREC, '
+        '  (ANOLANC, ANOVENDA, BAIXADO, CNPJ, CODBANCO, DATAPROCESSOBOLET' +
+        'O, DOCBAIX, '
       
-        '   DTEMISS, DTVENC, DTREC, DOCBAIX, VALORREC, VALORMULTA, VALORR' +
-        'ECTOT, '
+        '   DTEMISS, DTREC, DTVENC, EMPRESA, ENVIADO, FORMA_PAGTO, HISTOR' +
+        'IC, NOSSONUMERO, '
       
-        '   NUMCONTRATO, CODBANCO, NOSSONUMERO, REMESSA, VALORSALDO, PERC' +
-        'ENTJUROS, '
+        '   NUMCONTRATO, NUMLANC, NUMREC, NUMVENDA, PARCELA, PERCENTDESCO' +
+        'NTO, PERCENTJUROS, '
       
-        '   PERCENTMULTA, PERCENTDESCONTO, DATAPROCESSOBOLETO, BAIXADO, E' +
-        'NVIADO, '
-      '   ANOVENDA, NUMVENDA, SITUACAO)'
+        '   PERCENTMULTA, REMESSA, SITUACAO, TIPPAG, VALORMULTA, VALORREC' +
+        ', VALORRECTOT, '
+      '   VALORSALDO)'
       'values'
       
-        '  (:ANOLANC, :NUMLANC, :PARCELA, :CNPJ, :FORMA_PAGTO, :TIPPAG, :' +
-        'HISTORIC, '
+        '  (:ANOLANC, :ANOVENDA, :BAIXADO, :CNPJ, :CODBANCO, :DATAPROCESS' +
+        'OBOLETO, '
       
-        '   :NUMREC, :DTEMISS, :DTVENC, :DTREC, :DOCBAIX, :VALORREC, :VAL' +
-        'ORMULTA, '
+        '   :DOCBAIX, :DTEMISS, :DTREC, :DTVENC, :EMPRESA, :ENVIADO, :FOR' +
+        'MA_PAGTO, '
       
-        '   :VALORRECTOT, :NUMCONTRATO, :CODBANCO, :NOSSONUMERO, :REMESSA' +
-        ', :VALORSALDO, '
+        '   :HISTORIC, :NOSSONUMERO, :NUMCONTRATO, :NUMLANC, :NUMREC, :NU' +
+        'MVENDA, '
       
-        '   :PERCENTJUROS, :PERCENTMULTA, :PERCENTDESCONTO, :DATAPROCESSO' +
-        'BOLETO, '
-      '   :BAIXADO, :ENVIADO, :ANOVENDA, :NUMVENDA, :SITUACAO)')
+        '   :PARCELA, :PERCENTDESCONTO, :PERCENTJUROS, :PERCENTMULTA, :RE' +
+        'MESSA, '
+      
+        '   :SITUACAO, :TIPPAG, :VALORMULTA, :VALORREC, :VALORRECTOT, :VA' +
+        'LORSALDO)')
     DeleteSQL.Strings = (
       'delete from TBCONTREC'
       'where'
@@ -1480,8 +1494,6 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
   object tblEmpresa: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     TableName = 'TBEMPRESA'
     Left = 864
     Top = 8
@@ -1494,8 +1506,6 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
   object tblFormaPagto: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     TableName = 'TBFORMPAGTO'
     Left = 864
     Top = 40
@@ -1508,8 +1518,6 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
   object tblCondicaoPagto: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     TableName = 'VW_CONDICAOPAGTO'
     TableTypes = [ttView]
     Left = 864
@@ -1523,7 +1531,6 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
   object cdsPagamentos: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
     CachedUpdates = True
     RefreshSQL.Strings = (
       '')
@@ -1629,8 +1636,6 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
   object tblBanco: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     TableName = 'TBBANCO_BOLETO'
     TableTypes = [ttView]
     Left = 864
