@@ -492,6 +492,7 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
       '  , r.dataprocessoboleto'
       '  , r.anovenda'
       '  , r.numvenda'
+      '  , r.situacao'
       '  , v.serie'
       '  , v.nfe'
       '  , c.inscest'
@@ -765,6 +766,9 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
       FieldName = 'NFE'
       ProviderFlags = []
     end
+    object CdsTitulosSITUACAO: TSmallintField
+      FieldName = 'SITUACAO'
+    end
     object CdsTitulosNumeroDocumento: TStringField
       FieldKind = fkInternalCalc
       FieldName = 'NumeroDocumento'
@@ -975,6 +979,12 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
           Font.Height = -9
           Font.Name = 'Tahoma'
           Font.Style = []
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = clRed
+          Highlight.Font.Height = -9
+          Highlight.Font.Name = 'Tahoma'
+          Highlight.Font.Style = []
+          Highlight.Condition = '<Remessa."Situacao">=0'
           Memo.UTF8 = (
             '[Remessa."CNPJ"]')
           ParentFont = False
@@ -993,6 +1003,12 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
           Font.Height = -9
           Font.Name = 'Tahoma'
           Font.Style = []
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = clRed
+          Highlight.Font.Height = -9
+          Highlight.Font.Name = 'Tahoma'
+          Highlight.Font.Style = []
+          Highlight.Condition = '<Remessa."Situacao">=0'
           Memo.UTF8 = (
             '[Remessa."Sacado"]')
           ParentFont = False
@@ -1012,6 +1028,12 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
           Font.Name = 'Tahoma'
           Font.Style = []
           HAlign = haCenter
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = clRed
+          Highlight.Font.Height = -9
+          Highlight.Font.Name = 'Tahoma'
+          Highlight.Font.Style = []
+          Highlight.Condition = '<Remessa."Situacao">=0'
           Memo.UTF8 = (
             '[Remessa."Documento"]')
           ParentFont = False
@@ -1031,6 +1053,12 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
           Font.Name = 'Tahoma'
           Font.Style = []
           HAlign = haCenter
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = clRed
+          Highlight.Font.Height = -9
+          Highlight.Font.Name = 'Tahoma'
+          Highlight.Font.Style = []
+          Highlight.Condition = '<Remessa."Situacao">=0'
           Memo.UTF8 = (
             '[Remessa."Data Vencimento"]')
           ParentFont = False
@@ -1050,6 +1078,12 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
           Font.Name = 'Tahoma'
           Font.Style = []
           HAlign = haRight
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = clRed
+          Highlight.Font.Height = -9
+          Highlight.Font.Name = 'Tahoma'
+          Highlight.Font.Style = []
+          Highlight.Condition = '<Remessa."Situacao">=0'
           Memo.UTF8 = (
             '[FormatFloat('#39'###,###,##0.00'#39',<Remessa."Valor Documento">)] ')
           ParentFont = False
@@ -1069,6 +1103,12 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
           Font.Name = 'Tahoma'
           Font.Style = []
           HAlign = haCenter
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = clRed
+          Highlight.Font.Height = -9
+          Highlight.Font.Name = 'Tahoma'
+          Highlight.Font.Style = []
+          Highlight.Condition = '<Remessa."Situacao">=0'
           Memo.UTF8 = (
             '[Remessa."Nosso Numero"]')
           ParentFont = False
@@ -1078,7 +1118,7 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
       end
       object bndPageFooter: TfrxPageFooter
         Height = 7.559060000000000000
-        Top = 343.937230000000000000
+        Top = 362.834880000000000000
         Width = 718.110700000000000000
       end
       object bndHeader: TfrxHeader
@@ -1222,7 +1262,7 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
         end
       end
       object bndReportSummary: TfrxReportSummary
-        Height = 26.456710000000000000
+        Height = 45.354360000000000000
         Top = 294.803340000000000000
         Width = 718.110700000000000000
         object SysMemo1: TfrxSysMemoView
@@ -1264,6 +1304,30 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
           ParentFont = False
           VAlign = vaCenter
         end
+        object Memo7: TfrxMemoView
+          Top = 26.456710000000000000
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdRemessa
+          DataSetName = 'Remessa'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clRed
+          Font.Height = -9
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = clRed
+          Highlight.Font.Height = -9
+          Highlight.Font.Name = 'Tahoma'
+          Highlight.Font.Style = []
+          Highlight.Condition = '<Remessa."Situacao">=0'
+          Memo.UTF8 = (
+            ' * Boleto(s) cancelado(s).')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
       end
     end
   end
@@ -1274,6 +1338,7 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
       'ANOLANC=Ano'
       'NUMLANC=Lancamento'
       'PARCELA=Parcela'
+      'PARCELA_MAXIMA=Parcelas'
       'CODBANCO=Banco'
       'NOSSONUMERO=Nosso Numero'
       'CNPJ=CNPJ'
@@ -1290,17 +1355,20 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
       'INSCEST=INSCEST'
       'NOME=Sacado'
       'FONE=Fone'
-      'ENDER=Endereco'
-      'BAIRRO=Bairro'
-      'CIDADE=Cidade'
-      'UF=UF'
-      'CEP=CEP'
-      'EMAIL=E-mail'
       'ANOVENDA=AnoVenda'
       'NUMVENDA=NumVenda'
       'SERIE=Serie'
       'NFE=NFe'
-      'NumeroDocumento=Documento')
+      'SITUACAO=Situacao'
+      'NumeroDocumento=Documento'
+      'ENDER=Endereco'
+      'ENDER_DESC=ENDER_DESC'
+      'ENDER_NUM=ENDER_NUM'
+      'BAIRRO=Bairro'
+      'CIDADE=Cidade'
+      'UF=UF'
+      'CEP=CEP'
+      'EMAIL=E-mail')
     DataSet = CdsTitulos
     BCDToCurrency = False
     Left = 136

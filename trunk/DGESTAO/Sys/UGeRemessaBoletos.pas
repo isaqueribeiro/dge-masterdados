@@ -114,6 +114,7 @@ type
     CdsTitulosEMAIL: TStringField;
     edInicio: TDateEdit;
     edFinal: TDateEdit;
+    CdsTitulosSITUACAO: TSmallintField;
     procedure FormShow(Sender: TObject);
     procedure edBancoChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -354,17 +355,20 @@ procedure TfrmGeRemessaBoleto.dbgTitulosDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
 begin
- TDbGrid(Sender).Canvas.font.Color := clBlack;
+  TDbGrid(Sender).Canvas.font.Color := clBlack;
 
- if gdSelected in State then
- with (Sender as TDBGrid).Canvas do
- begin
-   Brush.Color :=  clMoneyGreen;
-   FillRect(Rect);
-   Font.Style  := [fsbold]
- end;
+  if gdSelected in State then
+    with (Sender as TDBGrid).Canvas do
+    begin
+      Brush.Color :=  clMoneyGreen;
+      FillRect(Rect);
+      Font.Style  := [fsbold]
+    end;
 
- TDbGrid(Sender).DefaultDrawDataCell(Rect, TDbGrid(Sender).columns[datacol].field, State);
+  if ( CdsTitulosSITUACAO.AsInteger = 0 ) then
+    TDbGrid(Sender).Canvas.Font.Color := clRed;
+
+  TDbGrid(Sender).DefaultDrawDataCell(Rect, TDbGrid(Sender).columns[datacol].field, State);
 end;
 
 function TfrmGeRemessaBoleto.DefinirCedente(Banco, Carteira: Integer;
@@ -812,7 +816,11 @@ begin
           DataProtesto    := (Vencimento + IbQryBancosBCO_DIA_PROTESTO.AsInteger);
         PercentualMulta   := IbQryBancosBCO_PERCENTUAL_JUROS.AsCurrency;  // Percentual de multa por dia de atraso.
 
-        OcorrenciaOriginal.Tipo := toRemessaBaixar;
+        if ( CdsTitulosSITUACAO.AsInteger = 0 ) then     // Cancelado
+          OcorrenciaOriginal.Tipo := toRemessaBaixar
+        else
+        if ( CdsTitulosSITUACAO.AsInteger = 1 ) then     // Ativo
+          OcorrenciaOriginal.Tipo := toRemessaRegistrar;
 
         Instrucao1        := '00';
         Instrucao2        := '00';
