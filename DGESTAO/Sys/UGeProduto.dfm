@@ -3,6 +3,7 @@ inherited frmGeProduto: TfrmGeProduto
   Top = 69
   Width = 977
   Height = 648
+  ActiveControl = dbCodigo
   Caption = 'Cadastro de Produtos/Servi'#231'os'
   OldCreateOrder = True
   OnActivate = FormActivate
@@ -23,6 +24,7 @@ inherited frmGeProduto: TfrmGeProduto
   inherited pgcGuias: TPageControl
     Width = 961
     Height = 567
+    ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
         Top = 472
@@ -752,7 +754,7 @@ inherited frmGeProduto: TfrmGeProduto
         Top = 197
         Width = 953
         Height = 341
-        ActivePage = tbsValores
+        ActivePage = TbsEspecificacao
         Align = alClient
         TabOrder = 2
         object tbsValores: TTabSheet
@@ -1535,209 +1537,314 @@ inherited frmGeProduto: TfrmGeProduto
             end
           end
         end
-        object tbsEspecificacaoVeiculo: TTabSheet
+        object TbsEspecificacao: TTabSheet
           Caption = 'Especifica'#231#245'es'
           ImageIndex = 2
-          object lblTipoVeiculo: TLabel
-            Left = 16
-            Top = 8
-            Width = 24
-            Height = 13
-            Caption = 'Tipo:'
-            FocusControl = dbTipoVeiculo
-          end
-          object lblCorVeiculo: TLabel
-            Left = 248
-            Top = 8
-            Width = 21
-            Height = 13
-            Caption = 'Cor:'
-            FocusControl = dbCorVeiculo
-          end
-          object lblTipoCombustivel: TLabel
-            Left = 480
-            Top = 8
-            Width = 85
-            Height = 13
-            Caption = 'Tipo Combust'#237'vel:'
-            FocusControl = dbTipoCombustivel
-          end
-          object lblRenavam: TLabel
-            Left = 16
-            Top = 48
-            Width = 49
-            Height = 13
-            Caption = 'Renavam:'
-            FocusControl = dbRenavam
-          end
-          object lblChassi: TLabel
-            Left = 248
-            Top = 48
-            Width = 35
-            Height = 13
-            Caption = 'Chassi:'
-            FocusControl = dbChassi
-          end
-          object lblAnoModelo: TLabel
-            Left = 584
-            Top = 48
-            Width = 60
-            Height = 13
-            Caption = 'Ano Modelo:'
-            FocusControl = dbAnoModelo
-          end
-          object lblAnoFabricacao: TLabel
-            Left = 480
-            Top = 48
-            Width = 78
-            Height = 13
-            Caption = 'Ano Fabrica'#231#227'o:'
-            FocusControl = dbAnoFabricacao
-          end
-          object lblKilometragem: TLabel
-            Left = 688
-            Top = 48
-            Width = 68
-            Height = 13
-            Caption = 'Kilometragem:'
-            FocusControl = dbKilometragem
-          end
-          object dbTipoVeiculo: TDBLookupComboBox
-            Left = 16
-            Top = 24
-            Width = 225
-            Height = 21
-            DataField = 'TIPO_VEICULO'
-            DataSource = DtSrcTabela
-            DropDownRows = 10
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            KeyField = 'CODIGO'
-            ListField = 'DESCRICAO'
-            ListSource = dtsTipoVeiculo
-            ParentFont = False
+          object pnlVeiculo: TPanel
+            Left = 0
+            Top = 0
+            Width = 945
+            Height = 113
+            Align = alTop
+            BevelOuter = bvNone
             TabOrder = 0
+            object GrpVeiculo: TGroupBox
+              Left = 0
+              Top = 0
+              Width = 945
+              Height = 113
+              Align = alClient
+              Caption = 'Ve'#237'culo'
+              TabOrder = 0
+              object lblTipoVeiculo: TLabel
+                Left = 16
+                Top = 24
+                Width = 24
+                Height = 13
+                Caption = 'Tipo:'
+                FocusControl = dbTipoVeiculo
+              end
+              object lblRenavam: TLabel
+                Left = 16
+                Top = 64
+                Width = 49
+                Height = 13
+                Caption = 'Renavam:'
+                FocusControl = dbRenavam
+              end
+              object lblCorVeiculo: TLabel
+                Left = 256
+                Top = 24
+                Width = 21
+                Height = 13
+                Caption = 'Cor:'
+                FocusControl = dbCorVeiculo
+              end
+              object lblChassi: TLabel
+                Left = 248
+                Top = 64
+                Width = 35
+                Height = 13
+                Caption = 'Chassi:'
+                FocusControl = dbChassi
+              end
+              object lblTipoCombustivel: TLabel
+                Left = 488
+                Top = 24
+                Width = 85
+                Height = 13
+                Caption = 'Tipo Combust'#237'vel:'
+                FocusControl = dbTipoCombustivel
+              end
+              object lblAnoFabricacao: TLabel
+                Left = 488
+                Top = 64
+                Width = 78
+                Height = 13
+                Caption = 'Ano Fabrica'#231#227'o:'
+                FocusControl = dbAnoFabricacao
+              end
+              object lblAnoModelo: TLabel
+                Left = 592
+                Top = 64
+                Width = 60
+                Height = 13
+                Caption = 'Ano Modelo:'
+                FocusControl = dbAnoModelo
+              end
+              object lblKilometragem: TLabel
+                Left = 696
+                Top = 64
+                Width = 68
+                Height = 13
+                Caption = 'Kilometragem:'
+                FocusControl = dbKilometragem
+              end
+              object dbTipoVeiculo: TDBLookupComboBox
+                Left = 16
+                Top = 40
+                Width = 233
+                Height = 21
+                DataField = 'TIPO_VEICULO'
+                DataSource = DtSrcTabela
+                DropDownRows = 10
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                KeyField = 'CODIGO'
+                ListField = 'DESCRICAO'
+                ListSource = dtsTipoVeiculo
+                ParentFont = False
+                TabOrder = 0
+              end
+              object dbRenavam: TDBEdit
+                Left = 16
+                Top = 80
+                Width = 233
+                Height = 21
+                CharCase = ecUpperCase
+                DataField = 'RENAVAM_VEICULO'
+                DataSource = DtSrcTabela
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 1
+              end
+              object dbCorVeiculo: TDBLookupComboBox
+                Left = 256
+                Top = 40
+                Width = 225
+                Height = 21
+                DataField = 'COR_VEICULO'
+                DataSource = DtSrcTabela
+                DropDownRows = 10
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                KeyField = 'CODIGO'
+                ListField = 'DESCRICAO'
+                ListSource = dtsCor
+                ParentFont = False
+                TabOrder = 2
+              end
+              object dbChassi: TDBEdit
+                Left = 256
+                Top = 80
+                Width = 225
+                Height = 21
+                CharCase = ecUpperCase
+                DataField = 'CHASSI_VEICULO'
+                DataSource = DtSrcTabela
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 3
+              end
+              object dbTipoCombustivel: TDBLookupComboBox
+                Left = 488
+                Top = 40
+                Width = 441
+                Height = 21
+                DataField = 'COMBUSTIVEL_VEICULO'
+                DataSource = DtSrcTabela
+                DropDownRows = 10
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                KeyField = 'CODIGO'
+                ListField = 'DESCRICAO'
+                ListSource = dtsCombustivel
+                ParentFont = False
+                TabOrder = 4
+              end
+              object dbAnoFabricacao: TDBEdit
+                Left = 488
+                Top = 80
+                Width = 97
+                Height = 21
+                CharCase = ecUpperCase
+                DataField = 'ANO_FABRICACAO_VEICULO'
+                DataSource = DtSrcTabela
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 5
+              end
+              object dbAnoModelo: TDBEdit
+                Left = 592
+                Top = 80
+                Width = 97
+                Height = 21
+                CharCase = ecUpperCase
+                DataField = 'ANO_MODELO_VEICULO'
+                DataSource = DtSrcTabela
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 6
+              end
+              object dbKilometragem: TDBEdit
+                Left = 696
+                Top = 80
+                Width = 97
+                Height = 21
+                CharCase = ecUpperCase
+                DataField = 'KILOMETRAGEM_VEICULO'
+                DataSource = DtSrcTabela
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 7
+              end
+            end
           end
-          object dbCorVeiculo: TDBLookupComboBox
-            Left = 248
-            Top = 24
-            Width = 225
-            Height = 21
-            DataField = 'COR_VEICULO'
-            DataSource = DtSrcTabela
-            DropDownRows = 10
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            KeyField = 'CODIGO'
-            ListField = 'DESCRICAO'
-            ListSource = dtsCor
-            ParentFont = False
+          object pnlVolume: TPanel
+            Left = 0
+            Top = 113
+            Width = 945
+            Height = 64
+            Align = alTop
+            BevelOuter = bvNone
             TabOrder = 1
-          end
-          object dbTipoCombustivel: TDBLookupComboBox
-            Left = 480
-            Top = 24
-            Width = 449
-            Height = 21
-            DataField = 'COMBUSTIVEL_VEICULO'
-            DataSource = DtSrcTabela
-            DropDownRows = 10
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            KeyField = 'CODIGO'
-            ListField = 'DESCRICAO'
-            ListSource = dtsCombustivel
-            ParentFont = False
-            TabOrder = 2
-          end
-          object dbRenavam: TDBEdit
-            Left = 16
-            Top = 64
-            Width = 225
-            Height = 21
-            CharCase = ecUpperCase
-            DataField = 'RENAVAM_VEICULO'
-            DataSource = DtSrcTabela
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 3
-          end
-          object dbChassi: TDBEdit
-            Left = 248
-            Top = 64
-            Width = 225
-            Height = 21
-            CharCase = ecUpperCase
-            DataField = 'CHASSI_VEICULO'
-            DataSource = DtSrcTabela
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 4
-          end
-          object dbAnoModelo: TDBEdit
-            Left = 584
-            Top = 64
-            Width = 97
-            Height = 21
-            CharCase = ecUpperCase
-            DataField = 'ANO_MODELO_VEICULO'
-            DataSource = DtSrcTabela
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 6
-          end
-          object dbAnoFabricacao: TDBEdit
-            Left = 480
-            Top = 64
-            Width = 97
-            Height = 21
-            CharCase = ecUpperCase
-            DataField = 'ANO_FABRICACAO_VEICULO'
-            DataSource = DtSrcTabela
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 5
-          end
-          object dbKilometragem: TDBEdit
-            Left = 688
-            Top = 64
-            Width = 97
-            Height = 21
-            CharCase = ecUpperCase
-            DataField = 'KILOMETRAGEM_VEICULO'
-            DataSource = DtSrcTabela
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 7
+            object GrpVolume: TGroupBox
+              Left = 0
+              Top = 0
+              Width = 945
+              Height = 64
+              Align = alClient
+              Caption = 'Peso / Volume'
+              TabOrder = 0
+              object lblPesoBruto: TLabel
+                Left = 16
+                Top = 16
+                Width = 79
+                Height = 13
+                Caption = 'Peso bruto (Kg):'
+                FocusControl = dbPesoBruto
+              end
+              object lblPesoLiquido: TLabel
+                Left = 136
+                Top = 16
+                Width = 83
+                Height = 13
+                Caption = 'Peso l'#237'quido (Kg):'
+                FocusControl = dbPesoLiquido
+              end
+              object lblCubagem: TLabel
+                Left = 256
+                Top = 16
+                Width = 74
+                Height = 13
+                Caption = 'Cubagem (m3):'
+                FocusControl = dbCubagem
+              end
+              object dbPesoBruto: TDBEdit
+                Left = 16
+                Top = 32
+                Width = 113
+                Height = 21
+                DataField = 'PESO_BRUTO'
+                DataSource = DtSrcTabela
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 0
+              end
+              object dbPesoLiquido: TDBEdit
+                Left = 136
+                Top = 32
+                Width = 113
+                Height = 21
+                DataField = 'PESO_LIQUIDO'
+                DataSource = DtSrcTabela
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 1
+              end
+              object dbCubagem: TDBEdit
+                Left = 256
+                Top = 32
+                Width = 113
+                Height = 21
+                DataField = 'CUBAGEM'
+                DataSource = DtSrcTabela
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'MS Sans Serif'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 2
+              end
+            end
           end
         end
         object tbsHistoricoVeiculo: TTabSheet
@@ -2039,6 +2146,9 @@ inherited frmGeProduto: TfrmGeProduto
       '  , p.Unidade'
       '  , p.Estoqmin'
       '  , p.fracionador'
+      '  , p.peso_bruto'
+      '  , p.peso_liquido'
+      '  , p.cubagem'
       '  , p.venda_fracionada'
       '  , p.codunidade_fracionada'
       '  , p.Codgrupo'
@@ -2077,6 +2187,7 @@ inherited frmGeProduto: TfrmGeProduto
       '  , p.Situacao_atual_veiculo'
       '  , p.Situacao_historico_veiculo'
       '  , p.Percentual_reducao_BC'
+      '  , p.Usuario'
       '  , case when coalesce(p.Reserva, 0) > 0'
       '      then coalesce(p.Qtde, 0) - coalesce(p.Reserva, 0)'
       '      else coalesce(p.Qtde, 0)'
@@ -2461,6 +2572,33 @@ inherited frmGeProduto: TfrmGeProduto
       DisplayLabel = 'Dispon'#237'vel'
       FieldName = 'DISPONIVEL'
     end
+    object IbDtstTabelaPESO_BRUTO: TIBBCDField
+      DisplayLabel = 'Peso Bruto (Kg)'
+      FieldName = 'PESO_BRUTO'
+      Origin = '"TBPRODUTO"."PESO_BRUTO"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.00#'
+      Precision = 18
+      Size = 3
+    end
+    object IbDtstTabelaPESO_LIQUIDO: TIBBCDField
+      DisplayLabel = 'Peso L'#237'quido (Kg)'
+      FieldName = 'PESO_LIQUIDO'
+      Origin = '"TBPRODUTO"."PESO_LIQUIDO"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.00#'
+      Precision = 18
+      Size = 3
+    end
+    object IbDtstTabelaCUBAGEM: TIBBCDField
+      DisplayLabel = 'Cubagem (m3)'
+      FieldName = 'CUBAGEM'
+      Origin = '"TBPRODUTO"."CUBAGEM"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.000#'
+      Precision = 18
+      Size = 4
+    end
     object IbDtstTabelaDESCRICAO_GRUPO: TIBStringField
       DisplayLabel = 'Grupo'
       FieldName = 'DESCRICAO_GRUPO'
@@ -2565,6 +2703,12 @@ inherited frmGeProduto: TfrmGeProduto
       ProviderFlags = []
       DisplayFormat = ',0.00'
     end
+    object IbDtstTabelaUSUARIO: TIBStringField
+      FieldName = 'USUARIO'
+      Origin = '"TBPRODUTO"."USUARIO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 50
+    end
   end
   inherited DtSrcTabela: TDataSource
     OnDataChange = DtSrcTabelaDataChange
@@ -2584,12 +2728,19 @@ inherited frmGeProduto: TfrmGeProduto
       '  REFERENCIA,'
       '  SECAO,'
       '  QTDE,'
+      '  FRACIONADOR,'
+      '  PESO_BRUTO,'
+      '  PESO_LIQUIDO,'
+      '  CUBAGEM,'
+      '  VENDA_FRACIONADA,'
+      '  CODUNIDADE_FRACIONADA,'
       '  UNIDADE,'
       '  ESTOQMIN,'
       '  CODGRUPO,'
       '  CODFABRICANTE,'
       '  CUSTOMEDIO,'
       '  PERCENTUAL_MARCKUP,'
+      '  PERCENTUAL_MARGEM,'
       '  PRECO_SUGERIDO,'
       '  CODEMP,'
       '  CODSECAO,'
@@ -2621,7 +2772,8 @@ inherited frmGeProduto: TfrmGeProduto
       '  KILOMETRAGEM_VEICULO,'
       '  SITUACAO_ATUAL_VEICULO,'
       '  SITUACAO_HISTORICO_VEICULO,'
-      '  PERCENTUAL_REDUCAO_BC'
+      '  PERCENTUAL_REDUCAO_BC,'
+      '  USUARIO'
       'from TBPRODUTO '
       'where'
       '  CODIGO = :CODIGO')
@@ -2648,22 +2800,27 @@ inherited frmGeProduto: TfrmGeProduto
       '  CODSECAO = :CODSECAO,'
       '  CODTRIBUTACAO = :CODTRIBUTACAO,'
       '  CODUNIDADE = :CODUNIDADE,'
+      '  CODUNIDADE_FRACIONADA = :CODUNIDADE_FRACIONADA,'
       '  COMBUSTIVEL_VEICULO = :COMBUSTIVEL_VEICULO,'
       '  COR_VEICULO = :COR_VEICULO,'
       '  CSOSN = :CSOSN,'
       '  CST = :CST,'
       '  CST_COFINS = :CST_COFINS,'
       '  CST_PIS = :CST_PIS,'
+      '  CUBAGEM = :CUBAGEM,'
       '  CUSTOMEDIO = :CUSTOMEDIO,'
       '  DESCRI = :DESCRI,'
       '  DESCRI_APRESENTACAO = :DESCRI_APRESENTACAO,'
       '  ESTOQMIN = :ESTOQMIN,'
+      '  FRACIONADOR = :FRACIONADOR,'
       '  KILOMETRAGEM_VEICULO = :KILOMETRAGEM_VEICULO,'
       '  MODELO = :MODELO,'
       '  NCM_SH = :NCM_SH,'
       '  PERCENTUAL_MARCKUP = :PERCENTUAL_MARCKUP,'
       '  PERCENTUAL_MARGEM = :PERCENTUAL_MARGEM,'
       '  PERCENTUAL_REDUCAO_BC = :PERCENTUAL_REDUCAO_BC,'
+      '  PESO_BRUTO = :PESO_BRUTO,'
+      '  PESO_LIQUIDO = :PESO_LIQUIDO,'
       '  PRECO = :PRECO,'
       '  PRECO_PROMOCAO = :PRECO_PROMOCAO,'
       '  PRECO_SUGERIDO = :PRECO_SUGERIDO,'
@@ -2677,10 +2834,9 @@ inherited frmGeProduto: TfrmGeProduto
       '  SITUACAO_HISTORICO_VEICULO = :SITUACAO_HISTORICO_VEICULO,'
       '  TIPO_VEICULO = :TIPO_VEICULO,'
       '  UNIDADE = :UNIDADE,'
+      '  USUARIO = :USUARIO,'
       '  VALOR_IPI = :VALOR_IPI,'
-      '  FRACIONADOR = :FRACIONADOR,'
-      '  VENDA_FRACIONADA = :VENDA_FRACIONADA,'
-      '  CODUNIDADE_FRACIONADA = :CODUNIDADE_FRACIONADA'
+      '  VENDA_FRACIONADA = :VENDA_FRACIONADA'
       'where'
       '  CODIGO = :OLD_CODIGO')
     InsertSQL.Strings = (
@@ -2695,53 +2851,61 @@ inherited frmGeProduto: TfrmGeProduto
         '   COD, CODBARRA_EAN, CODCFOP, CODEMP, CODFABRICANTE, CODGRUPO, ' +
         'CODIGO, '
       
-        '   CODORIGEM, CODSECAO, CODTRIBUTACAO, CODUNIDADE, COMBUSTIVEL_V' +
-        'EICULO, '
+        '   CODORIGEM, CODSECAO, CODTRIBUTACAO, CODUNIDADE, CODUNIDADE_FR' +
+        'ACIONADA, '
       
-        '   COR_VEICULO, CSOSN, CST, CST_COFINS, CST_PIS, CUSTOMEDIO, DES' +
-        'CRI, DESCRI_APRESENTACAO, '
+        '   COMBUSTIVEL_VEICULO, COR_VEICULO, CSOSN, CST, CST_COFINS, CST' +
+        '_PIS, CUBAGEM, '
       
-        '   ESTOQMIN, KILOMETRAGEM_VEICULO, MODELO, NCM_SH, PERCENTUAL_MA' +
-        'RCKUP, PERCENTUAL_MARGEM,'
+        '   CUSTOMEDIO, DESCRI, DESCRI_APRESENTACAO, ESTOQMIN, FRACIONADO' +
+        'R, KILOMETRAGEM_VEICULO, '
       
-        '   PERCENTUAL_REDUCAO_BC, PRECO, PRECO_PROMOCAO, PRECO_SUGERIDO,' +
-        ' PRODUTO_NOVO, '
+        '   MODELO, NCM_SH, PERCENTUAL_MARCKUP, PERCENTUAL_MARGEM, PERCEN' +
+        'TUAL_REDUCAO_BC, '
+      
+        '   PESO_BRUTO, PESO_LIQUIDO, PRECO, PRECO_PROMOCAO, PRECO_SUGERI' +
+        'DO, PRODUTO_NOVO, '
       
         '   QTDE, REFERENCIA, RENAVAM_VEICULO, RESERVA, SECAO, SITUACAO_A' +
         'TUAL_VEICULO, '
-      '   SITUACAO_HISTORICO_VEICULO, TIPO_VEICULO, UNIDADE, VALOR_IPI,'
-      '   FRACIONADOR, VENDA_FRACIONADA, CODUNIDADE_FRACIONADA)'
+      
+        '   SITUACAO_HISTORICO_VEICULO, TIPO_VEICULO, UNIDADE, USUARIO, V' +
+        'ALOR_IPI, '
+      '   VENDA_FRACIONADA)'
       'values'
       
         '  (:ALIQUOTA, :ALIQUOTA_COFINS, :ALIQUOTA_CSOSN, :ALIQUOTA_PIS, ' +
-        ':ALIQUOTA_TIPO,'
+        ':ALIQUOTA_TIPO, '
       
         '   :ANO_FABRICACAO_VEICULO, :ANO_MODELO_VEICULO, :APRESENTACAO, ' +
-        ':CHASSI_VEICULO,'
+        ':CHASSI_VEICULO, '
       
         '   :COD, :CODBARRA_EAN, :CODCFOP, :CODEMP, :CODFABRICANTE, :CODG' +
-        'RUPO, :CODIGO,'
+        'RUPO, :CODIGO, '
       
-        '   :CODORIGEM, :CODSECAO, :CODTRIBUTACAO, :CODUNIDADE, :COMBUSTI' +
-        'VEL_VEICULO,'
+        '   :CODORIGEM, :CODSECAO, :CODTRIBUTACAO, :CODUNIDADE, :CODUNIDA' +
+        'DE_FRACIONADA, '
       
-        '   :COR_VEICULO, :CSOSN, :CST, :CST_COFINS, :CST_PIS, :CUSTOMEDI' +
-        'O, :DESCRI,'
+        '   :COMBUSTIVEL_VEICULO, :COR_VEICULO, :CSOSN, :CST, :CST_COFINS' +
+        ', :CST_PIS, '
       
-        '   :DESCRI_APRESENTACAO, :ESTOQMIN, :KILOMETRAGEM_VEICULO, :MODE' +
-        'LO, :NCM_SH,'
+        '   :CUBAGEM, :CUSTOMEDIO, :DESCRI, :DESCRI_APRESENTACAO, :ESTOQM' +
+        'IN, :FRACIONADOR, '
       
-        '   :PERCENTUAL_MARCKUP, :PERCENTUAL_MARGEM, :PERCENTUAL_REDUCAO_' +
-        'BC, :PRECO, :PRECO_PROMOCAO,'
+        '   :KILOMETRAGEM_VEICULO, :MODELO, :NCM_SH, :PERCENTUAL_MARCKUP,' +
+        ' :PERCENTUAL_MARGEM, '
+      
+        '   :PERCENTUAL_REDUCAO_BC, :PESO_BRUTO, :PESO_LIQUIDO, :PRECO, :' +
+        'PRECO_PROMOCAO, '
       
         '   :PRECO_SUGERIDO, :PRODUTO_NOVO, :QTDE, :REFERENCIA, :RENAVAM_' +
-        'VEICULO,'
+        'VEICULO, '
       
         '   :RESERVA, :SECAO, :SITUACAO_ATUAL_VEICULO, :SITUACAO_HISTORIC' +
-        'O_VEICULO,'
+        'O_VEICULO, '
       
-        '   :TIPO_VEICULO, :UNIDADE, :VALOR_IPI, :FRACIONADOR, :VENDA_FRA' +
-        'CIONADA, :CODUNIDADE_FRACIONADA)')
+        '   :TIPO_VEICULO, :UNIDADE, :USUARIO, :VALOR_IPI, :VENDA_FRACION' +
+        'ADA)')
     DeleteSQL.Strings = (
       'delete from TBPRODUTO'
       'where'
@@ -2754,8 +2918,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblEmpresa: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     TableName = 'TBEMPRESA'
     Left = 296
   end
@@ -2766,8 +2928,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblOrigem: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'ORP_COD'
@@ -2804,8 +2964,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTributacaoNM: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'TPT_COD'
@@ -2846,8 +3004,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblAliquota: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -2889,8 +3045,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTributacaoSN: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'TPT_COD'
@@ -2929,8 +3083,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblCor: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -2953,8 +3105,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblCombustivel: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -2979,8 +3129,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTipoVeiculo: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3014,8 +3162,6 @@ inherited frmGeProduto: TfrmGeProduto
   object qryAliquotaPIS: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (
@@ -3032,8 +3178,6 @@ inherited frmGeProduto: TfrmGeProduto
   object qryAliquotaCOFINS: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (

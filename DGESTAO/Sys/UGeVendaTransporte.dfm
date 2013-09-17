@@ -1,6 +1,6 @@
 inherited frmGeVendaTransporte: TfrmGeVendaTransporte
-  Left = 802
-  Top = 288
+  Left = 610
+  Top = 236
   BorderStyle = bsDialog
   BorderWidth = 4
   Caption = 'Controle de Vendas - Dados Transportadora'
@@ -521,9 +521,9 @@ inherited frmGeVendaTransporte: TfrmGeVendaTransporte
       object lblVolumeNumero: TLabel
         Left = 86
         Top = 16
-        Width = 41
+        Width = 62
         Height = 13
-        Caption = 'N'#250'mero:'
+        Caption = 'Nro. Volume:'
         FocusControl = dbVolumeNumero
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -1067,7 +1067,7 @@ inherited frmGeVendaTransporte: TfrmGeVendaTransporte
         item
           Expanded = False
           FieldName = 'NUMERO'
-          Title.Caption = 'Volume'
+          Title.Caption = 'Nro. Volume'
           Width = 100
           Visible = True
         end
@@ -1215,5 +1215,34 @@ inherited frmGeVendaTransporte: TfrmGeVendaTransporte
     OnStateChange = dtsVendaVolumeStateChange
     Left = 104
     Top = 317
+  end
+  object qryVolume: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'Select'
+      '    sum( v.qtde ) as quantidade'
+      '  , sum( v.qtde * coalesce(p.peso_bruto, 0) )   as peso_bruto'
+      '  , sum( v.qtde * coalesce(p.peso_liquido, 0) ) as peso_liquido'
+      '  , sum( v.qtde * coalesce(p.cubagem, 0) )      as volume'
+      'from TVENDASITENS v'
+      '  inner join TBPRODUTO p on (p.cod = v.codprod)'
+      'where v.ano = :ano_venda'
+      '  and v.codcontrol = :num_venda')
+    Left = 384
+    Top = 257
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'ano_venda'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftInteger
+        Name = 'num_venda'
+        ParamType = ptInput
+        Value = 0
+      end>
   end
 end

@@ -2879,7 +2879,7 @@ inherited frmGeVenda: TfrmGeVenda
               item
                 Expanded = False
                 FieldName = 'NUMERO'
-                Title.Caption = 'Volume'
+                Title.Caption = 'Nro. Volume'
                 Width = 100
                 Visible = True
               end
@@ -4337,6 +4337,11 @@ inherited frmGeVenda: TfrmGeVenda
     ParamData = <
       item
         DataType = ftString
+        Name = 'EMPRESA'
+        ParamType = ptOutput
+      end
+      item
+        DataType = ftString
         Name = 'CLIENTE'
         ParamType = ptOutput
       end
@@ -4373,6 +4378,11 @@ inherited frmGeVenda: TfrmGeVenda
       item
         DataType = ftSmallint
         Name = 'FORMA_PAGTO'
+        ParamType = ptOutput
+      end
+      item
+        DataType = ftDate
+        Name = 'DATA_FINALIZ_VENDA'
         ParamType = ptOutput
       end
       item

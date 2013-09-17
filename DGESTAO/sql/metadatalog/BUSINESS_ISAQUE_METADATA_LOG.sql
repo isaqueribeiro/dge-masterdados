@@ -9887,3 +9887,1287 @@ Select
 from RDB$DATABASE
 ;
 
+
+
+
+/*------ SYSDBA 16/09/2013 23:13:50 --------*/
+
+ALTER TABLE TBPRODUTO
+    ADD PESO_BRUTO DMN_MONEY_DESCONTO,
+    ADD PESO_LIQUIDO DMN_MONEY_DESCONTO,
+    ADD CUBAGEM DMN_MONEY_DESCONTO;
+
+COMMENT ON COLUMN TBPRODUTO.PESO_BRUTO IS
+'Peso bruto (Kg).';
+
+COMMENT ON COLUMN TBPRODUTO.PESO_LIQUIDO IS
+'Peso liquido (Kg).';
+
+COMMENT ON COLUMN TBPRODUTO.CUBAGEM IS
+'Cubagem (m3).';
+
+alter table TBPRODUTO
+alter CODIGO position 1;
+
+alter table TBPRODUTO
+alter COD position 2;
+
+alter table TBPRODUTO
+alter DESCRI position 3;
+
+alter table TBPRODUTO
+alter APRESENTACAO position 4;
+
+alter table TBPRODUTO
+alter DESCRI_APRESENTACAO position 5;
+
+alter table TBPRODUTO
+alter MODELO position 6;
+
+alter table TBPRODUTO
+alter PRECO position 7;
+
+alter table TBPRODUTO
+alter PRECO_PROMOCAO position 8;
+
+alter table TBPRODUTO
+alter REFERENCIA position 9;
+
+alter table TBPRODUTO
+alter SECAO position 10;
+
+alter table TBPRODUTO
+alter QTDE position 11;
+
+alter table TBPRODUTO
+alter FRACIONADOR position 12;
+
+alter table TBPRODUTO
+alter PESO_BRUTO position 13;
+
+alter table TBPRODUTO
+alter PESO_LIQUIDO position 14;
+
+alter table TBPRODUTO
+alter CUBAGEM position 15;
+
+alter table TBPRODUTO
+alter VENDA_FRACIONADA position 16;
+
+alter table TBPRODUTO
+alter CODUNIDADE_FRACIONADA position 17;
+
+alter table TBPRODUTO
+alter UNIDADE position 18;
+
+alter table TBPRODUTO
+alter ESTOQMIN position 19;
+
+alter table TBPRODUTO
+alter CODGRUPO position 20;
+
+alter table TBPRODUTO
+alter CODFABRICANTE position 21;
+
+alter table TBPRODUTO
+alter CUSTOMEDIO position 22;
+
+alter table TBPRODUTO
+alter PERCENTUAL_MARCKUP position 23;
+
+alter table TBPRODUTO
+alter PERCENTUAL_MARGEM position 24;
+
+alter table TBPRODUTO
+alter PRECO_SUGERIDO position 25;
+
+alter table TBPRODUTO
+alter CODEMP position 26;
+
+alter table TBPRODUTO
+alter CODSECAO position 27;
+
+alter table TBPRODUTO
+alter CODORIGEM position 28;
+
+alter table TBPRODUTO
+alter CODTRIBUTACAO position 29;
+
+alter table TBPRODUTO
+alter CST position 30;
+
+alter table TBPRODUTO
+alter CSOSN position 31;
+
+alter table TBPRODUTO
+alter CST_PIS position 32;
+
+alter table TBPRODUTO
+alter CST_COFINS position 33;
+
+alter table TBPRODUTO
+alter NCM_SH position 34;
+
+alter table TBPRODUTO
+alter CODCFOP position 35;
+
+alter table TBPRODUTO
+alter CODBARRA_EAN position 36;
+
+alter table TBPRODUTO
+alter CODUNIDADE position 37;
+
+alter table TBPRODUTO
+alter ALIQUOTA_TIPO position 38;
+
+alter table TBPRODUTO
+alter ALIQUOTA position 39;
+
+alter table TBPRODUTO
+alter ALIQUOTA_CSOSN position 40;
+
+alter table TBPRODUTO
+alter ALIQUOTA_PIS position 41;
+
+alter table TBPRODUTO
+alter ALIQUOTA_COFINS position 42;
+
+alter table TBPRODUTO
+alter VALOR_IPI position 43;
+
+alter table TBPRODUTO
+alter RESERVA position 44;
+
+alter table TBPRODUTO
+alter PRODUTO_NOVO position 45;
+
+alter table TBPRODUTO
+alter COR_VEICULO position 46;
+
+alter table TBPRODUTO
+alter COMBUSTIVEL_VEICULO position 47;
+
+alter table TBPRODUTO
+alter TIPO_VEICULO position 48;
+
+alter table TBPRODUTO
+alter ANO_MODELO_VEICULO position 49;
+
+alter table TBPRODUTO
+alter ANO_FABRICACAO_VEICULO position 50;
+
+alter table TBPRODUTO
+alter RENAVAM_VEICULO position 51;
+
+alter table TBPRODUTO
+alter CHASSI_VEICULO position 52;
+
+alter table TBPRODUTO
+alter KILOMETRAGEM_VEICULO position 53;
+
+alter table TBPRODUTO
+alter SITUACAO_ATUAL_VEICULO position 54;
+
+alter table TBPRODUTO
+alter SITUACAO_HISTORICO_VEICULO position 55;
+
+alter table TBPRODUTO
+alter PERCENTUAL_REDUCAO_BC position 56;
+
+alter table TBPRODUTO
+alter USUARIO position 57;
+
+
+
+
+/*------ SYSDBA 16/09/2013 23:14:54 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_MONEY_DESCONTO_4'
+where (RDB$FIELD_NAME = 'CUBAGEM') and
+(RDB$RELATION_NAME = 'TBPRODUTO')
+;
+
+
+
+
+/*------ SYSDBA 17/09/2013 00:37:00 --------*/
+
+ALTER TABLE TBCONTREC
+    ADD EMPRESA DMN_CNPJ;
+
+COMMENT ON COLUMN TBCONTREC.EMPRESA IS
+'Empresa.';
+
+alter table TBCONTREC
+alter ANOLANC position 1;
+
+alter table TBCONTREC
+alter NUMLANC position 2;
+
+alter table TBCONTREC
+alter EMPRESA position 3;
+
+alter table TBCONTREC
+alter CNPJ position 4;
+
+alter table TBCONTREC
+alter FORMA_PAGTO position 5;
+
+alter table TBCONTREC
+alter TIPPAG position 6;
+
+alter table TBCONTREC
+alter HISTORIC position 7;
+
+alter table TBCONTREC
+alter NUMREC position 8;
+
+alter table TBCONTREC
+alter DTEMISS position 9;
+
+alter table TBCONTREC
+alter DTVENC position 10;
+
+alter table TBCONTREC
+alter DTREC position 11;
+
+alter table TBCONTREC
+alter DOCBAIX position 12;
+
+alter table TBCONTREC
+alter VALORREC position 13;
+
+alter table TBCONTREC
+alter VALORMULTA position 14;
+
+alter table TBCONTREC
+alter VALORRECTOT position 15;
+
+alter table TBCONTREC
+alter NUMCONTRATO position 16;
+
+alter table TBCONTREC
+alter PARCELA position 17;
+
+alter table TBCONTREC
+alter STATUS position 18;
+
+alter table TBCONTREC
+alter CODBANCO position 19;
+
+alter table TBCONTREC
+alter NOSSONUMERO position 20;
+
+alter table TBCONTREC
+alter REMESSA position 21;
+
+alter table TBCONTREC
+alter VALORSALDO position 22;
+
+alter table TBCONTREC
+alter PERCENTJUROS position 23;
+
+alter table TBCONTREC
+alter PERCENTMULTA position 24;
+
+alter table TBCONTREC
+alter PERCENTDESCONTO position 25;
+
+alter table TBCONTREC
+alter DATAPROCESSOBOLETO position 26;
+
+alter table TBCONTREC
+alter BAIXADO position 27;
+
+alter table TBCONTREC
+alter ENVIADO position 28;
+
+alter table TBCONTREC
+alter ANOVENDA position 29;
+
+alter table TBCONTREC
+alter NUMVENDA position 30;
+
+alter table TBCONTREC
+alter SITUACAO position 31;
+
+
+
+
+/*------ SYSDBA 17/09/2013 00:40:05 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER procedure SET_GERAR_TITULOS (
+    ANOVENDA smallint,
+    NUMVENDA integer)
+returns (
+    EMPRESA varchar(18),
+    CLIENTE varchar(18),
+    PARCELAS smallint,
+    VALOR_TOTAL numeric(15,2),
+    PARCELA smallint,
+    EMISSAO date,
+    VENCIMENTO date,
+    VALOR_DOCUMENTO numeric(15,2),
+    FORMA_PAGTO smallint,
+    DATA_FINALIZ_VENDA date,
+    ANO_LANC smallint,
+    NUM_LANC integer)
+as
+declare variable P01 smallint;
+declare variable P02 smallint;
+declare variable P03 smallint;
+declare variable P04 smallint;
+declare variable P05 smallint;
+declare variable P06 smallint;
+declare variable P07 smallint;
+declare variable P08 smallint;
+declare variable P09 smallint;
+declare variable P10 smallint;
+declare variable P11 smallint;
+declare variable P12 smallint;
+declare variable VALOR_TOTAL_PARCELAS numeric(15,2);
+begin
+  for
+    Select
+        x.codemp
+      , x.Codcli
+      , coalesce(v.Prazo_01, 0)
+      , v.Prazo_02
+      , v.Prazo_03
+      , v.Prazo_04
+      , v.Prazo_05
+      , v.Prazo_06
+      , v.Prazo_07
+      , v.Prazo_08
+      , v.Prazo_09
+      , v.Prazo_10
+      , v.Prazo_11
+      , v.Prazo_12
+      , case when coalesce(v.Prazo_01, 0) is not null then 1 else 0 end +
+        case when v.Prazo_02 is not null then 1 else 0 end +
+        case when v.Prazo_03 is not null then 1 else 0 end +
+        case when v.Prazo_04 is not null then 1 else 0 end +
+        case when v.Prazo_05 is not null then 1 else 0 end +
+        case when v.Prazo_06 is not null then 1 else 0 end +
+        case when v.Prazo_07 is not null then 1 else 0 end +
+        case when v.Prazo_08 is not null then 1 else 0 end +
+        case when v.Prazo_09 is not null then 1 else 0 end +
+        case when v.Prazo_10 is not null then 1 else 0 end +
+        case when v.Prazo_11 is not null then 1 else 0 end +
+        case when v.Prazo_12 is not null then 1 else 0 end as parcelas
+      , v.valor_fpagto
+      , v.Formapagto_cod
+      , x.Dtfinalizacao_venda
+    from TBVENDAS x
+      inner join TBVENDAS_FORMAPAGTO v on (v.ano_venda = x.ano and v.controle_venda = x.codcontrol)
+    where x.Ano        = :Anovenda
+      and x.Codcontrol = :Numvenda
+    into
+        empresa
+      , cliente
+      , p01
+      , p02
+      , p03
+      , p04
+      , p05
+      , p06
+      , p07
+      , p08
+      , p09
+      , p10
+      , p11
+      , p12
+      , parcelas
+      , valor_total
+      , forma_pagto
+      , data_finaliz_venda
+  do
+  begin
+
+    parcela = 0;
+    emissao = :Data_finaliz_venda;
+    valor_documento = :Valor_total / :Parcelas;
+
+    -- Parcela 1
+    if ( :P01 is not null ) then
+    begin
+      if ( :P01 = 0 ) then
+        parcela = 0;
+      else
+      if ( :P01 > 0 ) then
+        parcela = 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P01) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 2
+    if ( :P02 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P02) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 3
+    if ( :P03 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P03) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 4
+    if ( :P04 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P04) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 5
+    if ( :P05 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P05) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 6
+    if ( :P06 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P06) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 7
+    if ( :P07 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P07) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 8
+    if ( :P08 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P08) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 9
+    if ( :P09 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P09) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 10
+    if ( :P10 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P10) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 11
+    if ( :P11 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P11) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 12
+    if ( :P12 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P12) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Verificar ao valor total das parcelas
+    if ( :Parcelas > 1 ) then
+    begin
+      Select
+          sum( coalesce(r.Valorrec, 0) )
+      from TBCONTREC r
+      where r.Anovenda = :Anovenda
+        and r.Numvenda = :Numvenda
+        and r.forma_pagto = :forma_pagto
+      into
+          valor_total_parcelas;
+
+      -- Atualizar o valor da ultima parcela
+      if ( :Valor_total_parcelas < :Valor_total ) then
+      begin
+        Update TBCONTREC r Set
+            r.Valorrec = :Valor_documento + (:Valor_total - :Valor_total_parcelas)
+        where r.Anovenda = :Anovenda
+          and r.Numvenda = :Numvenda
+          and r.forma_pagto = :forma_pagto
+          and r.Parcela  = :Parcela;
+      end 
+    end 
+
+  end
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 17/09/2013 00:41:05 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER procedure SET_TITULO_RECEBER (
+    ANOVENDA smallint,
+    NUMVENDA integer,
+    EMPRESA varchar(18),
+    CLIENTE varchar(18),
+    FORMA_PAGTO smallint,
+    EMISSAO date,
+    VENCIMENTO date,
+    VALOR_DOCUMENTO numeric(15,2),
+    PARCELA smallint)
+returns (
+    ANOLANCAMENTO smallint,
+    NUMLANCAMENTO integer)
+as
+declare variable FORMA_PAGTO_DESC varchar(30);
+begin
+  if ( Exists(
+    Select
+      r.Numlanc
+    from TBCONTREC r
+    where r.Anovenda = :Anovenda
+      and r.Numvenda = :Numvenda
+      and r.Parcela  = :Parcela
+  ) ) then
+    Exit;
+
+  Select
+    f.Descri
+  from TBFORMPAGTO f
+  where f.Cod = :Forma_pagto
+  into
+    Forma_pagto_desc;
+
+  Anolancamento = :Anovenda;
+
+  if ( :Anolancamento = 2011 ) then
+    Numlancamento = gen_id(Gen_contarec_num_2011, 1);
+  else
+  if ( :Anolancamento = 2012 ) then
+    Numlancamento = gen_id(Gen_contarec_num_2012, 1);
+  else
+  if ( :Anolancamento = 2013 ) then
+    Numlancamento = gen_id(Gen_contarec_num_2013, 1);
+  else
+  if ( :Anolancamento = 2014 ) then
+    Numlancamento = gen_id(Gen_contarec_num_2014, 1);
+  else
+  if ( :Anolancamento = 2015 ) then
+    Numlancamento = gen_id(Gen_contarec_num_2015, 1);
+  else
+  if ( :Anolancamento = 2016 ) then
+    Numlancamento = gen_id(Gen_contarec_num_2016, 1);
+  else
+  if ( :Anolancamento = 2017 ) then
+    Numlancamento = gen_id(Gen_contarec_num_2017, 1);
+  else
+  if ( :Anolancamento = 2018 ) then
+    Numlancamento = gen_id(Gen_contarec_num_2018, 1);
+  else
+  if ( :Anolancamento = 2019 ) then
+    Numlancamento = gen_id(Gen_contarec_num_2019, 1);
+  else
+  if ( :Anolancamento = 2020 ) then
+    Numlancamento = gen_id(Gen_contarec_num_2020, 1);
+
+  Insert Into TBCONTREC (
+      Anolanc
+    , numlanc
+    , Anovenda
+    , Numvenda
+    , Empresa
+    , Cnpj
+    , Tippag
+    , Forma_pagto
+    , Dtemiss
+    , Dtvenc
+    , Valorrec
+    , Parcela
+    , Percentjuros
+    , Percentmulta
+    , Percentdesconto
+    , Baixado
+    , Enviado
+    , Situacao
+  ) values (
+      :Anolancamento
+    , :Numlancamento
+    , :Anovenda
+    , :Numvenda
+    , :Empresa
+    , :Cliente
+    , :Forma_pagto_desc
+    , :Forma_pagto
+    , :Emissao
+    , :Vencimento
+    , :Valor_documento
+    , :Parcela
+    , 0
+    , 0
+    , 0
+    , 0
+    , 0
+    , 1
+  );
+
+  suspend;
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 17/09/2013 00:43:45 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER procedure SET_GERAR_TITULOS (
+    ANOVENDA smallint,
+    NUMVENDA integer)
+returns (
+    EMPRESA varchar(18),
+    CLIENTE varchar(18),
+    PARCELAS smallint,
+    VALOR_TOTAL numeric(15,2),
+    PARCELA smallint,
+    EMISSAO date,
+    VENCIMENTO date,
+    VALOR_DOCUMENTO numeric(15,2),
+    FORMA_PAGTO smallint,
+    DATA_FINALIZ_VENDA date,
+    ANO_LANC smallint,
+    NUM_LANC integer)
+as
+declare variable P01 smallint;
+declare variable P02 smallint;
+declare variable P03 smallint;
+declare variable P04 smallint;
+declare variable P05 smallint;
+declare variable P06 smallint;
+declare variable P07 smallint;
+declare variable P08 smallint;
+declare variable P09 smallint;
+declare variable P10 smallint;
+declare variable P11 smallint;
+declare variable P12 smallint;
+declare variable VALOR_TOTAL_PARCELAS numeric(15,2);
+begin
+  for
+    Select
+        x.codemp
+      , x.Codcli
+      , coalesce(v.Prazo_01, 0)
+      , v.Prazo_02
+      , v.Prazo_03
+      , v.Prazo_04
+      , v.Prazo_05
+      , v.Prazo_06
+      , v.Prazo_07
+      , v.Prazo_08
+      , v.Prazo_09
+      , v.Prazo_10
+      , v.Prazo_11
+      , v.Prazo_12
+      , case when coalesce(v.Prazo_01, 0) is not null then 1 else 0 end +
+        case when v.Prazo_02 is not null then 1 else 0 end +
+        case when v.Prazo_03 is not null then 1 else 0 end +
+        case when v.Prazo_04 is not null then 1 else 0 end +
+        case when v.Prazo_05 is not null then 1 else 0 end +
+        case when v.Prazo_06 is not null then 1 else 0 end +
+        case when v.Prazo_07 is not null then 1 else 0 end +
+        case when v.Prazo_08 is not null then 1 else 0 end +
+        case when v.Prazo_09 is not null then 1 else 0 end +
+        case when v.Prazo_10 is not null then 1 else 0 end +
+        case when v.Prazo_11 is not null then 1 else 0 end +
+        case when v.Prazo_12 is not null then 1 else 0 end as parcelas
+      , v.valor_fpagto
+      , v.Formapagto_cod
+      , x.Dtfinalizacao_venda
+    from TBVENDAS x
+      inner join TBVENDAS_FORMAPAGTO v on (v.ano_venda = x.ano and v.controle_venda = x.codcontrol)
+    where x.Ano        = :Anovenda
+      and x.Codcontrol = :Numvenda
+    into
+        empresa
+      , cliente
+      , p01
+      , p02
+      , p03
+      , p04
+      , p05
+      , p06
+      , p07
+      , p08
+      , p09
+      , p10
+      , p11
+      , p12
+      , parcelas
+      , valor_total
+      , forma_pagto
+      , data_finaliz_venda
+  do
+  begin
+
+    parcela = 0;
+    emissao = :Data_finaliz_venda;
+    valor_documento = :Valor_total / :Parcelas;
+
+    -- Parcela 1
+    if ( :P01 is not null ) then
+    begin
+      if ( :P01 = 0 ) then
+        parcela = 0;
+      else
+      if ( :P01 > 0 ) then
+        parcela = 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P01) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 2
+    if ( :P02 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P02) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 3
+    if ( :P03 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P03) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 4
+    if ( :P04 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P04) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 5
+    if ( :P05 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P05) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 6
+    if ( :P06 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P06) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 7
+    if ( :P07 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P07) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 8
+    if ( :P08 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P08) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 9
+    if ( :P09 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P09) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 10
+    if ( :P10 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P10) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 11
+    if ( :P11 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P11) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 12
+    if ( :P12 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P12) d into vencimento;
+
+      Select
+          t.Anolancamento
+        , t.Numlancamento
+      from SET_TITULO_RECEBER (
+          :Anovenda
+        , :Numvenda
+        , :Empresa
+        , :Cliente
+        , :Forma_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela) t
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Verificar ao valor total das parcelas
+    if ( :Parcelas > 1 ) then
+    begin
+      Select
+          sum( coalesce(r.Valorrec, 0) )
+      from TBCONTREC r
+      where r.Anovenda = :Anovenda
+        and r.Numvenda = :Numvenda
+        and r.forma_pagto = :forma_pagto
+      into
+          valor_total_parcelas;
+
+      -- Atualizar o valor da ultima parcela
+      if ( :Valor_total_parcelas < :Valor_total ) then
+      begin
+        Update TBCONTREC r Set
+            r.Valorrec = :Valor_documento + (:Valor_total - :Valor_total_parcelas)
+        where r.Anovenda = :Anovenda
+          and r.Numvenda = :Numvenda
+          and r.forma_pagto = :forma_pagto
+          and r.Parcela  = :Parcela;
+      end 
+    end 
+
+  end
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 17/09/2013 00:49:04 --------*/
+
+ALTER TABLE TBCONTREC
+ADD CONSTRAINT FK_TBCONTREC_EMPRESA
+FOREIGN KEY (EMPRESA)
+REFERENCES TBEMPRESA(CNPJ);
+
