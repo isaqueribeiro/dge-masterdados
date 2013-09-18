@@ -114,6 +114,7 @@ begin
     ShowWarning('Favor informa a Modalidade do Frete');
     Exit;
   end;
+(* 18/09/2013 - Isaque: Obrigatoriedade removida dos campos.
 
   with dbTransportadora.DataSource.DataSet do
   begin
@@ -121,7 +122,7 @@ begin
     FieldByName('NFE_PLACA_VEICULO').Required  := ( FieldByName('NFE_TRANSPORTADORA').AsInteger > 0 );
     FieldByName('NFE_PLACA_UF').Required       := ( FieldByName('NFE_TRANSPORTADORA').AsInteger > 0 );
   end;
-
+*)
   if not CamposRequiridos(Self, TIBDataSet(dbCodigo.DataSource.DataSet), 'Dados Transportadora') then
     try
       if ShowConfirm('Confirma os dados de transporte informados?', 'Transporte') then
@@ -210,7 +211,6 @@ procedure TfrmGeVendaTransporte.btnVolumeInserirClick(Sender: TObject);
 var
   Sequencial : Integer;
 begin
-  CarregarValorPadrao;
   GerarSequencial(Sequencial);
 
   dtsVendaVolume.DataSet.Append;
@@ -218,6 +218,7 @@ begin
   dtsVendaVolume.DataSet.FieldByName('NUMERO').Value     := FormatFloat('00', Sequencial);
   dbVolumeNumero.SetFocus;
 
+  CarregarValorPadrao;
   if ( qryVolume.FieldByName('quantidade').AsCurrency > 0 ) then
     dbVolumeQtde.Field.Value := qryVolume.FieldByName('quantidade').AsCurrency;
 
@@ -271,8 +272,8 @@ begin
   with qryVolume do
   begin
     Close;
-    ParamByName('ano_venda').AsInteger := dtsVendaVolume.DataSet.FieldByName('ANO').AsInteger;
-    ParamByName('num_venda').AsInteger := dtsVendaVolume.DataSet.FieldByName('CODCONTROL').AsInteger;
+    ParamByName('ano_venda').AsInteger := dtsVendaVolume.DataSet.FieldByName('ANO_VENDA').AsInteger;
+    ParamByName('num_venda').AsInteger := dtsVendaVolume.DataSet.FieldByName('CONTROLE_VENDA').AsInteger;
     Open;
   end;
 end;
