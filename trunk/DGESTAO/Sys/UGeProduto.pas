@@ -203,9 +203,6 @@ type
     dbVendaFracionada: TDBCheckBox;
     lblUnidadeFracao: TLabel;
     dbUnidadeFracao: TRxDBComboEdit;
-    IbDtstTabelaPRECO_FRAC: TFloatField;
-    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField;
-    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField;
     pnlVeiculo: TPanel;
     pnlVolume: TPanel;
     GrpVolume: TGroupBox;
@@ -236,6 +233,9 @@ type
     IbDtstTabelaPESO_LIQUIDO: TIBBCDField;
     IbDtstTabelaCUBAGEM: TIBBCDField;
     IbDtstTabelaUSUARIO: TIBStringField;
+    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField;
+    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField;
+    IbDtstTabelaPRECO_FRAC: TFMTBCDField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);

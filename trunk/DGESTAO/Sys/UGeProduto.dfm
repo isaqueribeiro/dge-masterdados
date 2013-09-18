@@ -2688,20 +2688,26 @@ inherited frmGeProduto: TfrmGeProduto
       ProviderFlags = []
       Size = 5
     end
-    object IbDtstTabelaPRECO_FRAC: TFloatField
+    object IbDtstTabelaPRECO_FRAC: TFMTBCDField
       FieldName = 'PRECO_FRAC'
       ProviderFlags = []
       DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 5
     end
-    object IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField
+    object IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField
       FieldName = 'PRECO_PROMOCAO_FRAC'
       ProviderFlags = []
       DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 5
     end
-    object IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField
+    object IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField
       FieldName = 'PRECO_SUGERIDO_FRAC'
       ProviderFlags = []
       DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 5
     end
     object IbDtstTabelaUSUARIO: TIBStringField
       FieldName = 'USUARIO'
