@@ -96,7 +96,7 @@ PackageDLLOutputDir=
 PackageDCPOutputDir=
 SearchPath=
 Packages=vcl;rtl;dbrtl;adortl;vcldb;vclx;bdertl;vcldbx;ibxpress;dsnap;cds;bdecds;qrpt;teeui;teedb;tee;dss;teeqr;dsnapcrba;dsnapcon;VclSmp;vclshlctrls;vclie;xmlrtl;inet;inetdbbde;inetdbxpress;inetdb;nmfast;webdsnap;websnap;dbexpress;dbxcds;indy;dclOffice2k;BcBarMenus60;Instalar;FIBDBMidas6;LabelPack;WinSkinD6R;PackageXPMenu;RxCtl6;RxDB6;RxBDE6
-Conditionals=DGE
+Conditionals=DGE;ACBR
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
@@ -139,3 +139,12 @@ ReleaseDate=30/05/2012
 Contacts=(91) 8717-1057 / 8129-1567
 [Excluded Packages]
 c:\program files (x86)\borland\delphi7\Projects\Bpl\RVDBPkgD7.bpl=RichView DataAware
+[HistoryLists\hlConditionals]
+Count=1
+Item0=DGE;ACBR
+[HistoryLists\hlUnitAliases]
+Count=1
+Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
+[HistoryLists\hlOutputDirectorry]
+Count=1
+Item0=..\Bin\
