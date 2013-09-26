@@ -226,9 +226,10 @@ var
 begin
   sMsg := 'Informações importantes para a geração de boletos.' + #13 +
     '---' + #13#13 + 
-    '1. O código da Agência deve ser informada com o dígito. Ex: 1232-1' + #13 +
-    '2. A Conta Corrente (C/C) deverá ser infrmanda funatmente com o seu dígito. Ex: 06598-7' + #13 +
-    '3. Para determinados bancos o Código do Cedente é o mesmo número de Conta Corrente.';
+    '1. Para alguns bancos o "Código da Empresa" informado por eles é o mesmo "Código do Cedente" solicitado pela aplicação.' + #13 +
+    '2. O código da Agência deve ser informada com o dígito. Ex: 1232-1' + #13 +
+    '3. A Conta Corrente (C/C) deverá ser infrmanda funatmente com o seu dígito. Ex: 06598-7' + #13 +
+    '4. Para determinados bancos o Código do Cedente é o mesmo número de Conta Corrente.';
 
   ShowInformation(Self.Caption, sMsg);
 end;

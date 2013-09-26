@@ -983,6 +983,12 @@ begin
       Cedente.Convenio      := IbQryBancosBCO_CHAVE.AsString;
 
       // Dados Cedente
+      if StrIsCPF(IbQryBancosEMPRESA.AsString) then
+        Cedente.TipoInscricao := pFisica
+      else
+      if StrIsCNPJ(IbQryBancosEMPRESA.AsString) then
+        Cedente.TipoInscricao := pJuridica;
+
       Cedente.CNPJCPF     := IbQryBancosEMPRESA.AsString;
       Cedente.Nome        := IbQryBancosRZSOC.AsString;
       Cedente.Logradouro  := IbQryBancosENDER.AsString;
@@ -994,7 +1000,7 @@ begin
       Cedente.UF     := IbQryBancosUF.AsString;
 
       // Dados Convênio
-      Cedente.CodigoCedente     := IbQryBancosBCO_CODIGO_CEDENTE.AsString;
+      Cedente.CodigoCedente     := Trim(IbQryBancosBCO_CODIGO_CEDENTE.AsString);
       Cedente.Convenio          := IbQryBancosBCO_CHAVE.AsString;
       Cedente.CodigoTransmissao := EmptyStr;
     end;
@@ -1082,7 +1088,8 @@ begin
     while not CdsTitulos.Eof do
     begin
 
-      Boleto     := ACBrBoleto.CriarTituloNaLista;
+      Boleto := ACBrBoleto.CriarTituloNaLista;
+      
       if ( CdsTitulosNFE.AsLargeInt > 0 ) then
       begin
         sMensagem  := Format(MSG_REF_NFE, [FormatFloat('###0000000', CdsTitulosNFE.AsLargeInt), FormatFloat('00', CdsTitulosPARCELA.AsInteger), FormatFloat('00', CdsTitulosPARCELA_MAXIMA.AsInteger)]);
@@ -1097,14 +1104,24 @@ begin
       with Boleto do
       begin
         // Dados do Sacado
-        Sacado.NomeSacado := dbNome.Field.AsString;
+        if StrIsCPF(dbCPF.Field.AsString) then
+          Sacado.Pessoa   := pFisica
+        else
+        if StrIsCNPJ(dbCPF.Field.AsString) then
+          Sacado.Pessoa   := pJuridica
+        else
+          Sacado.Pessoa   := pOutras;
+
         Sacado.CNPJCPF    := dbCPF.Field.AsString;
+        Sacado.NomeSacado := dbNome.Field.AsString;
         Sacado.Logradouro := IbQryClientesENDER_DESC.AsString;
         Sacado.Numero     := IbQryClientesENDER_NUM.AsString;
         Sacado.Bairro     := dbBairro.Field.AsString;
         Sacado.Cidade     := dbCidade.Field.AsString;
         Sacado.UF         := dbUF.Field.AsString;
         Sacado.CEP        := StrOnlyNumbers(dbCEP.Field.AsString);
+        Sacado.Email      := AnsiLowerCase(Trim(IbQryClientesEMAIL.AsString));
+        Sacado.Fone       := StrOnlyNumbers(Trim(IbQryClientesFONE.AsString));
 
         // Dados do Documento
         LocalPagamento := 'Pagar preferêncialmente nas agências do(a) ' + ACBrBoleto.Banco.Nome;
@@ -1146,12 +1163,18 @@ begin
         ValorMoraJuros    := (CdsTitulosVALORREC.AsCurrency * IbQryBancosBCO_PERCENTUAL_MORA.AsCurrency / 100) / 30;
         ValorDesconto     := CdsTitulosVALORREC.AsCurrency * CdsTitulosPERCENTDESCONTO.AsCurrency / 100;
         DataMoraJuros     := GetProximoDiaUtil(Vencimento);
-        DataDesconto      := CdsTitulosDTVENC.AsDateTime;
         DataAbatimento    := StrToCurrDef(EmptyStr, 0);
+
+        if ( CdsTitulosPERCENTDESCONTO.AsCurrency = 0 ) then
+          DataDesconto    := StrToCurrDef(EmptyStr, 0)
+        else
+          DataDesconto    := CdsTitulosDTVENC.AsDateTime;
+
         if ( IbQryBancosBCO_DIA_PROTESTO.AsInteger = 0 ) then
           DataProtesto    := StrToCurrDef(EmptyStr, 0)
         else
           DataProtesto    := (Vencimento + IbQryBancosBCO_DIA_PROTESTO.AsInteger);
+
         PercentualMulta   := IbQryBancosBCO_PERCENTUAL_JUROS.AsCurrency;  // Percentual de multa por dia de atraso.
 
         OcorrenciaOriginal.Tipo := toRemessaRegistrar;

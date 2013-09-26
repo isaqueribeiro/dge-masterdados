@@ -248,11 +248,17 @@ end;
 
 procedure TfrmGeRemessaBoleto.DefinirNomeArquivo(iBanco: Integer);
 begin
+  try
+    ForceDirectories(Trim(IbQryBancosBCO_DIRETORIO_REMESSA.AsString));
+  except
+  end;
+
   if ( DirectoryExists(Trim(IbQryBancosBCO_DIRETORIO_REMESSA.AsString)) ) then
     edArquivoRemessa.Text := Trim(IbQryBancosBCO_DIRETORIO_REMESSA.AsString) + FormatFloat('000', iBanco) + '\' + FormatFloat('000', iBanco) + '_' + FormatDateTime('yyyymmdd-hhmmss', Now) + '.rem'
   else
     edArquivoRemessa.Text := ExtractFilePath(ParamStr(0)) + 'Remessa\' + FormatFloat('000', iBanco) + '\' + FormatFloat('000', iBanco) + '_' + FormatDateTime('yyyymmdd-hhmmss', Now) + '.rem';
 
+  edArquivoRemessa.Text := StringReplace(edArquivoRemessa.Text, '\\', '\', [rfReplaceAll]);  
   ForceDirectories( ExtractFilePath(edArquivoRemessa.Text) );
 end;
 
@@ -308,7 +314,7 @@ begin
       {$IFDEF ACBR}
       if ( InserirBoletoACbr ) then
       begin
-        edArquivoRemessa.Text := ACBrBoleto.GerarRemessa(IbQryBancosBCO_SEQUENCIAL_REM.AsInteger);
+        edArquivoRemessa.Text := StringReplace(ACBrBoleto.GerarRemessa(IbQryBancosBCO_SEQUENCIAL_REM.AsInteger), '\\', '\', [rfReplaceAll]);
       {$ELSE}
       if ( InserirBoleto( CobreBemX ) ) then
       begin
@@ -652,6 +658,12 @@ begin
       Cedente.Convenio      := IbQryBancosBCO_CHAVE.AsString;
 
       // Dados Cedente
+      if StrIsCPF(IbQryBancosEMPRESA.AsString) then
+        Cedente.TipoInscricao := pFisica
+      else
+      if StrIsCNPJ(IbQryBancosEMPRESA.AsString) then
+        Cedente.TipoInscricao := pJuridica;
+
       Cedente.CNPJCPF     := IbQryBancosEMPRESA.AsString;
       Cedente.Nome        := IbQryBancosRZSOC.AsString;
       Cedente.Logradouro  := IbQryBancosENDER.AsString;
@@ -663,7 +675,7 @@ begin
       Cedente.UF     := IbQryBancosUF.AsString;
 
       // Dados Convênio
-      Cedente.CodigoCedente     := IbQryBancosBCO_CODIGO_CEDENTE.AsString;
+      Cedente.CodigoCedente     := Trim(IbQryBancosBCO_CODIGO_CEDENTE.AsString);
       Cedente.Convenio          := IbQryBancosBCO_CHAVE.AsString;
       Cedente.CodigoTransmissao := EmptyStr;
     end;
@@ -750,7 +762,8 @@ begin
     while not CdsTitulos.Eof do
     begin
 
-      Boleto     := ACBrBoleto.CriarTituloNaLista;
+      Boleto := ACBrBoleto.CriarTituloNaLista;
+      
       if ( CdsTitulosNFE.AsLargeInt > 0 ) then
       begin
         sMensagem  := Format(MSG_REF_NFE, [FormatFloat('###0000000', CdsTitulosNFE.AsLargeInt), FormatFloat('00', CdsTitulosPARCELA.AsInteger), FormatFloat('00', CdsTitulosPARCELA_MAXIMA.AsInteger)]);
@@ -765,14 +778,24 @@ begin
       with Boleto do
       begin
         // Dados do Sacado
-        Sacado.NomeSacado := CdsTitulosNOME.AsString;
+        if StrIsCPF(CdsTitulosCNPJ.AsString) then
+          Sacado.Pessoa   := pFisica
+        else
+        if StrIsCNPJ(CdsTitulosCNPJ.AsString) then
+          Sacado.Pessoa   := pJuridica
+        else
+          Sacado.Pessoa   := pOutras;
+
         Sacado.CNPJCPF    := CdsTitulosCNPJ.AsString;
+        Sacado.NomeSacado := CdsTitulosNOME.AsString;
         Sacado.Logradouro := CdsTitulosENDER_DESC.AsString;
         Sacado.Numero     := CdsTitulosENDER_NUM.AsString;
         Sacado.Bairro     := CdsTitulosBAIRRO.AsString;
         Sacado.Cidade     := CdsTitulosCIDADE.AsString;
         Sacado.UF         := CdsTitulosUF.AsString;
         Sacado.CEP        := StrOnlyNumbers(CdsTitulosCEP.AsString);
+        Sacado.Email      := AnsiLowerCase(Trim(CdsTitulosEMAIL.AsString));
+        Sacado.Fone       := StrOnlyNumbers(Trim(CdsTitulosFONE.AsString));
 
         // Dados do Documento
         LocalPagamento := 'Pagar preferêncialmente nas agências do(a) ' + ACBrBoleto.Banco.Nome;
@@ -808,12 +831,18 @@ begin
         ValorMoraJuros    := (CdsTitulosVALORREC.AsCurrency * IbQryBancosBCO_PERCENTUAL_MORA.AsCurrency / 100) / 30;
         ValorDesconto     := CdsTitulosVALORREC.AsCurrency * CdsTitulosPERCENTDESCONTO.AsCurrency / 100;
         DataMoraJuros     := GetProximoDiaUtil(Vencimento);
-        DataDesconto      := CdsTitulosDTVENC.AsDateTime;
         DataAbatimento    := StrToCurrDef(EmptyStr, 0);
+
+        if ( CdsTitulosPERCENTDESCONTO.AsCurrency = 0 ) then
+          DataDesconto    := StrToCurrDef(EmptyStr, 0)
+        else
+          DataDesconto    := CdsTitulosDTVENC.AsDateTime;
+
         if ( IbQryBancosBCO_DIA_PROTESTO.AsInteger = 0 ) then
           DataProtesto    := StrToCurrDef(EmptyStr, 0)
         else
           DataProtesto    := (Vencimento + IbQryBancosBCO_DIA_PROTESTO.AsInteger);
+
         PercentualMulta   := IbQryBancosBCO_PERCENTUAL_JUROS.AsCurrency;  // Percentual de multa por dia de atraso.
 
         if ( CdsTitulosSITUACAO.AsInteger = 0 ) then     // Cancelado

@@ -11267,3 +11267,327 @@ end^
 
 SET TERM ; ^
 
+
+
+
+/*------ SYSDBA 25/09/2013 16:07:47 --------*/
+
+COMMENT ON COLUMN TBAJUSTESTOQ.CODPROD IS
+'Produto';
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:07:50 --------*/
+
+COMMENT ON COLUMN TBAJUSTESTOQ.CODEMPRESA IS
+'Empresa';
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:07:53 --------*/
+
+COMMENT ON COLUMN TBAJUSTESTOQ.CODFORN IS
+'Fornecedor';
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:07:55 --------*/
+
+COMMENT ON COLUMN TBAJUSTESTOQ.QTDEATUAL IS
+'Quantidade atual';
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:07:58 --------*/
+
+COMMENT ON COLUMN TBAJUSTESTOQ.QTDENOVA IS
+'Quantidade de entrada ou saida';
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:08:01 --------*/
+
+COMMENT ON COLUMN TBAJUSTESTOQ.QTDEFINAL IS
+'Quantidade final:
+Quantidade atual + Quantidade de entrada ou saida';
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:08:20 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_VCHAR_250'
+where (RDB$FIELD_NAME = 'MOTIVO') and
+(RDB$RELATION_NAME = 'TBAJUSTESTOQ')
+;
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:08:25 --------*/
+
+COMMENT ON COLUMN TBAJUSTESTOQ.DOC IS
+'Documento';
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:08:29 --------*/
+
+COMMENT ON COLUMN TBAJUSTESTOQ.DTAJUST IS
+'Data/Hora do ajuste';
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:08:32 --------*/
+
+COMMENT ON COLUMN TBAJUSTESTOQ.USUARIO IS
+'Usuario';
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:08:44 --------*/
+
+ALTER TABLE TBAJUSTESTOQ DROP CODEMPRESA;
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:09:11 --------*/
+
+ALTER TABLE TBAJUSTESTOQ
+    ADD CODEMPRESA DMN_CNPJ;
+
+COMMENT ON COLUMN TBAJUSTESTOQ.CODEMPRESA IS
+'Empresa';
+
+alter table TBAJUSTESTOQ
+alter CODPROD position 1;
+
+alter table TBAJUSTESTOQ
+alter CODEMPRESA position 2;
+
+alter table TBAJUSTESTOQ
+alter CODFORN position 3;
+
+alter table TBAJUSTESTOQ
+alter QTDEATUAL position 4;
+
+alter table TBAJUSTESTOQ
+alter QTDENOVA position 5;
+
+alter table TBAJUSTESTOQ
+alter QTDEFINAL position 6;
+
+alter table TBAJUSTESTOQ
+alter MOTIVO position 7;
+
+alter table TBAJUSTESTOQ
+alter DOC position 8;
+
+alter table TBAJUSTESTOQ
+alter DTAJUST position 9;
+
+alter table TBAJUSTESTOQ
+alter USUARIO position 10;
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:09:32 --------*/
+
+ALTER TABLE TBAJUSTESTOQ
+ADD CONSTRAINT FK_TBAJUSTESTOQ_EMP
+FOREIGN KEY (CODEMPRESA)
+REFERENCES TBEMPRESA(CNPJ);
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:10:25 --------*/
+
+ALTER TABLE TBAJUSTESTOQ
+    ADD CONTROLE DMN_BIGINT_NN;
+
+COMMENT ON COLUMN TBAJUSTESTOQ.CONTROLE IS
+'Codigo';
+
+alter table TBAJUSTESTOQ
+alter CONTROLE position 1;
+
+alter table TBAJUSTESTOQ
+alter CODPROD position 2;
+
+alter table TBAJUSTESTOQ
+alter CODEMPRESA position 3;
+
+alter table TBAJUSTESTOQ
+alter CODFORN position 4;
+
+alter table TBAJUSTESTOQ
+alter QTDEATUAL position 5;
+
+alter table TBAJUSTESTOQ
+alter QTDENOVA position 6;
+
+alter table TBAJUSTESTOQ
+alter QTDEFINAL position 7;
+
+alter table TBAJUSTESTOQ
+alter MOTIVO position 8;
+
+alter table TBAJUSTESTOQ
+alter DOC position 9;
+
+alter table TBAJUSTESTOQ
+alter DTAJUST position 10;
+
+alter table TBAJUSTESTOQ
+alter USUARIO position 11;
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:10:47 --------*/
+
+ALTER TABLE TBAJUSTESTOQ
+ADD CONSTRAINT PK_TBAJUSTESTOQ
+PRIMARY KEY (CONTROLE);
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:44:43 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger trgajustestoq for tbajustestoq
+active after insert position 0
+AS
+begin
+  update TBPRODUTO p set
+    qtde = coalesce(qtde, 0) + coalesce(new.qtdenova, 0)
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa;
+
+  Insert Into TBPRODHIST (
+      Codempresa
+    , Codprod
+    , Doc
+    , Historico
+    , Dthist
+    , Qtdeatual
+    , Qtdenova
+    , Qtdefinal
+    , Resp
+    , Motivo
+  ) values (
+      new.codempresa
+    , new.codprod
+    , new.doc
+    , 'AJUSTE DE ESTOQUE - ENTRADA'
+    , new.dtajust
+    , new.qtdeatual
+    , new.qtdenova
+    , new.qtdefinal
+    , coalesce(new.Usuario, user)
+    , new.motivo
+  );
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:45:13 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger trgajustestoq for tbajustestoq
+active after insert position 0
+AS
+begin
+  update TBPRODUTO p set
+    qtde = coalesce(qtde, 0) + coalesce(new.qtdenova, 0)
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa;
+
+  Insert Into TBPRODHIST (
+      Codempresa
+    , Codprod
+    , Doc
+    , Historico
+    , Dthist
+    , Qtdeatual
+    , Qtdenova
+    , Qtdefinal
+    , Resp
+    , Motivo
+  ) values (
+      new.codempresa
+    , new.codprod
+    , new.doc
+    , 'AJUSTE DE ESTOQUE - ENTRADA'
+    , new.dtajust
+    , new.qtdeatual
+    , new.qtdenova
+    , new.qtdefinal
+    , coalesce(new.Usuario, user)
+    , substring(trim(new.motivo) from 1 for 40)
+  );
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 25/09/2013 16:45:38 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger trgajustestoq for tbajustestoq
+active after insert position 0
+AS
+begin
+  update TBPRODUTO p set
+    p.qtde = coalesce(p.qtde, 0) + coalesce(new.qtdenova, 0)
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa;
+
+  Insert Into TBPRODHIST (
+      Codempresa
+    , Codprod
+    , Doc
+    , Historico
+    , Dthist
+    , Qtdeatual
+    , Qtdenova
+    , Qtdefinal
+    , Resp
+    , Motivo
+  ) values (
+      new.codempresa
+    , new.codprod
+    , new.doc
+    , 'AJUSTE DE ESTOQUE - ENTRADA'
+    , new.dtajust
+    , new.qtdeatual
+    , new.qtdenova
+    , new.qtdefinal
+    , coalesce(new.Usuario, user)
+    , substring(trim(new.motivo) from 1 for 40)
+  );
+end^
+
+SET TERM ; ^
+
