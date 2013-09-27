@@ -1295,6 +1295,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       DisplayLabel = '% Juros'
       FieldName = 'PERCENTJUROS'
       Origin = 'TBCONTREC.PERCENTJUROS'
+      DisplayFormat = ',0.00#'
       Precision = 9
       Size = 2
     end
@@ -1302,6 +1303,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       DisplayLabel = '% Multa'
       FieldName = 'PERCENTMULTA'
       Origin = 'TBCONTREC.PERCENTMULTA'
+      DisplayFormat = ',0.00#'
       Precision = 9
       Size = 2
     end
@@ -1309,6 +1311,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       DisplayLabel = '% Desconto'
       FieldName = 'PERCENTDESCONTO'
       Origin = 'TBCONTREC.PERCENTDESCONTO'
+      DisplayFormat = ',0.00#'
       Precision = 9
       Size = 2
     end

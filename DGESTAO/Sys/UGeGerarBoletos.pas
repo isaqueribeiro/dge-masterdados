@@ -174,7 +174,8 @@ type
     procedure CarregarBancos;
     procedure GravarBoletosGerados;
     procedure GravarBoletosGeradosACBr(const iProximoNossoNumero : Integer);
-    procedure UpdateTitulo( iAno : Smallint; iLancamento : Int64; iBanco : Integer; sNossoNumero : String; Data : TDateTime );
+    procedure UpdateTitulo( iAno : Smallint; iLancamento : Int64; iBanco : Integer; sNossoNumero : String; Data : TDateTime;
+      const cJuros : Currency = 0.0; const cMulta : Currency = 0.0);
 
     function GetAgenciaNumero : String;
     function GetAgenciaDigito : String;
@@ -777,6 +778,8 @@ var
   I    : Integer;
   N : String;
   Titulo : TACBrTitulo;
+  cJuros ,
+  cMulta : Currency;
 begin
   for I := 0 to ACBrBoleto.ListadeBoletos.Count - 1 do
     with ACBrBoleto, ListadeBoletos do
@@ -801,17 +804,21 @@ begin
       if CdsTitulos.FindKey( [pDOC, pDIG] ) then
         if ( CdsTitulosNOSSONUMERO.AsString <> Titulo.NossoNumero ) then
         begin
+          cJuros := IbQryBancosBCO_PERCENTUAL_JUROS.AsCurrency;
+          cMulta := IbQryBancosBCO_PERCENTUAL_MORA.AsCurrency;
+
           CdsTitulos.Edit;
           CdsTitulosCODBANCO.Value    := IbQryBancosBCO_COD.Value;
           CdsTitulosNOSSONUMERO.Value := Titulo.NossoNumero;
           CdsTitulosDATAPROCESSOBOLETO.Value := GetDateTimeDB;
-          CdsTitulosPERCENTJUROS.AsCurrency  := IbQryBancosBCO_PERCENTUAL_JUROS.AsCurrency;
-          CdsTitulosPERCENTMULTA.AsCurrency  := IbQryBancosBCO_PERCENTUAL_MORA.AsCurrency;
+          CdsTitulosPERCENTJUROS.AsCurrency  := cJuros;
+          CdsTitulosPERCENTMULTA.AsCurrency  := cMulta;
           CdsTitulos.Post;
 
           CommitTransaction;
 
-          UpdateTitulo(CdsTitulosANOLANC.Value, CdsTitulosNUMLANC.Value, CdsTitulosCODBANCO.Value, CdsTitulosNOSSONUMERO.Value, GetDateTimeDB);
+          UpdateTitulo(CdsTitulosANOLANC.Value, CdsTitulosNUMLANC.Value, CdsTitulosCODBANCO.Value, CdsTitulosNOSSONUMERO.Value,
+            GetDateTimeDB, cJuros, cMulta);
         end;
     end;
 
@@ -834,7 +841,7 @@ begin
 end;
 
 procedure TfrmGeGerarBoleto.UpdateTitulo(iAno : Smallint; iLancamento: Int64; iBanco: Integer;
-  sNossoNumero: String; Data: TDateTime);
+  sNossoNumero: String; Data: TDateTime; const cJuros : Currency = 0.0; const cMulta : Currency = 0.0);
 var
   sSQL : TStringList;
 begin
@@ -847,6 +854,8 @@ begin
     sSQL.Add( '     nossonumero = ' + QuotedStr(sNossoNumero) );
     sSQL.Add( '   , codbanco    = ' + IntToStr(iBanco) );
     sSQL.Add( '   , dataprocessoboleto = ' + QuotedStr(FormatDateTime('yyyy-mm-dd', Data)) );
+    sSQL.Add( '   , percentjuros       = ' + StringReplace(FormatFloat('########0.###', cJuros), ',', '.', [rfReplaceAll]) );
+    sSQL.Add( '   , percentmulta       = ' + StringReplace(FormatFloat('########0.###', cMulta), ',', '.', [rfReplaceAll]) );
     sSQL.Add( ' where anolanc = '   + IntToStr(iAno) );
     sSQL.Add( '   and numlanc = '   + IntToStr(iLancamento) );
     sSQL.EndUpdate;

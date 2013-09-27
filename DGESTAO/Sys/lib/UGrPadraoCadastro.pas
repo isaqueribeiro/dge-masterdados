@@ -349,6 +349,10 @@ end;
 
 procedure TfrmGrPadraoCadastro.FiltarDados;
 begin
+  Screen.Cursor := crSQLWait;
+
+  try
+
   try
 
     fOcorreuErro := False;
@@ -385,7 +389,7 @@ begin
       Open;
 
       try
-      
+
         if ( not IsEmpty ) then
           dbgDados.SetFocus
         else
@@ -406,6 +410,10 @@ begin
       fOcorreuErro := True;
       ShowWarning('Erro ao tentar filtrar registros na tabela.' + #13#13 + E.Message);
     end;
+  end;
+
+  finally
+    Screen.Cursor := crDefault;
   end;
 end;
 
