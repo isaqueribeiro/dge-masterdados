@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, DB, IBCustomDataSet, IBTable, CheckLst,
   Buttons, ToolWin, ComCtrls, Grids, DBGrids, ComObj, IBSQL, DBClient,
-  IBQuery, UGrPadrao;
+  IBQuery, UGrPadrao, IBUpdateSQL;
 
 type
   TfrmGeRetornoBoleto = class(TfrmGrPadrao)
@@ -16,19 +16,6 @@ type
     lblDiretorioRetorno: TLabel;
     edBanco: TComboBox;
     edDiretorioRetorno: TEdit;
-    IbTblBancos: TIBTable;
-    IbTblBancosBCO_COD: TSmallintField;
-    IbTblBancosBCO_CARTEIRA: TIBStringField;
-    IbTblBancosBCO_NOME: TIBStringField;
-    IbTblBancosBCO_CHAVE: TIBStringField;
-    IbTblBancosBCO_AGENCIA: TIBStringField;
-    IbTblBancosBCO_CC: TIBStringField;
-    IbTblBancosBCO_NOSSO_NUM_INICIO: TIBStringField;
-    IbTblBancosBCO_NOSSO_NUM_FINAL: TIBStringField;
-    IbTblBancosBCO_NOSSO_NUM_PROXIMO: TIBStringField;
-    IbTblBancosBCO_CONFG_1: TIBStringField;
-    IbTblBancosBCO_CONFG_2: TIBStringField;
-    IbTblBancosBCO_SEQUENCIAL_REM: TIntegerField;
     Label2: TLabel;
     lstBxRetorno: TCheckListBox;
     Bevel1: TBevel;
@@ -61,9 +48,44 @@ type
     CdsTitulosSacado: TStringField;
     CdsTitulosCnpj: TStringField;
     gFind: TIBQuery;
-    IbTblBancosBCO_DIRETORIO_REMESSA: TIBStringField;
-    IbTblBancosBCO_DIRETORIO_RETORNO: TIBStringField;
     CdsTitulosAno: TSmallintField;
+    IbQryBancos: TIBQuery;
+    IbQryBancosBCO_COD: TSmallintField;
+    IbQryBancosEMPRESA: TIBStringField;
+    IbQryBancosBCO_CARTEIRA: TIBStringField;
+    IbQryBancosBCO_NOME: TIBStringField;
+    IbQryBancosBCO_AGENCIA: TIBStringField;
+    IbQryBancosBCO_CC: TIBStringField;
+    IbQryBancosBCO_CODIGO_CEDENTE: TIBStringField;
+    IbQryBancosBCO_CHAVE: TIBStringField;
+    IbQryBancosBCO_GERAR_BOLETO: TSmallintField;
+    IbQryBancosBCO_NOSSO_NUM_INICIO: TIBStringField;
+    IbQryBancosBCO_NOSSO_NUM_FINAL: TIBStringField;
+    IbQryBancosBCO_NOSSO_NUM_PROXIMO: TIBStringField;
+    IbQryBancosBCO_CONFG_1: TIBStringField;
+    IbQryBancosBCO_CONFG_2: TIBStringField;
+    IbQryBancosBCO_SEQUENCIAL_REM: TIntegerField;
+    IbQryBancosBCO_DIRETORIO_REMESSA: TIBStringField;
+    IbQryBancosBCO_DIRETORIO_RETORNO: TIBStringField;
+    IbQryBancosBCO_PERCENTUAL_JUROS: TIBBCDField;
+    IbQryBancosBCO_PERCENTUAL_MORA: TIBBCDField;
+    IbQryBancosBCO_DIA_PROTESTO: TSmallintField;
+    IbQryBancosBCO_MSG_INSTRUCAO: TIBStringField;
+    IbQryBancosBCO_LAYOUT_REMESSA: TSmallintField;
+    IbQryBancosBCO_LAYOUT_RETORNO: TSmallintField;
+    IbQryBancosRZSOC: TIBStringField;
+    IbQryBancosNMFANT: TIBStringField;
+    IbQryBancosIE: TIBStringField;
+    IbQryBancosIM: TIBStringField;
+    IbQryBancosENDER: TIBStringField;
+    IbQryBancosCOMPLEMENTO: TIBStringField;
+    IbQryBancosNUMERO_END: TIBStringField;
+    IbQryBancosBAIRRO: TIBStringField;
+    IbQryBancosCEP: TIBStringField;
+    IbQryBancosCIDADE: TIBStringField;
+    IbQryBancosUF: TIBStringField;
+    IbQryBancosEMAIL: TIBStringField;
+    IbUpdBancos: TIBUpdateSQL;
     procedure edBancoChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
@@ -85,8 +107,9 @@ type
 
     function DefinirCedente( Banco, Carteira : Integer; var Objeto : Variant ) : Boolean;
     function CarregarRetorno( sArquivo : String; var Objeto : Variant ) : Boolean;
+    function CarregarRetornoACBr( sArquivo : String ) : Boolean;
     function ArquivoSelecionado : Boolean;
-    function LancamentoIdentificado( Banco : Integer; sNossoNumero : String; var Ano, Lancamento : Integer; var Parcela : Integer; var APagar : Currency; var Sacado, Cnpj : String) : Boolean;
+    function LancamentoIdentificado( Banco : Integer; sNossoNumero, sDocumento : String; var Ano, Lancamento : Integer; var Parcela : Integer; var APagar : Currency; var Sacado, Cnpj : String) : Boolean;
     function QuitarLancamento(Ano, Lancamento : Integer; Parcela : Integer; ValorPago : Currency; DataPagamento : TDateTime; NossoNumero : String) : Boolean;
   public
     { Public declarations }
@@ -137,34 +160,42 @@ end;
 
 procedure TfrmGeRetornoBoleto.CarregarBancos;
 begin
-  with IbTblBancos, edBanco do
+  with IbQryBancos, edBanco do
   begin
     Close;
+    ParamByName('empresa').AsString := GetEmpresaIDDefault;
     Open;
+    
     if ( not IsEmpty ) then
       Clear;
 
     while not Eof do
     begin
-      Items.Add( FormatFloat('000', IbTblBancosBCO_COD.AsInteger) + ' - ' + IbTblBancosBCO_NOME.AsString );
+      Items.Add( FormatFloat('000', IbQryBancosBCO_COD.AsInteger) + ' - ' + IbQryBancosBCO_NOME.AsString );
 
       Next;
     end;
 
     First;
 
-    edBanco.Tag       := IbTblBancosBCO_COD.AsInteger;
+    edBanco.Tag       := IbQryBancosBCO_COD.AsInteger;
     edBanco.ItemIndex := 0;
   end;
 end;
 
 procedure TfrmGeRetornoBoleto.DefinirDiretorioArquivo(iBanco: Integer);
 begin
-  if ( DirectoryExists(Trim(IbTblBancosBCO_DIRETORIO_RETORNO.AsString)) ) then
-    edDiretorioRetorno.Text := Trim(IbTblBancosBCO_DIRETORIO_RETORNO.AsString) + FormatFloat('000', iBanco) + '\'
+  try
+    ForceDirectories(Trim(IbQryBancosBCO_DIRETORIO_RETORNO.AsString));
+  except
+  end;
+
+  if ( DirectoryExists(Trim(IbQryBancosBCO_DIRETORIO_RETORNO.AsString)) ) then
+    edDiretorioRetorno.Text := Trim(IbQryBancosBCO_DIRETORIO_RETORNO.AsString) + FormatFloat('000', iBanco) + '\'
   else
     edDiretorioRetorno.Text := ExtractFilePath(ParamStr(0)) + 'Retorno\' + FormatFloat('000', iBanco) + '\';
 
+  edDiretorioRetorno.Text := StringReplace(edDiretorioRetorno.Text, '\\', '\', [rfReplaceAll]);
   ForceDirectories( edDiretorioRetorno.Text );
 end;
 
@@ -191,11 +222,11 @@ end;
 
 procedure TfrmGeRetornoBoleto.edBancoChange(Sender: TObject);
 begin
-  if ( not IbTblBancos.Active ) then
-    IbTblBancos.Open;
+  if ( not IbQryBancos.Active ) then
+    IbQryBancos.Open;
 
-  if ( IbTblBancos.Locate('BCO_COD', StrToIntDef(Copy(edBanco.Text, 1, 3), 0), []) ) then
-    edBanco.Tag := IbTblBancosBCO_COD.AsInteger;
+  if ( IbQryBancos.Locate('BCO_COD', StrToIntDef(Copy(edBanco.Text, 1, 3), 0), []) ) then
+    edBanco.Tag := IbQryBancosBCO_COD.AsInteger;
 
   DefinirDiretorioArquivo( edBanco.Tag );
 
@@ -256,18 +287,18 @@ begin
     // Parâmetros obrigatórios da conta corrente do Cedente
 
     Objeto.ArquivoLicenca         := sFileLisence;
-    Objeto.CodigoAgencia          := IbTblBancosBCO_AGENCIA.AsString;
-    Objeto.NumeroContaCorrente    := IbTblBancosBCO_CC.AsString;
-    Objeto.CodigoCedente          := IbTblBancosBCO_CHAVE.AsString;
-    Objeto.InicioNossoNumero      := IbTblBancosBCO_NOSSO_NUM_INICIO.AsString;
-    Objeto.FimNossoNumero         := IbTblBancosBCO_NOSSO_NUM_FINAL.AsString;
-    Objeto.OutroDadoConfiguracao1 := Trim(IbTblBancosBCO_CONFG_1.AsString);
-    Objeto.OutroDadoConfiguracao2 := Trim(IbTblBancosBCO_CONFG_2.AsString);
+    Objeto.CodigoAgencia          := IbQryBancosBCO_AGENCIA.AsString;
+    Objeto.NumeroContaCorrente    := IbQryBancosBCO_CC.AsString;
+    Objeto.CodigoCedente          := IbQryBancosBCO_CHAVE.AsString;
+    Objeto.InicioNossoNumero      := IbQryBancosBCO_NOSSO_NUM_INICIO.AsString;
+    Objeto.FimNossoNumero         := IbQryBancosBCO_NOSSO_NUM_FINAL.AsString;
+    Objeto.OutroDadoConfiguracao1 := Trim(IbQryBancosBCO_CONFG_1.AsString);
+    Objeto.OutroDadoConfiguracao2 := Trim(IbQryBancosBCO_CONFG_2.AsString);
 
-    if ( Trim(IbTblBancosBCO_NOSSO_NUM_PROXIMO.AsString) = EmptyStr ) then
+    if ( Trim(IbQryBancosBCO_NOSSO_NUM_PROXIMO.AsString) = EmptyStr ) then
       Objeto.ProximoNossoNumero  := '1'
     else
-      Objeto.ProximoNossoNumero  := IbTblBancosBCO_NOSSO_NUM_PROXIMO.AsString;
+      Objeto.ProximoNossoNumero  := IbQryBancosBCO_NOSSO_NUM_PROXIMO.AsString;
 
     Objeto.PadroesBoleto.PadroesBoletoImpresso.ArquivoLogotipo            := sAppPath + BOLETO_ARQUIVO_LOGOTIPO;
     Objeto.PadroesBoleto.PadroesBoletoImpresso.CaminhoImagensCodigoBarras := sAppPath + BOLETO_IMAGENS;
@@ -311,7 +342,7 @@ begin
         if not CdsTitulos.FindKey( [Objeto.OcorrenciasCobranca[I].NossoNumero] ) then
         begin
           CdsTitulos.Append;
-          
+
           CdsTitulosQuitar.AsString          := '.';
           CdsTitulosNossoNumero.AsString     := Objeto.OcorrenciasCobranca[I].NossoNumero;
           CdsTitulosNumeroDocumento.AsString := Objeto.OcorrenciasCobranca[I].NumeroDocumento;
@@ -321,7 +352,7 @@ begin
           CdsTitulosBanco.AsInteger          := edBanco.Tag;
           CdsTitulosArquivo.AsString         := sArquivo;
 
-          if ( LancamentoIdentificado( CdsTitulosBanco.AsInteger, CdsTitulosNossoNumero.AsString, Ano, Lancamento, Parcela, APagar, Sacado, Cnpj) ) then
+          if ( LancamentoIdentificado( CdsTitulosBanco.AsInteger, CdsTitulosNossoNumero.AsString, CdsTitulosNumeroDocumento.AsString, Ano, Lancamento, Parcela, APagar, Sacado, Cnpj) ) then
           begin
             if ( CdsTitulosValorPago.AsCurrency >= APagar ) then
               CdsTitulosQuitar.Value   := 'X';
@@ -347,6 +378,12 @@ begin
   end;
 end;
 
+function TfrmGeRetornoBoleto.CarregarRetornoACBr(
+  sArquivo: String): Boolean;
+begin
+  ;
+end;
+
 procedure TfrmGeRetornoBoleto.btnCarregarRetornoClick(Sender: TObject);
 var
   IArquivos ,
@@ -359,34 +396,38 @@ begin
 
     if ( lstBxRetorno.Items.Count = 0 ) then
     begin
-      Application.MessageBox('Não existe(m) arquivo(s) de retorno para o banco selecionado.','Alerta', MB_ICONEXCLAMATION);
+      ShowWarning('Não existe(m) arquivo(s) de retorno para o banco selecionado.');
       Exit;
     end;
 
     if ( ArquivoSelecionado ) then
     begin
-      Application.MessageBox('Não existe(m) arquivo(s) de retorno selecionado(s) para carga.','Alerta', MB_ICONEXCLAMATION);
+      ShowWarning('Não existe(m) arquivo(s) de retorno selecionado(s) para carga.');
       Exit;
     end;
 
-    if ( Application.MessageBox('Confirma a carga dos registros de cobrança do(s) arquivo(s) de retorno selecionado(s)?','Ler Retorno', MB_YESNO + MB_ICONQUESTION + MB_DEFBUTTON2) <> ID_YES ) then
+    if ( not ShowConfirm('Confirma a carga dos registros de cobrança do(s) arquivo(s) de retorno selecionado(s)?', 'Ler Retorno') ) then
       Exit;
 
     if ( edBanco.ItemIndex < 0 ) then
     begin
-      Application.MessageBox(PChar('Favor selecionar a entidade financeira para geração dos boletos.'), 'Alerta', MB_ICONWARNING);
+      ShowWarning('Favor selecionar a entidade financeira para geração dos boletos.');
       Exit;
     end;
 
     IBanco    := StrToIntDef( Copy(edBanco.Text, 1, 3), 0 );
-    ICarteira := IbTblBancosBCO_CARTEIRA.AsInteger;
+    ICarteira := IbQryBancosBCO_CARTEIRA.AsInteger;
 
     if DefinirCedente( IBanco, ICarteira, CobreBemX ) then
     begin
 
       for IArquivos := 0 to lstBxRetorno.Items.Count - 1 do
         if ( lstBxRetorno.Checked[IArquivos] ) then
+          {$IFDEF ACBR}
+          if ( CarregarRetornoACBr( lstBxRetorno.Items.Strings[IArquivos] ) ) then
+          {$ELSE}
           if ( CarregarRetorno(lstBxRetorno.Items.Strings[IArquivos], CobreBemX) ) then
+          {$ENDIF}
           begin
 
             lstBxRetorno.Checked[IArquivos] := False;
@@ -402,14 +443,14 @@ begin
             Application.ProcessMessages;
           end;
 
-      Application.MessageBox('Arquivo(s) de retorno carregado(s) com sucesso.','Retorno', MB_ICONINFORMATION);
-      
+      ShowInformation('Retorno', 'Arquivo(s) de retorno carregado(s) com sucesso.');
+
       edBancoChange(edBanco);
     end;
 
   except
     On E : Exception do
-      Application.MessageBox(PChar('Erro na tentativa de carregar os registro de cobrança.' + #13 + E.Message), 'Erro', MB_ICONERROR);
+      ShowError('Erro na tentativa de carregar os registro de cobrança.' + #13 + E.Message);
   end;
 end;
 
@@ -429,15 +470,21 @@ begin
 end;
 
 function TfrmGeRetornoBoleto.LancamentoIdentificado(Banco: Integer;
-  sNossoNumero: String; var Ano, Lancamento: Integer; var Parcela: Integer;
+  sNossoNumero, sDocumento : String; var Ano, Lancamento: Integer; var Parcela: Integer;
   var APagar: Currency; var Sacado, Cnpj: String): Boolean;
 var
+  sWHRDoc : String;
   sSQL : TStringList;
+  bReturn : Boolean;
 begin
+
+  bReturn := False;
 
   try
 
     try
+      // Buscar pelo NOSSO_NUMERO
+
       sSQL := TStringList.Create;
       sSQL.BeginUpdate;
       sSQL.Add(' Select ');
@@ -450,7 +497,8 @@ begin
       sSQL.Add('   , r.nossonumero ');
       sSQL.Add(' from TBCONTREC r ');
       sSQL.Add('   inner join TBCLIENTE c on ( r.cnpj = c.cnpj ) ');
-      sSQL.Add(' where r.codbanco = '    + IntToStr(Banco) );
+      sSQL.Add(' where r.baixado  = 0');
+      sSQL.Add('   and r.codbanco = ' + IntToStr(Banco) );
       sSQL.Add('   and r.nossonumero = ' + QuotedStr(sNossoNumero) );
       sSQL.EndUpdate;
 
@@ -461,9 +509,9 @@ begin
         SQL.AddStrings( sSQL );
         Open;
 
-        Result := ( not IsEmpty );
+        bReturn := ( not IsEmpty );
 
-        if ( Result ) then
+        if ( bReturn ) then
         begin
           Ano        := FieldByName('anolanc').AsInteger;
           Lancamento := FieldByName('numlanc').AsInteger;
@@ -472,19 +520,78 @@ begin
           Sacado     := FieldByName('nome').AsString;
           Cnpj       := FieldByName('cnpj').AsString;
         end
+      end;
+
+      if ( (not bReturn) and (Trim(sDocumento) <> EmptyStr) ) then
+      begin
+        // Buscar pelo NUMERO_DOCUMENTO
+        // Documento NF-e
+        if Pos('-', sWHRDoc) > 0 then
+          sWHRDoc := '(v.nfe = ' + Copy(sDocumento, 1, Pos('-', sDocumento) - 1) +
+             ' and r.parcela = ' + Copy(sDocumento, Pos('-', sDocumento) + 1, 2) + ')'
         else
+        // Documento Lançamento
+        if ( Length(Trim(sDocumento)) = 13 ) then
+          sWHRDoc := '(r.anolanc = ' + IntToStr( 2000 + StrToInt( Copy(sDocumento, 1, 2)) ) + // 2
+                 ' and r.numlanc = ' + Copy(sDocumento,  3, 8) +                              // 8
+                 ' and r.parcela = ' + Copy(sDocumento, 11, 3) + ')'                          // 3
+        else
+          sWHRDoc := '(1 = 0)';
+
+        sSQL.Clear;
+        sSQL.BeginUpdate;
+        sSQL.Add(' Select ');
+        sSQL.Add('     r.anolanc ');
+        sSQL.Add('   , r.numlanc ');
+        sSQL.Add('   , r.parcela ');
+        sSQL.Add('   , coalesce(r.valorsaldo, r.valorrec) as apagar ');
+        sSQL.Add('   , c.nome ');
+        sSQL.Add('   , r.cnpj ');
+        sSQL.Add('   , r.nossonumero ');
+        sSQL.Add(' from TBCONTREC r ');
+        sSQL.Add('   inner join TBCLIENTE c on ( r.cnpj = c.cnpj ) ');
+        sSQL.Add('   left join TBVENDAS v on (v.ano = r.anovenda and v.codcontrol = r.numvenda) ');
+        sSQL.Add(' where r.baixado  = 0');
+        sSQL.Add('   and r.codbanco = ' + IntToStr(Banco) );
+        sSQL.Add('   and ' + sWHRDoc );
+        sSQL.EndUpdate;
+
+        with gFind do
         begin
-          Ano        := 0;
-          Lancamento := 0;
-          Parcela    := 0;
-          APagar     := 0;
-          Sacado     := EmptyStr;
-          Cnpj       := EmptyStr;
+          Close;
+          SQL.Clear;
+          SQL.AddStrings( sSQL );
+          Open;
+
+          bReturn := ( not IsEmpty );
+
+          if ( bReturn ) then
+          begin
+            Ano        := FieldByName('anolanc').AsInteger;
+            Lancamento := FieldByName('numlanc').AsInteger;
+            Parcela    := FieldByName('parcela').AsInteger;
+            APagar     := FieldByName('apagar').AsCurrency;
+            Sacado     := FieldByName('nome').AsString;
+            Cnpj       := FieldByName('cnpj').AsString;
+          end
         end;
 
-        btnConfirmarBaixa.Enabled := ( btnConfirmarBaixa.Enabled ) or ( Result );
       end;
+
+      if ( not bReturn ) then
+      begin
+        Ano        := 0;
+        Lancamento := 0;
+        Parcela    := 0;
+        APagar     := 0;
+        Sacado     := EmptyStr;
+        Cnpj       := EmptyStr;
+      end;
+
+      btnConfirmarBaixa.Enabled := ( btnConfirmarBaixa.Enabled ) or ( bReturn );
+
     finally
+      Result := bReturn;
       sSQL.Free;
     end;
 
@@ -549,11 +656,11 @@ begin
     end;
 
     CdsTitulos.EmptyDataSet;
-    Application.MessageBox('Processo de baixa de lançamentos executado com sucesso.','Baixa', MB_ICONINFORMATION);
+    ShowInformation('Baixa', 'Processo de baixa de lançamentos executado com sucesso.');
 
   except
     On E : Exception do
-      Application.MessageBox(PChar('Erro na tentativa de quitar o(s) lançamento(s) identificado(s).' + #13 + E.Message), 'Erro', MB_ICONERROR);
+      ShowError('Erro na tentativa de quitar o(s) lançamento(s) identificado(s).' + #13 + E.Message);
   end;
 end;
 

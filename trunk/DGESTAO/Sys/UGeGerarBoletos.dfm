@@ -2491,6 +2491,8 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
     ModifySQL.Strings = (
       'update TBCONTREC'
       'set'
+      '  PERCENTJUROS = :PERCENTJUROS,'
+      '  PERCENTMULTA= :PERCENTMULTA,'
       '  CODBANCO = :CODBANCO,'
       '  NOSSONUMERO = :NOSSONUMERO,'
       '  DATAPROCESSOBOLETO = :DATAPROCESSOBOLETO'

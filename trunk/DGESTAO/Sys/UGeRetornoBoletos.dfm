@@ -512,148 +512,6 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
         end>
     end
   end
-  object IbTblBancos: TIBTable
-    Database = DMBusiness.ibdtbsBusiness
-    Transaction = DMBusiness.ibtrnsctnBusiness
-    FieldDefs = <
-      item
-        Name = 'BCO_COD'
-        DataType = ftSmallint
-      end
-      item
-        Name = 'BCO_CARTEIRA'
-        DataType = ftString
-        Size = 10
-      end
-      item
-        Name = 'BCO_NOME'
-        DataType = ftString
-        Size = 50
-      end
-      item
-        Name = 'BCO_CHAVE'
-        DataType = ftString
-        Size = 10
-      end
-      item
-        Name = 'BCO_AGENCIA'
-        DataType = ftString
-        Size = 10
-      end
-      item
-        Name = 'BCO_CC'
-        DataType = ftString
-        Size = 10
-      end
-      item
-        Name = 'BCO_NOSSO_NUM_INICIO'
-        DataType = ftString
-        Size = 10
-      end
-      item
-        Name = 'BCO_NOSSO_NUM_FINAL'
-        DataType = ftString
-        Size = 10
-      end
-      item
-        Name = 'BCO_NOSSO_NUM_PROXIMO'
-        DataType = ftString
-        Size = 10
-      end
-      item
-        Name = 'BCO_CONFG_1'
-        DataType = ftString
-        Size = 20
-      end
-      item
-        Name = 'BCO_CONFG_2'
-        DataType = ftString
-        Size = 20
-      end
-      item
-        Name = 'BCO_SEQUENCIAL_REM'
-        DataType = ftInteger
-      end
-      item
-        Name = 'BCO_DIRETORIO_REMESSA'
-        DataType = ftString
-        Size = 100
-      end
-      item
-        Name = 'BCO_DIRETORIO_RETORNO'
-        DataType = ftString
-        Size = 100
-      end>
-    IndexDefs = <
-      item
-        Name = 'PK_TBBANCO_BOLETO'
-        Fields = 'BCO_COD'
-        Options = [ixUnique]
-      end>
-    IndexName = 'PK_TBBANCO_BOLETO'
-    StoreDefs = True
-    TableName = 'TBBANCO_BOLETO'
-    Left = 16
-    Top = 232
-    object IbTblBancosBCO_COD: TSmallintField
-      FieldName = 'BCO_COD'
-      ProviderFlags = [pfInUpdate, pfInKey]
-    end
-    object IbTblBancosBCO_CARTEIRA: TIBStringField
-      FieldName = 'BCO_CARTEIRA'
-      ProviderFlags = [pfInUpdate]
-      Size = 10
-    end
-    object IbTblBancosBCO_NOME: TIBStringField
-      FieldName = 'BCO_NOME'
-      ProviderFlags = [pfInUpdate]
-      Size = 50
-    end
-    object IbTblBancosBCO_CHAVE: TIBStringField
-      FieldName = 'BCO_CHAVE'
-      ProviderFlags = [pfInUpdate]
-      Size = 10
-    end
-    object IbTblBancosBCO_AGENCIA: TIBStringField
-      FieldName = 'BCO_AGENCIA'
-      ProviderFlags = [pfInUpdate]
-      Size = 10
-    end
-    object IbTblBancosBCO_CC: TIBStringField
-      FieldName = 'BCO_CC'
-      ProviderFlags = [pfInUpdate]
-      Size = 10
-    end
-    object IbTblBancosBCO_NOSSO_NUM_INICIO: TIBStringField
-      FieldName = 'BCO_NOSSO_NUM_INICIO'
-      Size = 10
-    end
-    object IbTblBancosBCO_NOSSO_NUM_FINAL: TIBStringField
-      FieldName = 'BCO_NOSSO_NUM_FINAL'
-      Size = 10
-    end
-    object IbTblBancosBCO_NOSSO_NUM_PROXIMO: TIBStringField
-      FieldName = 'BCO_NOSSO_NUM_PROXIMO'
-      Size = 10
-    end
-    object IbTblBancosBCO_CONFG_1: TIBStringField
-      FieldName = 'BCO_CONFG_1'
-    end
-    object IbTblBancosBCO_CONFG_2: TIBStringField
-      FieldName = 'BCO_CONFG_2'
-    end
-    object IbTblBancosBCO_SEQUENCIAL_REM: TIntegerField
-      FieldName = 'BCO_SEQUENCIAL_REM'
-    end
-    object IbTblBancosBCO_DIRETORIO_REMESSA: TIBStringField
-      FieldName = 'BCO_DIRETORIO_REMESSA'
-      Size = 100
-    end
-    object IbTblBancosBCO_DIRETORIO_RETORNO: TIBStringField
-      FieldName = 'BCO_DIRETORIO_RETORNO'
-      Size = 100
-    end
-  end
   object UpdateLanc: TIBSQL
     Database = DMBusiness.ibdtbsBusiness
     SQL.Strings = (
@@ -804,5 +662,296 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
     Transaction = DMBusiness.ibtrnsctnBusiness
     Left = 80
     Top = 265
+  end
+  object IbQryBancos: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'Select'
+      '    b.bco_cod'
+      '  , b.bco_carteira'
+      '  , b.bco_nome'
+      '  , b.bco_agencia'
+      '  , b.bco_cc'
+      '  , b.bco_codigo_cedente'
+      '  , b.bco_chave'
+      '  , b.bco_gerar_boleto'
+      '  , b.bco_nosso_num_inicio'
+      '  , b.bco_nosso_num_final'
+      '  , b.bco_nosso_num_proximo'
+      '  , b.BCO_CONFG_1'
+      '  , b.BCO_CONFG_2'
+      '  , b.bco_sequencial_rem'
+      '  , b.bco_diretorio_remessa'
+      '  , b.bco_diretorio_retorno'
+      '  , b.bco_percentual_juros'
+      '  , b.bco_percentual_mora'
+      '  , b.bco_dia_protesto'
+      '  , b.bco_msg_instrucao'
+      '  , b.bco_layout_remessa'
+      '  , b.bco_layout_retorno'
+      '  , b.empresa'
+      '  , e.rzsoc'
+      '  , e.nmfant'
+      '  , e.ie'
+      '  , e.im'
+      '  , e.ender'
+      '  , e.complemento'
+      '  , e.numero_end'
+      '  , e.bairro'
+      '  , e.cep'
+      '  , e.cidade'
+      '  , e.uf'
+      '  , e.email'
+      'from TBBANCO_BOLETO b'
+      '  inner join TBEMPRESA e on (b.empresa = e.cnpj)'
+      ''
+      'where b.bco_gerar_boleto = 1'
+      '  and b.empresa = :empresa')
+    UpdateObject = IbUpdBancos
+    Left = 16
+    Top = 216
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'empresa'
+        ParamType = ptInput
+        Value = ''
+      end>
+    object IbQryBancosBCO_COD: TSmallintField
+      FieldName = 'BCO_COD'
+      Origin = '"TBBANCO_BOLETO"."BCO_COD"'
+      ProviderFlags = [pfInUpdate, pfInKey]
+      Required = True
+    end
+    object IbQryBancosEMPRESA: TIBStringField
+      FieldName = 'EMPRESA'
+      Origin = '"TBBANCO_BOLETO"."EMPRESA"'
+      ProviderFlags = [pfInUpdate]
+      Size = 18
+    end
+    object IbQryBancosBCO_CARTEIRA: TIBStringField
+      FieldName = 'BCO_CARTEIRA'
+      Origin = '"TBBANCO_BOLETO"."BCO_CARTEIRA"'
+      ProviderFlags = [pfInUpdate]
+      Required = True
+      Size = 10
+    end
+    object IbQryBancosBCO_NOME: TIBStringField
+      FieldName = 'BCO_NOME'
+      Origin = '"TBBANCO_BOLETO"."BCO_NOME"'
+      ProviderFlags = [pfInUpdate]
+      Size = 50
+    end
+    object IbQryBancosBCO_AGENCIA: TIBStringField
+      FieldName = 'BCO_AGENCIA'
+      Origin = '"TBBANCO_BOLETO"."BCO_AGENCIA"'
+      ProviderFlags = [pfInUpdate]
+      Size = 10
+    end
+    object IbQryBancosBCO_CC: TIBStringField
+      FieldName = 'BCO_CC'
+      Origin = '"TBBANCO_BOLETO"."BCO_CC"'
+      ProviderFlags = [pfInUpdate]
+      Size = 10
+    end
+    object IbQryBancosBCO_CODIGO_CEDENTE: TIBStringField
+      FieldName = 'BCO_CODIGO_CEDENTE'
+      Origin = '"TBBANCO_BOLETO"."BCO_CODIGO_CEDENTE"'
+      Size = 10
+    end
+    object IbQryBancosBCO_CHAVE: TIBStringField
+      FieldName = 'BCO_CHAVE'
+      Origin = '"TBBANCO_BOLETO"."BCO_CHAVE"'
+      ProviderFlags = [pfInUpdate]
+      Size = 10
+    end
+    object IbQryBancosBCO_GERAR_BOLETO: TSmallintField
+      FieldName = 'BCO_GERAR_BOLETO'
+      Origin = '"TBBANCO_BOLETO"."BCO_GERAR_BOLETO"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbQryBancosBCO_NOSSO_NUM_INICIO: TIBStringField
+      FieldName = 'BCO_NOSSO_NUM_INICIO'
+      Origin = '"TBBANCO_BOLETO"."BCO_NOSSO_NUM_INICIO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 10
+    end
+    object IbQryBancosBCO_NOSSO_NUM_FINAL: TIBStringField
+      FieldName = 'BCO_NOSSO_NUM_FINAL'
+      Origin = '"TBBANCO_BOLETO"."BCO_NOSSO_NUM_FINAL"'
+      ProviderFlags = [pfInUpdate]
+      Size = 10
+    end
+    object IbQryBancosBCO_NOSSO_NUM_PROXIMO: TIBStringField
+      FieldName = 'BCO_NOSSO_NUM_PROXIMO'
+      Origin = '"TBBANCO_BOLETO"."BCO_NOSSO_NUM_PROXIMO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 10
+    end
+    object IbQryBancosBCO_CONFG_1: TIBStringField
+      FieldName = 'BCO_CONFG_1'
+      Origin = '"TBBANCO_BOLETO"."BCO_CONFG_1"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbQryBancosBCO_CONFG_2: TIBStringField
+      FieldName = 'BCO_CONFG_2'
+      Origin = '"TBBANCO_BOLETO"."BCO_CONFG_2"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbQryBancosBCO_SEQUENCIAL_REM: TIntegerField
+      FieldName = 'BCO_SEQUENCIAL_REM'
+      Origin = '"TBBANCO_BOLETO"."BCO_SEQUENCIAL_REM"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbQryBancosBCO_DIRETORIO_REMESSA: TIBStringField
+      FieldName = 'BCO_DIRETORIO_REMESSA'
+      Origin = '"TBBANCO_BOLETO"."BCO_DIRETORIO_REMESSA"'
+      ProviderFlags = [pfInUpdate]
+      Size = 100
+    end
+    object IbQryBancosBCO_DIRETORIO_RETORNO: TIBStringField
+      FieldName = 'BCO_DIRETORIO_RETORNO'
+      Origin = '"TBBANCO_BOLETO"."BCO_DIRETORIO_RETORNO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 100
+    end
+    object IbQryBancosBCO_PERCENTUAL_JUROS: TIBBCDField
+      FieldName = 'BCO_PERCENTUAL_JUROS'
+      Origin = '"TBBANCO_BOLETO"."BCO_PERCENTUAL_JUROS"'
+      Precision = 18
+      Size = 2
+    end
+    object IbQryBancosBCO_PERCENTUAL_MORA: TIBBCDField
+      FieldName = 'BCO_PERCENTUAL_MORA'
+      Origin = '"TBBANCO_BOLETO"."BCO_PERCENTUAL_MORA"'
+      Precision = 18
+      Size = 2
+    end
+    object IbQryBancosBCO_DIA_PROTESTO: TSmallintField
+      FieldName = 'BCO_DIA_PROTESTO'
+      Origin = '"TBBANCO_BOLETO"."BCO_DIA_PROTESTO"'
+    end
+    object IbQryBancosBCO_MSG_INSTRUCAO: TIBStringField
+      FieldName = 'BCO_MSG_INSTRUCAO'
+      Origin = '"TBBANCO_BOLETO"."BCO_MSG_INSTRUCAO"'
+      Size = 250
+    end
+    object IbQryBancosBCO_LAYOUT_REMESSA: TSmallintField
+      FieldName = 'BCO_LAYOUT_REMESSA'
+      Origin = '"TBBANCO_BOLETO"."BCO_LAYOUT_REMESSA"'
+      ProviderFlags = []
+    end
+    object IbQryBancosBCO_LAYOUT_RETORNO: TSmallintField
+      FieldName = 'BCO_LAYOUT_RETORNO'
+      Origin = '"TBBANCO_BOLETO"."BCO_LAYOUT_RETORNO"'
+      ProviderFlags = []
+    end
+    object IbQryBancosRZSOC: TIBStringField
+      FieldName = 'RZSOC'
+      Origin = '"TBEMPRESA"."RZSOC"'
+      ProviderFlags = []
+      Size = 60
+    end
+    object IbQryBancosNMFANT: TIBStringField
+      FieldName = 'NMFANT'
+      Origin = '"TBEMPRESA"."NMFANT"'
+      ProviderFlags = []
+      Size = 25
+    end
+    object IbQryBancosIE: TIBStringField
+      FieldName = 'IE'
+      Origin = '"TBEMPRESA"."IE"'
+      ProviderFlags = []
+      Size = 11
+    end
+    object IbQryBancosIM: TIBStringField
+      FieldName = 'IM'
+      Origin = '"TBEMPRESA"."IM"'
+      ProviderFlags = []
+      Size = 12
+    end
+    object IbQryBancosENDER: TIBStringField
+      FieldName = 'ENDER'
+      Origin = '"TBEMPRESA"."ENDER"'
+      ProviderFlags = []
+      Size = 250
+    end
+    object IbQryBancosCOMPLEMENTO: TIBStringField
+      FieldName = 'COMPLEMENTO'
+      Origin = '"TBEMPRESA"."COMPLEMENTO"'
+      ProviderFlags = []
+      Size = 50
+    end
+    object IbQryBancosNUMERO_END: TIBStringField
+      FieldName = 'NUMERO_END'
+      Origin = '"TBEMPRESA"."NUMERO_END"'
+      ProviderFlags = []
+      Size = 10
+    end
+    object IbQryBancosBAIRRO: TIBStringField
+      FieldName = 'BAIRRO'
+      Origin = '"TBEMPRESA"."BAIRRO"'
+      ProviderFlags = []
+      Size = 25
+    end
+    object IbQryBancosCEP: TIBStringField
+      FieldName = 'CEP'
+      Origin = '"TBEMPRESA"."CEP"'
+      ProviderFlags = []
+      Size = 8
+    end
+    object IbQryBancosCIDADE: TIBStringField
+      FieldName = 'CIDADE'
+      Origin = '"TBEMPRESA"."CIDADE"'
+      ProviderFlags = []
+      Size = 30
+    end
+    object IbQryBancosUF: TIBStringField
+      FieldName = 'UF'
+      Origin = '"TBEMPRESA"."UF"'
+      ProviderFlags = []
+      FixedChar = True
+      Size = 2
+    end
+    object IbQryBancosEMAIL: TIBStringField
+      FieldName = 'EMAIL'
+      Origin = '"TBEMPRESA"."EMAIL"'
+      ProviderFlags = []
+      Size = 100
+    end
+  end
+  object IbUpdBancos: TIBUpdateSQL
+    RefreshSQL.Strings = (
+      'Select '
+      '  RDB$DB_KEY as IBX_INTERNAL_DBKEY, '
+      '  BCO_COD,'
+      '  BCO_CARTEIRA,'
+      '  BCO_NOME,'
+      '  BCO_CHAVE,'
+      '  BCO_AGENCIA,'
+      '  BCO_CC,'
+      '  BCO_NOSSO_NUM_INICIO,'
+      '  BCO_NOSSO_NUM_FINAL,'
+      '  BCO_NOSSO_NUM_PROXIMO,'
+      '  BCO_CONFG_1,'
+      '  BCO_CONFG_2,'
+      '  BCO_SEQUENCIAL_REM'
+      'from TBBANCO_BOLETO '
+      'where'
+      '  BCO_COD = :BCO_COD')
+    ModifySQL.Strings = (
+      'update TBBANCO_BOLETO'
+      'set'
+      '  BCO_AGENCIA = :BCO_AGENCIA,'
+      '  BCO_CC = :BCO_CC,'
+      '  BCO_NOSSO_NUM_INICIO = :BCO_NOSSO_NUM_INICIO,'
+      '  BCO_NOSSO_NUM_FINAL = :BCO_NOSSO_NUM_FINAL,'
+      '  BCO_NOSSO_NUM_PROXIMO = :BCO_NOSSO_NUM_PROXIMO,'
+      '  BCO_SEQUENCIAL_REM = :BCO_SEQUENCIAL_REM'
+      'where'
+      '  BCO_COD = :OLD_BCO_COD')
+    Left = 48
+    Top = 216
   end
 end

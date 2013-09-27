@@ -533,7 +533,7 @@ implementation
 
 uses UDMBusiness, Forms, FileCtrl, ACBrNFeConfiguracoes,
   ACBrNFeNotasFiscais, ACBrNFeWebServices, StdCtrls, pcnNFe, UFuncoes,
-  UConstantesDGE, DateUtils, pcnRetConsReciNFe;
+  UConstantesDGE, DateUtils, pcnRetConsReciNFe, pcnDownloadNFe;
 
 {$R *.dfm}
 
@@ -3324,17 +3324,34 @@ begin
 
       if Result then
       begin
-        FileNameXML  := WebServices.Consulta.protNFe.PathNFe;
         ChaveNFE     := WebServices.Consulta.NFeChave;
         ProtocoloNFE := WebServices.Consulta.Protocolo;
 
-        NotasFiscais.Clear;
-        NotasFiscais.LoadFromFile( FileNameXML );
+        // (Início) Fazer download da NF-e encontrada
 
-        iSerieNFe   := NotasFiscais.Items[0].NFe.Ide.Serie;
-        iNumeroNFe  := NotasFiscais.Items[0].NFe.Ide.nNF;
-        iTipoNFe    := Ord(NotasFiscais.Items[0].NFe.Ide.tpNF);
-        DataEmissao := NotasFiscais.Items[0].NFe.Ide.dEmi;
+        DownloadNFe.Download.Chaves.Clear;
+        DownloadNFe.Download.Chaves.Add.chNFe := sChave;
+        DownloadNFe.Download.CNPJ             := sCNPJEmitente;
+
+        if ( WebServices.DownloadNFe.Executar ) then
+          FileNameXML := WebServices.DownloadNFe.PathArqResp
+        else
+          raise Exception.Create('Erro ao tentar fazer download do arquivo XML do servidor da SEFA.');
+
+        // (Final) Fazer download da NF-e encontrada
+
+        if not FileExists(FileNameXML) then
+          raise Exception.Create(Format('Arquivo %s não encontrado.', [QuotedStr(FileNameXML)]))
+        else
+        begin
+          NotasFiscais.Clear;
+          NotasFiscais.LoadFromFile( FileNameXML );
+
+          iSerieNFe   := NotasFiscais.Items[0].NFe.Ide.Serie;
+          iNumeroNFe  := NotasFiscais.Items[0].NFe.Ide.nNF;
+          iTipoNFe    := Ord(NotasFiscais.Items[0].NFe.Ide.tpNF);
+          DataEmissao := NotasFiscais.Items[0].NFe.Ide.dEmi;
+        end;
 
         if Imprimir then
         begin
