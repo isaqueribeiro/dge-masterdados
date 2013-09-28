@@ -194,7 +194,6 @@ inherited frmGeLogradouro: TfrmGeLogradouro
       DisplayLabel = 'C'#243'digo'
       FieldName = 'LOG_COD'
       Origin = 'TBLOGRADOURO.LOG_COD'
-      Required = True
     end
     object IbDtstTabelaLOG_NOME: TIBStringField
       DisplayLabel = 'Nome'

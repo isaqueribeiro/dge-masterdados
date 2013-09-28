@@ -483,7 +483,7 @@ begin
   try
 
     try
-      // Buscar pelo NOSSO_NUMERO
+      // Buscar pelo NOSSO_NUMERO registros não baixados
 
       sSQL := TStringList.Create;
       sSQL.BeginUpdate;
@@ -524,7 +524,8 @@ begin
 
       if ( (not bReturn) and (Trim(sDocumento) <> EmptyStr) ) then
       begin
-        // Buscar pelo NUMERO_DOCUMENTO
+        // Buscar pelo NUMERO_DOCUMENTO registros não baixados
+        
         // Documento NF-e
         if Pos('-', sWHRDoc) > 0 then
           sWHRDoc := '(v.nfe = ' + Copy(sDocumento, 1, Pos('-', sDocumento) - 1) +

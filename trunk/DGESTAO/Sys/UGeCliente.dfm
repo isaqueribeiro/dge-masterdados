@@ -310,6 +310,12 @@ inherited frmGeCliente: TfrmGeCliente
           Caption = 'Pessoa F'#237'sica'
           DataField = 'PESSOA_FISICA'
           DataSource = DtSrcTabela
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 1
           ValueChecked = '1'
           ValueUnchecked = '0'
@@ -1349,7 +1355,6 @@ inherited frmGeCliente: TfrmGeCliente
       DisplayLabel = 'C'#243'digo'
       FieldName = 'CODIGO'
       Origin = 'TBEMPRESA.CODIGO'
-      Required = True
     end
     object IbDtstTabelaPESSOA_FISICA: TSmallintField
       DisplayLabel = 'Pessoa F'#237'sica'

@@ -142,6 +142,13 @@ begin
   ControlFirstEdit := nil;
 
   CarregarControleAcesso;
+
+  // Remover a obrigatoriedade de informar código quando o GENERATOR é responsável por sua geração
+  with IbDtstTabela.GeneratorField do
+  begin
+    if (Generator <> EmptyStr) and (Field <> EmptyStr) then
+      IbDtstTabela.FieldByName(Field).Required := False;
+  end;
 end;
 
 procedure TfrmGrPadraoCadastro.dbgDadosDrawColumnCell(Sender: TObject;
@@ -353,64 +360,64 @@ begin
 
   try
 
-  try
+    try
 
-    fOcorreuErro := False;
-    if (Trim(CampoCodigo) = EmptyStr) or ((Trim(CampoDescricao) = EmptyStr)) then
-    begin
-      ShowWarning('O nome do campo chave e/ou de descrição não foram informados');
-      Abort;
-    end;
-
-    with IbDtstTabela, SelectSQL do
-    begin
-      if ( Trim(CampoOrdenacao) = EmptyStr ) then
-        CampoOrdenacao := CampoDescricao;
-
-      Close;
-      Clear;
-      AddStrings( sSQL );
-
-      if ( Trim(edtFiltrar.Text) <> EmptyStr ) then
-        if ( StrToIntDef(Trim(edtFiltrar.Text), 0) > 0 ) then
-          Add( 'where ' + CampoCodigo +  ' = ' + Trim(edtFiltrar.Text) )
-        else
-          Add( 'where (upper(' + CampoDescricao +  ') like ' + QuotedStr('%' + UpperCase(Trim(edtFiltrar.Text)) + '%') +
-               '    or upper(' + CampoDescricao +  ') like ' + QuotedStr('%' + UpperCase(FuncoesString.StrRemoveAllAccents(Trim(edtFiltrar.Text))) + '%') + ')');
-
-      if ( fWhereAdditional <> EmptyStr ) then
-        if ( Pos('where', SelectSQL.Text) > 0 ) then
-          Add( '  and (' + WhereAdditional + ')' )
-        else
-          Add( 'where (' + WhereAdditional + ')' );
-
-      Add( 'order by ' + CampoOrdenacao );
-
-      Open;
-
-      try
-
-        if ( not IsEmpty ) then
-          dbgDados.SetFocus
-        else
-        begin
-          ShowWarning('Não existe registros na tabela para este tipo de pesquisa');
-
-          edtFiltrar.SetFocus;
-          edtFiltrar.SelectAll;
-        end;
-
-      except
+      fOcorreuErro := False;
+      if (Trim(CampoCodigo) = EmptyStr) or ((Trim(CampoDescricao) = EmptyStr)) then
+      begin
+        ShowWarning('O nome do campo chave e/ou de descrição não foram informados');
+        Abort;
       end;
 
+      with IbDtstTabela, SelectSQL do
+      begin
+        if ( Trim(CampoOrdenacao) = EmptyStr ) then
+          CampoOrdenacao := CampoDescricao;
+
+        Close;
+        Clear;
+        AddStrings( sSQL );
+
+        if ( Trim(edtFiltrar.Text) <> EmptyStr ) then
+          if ( StrToIntDef(Trim(edtFiltrar.Text), 0) > 0 ) then
+            Add( 'where ' + CampoCodigo +  ' = ' + Trim(edtFiltrar.Text) )
+          else
+            Add( 'where (upper(' + CampoDescricao +  ') like ' + QuotedStr('%' + UpperCase(Trim(edtFiltrar.Text)) + '%') +
+                 '    or upper(' + CampoDescricao +  ') like ' + QuotedStr('%' + UpperCase(FuncoesString.StrRemoveAllAccents(Trim(edtFiltrar.Text))) + '%') + ')');
+
+        if ( fWhereAdditional <> EmptyStr ) then
+          if ( Pos('where', SelectSQL.Text) > 0 ) then
+            Add( '  and (' + WhereAdditional + ')' )
+          else
+            Add( 'where (' + WhereAdditional + ')' );
+
+        Add( 'order by ' + CampoOrdenacao );
+
+        Open;
+
+        try
+
+          if ( not IsEmpty ) then
+            dbgDados.SetFocus
+          else
+          begin
+            ShowWarning('Não existe registros na tabela para este tipo de pesquisa');
+
+            edtFiltrar.SetFocus;
+            edtFiltrar.SelectAll;
+          end;
+
+        except
+        end;
+
+      end;
+    except
+      On E : Exception do
+      begin
+        fOcorreuErro := True;
+        ShowWarning('Erro ao tentar filtrar registros na tabela.' + #13#13 + E.Message);
+      end;
     end;
-  except
-    On E : Exception do
-    begin
-      fOcorreuErro := True;
-      ShowWarning('Erro ao tentar filtrar registros na tabela.' + #13#13 + E.Message);
-    end;
-  end;
 
   finally
     Screen.Cursor := crDefault;
