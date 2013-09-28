@@ -279,6 +279,7 @@ inherited frmGeContaCorrente: TfrmGeContaCorrente
     end
   end
   inherited DtSrcTabela: TDataSource
+    OnDataChange = DtSrcTabelaDataChange
     Left = 664
   end
   inherited IbUpdTabela: TIBUpdateSQL

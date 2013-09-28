@@ -25,6 +25,7 @@ type
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
     procedure btbtnSalvarClick(Sender: TObject);
     procedure dbBancoButtonClick(Sender: TObject);
+    procedure DtSrcTabelaDataChange(Sender: TObject; Field: TField);
   private
     { Private declarations }
   public
@@ -39,7 +40,7 @@ var
 
 implementation
 
-uses UDMBusiness, UGeBancos;
+uses UDMBusiness, UGeBancos, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -82,13 +83,13 @@ procedure TfrmGeContaCorrente.IbDtstTabelaNewRecord(DataSet: TDataSet);
 begin
   inherited;
   IbDtstTabelaCODIGO.Value := GetNextID(NomeTabela, CampoCodigo);
-  IbDtstTabelaTIPO.Value   := 1;
+  IbDtstTabelaTIPO.Value   := CONTA_CORRENTE_TIPO_CAIXA;
   IbDtstTabelaCONTA_BANCO_BOLETO.Clear;
 end;
 
 procedure TfrmGeContaCorrente.btbtnSalvarClick(Sender: TObject);
 begin
-  IbDtstTabelaCONTA_BANCO_BOLETO.Required := (IbDtstTabelaTIPO.AsInteger = 2);
+  IbDtstTabelaCONTA_BANCO_BOLETO.Required := (IbDtstTabelaTIPO.AsInteger = CONTA_CORRENTE_TIPO_BANCO);
   IbDtstTabelaTIPO_DESC.AsString := dbTipo.Items[ dbTipo.ItemIndex ];
   inherited;
 end;
@@ -106,6 +107,13 @@ begin
       IbDtstTabelaCONTA_BANCO_BOLETO.AsInteger := iCodigo;
       IbDtstTabelaBANCO.AsString := sNome + ' AG.: ' + sAgencia + ' C/C.: ' + sConta;
     end;
+end;
+
+procedure TfrmGeContaCorrente.DtSrcTabelaDataChange(Sender: TObject;
+  Field: TField);
+begin
+  if ( Field = IbDtstTabela.FieldByName('TIPO') ) then
+    dbBanco.Button.Enabled := (IbDtstTabela.FieldByName('TIPO').AsInteger = CONTA_CORRENTE_TIPO_BANCO);
 end;
 
 initialization

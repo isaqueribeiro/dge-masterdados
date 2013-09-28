@@ -256,7 +256,6 @@ inherited frmGeBairro: TfrmGeBairro
       DisplayLabel = 'C'#243'digo'
       FieldName = 'BAI_COD'
       Origin = 'TBBAIRRO.BAI_COD'
-      Required = True
     end
     object IbDtstTabelaBAI_NOME: TIBStringField
       DisplayLabel = 'Nome'

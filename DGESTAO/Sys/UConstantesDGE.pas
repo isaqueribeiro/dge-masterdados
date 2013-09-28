@@ -22,6 +22,9 @@ const
   SEGMENTO_VAREJO_ATACADO_DS = 'Varejo e Atacado';
   SEGMENTO_MERCADO_CARRO_DS  = 'Comércio de Veículos';
 
+  CONTA_CORRENTE_TIPO_CAIXA = 1;
+  CONTA_CORRENTE_TIPO_BANCO = 2;
+
   BOLETO_ARQUIVO_LOGOTIPO = 'Imagens\Emitente.gif';
   BOLETO_IMAGENS          = 'Imagens\';
   BOLETO_LICENCAS         = 'Licencas\';
