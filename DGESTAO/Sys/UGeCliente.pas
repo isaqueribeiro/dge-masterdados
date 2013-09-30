@@ -6,10 +6,11 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UGrPadraoCadastro, ImgList, IBCustomDataSet, IBUpdateSQL, DB,
   Mask, DBCtrls, StdCtrls, Buttons, ExtCtrls, Grids, DBGrids, ComCtrls,
-  ToolWin, IBTable, rxToolEdit, RXDBCtrl, IBQuery, Menus;
+  ToolWin, IBTable, rxToolEdit, RXDBCtrl, IBQuery, Menus,
+  UObserverInterface, UCliente;
 
 type
-  TfrmGeCliente = class(TfrmGrPadraoCadastro)
+  TfrmGeCliente = class(TfrmGrPadraoCadastro, IObserver) // Observador
     IbDtstTabelaCODIGO: TIntegerField;
     IbDtstTabelaPESSOA_FISICA: TSmallintField;
     IbDtstTabelaCNPJ: TIBStringField;
@@ -30,7 +31,6 @@ type
     IbDtstTabelaEMAIL: TIBStringField;
     dbPessoaFisica: TDBCheckBox;
     lblCNPJ: TLabel;
-    dbCNPJ: TDBEdit;
     lblRazao: TLabel;
     dbRazao: TDBEdit;
     lblIE: TLabel;
@@ -142,6 +142,7 @@ type
     popProcesso: TPopupMenu;
     mpClienteBloquear: TMenuItem;
     mpClienteDesbloquear: TMenuItem;
+    dbCNPJ: TRxDBComboEdit;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -162,11 +163,14 @@ type
     procedure btbtnAlterarClick(Sender: TObject);
     procedure mpClienteDesbloquearClick(Sender: TObject);
     procedure mpClienteBloquearClick(Sender: TObject);
+    procedure dbCNPJButtonClick(Sender: TObject);
   private
     { Private declarations }
     procedure GetComprasAbertas(sCNPJ : String);
   public
     { Public declarations }
+    procedure Update(Observeble: IObservable); overload;
+    procedure Update(Observeble: IObservable; sMessage: string); overload;
   end;
 
 var
@@ -578,6 +582,40 @@ begin
         IbDtstTabela.Open;
         IbDtstTabela.Locate('CNPJ', sCNPJ, []);
       end;
+end;
+
+procedure TfrmGeCliente.Update(Observeble: IObservable);
+begin
+  ShowWarning('Atualizar observador!');
+end;
+
+procedure TfrmGeCliente.Update(Observeble: IObservable; sMessage: string);
+begin
+  Self.Update(Observeble);
+end;
+
+procedure TfrmGeCliente.dbCNPJButtonClick(Sender: TObject);
+var
+  fCliente : TCliente;
+  bRetorno : Boolean;
+begin
+  fCliente := TCliente.Create;
+  try
+    if dbPessoaFisica.Checked then
+      bRetorno := FormFunction.ShowModalForm(Self, 'frmGrConsultarCPF', frmGeCliente)
+    else
+      bRetorno := FormFunction.ShowModalForm(Self, 'frmGrConsultarCNJP', frmGeCliente);
+
+    if not (IbDtstTabela.State in [dsEdit, dsInsert]) then
+      Exit;
+
+    if bRetorno then
+    begin
+    
+    end;
+  finally
+    fCliente.Destroy;
+  end;
 end;
 
 initialization

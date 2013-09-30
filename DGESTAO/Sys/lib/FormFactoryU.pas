@@ -17,7 +17,7 @@ type
 end;
 
 var
-_FormFactory: TFormFactory;
+  _FormFactory: TFormFactory;
 
 implementation
 
