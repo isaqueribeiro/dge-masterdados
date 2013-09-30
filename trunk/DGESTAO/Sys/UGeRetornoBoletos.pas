@@ -750,7 +750,7 @@ begin
     inherited;
 end;
 
-initialization
+initialization  
   FormFunction.RegisterForm('frmGeRetornoBoleto', TfrmGeRetornoBoleto);
 
 end.

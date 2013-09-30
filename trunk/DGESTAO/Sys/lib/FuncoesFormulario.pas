@@ -2,9 +2,9 @@ unit FuncoesFormulario;
 
 interface
 
-uses Classes, Forms, Controls, QRCtrls, QuickRpt;{, ConexaoDB, Basico, BasicoTela,  Windows, Messages, SysUtils, Variants,
-Graphics, Dialogs, StdCtrls;
-}
+uses
+  Classes, Forms, Controls, QRCtrls, QuickRpt,
+  UObserverInterface;
 
 type
   TFormularios = class
@@ -12,7 +12,8 @@ type
 
   public
     class function EstaAberto(sForm: String): Boolean;
-    class function ShowModalForm(const AOnwer : TComponent; NomeForm: String): Boolean;
+    class function ShowModalForm(const AOnwer : TComponent; NomeForm: String): Boolean; overload;
+    class function ShowModalForm(const AOnwer : TComponent; NomeForm: String; Observador : IObserver): Boolean; overload;
     class procedure ShowForm(const AOnwer : TComponent; NomeForm: String);
     class procedure ShowFormReport(const AOnwer : TComponent; NomeForm: String); overload;
     class procedure ShowFormReport(const AOnwer : TComponent; NomeForm, NomeQuickRep: String); overload;
@@ -140,6 +141,22 @@ begin
   try
     if TFormularios.EstaAberto(NomeForm) then
       FForm := _FormFactory.CreateForm(AOnwer, NomeForm);
+    Result := (FForm.ShowModal = mrOk);
+  finally
+    FForm.Free;
+  end;
+end;
+
+class function TFormularios.ShowModalForm(const AOnwer: TComponent;
+  NomeForm: String; Observador: IObserver): Boolean;
+begin
+  try
+    if TFormularios.EstaAberto(NomeForm) then
+      FForm := _FormFactory.CreateForm(AOnwer, NomeForm);
+
+    // Adicionando o "Observador" no formulário "Observado"  
+    IObservable(FForm as IObservable).addObserver(Observador);
+
     Result := (FForm.ShowModal = mrOk);
   finally
     FForm.Free;

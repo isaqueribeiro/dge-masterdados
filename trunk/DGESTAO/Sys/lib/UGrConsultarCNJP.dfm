@@ -15,6 +15,8 @@ object frmGrConsultarCNJP: TfrmGrConsultarCNJP
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   DesignSize = (
     644
@@ -562,6 +564,7 @@ object frmGrConsultarCNJP: TfrmGrConsultarCNJP
     Font.Style = []
     ParentFont = False
     TabOrder = 2
+    OnClick = btnRecuperarClick
     Glyph.Data = {
       36060000424D3606000000000000360000002800000020000000100000000100
       18000000000000060000000000000000000000000000000000000000FF0000FF

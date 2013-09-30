@@ -5,11 +5,12 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, Dialogs, ExtCtrls, StdCtrls, Buttons,
-  ACBrBase, ACBrSocket, ACBrConsultaCNPJ, JPEG, Mask; 
+  ACBrBase, ACBrSocket, ACBrConsultaCNPJ, JPEG, Mask,
+  UObserverInterface, UCliente;
 
 
 type
-  TfrmGrConsultarCNJP = class(TForm)
+  TfrmGrConsultarCNJP = class(TForm, IObservable)  // Observado
     pnlRetorno: TPanel;
     Label2: TLabel;
     Label3: TLabel;
@@ -54,15 +55,21 @@ type
     procedure tmrCaptchaTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure edCaptchaKeyPress(Sender: TObject; var Key: Char);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure btnRecuperarClick(Sender: TObject);
   private
     { Private declarations }
+    FObservers: TInterfaceList;
+    FCliente : TCliente;
   public
     { Public declarations }
+    procedure addObserver(Observer: IObserver);
+    procedure removeObserver(Observer: IObserver);
+    procedure Notify; overload;
+    procedure Notify(sMessage: string); overload;
   end;
 
-//var
-//  frmGrConsultarCNJP: TfrmGrConsultarCNJP;
-//
 implementation
 
 uses
@@ -138,6 +145,67 @@ begin
   tmrCaptcha.Enabled := False;
   LabAtualizarCaptchaClick(LabAtualizarCaptcha);
   edCNPJ.SetFocus;
+end;
+
+procedure TfrmGrConsultarCNJP.FormCreate(Sender: TObject);
+begin
+  FObservers := TInterfaceList.Create;
+  FCliente   := TCliente.GetInstance();
+end;
+
+procedure TfrmGrConsultarCNJP.addObserver(Observer: IObserver);
+var
+  I : Integer;
+begin
+  I := FObservers.IndexOf(Observer);
+  if (I < 0) then
+    FObservers.Add(Observer);
+end;
+
+procedure TfrmGrConsultarCNJP.Notify;
+var
+  I : Integer;
+  Observer : IInterface;
+begin
+  for I := 0 to FObservers.Count - 1 do
+  begin
+    Observer := FObservers.Items[I];
+    IObserver(Observer).Update(Self);
+  end;
+end;
+
+procedure TfrmGrConsultarCNJP.Notify(sMessage: string);
+//var
+//  I : Integer;
+//  Observer: IInterface;
+begin
+  Self.Notify;
+//  Self.FMessageBaseObject := sMessage;
+//  for I := 0 to FObservers.Count - 1 do
+//  begin
+//    Observer := FObservers.Items[I];
+//    IObserver(Observer).Update(Self, Self.FMessageBaseObject);
+//  end;
+end;
+
+procedure TfrmGrConsultarCNJP.removeObserver(Observer: IObserver);
+var
+  I : Integer;
+begin
+  I := FObservers.IndexOf(Observer);
+  if (I > - 1) then
+    FObservers.Remove(Observer);
+end;
+
+procedure TfrmGrConsultarCNJP.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(FObservers);
+end;
+
+procedure TfrmGrConsultarCNJP.btnRecuperarClick(Sender: TObject);
+begin
+  Self.Notify;
+  ModalResult := mrOk;
 end;
 
 initialization
