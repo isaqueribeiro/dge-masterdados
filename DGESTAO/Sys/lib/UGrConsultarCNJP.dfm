@@ -77,7 +77,7 @@ object frmGrConsultarCNJP: TfrmGrConsultarCNJP
       ParentFont = False
     end
     object Label5: TLabel
-      Left = 192
+      Left = 242
       Top = 59
       Width = 59
       Height = 16
@@ -90,7 +90,7 @@ object frmGrConsultarCNJP: TfrmGrConsultarCNJP
       ParentFont = False
     end
     object Label6: TLabel
-      Left = 486
+      Left = 534
       Top = 59
       Width = 45
       Height = 16
@@ -236,7 +236,7 @@ object frmGrConsultarCNJP: TfrmGrConsultarCNJP
       TabOrder = 2
     end
     object EditEndereco: TEdit
-      Left = 192
+      Left = 242
       Top = 77
       Width = 288
       Height = 24
@@ -250,9 +250,9 @@ object frmGrConsultarCNJP: TfrmGrConsultarCNJP
       TabOrder = 4
     end
     object EditNumero: TEdit
-      Left = 486
+      Left = 536
       Top = 77
-      Width = 138
+      Width = 88
       Height = 24
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -350,7 +350,7 @@ object frmGrConsultarCNJP: TfrmGrConsultarCNJP
     object EditFantasia: TEdit
       Left = 8
       Top = 77
-      Width = 178
+      Width = 227
       Height = 24
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
