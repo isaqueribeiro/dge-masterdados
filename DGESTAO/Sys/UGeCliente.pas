@@ -6,8 +6,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UGrPadraoCadastro, ImgList, IBCustomDataSet, IBUpdateSQL, DB,
   Mask, DBCtrls, StdCtrls, Buttons, ExtCtrls, Grids, DBGrids, ComCtrls,
-  ToolWin, IBTable, rxToolEdit, RXDBCtrl, IBQuery, Menus,
-  UObserverInterface, UCliente;
+  ToolWin, IBTable, rxToolEdit, RXDBCtrl, IBQuery, Menus, JPEG,
+  UObserverInterface, UCliente, ACBrBase, ACBrSocket, ACBrConsultaCNPJ;
 
 type
   TfrmGeCliente = class(TfrmGrPadraoCadastro, IObserver) // Observador
@@ -143,6 +143,47 @@ type
     mpClienteBloquear: TMenuItem;
     mpClienteDesbloquear: TMenuItem;
     dbCNPJ: TRxDBComboEdit;
+    tbsConsultarCNPJ: TTabSheet;
+    tbsConsultarCPF: TTabSheet;
+    ACBrConsultaCNPJ: TACBrConsultaCNPJ;
+    pnlConsultarCNPJ: TPanel;
+    lblCNPJX: TLabel;
+    lblCaptchaX: TLabel;
+    edCaptcha: TEdit;
+    edCNPJ: TMaskEdit;
+    pnlCaptcha: TPanel;
+    ImgCaptcha: TImage;
+    LabAtualizarCaptcha: TLabel;
+    ckRemoverEspacosDuplos: TCheckBox;
+    btnConsultarCNPJ: TButton;
+    BvlConsultar: TBevel;
+    pnlRetornoCNPJ: TPanel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    EditTipo: TEdit;
+    EditRazaoSocial: TEdit;
+    EditAbertura: TEdit;
+    EditEndereco: TEdit;
+    EditNumero: TEdit;
+    EditComplemento: TEdit;
+    EditBairro: TEdit;
+    EditCidade: TEdit;
+    EditUF: TEdit;
+    EditCEP: TEdit;
+    EditSituacao: TEdit;
+    EditFantasia: TEdit;
+    btnVoltar: TButton;
+    btnRecuperarCNPJ: TButton;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -164,6 +205,10 @@ type
     procedure mpClienteDesbloquearClick(Sender: TObject);
     procedure mpClienteBloquearClick(Sender: TObject);
     procedure dbCNPJButtonClick(Sender: TObject);
+    procedure LabAtualizarCaptchaClick(Sender: TObject);
+    procedure btnConsultarCNPJClick(Sender: TObject);
+    procedure btnVoltarClick(Sender: TObject);
+    procedure btnRecuperarCNPJClick(Sender: TObject);
   private
     { Private declarations }
     procedure GetComprasAbertas(sCNPJ : String);
@@ -184,7 +229,7 @@ var
 implementation
 
 uses UDMBusiness, UGeBairro, UGeCidade, UGeDistrito, UGeEstado,
-  UGeLogradouro, UGrPadrao, ChkDgVer;
+  UGeLogradouro, UGrPadrao, ChkDgVer, FuncoesFormulario;
 
 {$R *.dfm}
 
@@ -265,6 +310,8 @@ begin
   UpdateGenerator;
 
   pgcMaisDados.ActivePageIndex := 0;
+  tbsConsultarCNPJ.TabVisible  := False;
+  tbsConsultarCPF.TabVisible   := False;
 
   if not (GetUserFunctionID in [FUNCTION_USER_ID_DIRETORIA, FUNCTION_USER_ID_GERENTE_FIN, FUNCTION_USER_ID_SYSTEM_ADM])
   then  dbValorLimiteCompra.Enabled := False;   
@@ -388,7 +435,11 @@ begin
       IbDtstTabelaCNPJ.EditMask := '99.999.999/9999-99;0; ';
   end
   else
-    IbDtstTabelaCNPJ.EditMask := '';
+  begin
+    IbDtstTabelaCNPJ.EditMask   := EmptyStr;
+    tbsConsultarCNPJ.TabVisible := False;
+    tbsConsultarCPF.TabVisible  := False;
+  end;
 
   BtBtnProcesso.Enabled := IbDtstTabela.Active and
     (not (IbDtstTabela.State in [dsEdit, dsInsert]));
@@ -595,26 +646,150 @@ begin
 end;
 
 procedure TfrmGeCliente.dbCNPJButtonClick(Sender: TObject);
-var
-  fCliente : TCliente;
-  bRetorno : Boolean;
+//var
+//  fCliente : TCliente;
+//  bRetorno : Boolean;
 begin
-  fCliente := TCliente.Create;
+(*
+  fCliente := TCliente.GetInstance();
   try
+    fCliente.CpfCnpj := StrOnlyNumbers(dbCNPJ.Text);
+
     if dbPessoaFisica.Checked then
-      bRetorno := FormFunction.ShowModalForm(Self, 'frmGrConsultarCPF', frmGeCliente)
+      bRetorno := FormFunction.ShowModalForm(Self, 'frmGrConsultarCPF')
     else
-      bRetorno := FormFunction.ShowModalForm(Self, 'frmGrConsultarCNJP', frmGeCliente);
+      bRetorno := FormFunction.ShowModalForm(Self, 'frmGrConsultarCNJP');
+
 
     if not (IbDtstTabela.State in [dsEdit, dsInsert]) then
       Exit;
 
     if bRetorno then
     begin
-    
+      IbDtstTabelaCNPJ.AsString := fCliente.CpfCnpj;
+      IbDtstTabelaNOME.AsString := fCliente.RazaoSocial;
     end;
   finally
     fCliente.Destroy;
+  end;
+*)
+
+  if dbPessoaFisica.Checked then
+  begin
+    ;
+  end
+  else
+  begin
+    tbsConsultarCNPJ.TabVisible := True;
+    pgcGuias.ActivePage         := tbsConsultarCNPJ;
+    pnlCaptcha.Parent           := pnlConsultarCNPJ;
+
+    LabAtualizarCaptchaClick(LabAtualizarCaptcha);
+
+    if ( Trim(StrOnlyNumbers(dbCNPJ.Text)) <> EmptyStr ) then
+      edCNPJ.Text := StrFormatarCnpj( StrOnlyNumbers(dbCNPJ.Text) )
+    else
+      edCNPJ.SetFocus;
+  end;
+end;
+
+procedure TfrmGeCliente.LabAtualizarCaptchaClick(Sender: TObject);
+var
+  Stream : TMemoryStream;
+  Jpg : TJPEGImage;
+begin
+  Stream := TMemoryStream.Create;
+  Jpg    := TJPEGImage.Create;
+  try
+    ACBrConsultaCNPJ.Captcha(Stream);
+    Jpg.LoadFromStream(Stream);
+    ImgCaptcha.Picture.Assign(Jpg);
+
+    edCaptcha.Clear;
+    edCaptcha.SetFocus;
+
+    EditTipo.Clear;
+    EditAbertura.Clear;
+    EditSituacao.Clear;
+    EditRazaoSocial.Clear;
+    EditFantasia.Clear;
+    EditEndereco.Clear;
+    EditNumero.Clear;
+    EditComplemento.Clear;
+    EditBairro.Clear;
+    EditCidade.Clear;
+    EditUF.Clear;
+    EditCEP.Clear;
+  finally
+    Stream.Free;
+    Jpg.Free;
+  end;
+end;
+
+procedure TfrmGeCliente.btnConsultarCNPJClick(Sender: TObject);
+begin
+  if Trim(edCaptcha.Text) <> EmptyStr then
+  begin
+    if ACBrConsultaCNPJ.Consulta(edCNPJ.Text, Trim(edCaptcha.Text), ckRemoverEspacosDuplos.Checked) then
+    begin
+      EditTipo.Text        := ACBrConsultaCNPJ.EmpresaTipo;
+      EditRazaoSocial.Text := ACBrConsultaCNPJ.RazaoSocial;
+      EditAbertura.Text    := DateToStr( ACBrConsultaCNPJ.Abertura );
+      EditFantasia.Text    := ACBrConsultaCNPJ.Fantasia;
+      EditEndereco.Text    := ACBrConsultaCNPJ.Endereco;
+      EditNumero.Text      := ACBrConsultaCNPJ.Numero;
+      EditComplemento.Text := ACBrConsultaCNPJ.Complemento;
+      EditBairro.Text      := ACBrConsultaCNPJ.Bairro;
+      EditComplemento.Text := ACBrConsultaCNPJ.Complemento;
+      EditCidade.Text      := ACBrConsultaCNPJ.Cidade;
+      EditUF.Text          := ACBrConsultaCNPJ.UF;
+      EditCEP.Text         := ACBrConsultaCNPJ.CEP;
+      EditSituacao.Text    := ACBrConsultaCNPJ.Situacao;
+
+      btnRecuperarCNPJ.Enabled := True;
+    end;
+  end
+  else
+  begin
+    ShowWarning('É necessário digitar o captcha.');
+    edCaptcha.SetFocus;
+
+    btnRecuperarCNPJ.Enabled := False;
+  end;
+end;
+
+procedure TfrmGeCliente.btnVoltarClick(Sender: TObject);
+begin
+  pgcGuias.ActivePage         := tbsCadastro;
+  tbsConsultarCNPJ.TabVisible := False;
+  dbCNPJ.SetFocus;
+end;
+
+procedure TfrmGeCliente.btnRecuperarCNPJClick(Sender: TObject);
+begin
+  btnVoltar.Click;
+
+  if not (IbDtstTabela.State in [dsEdit, dsInsert]) then
+    Exit;
+
+  if ShowConfirm('Deseja carregar os dados consultados para o cadastro?') then
+  begin
+    IbDtstTabelaCNPJ.AsString       := StrOnlyNumbers(edCNPJ.Text);
+    IbDtstTabelaNOME.AsString       := Copy(Trim(EditRazaoSocial.Text), 1, IbDtstTabelaNOME.Size);
+    IbDtstTabelaEST_COD.AsInteger   := GetEstadoID( Trim(EditUF.Text) );
+    IbDtstTabelaEST_NOME.AsString   := GetEstadoNome( Trim(EditUF.Text) );
+    IbDtstTabelaCID_COD.AsInteger   := GetCidadeID(IbDtstTabelaEST_COD.AsInteger, EditCidade.Text);
+    IbDtstTabelaCID_NOME.AsString   := GetCidadeNome(IbDtstTabelaCID_COD.AsInteger);
+
+    if ( (IbDtstTabelaCID_COD.AsInteger = 0) and (Trim(EditCEP.Text) <> EmptyStr) ) then
+    begin
+      IbDtstTabelaCID_COD.AsInteger  := GetCidadeID(Trim(EditCEP.Text));
+      IbDtstTabelaCID_NOME.AsString  := GetCidadeNome(IbDtstTabelaCID_COD.AsInteger);
+    end;
+
+    IbDtstTabelaCOMPLEMENTO.AsString := Copy(Trim(EditComplemento.Text), 1, IbDtstTabelaCOMPLEMENTO.Size);
+    IbDtstTabelaNUMERO_END.AsString  := Copy(Trim(EditNumero.Text),      1, IbDtstTabelaNUMERO_END.Size);
+    IbDtstTabelaCEP.AsString         := Copy(StrOnlyNumbers(Trim(EditCEP.Text)), 1, IbDtstTabelaCEP.Size);
   end;
 end;
 

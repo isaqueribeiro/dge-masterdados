@@ -152,8 +152,13 @@ var
   function GetNextID(NomeTabela, CampoChave : String; const sWhere : String = '') : Largeint;
   function GetPaisNomeDefault : String;
   function GetEstadoNomeDefault : String;
+  function GetEstadoNome(const iEstado : Integer) : String; overload;
+  function GetEstadoNome(const sSigla : String) : String; overload;
+  function GetEstadoID(const sSigla : String) : Integer;
   function GetCidadeNomeDefault : String;
   function GetCidadeNome(const iCidade : Integer) : String;
+  function GetCidadeID(const iEstado : Integer; const sNome : String) : Integer; overload;
+  function GetCidadeID(const sCEP : String) : Integer; overload;
   function GetCfopNomeDefault : String;
   function GetEmpresaNomeDefault : String;
   function GetClienteNomeDefault : String;
@@ -1101,6 +1106,51 @@ begin
   end;
 end;
 
+function GetEstadoNome(const iEstado : Integer) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select est_nome from TBESTADO where est_cod = ' + IntToStr(iEstado));
+    Open;
+
+    Result := FieldByName('est_nome').AsString;
+
+    Close;
+  end;
+end;
+
+function GetEstadoNome(const sSigla : String) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select est_nome from TBESTADO where est_sigla = ' + QuotedStr(sSigla));
+    Open;
+
+    Result := FieldByName('est_nome').AsString;
+
+    Close;
+  end;
+end;
+
+function GetEstadoID(const sSigla : String) : Integer;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select est_cod from TBESTADO where est_sigla = ' + QuotedStr(sSigla));
+    Open;
+
+    Result := FieldByName('est_cod').AsInteger;
+
+    Close;
+  end;
+end;
+
 function GetCidadeNomeDefault : String;
 begin
   with DMBusiness, qryBusca do
@@ -1126,6 +1176,36 @@ begin
     Open;
 
     Result := FieldByName('cid_nome').AsString;
+
+    Close;
+  end;
+end;
+
+function GetCidadeID(const iEstado : Integer; const sNome : String) : Integer;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select cid_cod from TBCIDADE where est_cod = ' + IntToStr(iEstado) + ' and cid_nome like ' + QuotedStr('%' + Trim(sNome) + '%'));
+    Open;
+
+    Result := FieldByName('cid_cod').AsInteger;
+
+    Close;
+  end;
+end;
+
+function GetCidadeID(const sCEP : String) : Integer;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select cid_nome from TBCIDADE where ' + StrOnlyNumbers(sCEP) + ' between cid_cep_inicial and cid_cep_final');
+    Open;
+
+    Result := FieldByName('cid_cod').AsInteger;
 
     Close;
   end;
