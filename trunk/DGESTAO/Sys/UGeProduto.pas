@@ -181,9 +181,9 @@ type
     dbLucroValor: TDBEdit;
     IbDtstTabelaLUCRO_CALCULADO: TIBBCDField;
     ShpLucroZerado: TShape;
-    Label1: TLabel;
+    lblLucroZerado: TLabel;
     ShpLucroNegativo: TShape;
-    Label2: TLabel;
+    lblLucroPrejuizo: TLabel;
     IbDtstTabelaLUCRO_VALOR: TIBBCDField;
     IbDtstTabelaPERCENTUAL_MARGEM: TIBBCDField;
     IbDtstTabelaFRACIONADOR: TIBBCDField;
@@ -278,7 +278,8 @@ var
 
 implementation
 
-uses UDMBusiness, UGeSecaoProduto, UGeGrupoProduto, UGeUnidade,
+uses
+  UDMBusiness, UGeSecaoProduto, UGeGrupoProduto, UGeUnidade,
   UGeTabelaCFOP, UGeFabricante, UConstantesDGE;
 
 {$R *.dfm}
@@ -374,9 +375,9 @@ begin
       Aliquota       := frm.IbDtstTabelaALIQUOTA.AsCurrency;
       AliquotaPIS    := frm.IbDtstTabelaALIQUOTA_PIS.AsCurrency;
       AliquotaCOFINS := frm.IbDtstTabelaALIQUOTA_COFINS.AsCurrency;
-      ValorVenda    := frm.IbDtstTabelaPRECO.AsCurrency;
-      ValorPromocao := frm.IbDtstTabelaPRECO_PROMOCAO.AsCurrency;
-      ValorIPI      := frm.IbDtstTabelaVALOR_IPI.AsCurrency;
+      ValorVenda     := frm.IbDtstTabelaPRECO.AsCurrency;
+      ValorPromocao  := frm.IbDtstTabelaPRECO_PROMOCAO.AsCurrency;
+      ValorIPI       := frm.IbDtstTabelaVALOR_IPI.AsCurrency;
 
       PercentualRedBC := frm.IbDtstTabelaPERCENTUAL_REDUCAO_BC.AsCurrency;
 
@@ -608,9 +609,9 @@ begin
   if ( not tblTributacaoNM.IsEmpty ) then
     IbDtstTabelaCODTRIBUTACAO.Value := tblTributacaoNM.FieldByName('TPT_COD').AsString;
 
-  IbDtstTabelaCST.Value      := IbDtstTabelaCODORIGEM.AsString + IbDtstTabelaCODTRIBUTACAO.AsString;
-  IbDtstTabelaESTOQMIN.Value := 0;
-  IbDtstTabelaQTDE.Value     := 0;
+  IbDtstTabelaCST.Value        := IbDtstTabelaCODORIGEM.AsString + IbDtstTabelaCODTRIBUTACAO.AsString;
+  IbDtstTabelaESTOQMIN.Value   := 0;
+  IbDtstTabelaQTDE.Value       := 0;
   IbDtstTabelaCUSTOMEDIO.Value := 0;
   IbDtstTabelaPRECO.Value      := 0;
   IbDtstTabelaCODCFOP.Value        := GetCfopIDDefault;

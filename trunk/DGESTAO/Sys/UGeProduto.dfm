@@ -1,6 +1,6 @@
 inherited frmGeProduto: TfrmGeProduto
-  Left = 278
-  Top = 69
+  Left = 396
+  Top = 213
   Width = 977
   Height = 648
   ActiveControl = dbCodigo
@@ -191,7 +191,7 @@ inherited frmGeProduto: TfrmGeProduto
           Height = 15
           Brush.Color = clYellow
         end
-        object Label1: TLabel [4]
+        object lblLucroZerado: TLabel [4]
           Left = 308
           Top = 10
           Width = 73
@@ -212,7 +212,7 @@ inherited frmGeProduto: TfrmGeProduto
           Height = 15
           Brush.Color = 7434751
         end
-        object Label2: TLabel [6]
+        object lblLucroPrejuizo: TLabel [6]
           Left = 308
           Top = 28
           Width = 46
@@ -754,7 +754,7 @@ inherited frmGeProduto: TfrmGeProduto
         Top = 197
         Width = 953
         Height = 341
-        ActivePage = TbsEspecificacao
+        ActivePage = tbsValores
         Align = alClient
         TabOrder = 2
         object tbsValores: TTabSheet
@@ -1581,7 +1581,7 @@ inherited frmGeProduto: TfrmGeProduto
                 FocusControl = dbCorVeiculo
               end
               object lblChassi: TLabel
-                Left = 248
+                Left = 256
                 Top = 64
                 Width = 35
                 Height = 13

@@ -148,6 +148,9 @@ var
   function StrDescricaoProduto : String;
   function StrOnlyNumbers(const Str : String) : String;
 
+  function SetBairro(const iCidade : Integer; const sNome : String) : Integer;
+  function SetLogradouro(const iCidade : Integer; const sNome : String) : Integer;
+
   function GetGeneratorID(const GeneratorName : String) : Integer;
   function GetNextID(NomeTabela, CampoChave : String; const sWhere : String = '') : Largeint;
   function GetPaisNomeDefault : String;
@@ -159,6 +162,8 @@ var
   function GetCidadeNome(const iCidade : Integer) : String;
   function GetCidadeID(const iEstado : Integer; const sNome : String) : Integer; overload;
   function GetCidadeID(const sCEP : String) : Integer; overload;
+  function GetBairroNome(const iBairro : Integer) : String;
+  function GetLogradouroNome(const iLogradouro : Integer) : String;
   function GetCfopNomeDefault : String;
   function GetEmpresaNomeDefault : String;
   function GetClienteNomeDefault : String;
@@ -1046,6 +1051,52 @@ begin
   Result := Valor;
 end;
 
+function SetBairro(const iCidade : Integer; const sNome : String) : Integer;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select g.cod_bairro from SET_BAIRRO(' + QuotedStr(Trim(AnsiUpperCase(sNome))) + ', ' + IntToStr(iCidade) + ', null) g');
+    Open;
+
+    Result := FieldByName('cod_bairro').AsInteger;
+
+    CommitTransaction;
+
+    Close;
+  end;
+end;
+
+function SetLogradouro(const iCidade : Integer; const sNome : String) : Integer;
+var
+  sTipo ,
+  sDesc : String;
+begin
+  sDesc := Trim(AnsiUpperCase(sNome));
+  sTipo := Trim(Copy(sDesc, 1, Pos('.', sDesc) - 1));
+
+  if ( sTipo = EmptyStr ) then
+    sTipo := Trim(Copy(sDesc, 1, Pos(' ', sDesc) - 1));
+
+  if ( sTipo <> EmptyStr ) then
+    sDesc :=Trim(Copy(sDesc, Length(sTipo) + 1, Length(sDesc)));
+
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select g.cod_logradouro from SET_LOGRADOURO(' + QuotedStr(sDesc) + ', ' + QuotedStr(sTipo) + ', ' + IntToStr(iCidade) + ') g');
+    Open;
+
+    Result := FieldByName('cod_logradouro').AsInteger;
+
+    CommitTransaction;
+
+    Close;
+  end;
+end;
+
 function GetGeneratorID(const GeneratorName : String) : Integer;
 begin
   with DMBusiness, qryBusca do
@@ -1206,6 +1257,36 @@ begin
     Open;
 
     Result := FieldByName('cid_cod').AsInteger;
+
+    Close;
+  end;
+end;
+
+function GetBairroNome(const iBairro : Integer) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select bai_nome from TBBAIRRO where bai_cod = ' + IntToStr(iBairro));
+    Open;
+
+    Result := FieldByName('bai_nome').AsString;
+
+    Close;
+  end;
+end;
+
+function GetLogradouroNome(const iLogradouro : Integer) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select log_nome from TBLOGRADOURO where log_cod = ' + IntToStr(iLogradouro));
+    Open;
+
+    Result := FieldByName('log_nome').AsString;
 
     Close;
   end;
