@@ -676,7 +676,9 @@ begin
 
   if dbPessoaFisica.Checked then
   begin
-    ;
+
+    ShowInformation('Consultar CPF', 'Funcionalidade de sistema ainda não disponível nesta versão!');
+    
   end
   else
   begin
@@ -778,6 +780,7 @@ begin
     IbDtstTabelaNOME.AsString       := Copy(Trim(EditRazaoSocial.Text), 1, IbDtstTabelaNOME.Size);
     IbDtstTabelaEST_COD.AsInteger   := GetEstadoID( Trim(EditUF.Text) );
     IbDtstTabelaEST_NOME.AsString   := GetEstadoNome( Trim(EditUF.Text) );
+    IbDtstTabelaUF.AsString         := Trim(EditUF.Text);
     IbDtstTabelaCID_COD.AsInteger   := GetCidadeID(IbDtstTabelaEST_COD.AsInteger, EditCidade.Text);
     IbDtstTabelaCID_NOME.AsString   := GetCidadeNome(IbDtstTabelaCID_COD.AsInteger);
 
@@ -786,6 +789,12 @@ begin
       IbDtstTabelaCID_COD.AsInteger  := GetCidadeID(Trim(EditCEP.Text));
       IbDtstTabelaCID_NOME.AsString  := GetCidadeNome(IbDtstTabelaCID_COD.AsInteger);
     end;
+
+    IbDtstTabelaBAI_COD.AsInteger := SetBairro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditBairro.Text), 1, IbDtstTabelaBAIRRO.Size));
+    IbDtstTabelaBAIRRO.AsString   := Trim(EditBairro.Text);
+
+    IbDtstTabelaLOG_COD.AsInteger   := SetLogradouro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditEndereco.Text), 1, IbDtstTabelaLOGRADOURO.Size));
+    IbDtstTabelaLOGRADOURO.AsString := Trim(EditEndereco.Text);
 
     IbDtstTabelaCOMPLEMENTO.AsString := Copy(Trim(EditComplemento.Text), 1, IbDtstTabelaCOMPLEMENTO.Size);
     IbDtstTabelaNUMERO_END.AsString  := Copy(Trim(EditNumero.Text),      1, IbDtstTabelaNUMERO_END.Size);
