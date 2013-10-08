@@ -36,7 +36,6 @@ type
     EditSituacao: TEdit;
     pnlConsultar: TPanel;
     lblCNPJ: TLabel;
-    btnBuscar: TBitBtn;
     edCaptcha: TEdit;
     lblCaptcha: TLabel;
     tmrCaptcha: TTimer;
@@ -44,20 +43,19 @@ type
     Label13: TLabel;
     ACBrConsultaCNPJ: TACBrConsultaCNPJ;
     edCNPJ: TMaskEdit;
-    Panel3: TPanel;
+    pnlCaptcha: TPanel;
     ImgCaptcha: TImage;
     LabAtualizarCaptcha: TLabel;
     ckRemoverEspacosDuplos: TCheckBox;
     BvlConsultar: TBevel;
-    btnRecuperar: TBitBtn;
+    btnBuscar: TButton;
+    procedure FormDestroy(Sender: TObject);
     procedure LabAtualizarCaptchaClick(Sender: TObject);
     procedure btnBuscarClick(Sender: TObject);
     procedure tmrCaptchaTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure edCaptchaKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
-    procedure btnRecuperarClick(Sender: TObject);
   private
     { Private declarations }
     FObservers: TInterfaceList;
@@ -70,12 +68,30 @@ type
     procedure Notify(sMessage: string); overload;
   end;
 
+  function SelecionarCNPJ(const AOwner : TComponent; var Cliente : TCliente) : Boolean;
+
 implementation
 
 uses
   UDMBusiness;
 
 {$R *.dfm}
+
+function SelecionarCNPJ(const AOwner : TComponent; var Cliente : TCliente) : Boolean;
+var
+  AForm : TfrmGrConsultarCNJP;
+begin
+  AForm := TfrmGrConsultarCNJP.Create(AOwner);
+  try
+    AForm.FCliente := Cliente;
+    Result := (AForm.ShowModal = mrOk);
+
+    if Result then
+      Cliente := AForm.FCliente;
+  finally
+    AForm.Destroy;
+  end;
+end;
 
 procedure TfrmGrConsultarCNJP.btnBuscarClick(Sender: TObject);
 begin
@@ -96,16 +112,16 @@ begin
       EditUF.Text          := ACBrConsultaCNPJ.UF;
       EditCEP.Text         := ACBrConsultaCNPJ.CEP;
       EditSituacao.Text    := ACBrConsultaCNPJ.Situacao;
-
-      btnRecuperar.Enabled := True;
+//
+//      btnRecuperar.Enabled := True;
     end;
   end
   else
   begin
     ShowWarning('É necessário digitar o captcha.');
     edCaptcha.SetFocus;
-
-    btnRecuperar.Enabled := False;
+//
+//    btnRecuperar.Enabled := False;
   end;
 end;
 
@@ -118,6 +134,9 @@ end;
 procedure TfrmGrConsultarCNJP.FormShow(Sender: TObject);
 begin
   tmrCaptcha.Enabled := True;
+
+  if Trim(FCliente.CpfCnpj) <> EmptyStr then
+    edCNPJ.Text := StrFormatarCnpj(FCliente.CpfCnpj);
 end;
 
 procedure TfrmGrConsultarCNJP.LabAtualizarCaptchaClick(Sender: TObject);
@@ -144,7 +163,6 @@ procedure TfrmGrConsultarCNJP.tmrCaptchaTimer(Sender: TObject);
 begin
   tmrCaptcha.Enabled := False;
   LabAtualizarCaptchaClick(LabAtualizarCaptcha);
-  edCNPJ.SetFocus;
 end;
 
 procedure TfrmGrConsultarCNJP.FormCreate(Sender: TObject);
@@ -157,6 +175,9 @@ procedure TfrmGrConsultarCNJP.addObserver(Observer: IObserver);
 var
   I : Integer;
 begin
+  if (Observer = nil) then
+    Exit;
+
   I := FObservers.IndexOf(Observer);
   if (I < 0) then
     FObservers.Add(Observer);
@@ -170,7 +191,8 @@ begin
   for I := 0 to FObservers.Count - 1 do
   begin
     Observer := FObservers.Items[I];
-    IObserver(Observer).Update(Self);
+    if ( Observer <> nil ) then
+      IObserver(Observer).Update(Self);
   end;
 end;
 
@@ -194,18 +216,14 @@ var
 begin
   I := FObservers.IndexOf(Observer);
   if (I > - 1) then
-    FObservers.Remove(Observer);
+    if ( Observer <> nil ) then
+      FObservers.Remove(Observer);
 end;
 
 procedure TfrmGrConsultarCNJP.FormDestroy(Sender: TObject);
 begin
-  FreeAndNil(FObservers);
-end;
-
-procedure TfrmGrConsultarCNJP.btnRecuperarClick(Sender: TObject);
-begin
-  Self.Notify;
-  ModalResult := mrOk;
+  if ( FObservers <> nil ) then
+    FreeAndNil(FObservers);
 end;
 
 initialization

@@ -1,9 +1,9 @@
 inherited frmGeCliente: TfrmGeCliente
-  Left = 254
-  Top = 131
+  Left = 493
+  Top = 206
   Width = 860
   Height = 536
-  ActiveControl = dbCodigo
+  ActiveControl = edCNPJ
   Caption = 'Cadastro de Clientes'
   OldCreateOrder = True
   OnClose = FormClose
@@ -107,7 +107,7 @@ inherited frmGeCliente: TfrmGeCliente
   inherited pgcGuias: TPageControl
     Width = 844
     Height = 455
-    ActivePage = tbsCadastro
+    ActivePage = tbsConsultarCNPJ
     OnChange = pgcGuiasChange
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
@@ -412,6 +412,7 @@ inherited frmGeCliente: TfrmGeCliente
           Height = 21
           ButtonHint = 'Consultar CPF/CNPJ junto a Receita Federal (Ctrl + P).'
           CharCase = ecUpperCase
+          ClickKey = 16464
           DataField = 'CNPJ'
           DataSource = DtSrcTabela
           Font.Charset = DEFAULT_CHARSET
@@ -1351,6 +1352,536 @@ inherited frmGeCliente: TfrmGeCliente
         end
       end
     end
+    object tbsConsultarCNPJ: TTabSheet
+      Caption = 'Consultar CNPJ'
+      ImageIndex = 12
+      object BvlConsultar: TBevel
+        Left = 377
+        Top = 0
+        Width = 4
+        Height = 426
+        Align = alLeft
+        Shape = bsSpacer
+      end
+      object pnlConsultarCNPJ: TPanel
+        Left = 0
+        Top = 0
+        Width = 377
+        Height = 426
+        Align = alLeft
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -27
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        object lblCNPJX: TLabel
+          Left = 9
+          Top = 172
+          Width = 85
+          Height = 16
+          Caption = 'Digite o CNPJ:'
+          FocusControl = edCNPJ
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblCaptchaX: TLabel
+          Left = 9
+          Top = 238
+          Width = 96
+          Height = 16
+          Caption = 'Digite o Captcha'
+          FocusControl = edCaptcha
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+        end
+        object edCaptcha: TEdit
+          Left = 9
+          Top = 257
+          Width = 232
+          Height = 41
+          CharCase = ecUpperCase
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -27
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 2
+        end
+        object edCNPJ: TMaskEdit
+          Left = 9
+          Top = 191
+          Width = 352
+          Height = 41
+          EditMask = '00.000.000/0000-00;1;_'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -27
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxLength = 18
+          ParentFont = False
+          TabOrder = 1
+          Text = '  .   .   /    -  '
+        end
+        object pnlCaptcha: TPanel
+          Left = 9
+          Top = 11
+          Width = 346
+          Height = 127
+          BevelOuter = bvLowered
+          Color = clWhite
+          ParentBackground = False
+          TabOrder = 0
+          object ImgCaptcha: TImage
+            Left = 1
+            Top = 1
+            Width = 344
+            Height = 106
+            Align = alClient
+            Center = True
+            Proportional = True
+            Stretch = True
+          end
+          object LabAtualizarCaptcha: TLabel
+            Left = 1
+            Top = 107
+            Width = 344
+            Height = 19
+            Cursor = crHandPoint
+            Align = alBottom
+            Alignment = taCenter
+            AutoSize = False
+            Caption = 'Atualizar Captcha'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlue
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold, fsUnderline]
+            ParentFont = False
+            Transparent = False
+            OnClick = LabAtualizarCaptchaClick
+          end
+        end
+        object ckRemoverEspacosDuplos: TCheckBox
+          Left = 10
+          Top = 150
+          Width = 359
+          Height = 17
+          Caption = 'Remover espa'#231'os duplos dos dados retornados'
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 4
+        end
+        object btnConsultarCNPJ: TButton
+          Left = 248
+          Top = 256
+          Width = 115
+          Height = 41
+          Caption = 'Consultar'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 3
+          OnClick = btnConsultarCNPJClick
+        end
+      end
+      object pnlRetornoCNPJ: TPanel
+        Left = 381
+        Top = 0
+        Width = 455
+        Height = 426
+        Align = alClient
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        object Label2: TLabel
+          Left = 8
+          Top = 11
+          Width = 97
+          Height = 16
+          Caption = 'Tipo de Empresa'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label3: TLabel
+          Left = 8
+          Top = 59
+          Width = 73
+          Height = 16
+          Caption = 'Raz'#227'o Social'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label4: TLabel
+          Left = 112
+          Top = 11
+          Width = 80
+          Height = 16
+          Caption = 'Data Abertura'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label5: TLabel
+          Left = 176
+          Top = 107
+          Width = 58
+          Height = 16
+          Caption = 'Endere'#231'o:'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label6: TLabel
+          Left = 390
+          Top = 107
+          Width = 45
+          Height = 16
+          Caption = 'N'#250'mero'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label7: TLabel
+          Left = 8
+          Top = 153
+          Width = 79
+          Height = 16
+          Caption = 'Complemento'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label8: TLabel
+          Left = 224
+          Top = 153
+          Width = 34
+          Height = 16
+          Caption = 'Bairro'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label9: TLabel
+          Left = 8
+          Top = 201
+          Width = 39
+          Height = 16
+          Caption = 'Cidade'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label10: TLabel
+          Left = 289
+          Top = 201
+          Width = 15
+          Height = 16
+          Caption = 'UF'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label11: TLabel
+          Left = 328
+          Top = 201
+          Width = 22
+          Height = 16
+          Caption = 'CEP'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label12: TLabel
+          Left = 208
+          Top = 11
+          Width = 49
+          Height = 16
+          Caption = 'Situa'#231#227'o'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label13: TLabel
+          Left = 8
+          Top = 107
+          Width = 48
+          Height = 16
+          Caption = 'Fantasia'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object EditTipo: TEdit
+          Left = 8
+          Top = 29
+          Width = 98
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 0
+        end
+        object EditRazaoSocial: TEdit
+          Left = 8
+          Top = 77
+          Width = 433
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 3
+        end
+        object EditAbertura: TEdit
+          Left = 112
+          Top = 29
+          Width = 88
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 1
+        end
+        object EditEndereco: TEdit
+          Left = 176
+          Top = 125
+          Width = 209
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 5
+        end
+        object EditNumero: TEdit
+          Left = 390
+          Top = 125
+          Width = 51
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 6
+        end
+        object EditComplemento: TEdit
+          Left = 8
+          Top = 171
+          Width = 209
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 7
+        end
+        object EditBairro: TEdit
+          Left = 224
+          Top = 171
+          Width = 217
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 8
+        end
+        object EditCidade: TEdit
+          Left = 8
+          Top = 219
+          Width = 273
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 9
+        end
+        object EditUF: TEdit
+          Left = 289
+          Top = 219
+          Width = 33
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 10
+        end
+        object EditCEP: TEdit
+          Left = 328
+          Top = 219
+          Width = 114
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 11
+        end
+        object EditSituacao: TEdit
+          Left = 208
+          Top = 29
+          Width = 160
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 2
+        end
+        object EditFantasia: TEdit
+          Left = 8
+          Top = 125
+          Width = 161
+          Height = 24
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 4
+        end
+        object btnVoltar: TButton
+          Left = 8
+          Top = 256
+          Width = 115
+          Height = 41
+          Caption = '&Voltar ao Cadastro'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 12
+          OnClick = btnVoltarClick
+        end
+        object btnRecuperarCNPJ: TButton
+          Left = 328
+          Top = 256
+          Width = 115
+          Height = 41
+          Caption = '&Recuperar Dados'
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 13
+          OnClick = btnRecuperarCNPJClick
+        end
+      end
+    end
+    object tbsConsultarCPF: TTabSheet
+      Caption = 'Consultar CPF'
+      ImageIndex = 12
+    end
   end
   inherited IbDtstTabela: TIBDataSet
     OnNewRecord = IbDtstTabelaNewRecord
@@ -1404,7 +1935,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  left join TBPAIS p on (p.Pais_id = cl.Pais_id)')
     GeneratorField.Field = 'CODIGO'
     GeneratorField.Generator = 'GEN_CLIENTE_ID'
-    Left = 640
+    Left = 648
     object IbDtstTabelaCODIGO: TIntegerField
       DisplayLabel = 'C'#243'digo'
       FieldName = 'CODIGO'
@@ -1620,7 +2151,7 @@ inherited frmGeCliente: TfrmGeCliente
   end
   inherited DtSrcTabela: TDataSource
     OnDataChange = DtSrcTabelaDataChange
-    Left = 704
+    Left = 712
   end
   inherited IbUpdTabela: TIBUpdateSQL
     RefreshSQL.Strings = (
@@ -1733,10 +2264,10 @@ inherited frmGeCliente: TfrmGeCliente
       'delete from TBCLIENTE'
       'where'
       '  CNPJ = :OLD_CNPJ')
-    Left = 672
+    Left = 680
   end
   inherited ImgList: TImageList
-    Left = 608
+    Left = 616
   end
   object qryTotalComprasAbertas: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
@@ -1747,7 +2278,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  , g.Valor_compras_abertas'
       '  , g.Valor_limite_disponivel'
       'from GET_LIMITE_DISPONIVEL_CLIENTE(:CNPJ) g')
-    Left = 672
+    Left = 680
     Top = 41
     ParamData = <
       item
@@ -1780,7 +2311,7 @@ inherited frmGeCliente: TfrmGeCliente
   end
   object cdsTotalComprasAbertas: TDataSource
     DataSet = qryTotalComprasAbertas
-    Left = 704
+    Left = 712
     Top = 41
   end
   object qryTitulos: TIBQuery
@@ -1823,7 +2354,7 @@ inherited frmGeCliente: TfrmGeCliente
       'where r.Baixado = 0'
       '  and r.Parcela > 0'
       '  and r.Cnpj = :cliente')
-    Left = 672
+    Left = 680
     Top = 73
     ParamData = <
       item
@@ -1941,25 +2472,25 @@ inherited frmGeCliente: TfrmGeCliente
   end
   object dtsTitulos: TDataSource
     DataSet = qryTitulos
-    Left = 704
+    Left = 712
     Top = 73
   end
   object tblVendedor: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     TableName = 'TBVENDEDOR'
-    Left = 672
+    Left = 680
     Top = 104
   end
   object dtsVendedor: TDataSource
     DataSet = tblVendedor
-    Left = 704
+    Left = 712
     Top = 104
   end
   object popProcesso: TPopupMenu
     Images = ImgList
-    Left = 688
-    Top = 414
+    Left = 696
+    Top = 446
     object mpClienteBloquear: TMenuItem
       Caption = '&Bloquear'
       ImageIndex = 37
@@ -1970,5 +2501,10 @@ inherited frmGeCliente: TfrmGeCliente
       ImageIndex = 39
       OnClick = mpClienteDesbloquearClick
     end
+  end
+  object ACBrConsultaCNPJ: TACBrConsultaCNPJ
+    ProxyPort = '8080'
+    Left = 650
+    Top = 337
   end
 end

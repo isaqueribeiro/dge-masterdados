@@ -12,8 +12,8 @@ type
 
   public
     class function EstaAberto(sForm: String): Boolean;
-    class function ShowModalForm(const AOnwer : TComponent; NomeForm: String): Boolean; overload;
-    class function ShowModalForm(const AOnwer : TComponent; NomeForm: String; Observador : IObserver): Boolean; overload;
+    class function ShowModalForm(const AOnwer : TComponent; NomeForm: String): Boolean;
+    class function ShowModalFormObserver(const AOnwer : TComponent; NomeForm: String; Observador : IObserver): Boolean;
     class procedure ShowForm(const AOnwer : TComponent; NomeForm: String);
     class procedure ShowFormReport(const AOnwer : TComponent; NomeForm: String); overload;
     class procedure ShowFormReport(const AOnwer : TComponent; NomeForm, NomeQuickRep: String); overload;
@@ -147,7 +147,7 @@ begin
   end;
 end;
 
-class function TFormularios.ShowModalForm(const AOnwer: TComponent;
+class function TFormularios.ShowModalFormObserver(const AOnwer: TComponent;
   NomeForm: String; Observador: IObserver): Boolean;
 begin
   try
