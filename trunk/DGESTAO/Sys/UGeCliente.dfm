@@ -3,7 +3,7 @@ inherited frmGeCliente: TfrmGeCliente
   Top = 206
   Width = 860
   Height = 536
-  ActiveControl = dbCodigo
+  ActiveControl = edCNPJ
   Caption = 'Cadastro de Clientes'
   OldCreateOrder = True
   OnClose = FormClose
@@ -107,7 +107,7 @@ inherited frmGeCliente: TfrmGeCliente
   inherited pgcGuias: TPageControl
     Width = 844
     Height = 455
-    ActivePage = tbsCadastro
+    ActivePage = tbsConsultarCNPJ
     OnChange = pgcGuiasChange
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
@@ -1419,6 +1419,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
           TabOrder = 2
+          OnKeyPress = edCaptchaKeyPress
         end
         object edCNPJ: TMaskEdit
           Left = 9
@@ -1435,6 +1436,7 @@ inherited frmGeCliente: TfrmGeCliente
           ParentFont = False
           TabOrder = 1
           Text = '  .   .   /    -  '
+          OnKeyPress = edCNPJKeyPress
         end
         object pnlCaptcha: TPanel
           Left = 9
@@ -1521,7 +1523,7 @@ inherited frmGeCliente: TfrmGeCliente
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        object Label2: TLabel
+        object lblTipoX: TLabel
           Left = 8
           Top = 11
           Width = 97
@@ -1534,7 +1536,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label3: TLabel
+        object lblRazaoSocialX: TLabel
           Left = 8
           Top = 59
           Width = 73
@@ -1547,7 +1549,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label4: TLabel
+        object lblAberturaX: TLabel
           Left = 112
           Top = 11
           Width = 80
@@ -1560,7 +1562,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label5: TLabel
+        object lblEnderecoX: TLabel
           Left = 176
           Top = 107
           Width = 58
@@ -1573,7 +1575,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label6: TLabel
+        object lblNumeroX: TLabel
           Left = 390
           Top = 107
           Width = 45
@@ -1586,7 +1588,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label7: TLabel
+        object lblComplementoX: TLabel
           Left = 8
           Top = 153
           Width = 79
@@ -1599,7 +1601,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label8: TLabel
+        object lblBairroX: TLabel
           Left = 224
           Top = 153
           Width = 34
@@ -1612,7 +1614,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label9: TLabel
+        object lblCidadeX: TLabel
           Left = 8
           Top = 201
           Width = 39
@@ -1625,7 +1627,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label10: TLabel
+        object lblUFX: TLabel
           Left = 289
           Top = 201
           Width = 15
@@ -1638,7 +1640,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label11: TLabel
+        object lblCEPX: TLabel
           Left = 328
           Top = 201
           Width = 22
@@ -1651,7 +1653,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label12: TLabel
+        object lblSituacaoX: TLabel
           Left = 208
           Top = 11
           Width = 49
@@ -1664,7 +1666,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Style = []
           ParentFont = False
         end
-        object Label13: TLabel
+        object lblFantasiaX: TLabel
           Left = 8
           Top = 107
           Width = 48
@@ -1682,6 +1684,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 29
           Width = 98
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1696,6 +1699,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 77
           Width = 433
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1710,6 +1714,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 29
           Width = 88
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1724,6 +1729,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 125
           Width = 209
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1738,6 +1744,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 125
           Width = 51
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1752,6 +1759,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 171
           Width = 209
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1766,6 +1774,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 171
           Width = 217
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1780,6 +1789,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 219
           Width = 273
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1794,6 +1804,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 219
           Width = 33
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1808,6 +1819,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 219
           Width = 114
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1822,6 +1834,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 29
           Width = 160
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1836,6 +1849,7 @@ inherited frmGeCliente: TfrmGeCliente
           Top = 125
           Width = 161
           Height = 24
+          TabStop = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -1881,6 +1895,68 @@ inherited frmGeCliente: TfrmGeCliente
     object tbsConsultarCPF: TTabSheet
       Caption = 'Consultar CPF'
       ImageIndex = 12
+      object pnlConsultarCPF: TPanel
+        Left = 0
+        Top = 0
+        Width = 377
+        Height = 426
+        Align = alLeft
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -27
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        object lblCPFX: TLabel
+          Left = 9
+          Top = 172
+          Width = 78
+          Height = 16
+          Caption = 'Digite o CPF:'
+          FocusControl = edCPF
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+        end
+        object edCPF: TMaskEdit
+          Left = 9
+          Top = 191
+          Width = 350
+          Height = 41
+          EditMask = '000.000.000-00;1;_'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -27
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxLength = 14
+          ParentFont = False
+          TabOrder = 0
+          Text = '   .   .   -  '
+          OnKeyPress = edCNPJKeyPress
+        end
+        object btnConsultarCPF: TButton
+          Left = 248
+          Top = 256
+          Width = 115
+          Height = 41
+          Caption = 'Consultar'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+          OnClick = btnConsultarCPFClick
+        end
+      end
     end
   end
   inherited IbDtstTabela: TIBDataSet
@@ -2506,5 +2582,10 @@ inherited frmGeCliente: TfrmGeCliente
     ProxyPort = '8080'
     Left = 650
     Top = 337
+  end
+  object ACBrConsultaCPF: TACBrConsultaCPF
+    ProxyPort = '8080'
+    Left = 648
+    Top = 382
   end
 end
