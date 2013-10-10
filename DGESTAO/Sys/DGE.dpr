@@ -89,7 +89,11 @@ uses
   UGeInutilizarNumeroNFe in 'UGeInutilizarNumeroNFe.pas' {frmGeInutilizarNumeroNFe},
   UGeConfiguracaoEmpresa in 'UGeConfiguracaoEmpresa.pas' {frmGeConfiguracaoEmpresa},
   UGeProdutoEstoqueMinimo in 'UGeProdutoEstoqueMinimo.pas' {FrmGeProdutoEstoqueMinimo},
-  UGeConsultarLoteNFe in 'UGeConsultarLoteNFe.pas' {frmGeConsultarLoteNFe};
+  UGeConsultarLoteNFe in 'UGeConsultarLoteNFe.pas' {frmGeConsultarLoteNFe},
+  UCliente in 'lib\UCliente.pas',
+  UGrConsultarCNJP in 'lib\UGrConsultarCNJP.pas' {frmGrConsultarCNJP},
+  UBaseObject in 'lib\UBaseObject.pas',
+  UObserverInterface in 'lib\UObserverInterface.pas';
 
 {$R *.res}
 
