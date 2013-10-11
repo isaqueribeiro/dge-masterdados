@@ -14,10 +14,14 @@ type
     procedure SetCompanyName(const Value : String);
 
     function GetCompanyName : String;
+    function GetFileVersion : String;
+    function GetProductVersion : String;
   public
     constructor Create;
 
-    property CompanyName: string read GetCompanyName write SetCompanyName;
+    property CompanyName: String read GetCompanyName write SetCompanyName;
+    property FileVersion: String read GetFileVersion;
+    property ProductVersion: String read GetProductVersion;
 
     class function GetInstance : TInfoVersao;
     function getPropertyValue(propName: String): String;
@@ -35,8 +39,9 @@ const
   ivPRODUCT_VERSION   = 'ProductVersion';
   ivCOMMENTS          = 'Comments';
   ivRELEASE_DATE      = 'ReleaseDate';
-  ivSYSTEM_ANALISTY   = 'SystemAnalisty';
+  ivSYSTEM_ANALYST    = 'SystemAnalyst';
   ivCONTACTS          = 'Contacts';
+  ivOWNER             = 'Owner';
 
 implementation
 
@@ -49,7 +54,7 @@ var
 
 class function TInfoVersao.GetInstance : TInfoVersao;
 begin
-  if ( InfoVersao = nil ) then
+  if not Assigned(InfoVersao) then
     InfoVersao := TInfoVersao.PrivateCreate;
 
   Result := InfoVersao;
@@ -57,7 +62,7 @@ end;
 
 function TInfoVersao.GetCompanyName: String;
 begin
-  Result := FInfoVersao.Values[ivCOMPANY_NAME];
+  Result := getPropertyValue(ivCOMPANY_NAME);
 end;
 
 function TInfoVersao.getPropertyValue(propName: String): String;
@@ -107,11 +112,22 @@ end;
 constructor TInfoVersao.PrivateCreate;
 begin
   inherited Create;
+  FInfoVersao := TStringList.Create;
 end;
 
 constructor TInfoVersao.Create;
 begin
   raise Exception.Create('Para obter um TInfoVersao invoque o método GetInstance().');
+end;
+
+function TInfoVersao.GetFileVersion: String;
+begin
+  Result := getPropertyValue(ivFILE_VERSION);
+end;
+
+function TInfoVersao.GetProductVersion: String;
+begin
+  Result := getPropertyValue(ivPRODUCT_VERSION);
 end;
 
 end.
