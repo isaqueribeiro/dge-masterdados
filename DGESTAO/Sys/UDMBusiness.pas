@@ -141,6 +141,7 @@ var
   function StrIsCNPJ(const Num: string): Boolean;
   function StrIsCPF(const Num: string): Boolean;
   function StrIsDateTime(const S: string): Boolean;
+  function StrIsInteger(const Num: string): Boolean;
   function StrFormatarCnpj(sCnpj: String): String;
   function StrFormatarCpf(sCpf: String): String;
   function StrFormatarCEP(sCEP: String): String;
@@ -944,6 +945,13 @@ var
   d : TDateTime;
 begin
   Result := TryStrToDateTime(S, d);
+end;
+
+function StrIsInteger(const Num: string): Boolean;
+var
+  I : Integer;
+begin
+  Result := TryStrToInt(Num, I);
 end;
 
 function StrFormatarCnpj(sCnpj: String): String;

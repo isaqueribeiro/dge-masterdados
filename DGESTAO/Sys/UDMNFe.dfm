@@ -2090,7 +2090,7 @@ object DMNFe: TDMNFe
     ShowProgress = True
     OverwritePrompt = False
     ShowExportDialog = True
-    SmtpPort = 25
+    SmtpPort = 587
     UseIniFile = True
     TimeOut = 60
     ConfurmReading = False
@@ -5186,12 +5186,15 @@ object DMNFe: TDMNFe
     Top = 336
     Datasets = <
       item
+        DataSet = dmACBrBoletoFCFR.frxBanco
         DataSetName = 'Banco'
       end
       item
+        DataSet = dmACBrBoletoFCFR.frxCedente
         DataSetName = 'Cedente'
       end
       item
+        DataSet = dmACBrBoletoFCFR.frxTitulo
         DataSetName = 'Titulo'
       end>
     Variables = <>
@@ -5219,6 +5222,7 @@ object DMNFe: TDMNFe
         Top = 18.897650000000000000
         Width = 718.110700000000000000
         OnBeforePrint = 'MDOnBeforePrint'
+        DataSet = dmACBrBoletoFCFR.frxTitulo
         DataSetName = 'Titulo'
         RowCount = 0
         object Memo37: TfrxMemoView
@@ -5325,6 +5329,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'Nome'
+          DataSet = dmACBrBoletoFCFR.frxCedente
           DataSetName = 'Cedente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5376,6 +5381,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'Sacado_NomeSacado'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -5413,6 +5419,7 @@ object DMNFe: TDMNFe
           Width = 170.078740160000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxCedente
           DataSetName = 'Cedente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5436,6 +5443,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'NossoNum'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5535,6 +5543,7 @@ object DMNFe: TDMNFe
           Width = 70.677165350000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = 'dd/mm/yyyy'
           DisplayFormat.Kind = fkDateTime
@@ -5592,6 +5601,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'NumeroDocumento'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5612,6 +5622,7 @@ object DMNFe: TDMNFe
           Width = 60.094488190000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5650,6 +5661,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'ValorDocumento'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
@@ -5850,6 +5862,7 @@ object DMNFe: TDMNFe
           Width = 156.283703170000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5869,6 +5882,7 @@ object DMNFe: TDMNFe
           Width = 78.236220470000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5887,6 +5901,7 @@ object DMNFe: TDMNFe
           Width = 210.897637800000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5905,6 +5920,7 @@ object DMNFe: TDMNFe
           Width = 78.236220470000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5923,6 +5939,7 @@ object DMNFe: TDMNFe
           Width = 195.170686680000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5973,6 +5990,7 @@ object DMNFe: TDMNFe
           Width = 600.980672870000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -5993,6 +6011,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'DataProcessamento'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = 'dd/mm/yyyy'
           DisplayFormat.Kind = fkDateTime
@@ -6099,6 +6118,7 @@ object DMNFe: TDMNFe
           Width = 535.937007874016000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6117,6 +6137,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = 'dd/mm/yyyy'
           DisplayFormat.Kind = fkDateTime
@@ -6151,6 +6172,7 @@ object DMNFe: TDMNFe
           Width = 535.937007870000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6184,6 +6206,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6220,6 +6243,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6254,6 +6278,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
@@ -6290,6 +6315,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
@@ -6325,6 +6351,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
@@ -6360,6 +6387,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
@@ -6470,6 +6498,7 @@ object DMNFe: TDMNFe
           Width = 535.937007870000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6488,6 +6517,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = 'dd/mm/yyyy'
           DisplayFormat.Kind = fkDateTime
@@ -6522,6 +6552,7 @@ object DMNFe: TDMNFe
           Width = 535.937007870000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6555,6 +6586,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = 'dd/mm/yyyy'
           Font.Charset = DEFAULT_CHARSET
@@ -6590,6 +6622,7 @@ object DMNFe: TDMNFe
           Width = 132.283464570000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = 'dd/mm/yyyy'
           DisplayFormat.Kind = fkDateTime
@@ -6627,6 +6660,7 @@ object DMNFe: TDMNFe
           Width = 132.283464566929000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6662,6 +6696,7 @@ object DMNFe: TDMNFe
           Width = 66.141732280000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6697,6 +6732,7 @@ object DMNFe: TDMNFe
           Width = 66.141732280000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6732,6 +6768,7 @@ object DMNFe: TDMNFe
           Width = 138.858983540000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = 'dd/mm/yyyy'
           DisplayFormat.Kind = fkDateTime
@@ -6767,6 +6804,7 @@ object DMNFe: TDMNFe
           Width = 132.283464570000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6800,6 +6838,7 @@ object DMNFe: TDMNFe
           Width = 66.141732280000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6835,6 +6874,7 @@ object DMNFe: TDMNFe
           Width = 66.141732280000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6870,6 +6910,7 @@ object DMNFe: TDMNFe
           Width = 132.283464570000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6903,6 +6944,7 @@ object DMNFe: TDMNFe
           Width = 138.858983540000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6935,6 +6977,7 @@ object DMNFe: TDMNFe
           Width = 533.963513330000000000
           Height = 78.746134840000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6966,6 +7009,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'Sacado_NomeSacado'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -6998,6 +7042,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'Sacado_CNPJCPF'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7015,6 +7060,7 @@ object DMNFe: TDMNFe
           Width = 400.630180000000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7033,6 +7079,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'Sacado_Bairro'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7049,6 +7096,7 @@ object DMNFe: TDMNFe
           Width = 400.630180000000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7194,6 +7242,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7228,6 +7277,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
@@ -7264,6 +7314,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
@@ -7299,6 +7350,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
@@ -7334,6 +7386,7 @@ object DMNFe: TDMNFe
           Width = 167.923005760000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
@@ -7374,6 +7427,7 @@ object DMNFe: TDMNFe
           Width = 132.283464570000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = 'dd/mm/yyyy'
           DisplayFormat.Kind = fkDateTime
@@ -7411,6 +7465,7 @@ object DMNFe: TDMNFe
           Width = 132.283464570000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7446,6 +7501,7 @@ object DMNFe: TDMNFe
           Width = 66.141732280000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7481,6 +7537,7 @@ object DMNFe: TDMNFe
           Width = 66.141732280000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7516,6 +7573,7 @@ object DMNFe: TDMNFe
           Width = 138.858983540000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = 'dd/mm/yyyy'
           DisplayFormat.Kind = fkDateTime
@@ -7551,6 +7609,7 @@ object DMNFe: TDMNFe
           Width = 132.283464570000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           DisplayFormat.FormatStr = 'dd/mm/yyyy'
           DisplayFormat.Kind = fkDateTime
@@ -7586,6 +7645,7 @@ object DMNFe: TDMNFe
           Width = 66.141732280000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7621,6 +7681,7 @@ object DMNFe: TDMNFe
           Width = 66.141732280000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7656,6 +7717,7 @@ object DMNFe: TDMNFe
           Width = 132.283464570000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7689,6 +7751,7 @@ object DMNFe: TDMNFe
           Width = 138.858983540000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7721,6 +7784,7 @@ object DMNFe: TDMNFe
           Width = 534.721089090000000000
           Height = 77.988559090000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7752,6 +7816,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'Sacado_NomeSacado'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7784,6 +7849,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'Sacado_CNPJCPF'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7801,6 +7867,7 @@ object DMNFe: TDMNFe
           Width = 400.630180000000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7819,6 +7886,7 @@ object DMNFe: TDMNFe
           Height = 18.897650000000000000
           ShowHint = False
           DataField = 'Sacado_Bairro'
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -7835,6 +7903,7 @@ object DMNFe: TDMNFe
           Width = 400.630180000000000000
           Height = 18.897650000000000000
           ShowHint = False
+          DataSet = dmACBrBoletoFCFR.frxTitulo
           DataSetName = 'Titulo'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
