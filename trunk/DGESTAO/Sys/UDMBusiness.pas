@@ -165,6 +165,7 @@ var
   function GetCidadeID(const sCEP : String) : Integer; overload;
   function GetBairroNome(const iBairro : Integer) : String;
   function GetLogradouroNome(const iLogradouro : Integer) : String;
+  function GetLogradouroTipo(const iLogradouro : Integer) : String;
   function GetCfopNomeDefault : String;
   function GetEmpresaNomeDefault : String;
   function GetClienteNomeDefault : String;
@@ -1295,6 +1296,25 @@ begin
     Open;
 
     Result := FieldByName('log_nome').AsString;
+
+    Close;
+  end;
+end;
+
+function GetLogradouroTipo(const iLogradouro : Integer) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('  coalesce(t.tlg_sigla, t.tlg_descricao) as tipo');
+    SQL.Add('from TBLOGRADOURO l');
+    SQL.Add('  inner join TBTIPO_LOGRADOURO t on (t.tlg_cod = l.tlg_cod)');
+    SQL.Add('where log_cod = ' + IntToStr(iLogradouro));
+    Open;
+
+    Result := FieldByName('tipo').AsString;
 
     Close;
   end;
