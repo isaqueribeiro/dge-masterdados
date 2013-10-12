@@ -844,11 +844,14 @@ begin
         IbDtstTabelaCID_NOME.AsString  := GetCidadeNome(IbDtstTabelaCID_COD.AsInteger);
       end;
 
+      IbDtstTabelaCIDADE.AsString   := IbDtstTabelaCID_NOME.AsString + ' (' + Trim(EditUF.Text) + ')';
+
       IbDtstTabelaBAI_COD.AsInteger := SetBairro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditBairro.Text), 1, IbDtstTabelaBAIRRO.Size));
       IbDtstTabelaBAIRRO.AsString   := Trim(EditBairro.Text);
 
       IbDtstTabelaLOG_COD.AsInteger   := SetLogradouro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditEndereco.Text), 1, IbDtstTabelaLOGRADOURO.Size));
-      IbDtstTabelaLOGRADOURO.AsString := Trim(EditEndereco.Text);
+      IbDtstTabelaLOGRADOURO.AsString := Trim(GetLogradouroTipo(IbDtstTabelaLOG_COD.AsInteger) + ' ' + GetLogradouroNome(IbDtstTabelaLOG_COD.AsInteger));
+      IbDtstTabelaENDER.AsString      := Trim(IbDtstTabelaLOGRADOURO.AsString);
 
       IbDtstTabelaCOMPLEMENTO.AsString := Copy(Trim(EditComplemento.Text), 1, IbDtstTabelaCOMPLEMENTO.Size);
       IbDtstTabelaNUMERO_END.AsString  := Copy(Trim(EditNumero.Text),      1, IbDtstTabelaNUMERO_END.Size);
