@@ -6,13 +6,12 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UGrPadraoCadastro, ImgList, IBCustomDataSet, IBUpdateSQL, DB,
   Mask, DBCtrls, StdCtrls, Buttons, ExtCtrls, Grids, DBGrids, ComCtrls,
-  ToolWin, IBTable, rxToolEdit, RXDBCtrl;
+  ToolWin, IBTable, rxToolEdit, RXDBCtrl, ACBrConsultaCPF, ACBrBase,
+  ACBrSocket, ACBrConsultaCNPJ, JPEG;
 
 type
   TfrmGeFornecedor = class(TfrmGrPadraoCadastro)
     dbPessoaFisica: TDBCheckBox;
-    lblCNPJ: TLabel;
-    dbCNPJ: TDBEdit;
     lblRazao: TLabel;
     dbRazao: TDBEdit;
     lblIE: TLabel;
@@ -83,6 +82,63 @@ type
     tbsDadosAdcionais: TTabSheet;
     IbDtstTabelaTRANSPORTADORA: TSmallintField;
     DBCheckBox1: TDBCheckBox;
+    tbsConsultarCNPJ: TTabSheet;
+    tbsConsultarCPF: TTabSheet;
+    pnlConsultarCNPJ: TPanel;
+    lblCNPJX: TLabel;
+    lblCaptchaX: TLabel;
+    edCaptcha: TEdit;
+    edCNPJ: TMaskEdit;
+    pnlCaptcha: TPanel;
+    ImgCaptcha: TImage;
+    LabAtualizarCaptcha: TLabel;
+    ckRemoverEspacosDuplos: TCheckBox;
+    btnConsultarCNPJ: TButton;
+    BvlConsultar: TBevel;
+    pnlRetornoCNPJ: TPanel;
+    lblTipoX: TLabel;
+    lblRazaoSocialX: TLabel;
+    lblAberturaX: TLabel;
+    lblEnderecoX: TLabel;
+    lblNumeroX: TLabel;
+    lblComplementoX: TLabel;
+    lblBairroX: TLabel;
+    lblCidadeX: TLabel;
+    lblUFX: TLabel;
+    lblCEPX: TLabel;
+    lblSituacaoX: TLabel;
+    lblFantasiaX: TLabel;
+    EditTipo: TEdit;
+    EditRazaoSocial: TEdit;
+    EditAbertura: TEdit;
+    EditEndereco: TEdit;
+    EditNumero: TEdit;
+    EditComplemento: TEdit;
+    EditBairro: TEdit;
+    EditCidade: TEdit;
+    EditUF: TEdit;
+    EditCEP: TEdit;
+    EditSituacao: TEdit;
+    EditFantasia: TEdit;
+    btnVoltar: TButton;
+    btnRecuperarCNPJ: TButton;
+    pnlConsultarCPF: TPanel;
+    lblCPFX: TLabel;
+    edCPF: TMaskEdit;
+    btnConsultarCPF: TButton;
+    lblCNPJ: TLabel;
+    dbCNPJ: TRxDBComboEdit;
+    ACBrConsultaCNPJ: TACBrConsultaCNPJ;
+    ACBrConsultaCPF: TACBrConsultaCPF;
+    IbDtstTabelaDTCAD: TDateField;
+    dbDataCadastro: TDBEdit;
+    lblDataCadastro: TLabel;
+    lblFoneCelular: TLabel;
+    dbFoneCelular: TDBEdit;
+    dbFoneFax: TDBEdit;
+    lblFoneFax: TLabel;
+    IbDtstTabelaFONECEL: TIBStringField;
+    IbDtstTabelaFONEFAX: TIBStringField;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -94,6 +150,14 @@ type
     procedure DtSrcTabelaDataChange(Sender: TObject; Field: TField);
     procedure btbtnSalvarClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure dbCNPJButtonClick(Sender: TObject);
+    procedure LabAtualizarCaptchaClick(Sender: TObject);
+    procedure btnVoltarClick(Sender: TObject);
+    procedure btnRecuperarCNPJClick(Sender: TObject);
+    procedure btnConsultarCNPJClick(Sender: TObject);
+    procedure btnConsultarCPFClick(Sender: TObject);
+    procedure edCNPJKeyPress(Sender: TObject; var Key: Char);
+    procedure edCaptchaKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
   public
@@ -121,6 +185,7 @@ var
 begin
   frm := TfrmGeFornecedor.Create(AOwner);
   try
+    frm.WhereAdditional := 'f.cliente_origem is null';
     frm.tbsDuplicatas.TabVisible := False; // Temporário
     frm.ShowModal;
   finally
@@ -134,8 +199,8 @@ var
 begin
   frm := TfrmGeFornecedor.Create(AOwner);
   try
-    frm.tbsDuplicatas.TabVisible := False; // Temporário
-    
+    frm.WhereAdditional := EmptyStr;
+
     Result := frm.SelecionarRegistro(Codigo, Nome);
   finally
     frm.Destroy;
@@ -148,6 +213,8 @@ var
 begin
   frm := TfrmGeFornecedor.Create(AOwner);
   try
+    frm.WhereAdditional := EmptyStr;
+
     Result := frm.SelecionarRegistro(Codigo, Nome);
     if ( Result ) then
       CNPJ := frm.IbDtstTabelaCNPJ.AsString;
@@ -187,13 +254,18 @@ begin
 
   tblGrupo.Open;
 
-  NomeTabela     := 'TBFORNECEDOR';
-  CampoCodigo    := 'Codforn';
-  CampoDescricao := 'Nomeforn';
+  NomeTabela      := 'TBFORNECEDOR';
+  CampoCodigo     := 'Codforn';
+  CampoDescricao  := 'Nomeforn';
+  WhereAdditional := 'f.cliente_origem is null';
 
   UpdateGenerator;
 
   pgcMaisDados.ActivePageIndex := 0;
+  tbsConsultarCNPJ.TabVisible  := False;
+  tbsConsultarCPF.TabVisible   := False;
+
+  tbsDuplicatas.TabVisible := False; // Temporário
 end;
 
 procedure TfrmGeFornecedor.ProximoCampoKeyPress(Sender: TObject;
@@ -292,6 +364,7 @@ begin
   IbDtstTabelaPAIS_ID.AsString         := GetPaisIDDefault;
   IbDtstTabelaPAIS_NOME.AsString       := GetPaisNomeDefault;
   IbDtstTabelaTRANSPORTADORA.AsInteger := 0;
+  IbDtstTabelaDTCAD.AsDateTime         := GetDateTimeDB;
 end;
 
 procedure TfrmGeFornecedor.DtSrcTabelaStateChange(Sender: TObject);
@@ -300,14 +373,18 @@ begin
   if ( IbDtstTabela.State in [dsEdit, dsInsert] ) then
   begin
     pgcMaisDados.ActivePageIndex := 0;
-    
+
     if ( IbDtstTabelaPESSOA_FISICA.AsInteger = 1 ) then
       IbDtstTabelaCNPJ.EditMask := '999.999.999-99;0; '
     else
       IbDtstTabelaCNPJ.EditMask := '99.999.999/9999-99;0; ';
   end
   else
-    IbDtstTabelaCNPJ.EditMask := '';
+  begin
+    IbDtstTabelaCNPJ.EditMask   := EmptyStr;
+    tbsConsultarCNPJ.TabVisible := False;
+    tbsConsultarCPF.TabVisible  := False;
+  end;
 end;
 
 procedure TfrmGeFornecedor.DtSrcTabelaDataChange(Sender: TObject;
@@ -351,6 +428,9 @@ begin
     end;
   end;
 
+  if ( IbDtstTabelaDTCAD.IsNull ) then
+    IbDtstTabelaDTCAD.AsDateTime := GetDateTimeDB;
+    
   inherited;
 end;
 
@@ -359,6 +439,253 @@ procedure TfrmGeFornecedor.FormClose(Sender: TObject;
 begin
   inherited;
   Action := caFree;
+end;
+
+procedure TfrmGeFornecedor.dbCNPJButtonClick(Sender: TObject);
+
+  procedure AtualizarCamposRetorno;
+  var
+    bCNPJ,
+    bCPF : Boolean;
+  begin
+    bCNPJ := tbsConsultarCNPJ.TabVisible;
+    bCPF  := tbsConsultarCPF.TabVisible;
+
+    if bCNPJ then
+      lblRazaoSocialX.Caption := 'Razão Social';
+
+    if bCPF then
+      lblRazaoSocialX.Caption := 'Nome';
+
+    lblTipoX.Enabled := bCNPJ;
+    EditTipo.Enabled := bCNPJ;
+    lblAberturaX.Enabled := bCNPJ;
+    EditAbertura.Enabled := bCNPJ;
+    lblFantasiaX.Enabled := bCNPJ;
+    EditFantasia.Enabled := bCNPJ;
+    lblEnderecoX.Enabled := bCNPJ;
+    EditEndereco.Enabled := bCNPJ;
+    lblNumeroX.Enabled := bCNPJ;
+    EditNumero.Enabled := bCNPJ;
+    lblComplementoX.Enabled := bCNPJ;
+    EditComplemento.Enabled := bCNPJ;
+    lblBairroX.Enabled := bCNPJ;
+    EditBairro.Enabled := bCNPJ;
+    lblCidadeX.Enabled := bCNPJ;
+    EditCidade.Enabled := bCNPJ;
+    lblUFX.Enabled := bCNPJ;
+    EditUF.Enabled := bCNPJ;
+    lblCEPX.Enabled := bCNPJ;
+    EditCEP.Enabled := bCNPJ;
+  end;
+
+begin
+  if dbPessoaFisica.Checked then
+  begin
+
+    tbsConsultarCPF.TabVisible := True;
+    pgcGuias.ActivePage        := tbsConsultarCPF;
+
+    pnlCaptcha.Parent             := pnlConsultarCPF;
+    ckRemoverEspacosDuplos.Parent := pnlConsultarCPF;
+    lblCaptchaX.Parent    := pnlConsultarCPF;
+    edCaptcha.Parent      := pnlConsultarCPF;
+    pnlRetornoCNPJ.Parent := tbsConsultarCPF;
+
+    LabAtualizarCaptchaClick(LabAtualizarCaptcha);
+
+    if ( Trim(StrOnlyNumbers(dbCNPJ.Text)) <> EmptyStr ) then
+      edCPF.Text := StrFormatarCpf( StrOnlyNumbers(dbCNPJ.Text) )
+    else
+      edCPF.SetFocus;
+  end
+  else
+  begin
+    tbsConsultarCNPJ.TabVisible := True;
+    pgcGuias.ActivePage         := tbsConsultarCNPJ;
+
+    pnlCaptcha.Parent             := pnlConsultarCNPJ;
+    ckRemoverEspacosDuplos.Parent := pnlConsultarCNPJ;
+    lblCaptchaX.Parent    := pnlConsultarCNPJ;
+    edCaptcha.Parent      := pnlConsultarCNPJ;
+    pnlRetornoCNPJ.Parent := tbsConsultarCNPJ;
+
+    LabAtualizarCaptchaClick(LabAtualizarCaptcha);
+
+    if ( Trim(StrOnlyNumbers(dbCNPJ.Text)) <> EmptyStr ) then
+      edCNPJ.Text := StrFormatarCnpj( StrOnlyNumbers(dbCNPJ.Text) )
+    else
+      edCNPJ.SetFocus;
+  end;
+
+  AtualizarCamposRetorno;
+end;
+
+procedure TfrmGeFornecedor.LabAtualizarCaptchaClick(Sender: TObject);
+var
+  Stream : TMemoryStream;
+  Jpg : TJPEGImage;
+begin
+  Stream := TMemoryStream.Create;
+  Jpg    := TJPEGImage.Create;
+  try
+    if ( pgcGuias.ActivePage = tbsConsultarCNPJ ) then
+      ACBrConsultaCNPJ.Captcha(Stream)
+    else
+    if ( pgcGuias.ActivePage = tbsConsultarCPF ) then
+      ACBrConsultaCPF.Captcha(Stream);
+      
+    Jpg.LoadFromStream(Stream);
+    ImgCaptcha.Picture.Assign(Jpg);
+
+    edCaptcha.Clear;
+    edCaptcha.SetFocus;
+
+    EditTipo.Clear;
+    EditAbertura.Clear;
+    EditSituacao.Clear;
+    EditRazaoSocial.Clear;
+    EditFantasia.Clear;
+    EditEndereco.Clear;
+    EditNumero.Clear;
+    EditComplemento.Clear;
+    EditBairro.Clear;
+    EditCidade.Clear;
+    EditUF.Clear;
+    EditCEP.Clear;
+  finally
+    Stream.Free;
+    Jpg.Free;
+  end;
+end;
+
+procedure TfrmGeFornecedor.btnVoltarClick(Sender: TObject);
+begin
+  pgcGuias.ActivePage         := tbsCadastro;
+  tbsConsultarCNPJ.TabVisible := False;
+  dbCNPJ.SetFocus;
+end;
+
+procedure TfrmGeFornecedor.btnRecuperarCNPJClick(Sender: TObject);
+var
+  bCPF : Boolean;
+begin
+  bCPF := (pgcGuias.ActivePage = tbsConsultarCPF);
+  btnVoltar.Click;
+
+  if not (IbDtstTabela.State in [dsEdit, dsInsert]) then
+    Exit;
+
+  if ShowConfirm('Deseja carregar os dados consultados para o cadastro?') then
+  begin
+    if bCPF then
+    begin
+      IbDtstTabelaCNPJ.AsString     := StrOnlyNumbers(edCPF.Text);
+      IbDtstTabelaNOMEFORN.AsString := Copy(Trim(EditRazaoSocial.Text), 1, IbDtstTabelaNOMEFORN.Size);
+    end
+    else
+    begin
+      IbDtstTabelaCNPJ.AsString       := StrOnlyNumbers(edCNPJ.Text);
+      IbDtstTabelaNOMEFORN.AsString   := Copy(Trim(EditRazaoSocial.Text), 1, IbDtstTabelaNOMEFORN.Size);
+      IbDtstTabelaEST_COD.AsInteger   := GetEstadoID( Trim(EditUF.Text) );
+      IbDtstTabelaEST_NOME.AsString   := GetEstadoNome( Trim(EditUF.Text) );
+      IbDtstTabelaUF.AsString         := Trim(EditUF.Text);
+      IbDtstTabelaCID_COD.AsInteger   := GetCidadeID(IbDtstTabelaEST_COD.AsInteger, EditCidade.Text);
+      IbDtstTabelaCID_NOME.AsString   := GetCidadeNome(IbDtstTabelaCID_COD.AsInteger);
+
+      if ( (IbDtstTabelaCID_COD.AsInteger = 0) and (Trim(EditCEP.Text) <> EmptyStr) ) then
+      begin
+        IbDtstTabelaCID_COD.AsInteger  := GetCidadeID(Trim(EditCEP.Text));
+        IbDtstTabelaCID_NOME.AsString  := GetCidadeNome(IbDtstTabelaCID_COD.AsInteger);
+      end;
+
+      IbDtstTabelaCIDADE.AsString   := IbDtstTabelaCID_NOME.AsString + ' (' + Trim(EditUF.Text) + ')';
+
+      IbDtstTabelaBAI_COD.AsInteger := SetBairro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditBairro.Text), 1, IbDtstTabelaBAI_NOME.Size));
+      IbDtstTabelaBAI_NOME.AsString := Trim(EditBairro.Text);
+
+      IbDtstTabelaLOG_COD.AsInteger   := SetLogradouro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditEndereco.Text), 1, IbDtstTabelaLOGRADOURO.Size));
+      IbDtstTabelaLOGRADOURO.AsString := Trim(GetLogradouroTipo(IbDtstTabelaLOG_COD.AsInteger) + ' ' + GetLogradouroNome(IbDtstTabelaLOG_COD.AsInteger));
+      IbDtstTabelaENDER.AsString      := Trim(IbDtstTabelaLOGRADOURO.AsString);
+
+      IbDtstTabelaCOMPLEMENTO.AsString := Copy(Trim(EditComplemento.Text), 1, IbDtstTabelaCOMPLEMENTO.Size);
+      IbDtstTabelaNUMERO_END.AsString  := Copy(Trim(EditNumero.Text),      1, IbDtstTabelaNUMERO_END.Size);
+      IbDtstTabelaCEP.AsString         := Copy(StrOnlyNumbers(Trim(EditCEP.Text)), 1, IbDtstTabelaCEP.Size);
+    end;
+  end;
+end;
+
+procedure TfrmGeFornecedor.btnConsultarCNPJClick(Sender: TObject);
+begin
+  if Trim(edCaptcha.Text) <> EmptyStr then
+  begin
+    if ACBrConsultaCNPJ.Consulta(edCNPJ.Text, Trim(edCaptcha.Text), ckRemoverEspacosDuplos.Checked) then
+    begin
+      EditTipo.Text        := ACBrConsultaCNPJ.EmpresaTipo;
+      EditRazaoSocial.Text := ACBrConsultaCNPJ.RazaoSocial;
+      EditAbertura.Text    := DateToStr( ACBrConsultaCNPJ.Abertura );
+      EditFantasia.Text    := ACBrConsultaCNPJ.Fantasia;
+      EditEndereco.Text    := ACBrConsultaCNPJ.Endereco;
+      EditNumero.Text      := ACBrConsultaCNPJ.Numero;
+      EditComplemento.Text := ACBrConsultaCNPJ.Complemento;
+      EditBairro.Text      := ACBrConsultaCNPJ.Bairro;
+      EditComplemento.Text := ACBrConsultaCNPJ.Complemento;
+      EditCidade.Text      := ACBrConsultaCNPJ.Cidade;
+      EditUF.Text          := ACBrConsultaCNPJ.UF;
+      EditCEP.Text         := ACBrConsultaCNPJ.CEP;
+      EditSituacao.Text    := ACBrConsultaCNPJ.Situacao;
+
+      btnRecuperarCNPJ.Enabled := True;
+    end;
+  end
+  else
+  begin
+    ShowWarning('É necessário digitar o captcha.');
+    edCaptcha.SetFocus;
+
+    btnRecuperarCNPJ.Enabled := False;
+  end;
+end;
+
+procedure TfrmGeFornecedor.btnConsultarCPFClick(Sender: TObject);
+begin
+  if Trim(edCaptcha.Text) <> EmptyStr then
+  begin
+    if ACBrConsultaCPF.Consulta(edCPF.Text, Trim(edCaptcha.Text)) then
+    begin
+      EditRazaoSocial.Text := ACBrConsultaCPF.Nome;
+      EditSituacao.Text    := ACBrConsultaCPF.Situacao;
+      //EditAbertura.Text    := ACBrConsultaCPF.Emissao;
+      //EditTipo.Text        := ACBrConsultaCPF.CodCtrlControle;
+      //EditFantasia.Text    := ACBrConsultaCPF.DigitoVerificador;
+
+      btnRecuperarCNPJ.Enabled := True;
+    end;
+  end
+  else
+  begin
+    ShowWarning('É necessário digitar o captcha.');
+    edCaptcha.SetFocus;
+
+    btnRecuperarCNPJ.Enabled := False;
+  end;
+end;
+
+procedure TfrmGeFornecedor.edCNPJKeyPress(Sender: TObject; var Key: Char);
+begin
+  if ( Key = #13 ) then
+    edCaptcha.SetFocus;
+end;
+
+procedure TfrmGeFornecedor.edCaptchaKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if ( Key = #13 ) then
+    if ( pgcGuias.ActivePage = tbsConsultarCNPJ ) then
+      btnConsultarCNPJ.Click
+    else
+    if ( pgcGuias.ActivePage = tbsConsultarCPF ) then
+      btnConsultarCPF.Click;
 end;
 
 initialization

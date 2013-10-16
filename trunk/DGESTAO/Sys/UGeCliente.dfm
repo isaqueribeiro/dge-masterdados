@@ -1350,6 +1350,28 @@ inherited frmGeCliente: TfrmGeCliente
             ValueUnchecked = '0'
           end
         end
+        object tbsDadosAdcionais: TTabSheet
+          Caption = 'Outras Informa'#231#245'es'
+          ImageIndex = 2
+          object DBCheckBox1: TDBCheckBox
+            Left = 8
+            Top = 10
+            Width = 329
+            Height = 17
+            Caption = 'Permitir emiss'#227'o de NF-e de Devolu'#231#227'o para o cliente'
+            DataField = 'EMITIR_NFE_DEVOLUCAO'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
+        end
       end
     end
     object tbsConsultarCNPJ: TTabSheet
@@ -1996,6 +2018,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  , cl.Bloqueado_usuario'
       '  , cl.DesBloqueado_data'
       '  , cl.Usuario'
+      '  , cl.emitir_nfe_devolucao'
       
         '  , coalesce( cast(coalesce(coalesce(t.Tlg_sigla, t.Tlg_descrica' +
         'o) || '#39' '#39', '#39#39') || l.Log_nome as varchar(250)), cl.Ender ) as Log' +
@@ -2219,6 +2242,11 @@ inherited frmGeCliente: TfrmGeCliente
       FieldName = 'DESBLOQUEADO_DATA'
       Origin = 'TBCLIENTE.DESBLOQUEADO_DATA'
     end
+    object IbDtstTabelaEMITIR_NFE_DEVOLUCAO: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'EMITIR_NFE_DEVOLUCAO'
+      Origin = '"TBCLIENTE"."EMITIR_NFE_DEVOLUCAO"'
+    end
     object IbDtstTabelaUSUARIO: TIBStringField
       FieldName = 'USUARIO'
       Origin = '"TBCLIENTE"."USUARIO"'
@@ -2263,7 +2291,9 @@ inherited frmGeCliente: TfrmGeCliente
       '  BLOQUEADO_USUARIO,'
       '  DESBLOQUEADO_DATA,'
       '  DTCAD,'
-      '  VENDEDOR_COD'
+      '  VENDEDOR_COD,'
+      '  USUARIO,'
+      '  EMITIR_NFE_DEVOLUCAO'
       'from TBCLIENTE '
       'where'
       '  CNPJ = :CNPJ')
@@ -2276,7 +2306,6 @@ inherited frmGeCliente: TfrmGeCliente
       '  BLOQUEADO_DATA = :BLOQUEADO_DATA,'
       '  BLOQUEADO_MOTIVO = :BLOQUEADO_MOTIVO,'
       '  BLOQUEADO_USUARIO = :BLOQUEADO_USUARIO,'
-      '  USUARIO = :USUARIO,'
       '  CEP = :CEP,'
       '  CID_COD = :CID_COD,'
       '  CIDADE = :CIDADE,'
@@ -2286,6 +2315,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  DESBLOQUEADO_DATA = :DESBLOQUEADO_DATA,'
       '  DTCAD = :DTCAD,'
       '  EMAIL = :EMAIL,'
+      '  EMITIR_NFE_DEVOLUCAO = :EMITIR_NFE_DEVOLUCAO,'
       '  ENDER = :ENDER,'
       '  EST_COD = :EST_COD,'
       '  FONE = :FONE,'
@@ -2301,6 +2331,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  SITE = :SITE,'
       '  TLG_TIPO = :TLG_TIPO,'
       '  UF = :UF,'
+      '  USUARIO = :USUARIO,'
       '  VALOR_LIMITE_COMPRA = :VALOR_LIMITE_COMPRA,'
       '  VENDEDOR_COD = :VENDEDOR_COD'
       'where'
@@ -2314,28 +2345,31 @@ inherited frmGeCliente: TfrmGeCliente
         '   CEP, CID_COD, CIDADE, CNPJ, CODIGO, COMPLEMENTO, DESBLOQUEADO' +
         '_DATA, '
       
-        '   DTCAD, EMAIL, ENDER, EST_COD, FONE, FONECEL, FONECOMERC, INSC' +
-        'EST, INSCMUN, '
+        '   DTCAD, EMAIL, EMITIR_NFE_DEVOLUCAO, ENDER, EST_COD, FONE, FON' +
+        'ECEL, FONECOMERC, '
       
-        '   LOG_COD, NOME, NUMERO_END, PAIS_ID, PESSOA_FISICA, SITE, TLG_' +
-        'TIPO, UF, '
-      '   VALOR_LIMITE_COMPRA, VENDEDOR_COD, USUARIO)'
+        '   INSCEST, INSCMUN, LOG_COD, NOME, NUMERO_END, PAIS_ID, PESSOA_' +
+        'FISICA, '
+      
+        '   SITE, TLG_TIPO, UF, USUARIO, VALOR_LIMITE_COMPRA, VENDEDOR_CO' +
+        'D)'
       'values'
       
         '  (:BAI_COD, :BAIRRO, :BLOQUEADO, :BLOQUEADO_DATA, :BLOQUEADO_MO' +
-        'TIVO, :BLOQUEADO_USUARIO,'
+        'TIVO, :BLOQUEADO_USUARIO, '
       
         '   :CEP, :CID_COD, :CIDADE, :CNPJ, :CODIGO, :COMPLEMENTO, :DESBL' +
-        'OQUEADO_DATA,'
+        'OQUEADO_DATA, '
       
-        '   :DTCAD, :EMAIL, :ENDER, :EST_COD, :FONE, :FONECEL, :FONECOMER' +
-        'C, :INSCEST,'
+        '   :DTCAD, :EMAIL, :EMITIR_NFE_DEVOLUCAO, :ENDER, :EST_COD, :FON' +
+        'E, :FONECEL, '
       
-        '   :INSCMUN, :LOG_COD, :NOME, :NUMERO_END, :PAIS_ID, :PESSOA_FIS' +
-        'ICA, :SITE,'
+        '   :FONECOMERC, :INSCEST, :INSCMUN, :LOG_COD, :NOME, :NUMERO_END' +
+        ', :PAIS_ID, '
       
-        '   :TLG_TIPO, :UF, :VALOR_LIMITE_COMPRA, :VENDEDOR_COD, :USUARIO' +
-        ')')
+        '   :PESSOA_FISICA, :SITE, :TLG_TIPO, :UF, :USUARIO, :VALOR_LIMIT' +
+        'E_COMPRA, '
+      '   :VENDEDOR_COD)')
     DeleteSQL.Strings = (
       'delete from TBCLIENTE'
       'where'

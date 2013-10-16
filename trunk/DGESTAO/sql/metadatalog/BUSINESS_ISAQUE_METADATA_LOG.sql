@@ -11827,3 +11827,518 @@ end^
 
 SET TERM ; ^
 
+
+
+
+/*------ SYSDBA 15/10/2013 21:35:16 --------*/
+
+ALTER TABLE TBFORNECEDOR
+    ADD DTCAD DMN_DATE;
+
+COMMENT ON COLUMN TBFORNECEDOR.DTCAD IS
+'Data de Cadastro.';
+
+
+
+
+/*------ SYSDBA 15/10/2013 21:49:01 --------*/
+
+ALTER TABLE TBFORNECEDOR
+    ADD FONECEL DMN_FONERSD,
+    ADD FONEFAX DMN_FONERSD;
+
+COMMENT ON COLUMN TBFORNECEDOR.FONE IS
+'Telefone Comercial.';
+
+COMMENT ON COLUMN TBFORNECEDOR.FONECEL IS
+'Telefone Movel.';
+
+COMMENT ON COLUMN TBFORNECEDOR.FONEFAX IS
+'Fax.';
+
+alter table TBFORNECEDOR
+alter CODFORN position 1;
+
+alter table TBFORNECEDOR
+alter PESSOA_FISICA position 2;
+
+alter table TBFORNECEDOR
+alter NOMEFORN position 3;
+
+alter table TBFORNECEDOR
+alter CNPJ position 4;
+
+alter table TBFORNECEDOR
+alter INSCEST position 5;
+
+alter table TBFORNECEDOR
+alter INSCMUN position 6;
+
+alter table TBFORNECEDOR
+alter ENDER position 7;
+
+alter table TBFORNECEDOR
+alter COMPLEMENTO position 8;
+
+alter table TBFORNECEDOR
+alter NUMERO_END position 9;
+
+alter table TBFORNECEDOR
+alter CEP position 10;
+
+alter table TBFORNECEDOR
+alter CIDADE position 11;
+
+alter table TBFORNECEDOR
+alter UF position 12;
+
+alter table TBFORNECEDOR
+alter CONTATO position 13;
+
+alter table TBFORNECEDOR
+alter FONE position 14;
+
+alter table TBFORNECEDOR
+alter FONECEL position 15;
+
+alter table TBFORNECEDOR
+alter FONEFAX position 16;
+
+alter table TBFORNECEDOR
+alter EMAIL position 17;
+
+alter table TBFORNECEDOR
+alter SITE position 18;
+
+alter table TBFORNECEDOR
+alter TLG_TIPO position 19;
+
+alter table TBFORNECEDOR
+alter LOG_COD position 20;
+
+alter table TBFORNECEDOR
+alter BAI_COD position 21;
+
+alter table TBFORNECEDOR
+alter CID_COD position 22;
+
+alter table TBFORNECEDOR
+alter EST_COD position 23;
+
+alter table TBFORNECEDOR
+alter PAIS_ID position 24;
+
+alter table TBFORNECEDOR
+alter GRF_COD position 25;
+
+alter table TBFORNECEDOR
+alter TRANSPORTADORA position 26;
+
+alter table TBFORNECEDOR
+alter DTCAD position 27;
+
+
+
+
+/*------ SYSDBA 15/10/2013 21:57:45 --------*/
+
+ALTER TABLE TBCLIENTE
+    ADD EMITIR_NFE_DEVOLUCAO DMN_SMALLINT_N;
+
+COMMENT ON COLUMN TBCLIENTE.EMITIR_NFE_DEVOLUCAO IS
+'Emitir NF-e de devolucao para o cliente:
+0 - Nao
+1 - Sim';
+
+
+
+
+/*------ SYSDBA 15/10/2013 21:59:49 --------*/
+
+ALTER TABLE TBFORNECEDOR
+    ADD CLIENTE_ORIGEM DMN_CNPJ;
+
+COMMENT ON COLUMN TBFORNECEDOR.CLIENTE_ORIGEM IS
+'FORNECEDOR corresponde a CLIENTE cadastrado.';
+
+
+
+
+/*------ SYSDBA 15/10/2013 22:19:02 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_cliente_gerar_fornecedor for tbcliente
+active after insert or update position 1
+AS
+  declare variable codigo_forn Integer;
+  declare variable grupo_forn Smallint;
+begin
+  if ( new.emitir_nfe_devolucao = 1 ) then
+  begin
+    /* Buscar Fornecedor referenre ao CPF/CNPJ */
+    Select first 1
+      f.codforn
+    from TBFORNECEDOR f
+    where f.cnpj = new.cnpj
+    Into
+      codigo_forn;
+
+    if ( :codigo_forn is null ) then
+    begin
+      /* Buscar Grupo de fornecedor */
+      Select first 1
+        g.grf_cod
+      from TBFORNECEDOR_GRUPO g
+      Into
+        grupo_forn;
+
+      codigo_forn = Gen_id(GEN_FORNECEDOR_ID, 1);
+      Insert Into TBFORNECEDOR (
+          CODFORN
+        , PESSOA_FISICA
+        , NOMEFORN
+        , CNPJ
+        , INSCEST
+        , INSCMUN
+        , ENDER
+        , COMPLEMENTO
+        , NUMERO_END
+        , CEP
+        , CIDADE
+        , UF
+        , FONE
+        , FONECEL
+        , EMAIL
+        , SITE
+        , TLG_TIPO
+        , LOG_COD
+        , BAI_COD
+        , CID_COD
+        , EST_COD
+        , PAIS_ID
+        , GRF_COD
+        , TRANSPORTADORA
+        , DTCAD
+        , CLIENTE_ORIGEM
+      ) values (
+          :codigo_forn
+        , new.pessoa_fisica
+        , new.nome
+        , new.cnpj
+        , new.inscest
+        , new.inscmun
+        , new.ender
+        , new.complemento
+        , new.numero_end
+        , new.cep
+        , new.cidade
+        , new.uf
+        , new.fone
+        , new.fonecel
+        , substring(new.email from 1 for 40)
+        , substring(new.site from 1 for 35)
+        , new.tlg_tipo
+        , new.log_cod
+        , new.bai_cod
+        , new.cid_cod
+        , new.est_cod
+        , new.pais_id
+        , :grupo_forn
+        , 0
+        , current_date
+        , new.cnpj
+      );
+    end
+    else
+    begin
+      Update TBFORNECEDOR f Set
+          f.pessoa_fisica = new.pessoa_fisica
+        , f.nomeforn = new.nome
+        , f.cnpj     = new.cnpj
+        , f.inscest = new.inscest
+        , f.inscmun = new.inscmun
+        , f.ender   = new.ender
+        , f.complemento = new.complemento
+        , f.numero_end  = new.numero_end
+        , f.cep    = new.cep
+        , f.cidade = new.cidade
+        , f.uf     = new.uf
+        , f.fone    = new.fone
+        , f.fonecel = new.fonecel
+        , f.email   = substring(new.email from 1 for 40)
+        , f.site    = substring(new.site from 1 for 35)
+        , f.tlg_tipo = new.tlg_tipo
+        , f.log_cod = new.log_cod
+        , f.bai_cod = new.bai_cod
+        , f.cid_cod = new.cid_cod
+        , f.est_cod = new.est_cod
+        , f.pais_id = new.pais_id
+        , f.cliente_origem =  new.cnpj
+      where f.codforn = :codigo_forn;
+    end 
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 15/10/2013 22:25:10 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_cliente_gerar_fornecedor for tbcliente
+active after insert or update position 1
+AS
+  declare variable codigo_forn Integer;
+  declare variable grupo_forn Smallint;
+begin
+  if ( new.emitir_nfe_devolucao = 1 ) then
+  begin
+    /* Buscar Fornecedor referenre ao CPF/CNPJ */
+    Select first 1
+      f.codforn
+    from TBFORNECEDOR f
+    where f.cliente_origem = new.cnpj
+    Into
+      codigo_forn;
+
+    if ( :codigo_forn is null ) then
+    begin
+      /* Buscar Grupo de fornecedor */
+      Select first 1
+        g.grf_cod
+      from TBFORNECEDOR_GRUPO g
+      Into
+        grupo_forn;
+
+      codigo_forn = Gen_id(GEN_FORNECEDOR_ID, 1);
+      Insert Into TBFORNECEDOR (
+          CODFORN
+        , PESSOA_FISICA
+        , NOMEFORN
+        , CNPJ
+        , INSCEST
+        , INSCMUN
+        , ENDER
+        , COMPLEMENTO
+        , NUMERO_END
+        , CEP
+        , CIDADE
+        , UF
+        , FONE
+        , FONECEL
+        , EMAIL
+        , SITE
+        , TLG_TIPO
+        , LOG_COD
+        , BAI_COD
+        , CID_COD
+        , EST_COD
+        , PAIS_ID
+        , GRF_COD
+        , TRANSPORTADORA
+        , DTCAD
+        , CLIENTE_ORIGEM
+      ) values (
+          :codigo_forn
+        , new.pessoa_fisica
+        , new.nome
+        , new.cnpj
+        , new.inscest
+        , new.inscmun
+        , new.ender
+        , new.complemento
+        , new.numero_end
+        , new.cep
+        , new.cidade
+        , new.uf
+        , new.fone
+        , new.fonecel
+        , substring(new.email from 1 for 40)
+        , substring(new.site from 1 for 35)
+        , new.tlg_tipo
+        , new.log_cod
+        , new.bai_cod
+        , new.cid_cod
+        , new.est_cod
+        , new.pais_id
+        , :grupo_forn
+        , 0
+        , current_date
+        , new.cnpj
+      );
+    end
+    else
+    begin
+      Update TBFORNECEDOR f Set
+          f.pessoa_fisica = new.pessoa_fisica
+        , f.nomeforn = new.nome
+        , f.cnpj     = new.cnpj
+        , f.inscest = new.inscest
+        , f.inscmun = new.inscmun
+        , f.ender   = new.ender
+        , f.complemento = new.complemento
+        , f.numero_end  = new.numero_end
+        , f.cep    = new.cep
+        , f.cidade = new.cidade
+        , f.uf     = new.uf
+        , f.fone    = new.fone
+        , f.fonecel = new.fonecel
+        , f.email   = substring(new.email from 1 for 40)
+        , f.site    = substring(new.site from 1 for 35)
+        , f.tlg_tipo = new.tlg_tipo
+        , f.log_cod = new.log_cod
+        , f.bai_cod = new.bai_cod
+        , f.cid_cod = new.cid_cod
+        , f.est_cod = new.est_cod
+        , f.pais_id = new.pais_id
+        , f.cliente_origem =  new.cnpj
+      where f.codforn = :codigo_forn;
+    end 
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 15/10/2013 22:27:18 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_cliente_gerar_fornecedor for tbcliente
+active after insert or update position 1
+AS
+  declare variable codigo_forn Integer;
+  declare variable grupo_forn Smallint;
+begin
+  if ( new.emitir_nfe_devolucao = 1 ) then
+  begin
+    /* Buscar Fornecedor referenre ao CPF/CNPJ */
+    Select first 1
+      f.codforn
+    from TBFORNECEDOR f
+    where f.cliente_origem = new.cnpj
+    Into
+      codigo_forn;
+
+    if ( :codigo_forn is null ) then
+    begin
+      /* Buscar Grupo de fornecedor */
+      Select first 1
+        g.grf_cod
+      from TBFORNECEDOR_GRUPO g
+      Into
+        grupo_forn;
+
+      codigo_forn = Gen_id(GEN_FORNECEDOR_ID, 1);
+      Insert Into TBFORNECEDOR (
+          CODFORN
+        , PESSOA_FISICA
+        , NOMEFORN
+        , CNPJ
+        , INSCEST
+        , INSCMUN
+        , ENDER
+        , COMPLEMENTO
+        , NUMERO_END
+        , CEP
+        , CIDADE
+        , UF
+        , FONE
+        , FONECEL
+        , EMAIL
+        , SITE
+        , TLG_TIPO
+        , LOG_COD
+        , BAI_COD
+        , CID_COD
+        , EST_COD
+        , PAIS_ID
+        , GRF_COD
+        , TRANSPORTADORA
+        , DTCAD
+        , CLIENTE_ORIGEM
+      ) values (
+          :codigo_forn
+        , new.pessoa_fisica
+        , new.nome
+        , new.cnpj
+        , new.inscest
+        , new.inscmun
+        , new.ender
+        , new.complemento
+        , new.numero_end
+        , new.cep
+        , new.cidade
+        , new.uf
+        , new.fone
+        , new.fonecel
+        , substring(new.email from 1 for 40)
+        , substring(new.site from 1 for 35)
+        , new.tlg_tipo
+        , new.log_cod
+        , new.bai_cod
+        , new.cid_cod
+        , new.est_cod
+        , new.pais_id
+        , :grupo_forn
+        , 0
+        , current_date
+        , new.cnpj
+      );
+    end
+    else
+    begin
+      Update TBFORNECEDOR f Set
+          f.pessoa_fisica = new.pessoa_fisica
+        , f.nomeforn = new.nome
+        , f.cnpj     = new.cnpj
+        , f.inscest = new.inscest
+        , f.inscmun = new.inscmun
+        , f.ender   = new.ender
+        , f.complemento = new.complemento
+        , f.numero_end  = new.numero_end
+        , f.cep    = new.cep
+        , f.cidade = new.cidade
+        , f.uf     = new.uf
+        , f.fone    = new.fone
+        , f.fonecel = new.fonecel
+        , f.email   = substring(new.email from 1 for 40)
+        , f.site    = substring(new.site from 1 for 35)
+        , f.tlg_tipo = new.tlg_tipo
+        , f.log_cod = new.log_cod
+        , f.bai_cod = new.bai_cod
+        , f.cid_cod = new.cid_cod
+        , f.est_cod = new.est_cod
+        , f.pais_id = new.pais_id
+        , f.cliente_origem =  new.cnpj
+      where f.codforn = :codigo_forn;
+    end 
+  end 
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_CLIENTE_GERAR_FORNECEDOR IS 'Trigger Gerar Fornecedor do Cliente.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   15/10/2013
+
+Trigger responsavel por inserir/atualizar um registro de fornecedor corrrespondente ao registro do clientes quando for
+permitido para este gerar NF-e de devolucao.';
+
+
+
+
+/*------ SYSDBA 15/10/2013 22:28:22 --------*/
+
+ALTER TABLE TBFORNECEDOR
+ADD CONSTRAINT FK_TBFORNECEDOR_CLIENTE
+FOREIGN KEY (CLIENTE_ORIGEM)
+REFERENCES TBCLIENTE(CNPJ);
+
