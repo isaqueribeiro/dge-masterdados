@@ -190,6 +190,9 @@ type
     edCPF: TMaskEdit;
     btnConsultarCPF: TButton;
     lblCPFX: TLabel;
+    tbsDadosAdcionais: TTabSheet;
+    DBCheckBox1: TDBCheckBox;
+    IbDtstTabelaEMITIR_NFE_DEVOLUCAO: TSmallintField;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -322,9 +325,8 @@ begin
   tbsConsultarCNPJ.TabVisible  := False;
   tbsConsultarCPF.TabVisible   := False;
 
-  if not (GetUserFunctionID in [FUNCTION_USER_ID_DIRETORIA, FUNCTION_USER_ID_GERENTE_FIN, FUNCTION_USER_ID_SYSTEM_ADM])
-  then  dbValorLimiteCompra.Enabled := False;   
-
+  if not (GetUserFunctionID in [FUNCTION_USER_ID_DIRETORIA, FUNCTION_USER_ID_GERENTE_FIN, FUNCTION_USER_ID_SYSTEM_ADM]) then
+    dbValorLimiteCompra.Enabled := False;
 end;
 
 procedure TfrmGeCliente.ProximoCampoKeyPress(Sender: TObject;
@@ -418,12 +420,13 @@ end;
 procedure TfrmGeCliente.IbDtstTabelaNewRecord(DataSet: TDataSet);
 begin
   inherited;
-  IbDtstTabelaPESSOA_FISICA.AsInteger   := 1;
-  IbDtstTabelaVALOR_LIMITE_COMPRA.Value := 0;
-  IbDtstTabelaPAIS_ID.AsString          := GetPaisIDDefault;
-  IbDtstTabelaPAIS_NOME.AsString        := GetPaisNomeDefault;
-  IbDtstTabelaDTCAD.AsDateTime          := GetDateDB;
-  IbDtstTabelaBLOQUEADO.AsInteger       := Ord(False);
+  IbDtstTabelaPESSOA_FISICA.AsInteger    := 1;
+  IbDtstTabelaVALOR_LIMITE_COMPRA.Value  := 0;
+  IbDtstTabelaPAIS_ID.AsString           := GetPaisIDDefault;
+  IbDtstTabelaPAIS_NOME.AsString         := GetPaisNomeDefault;
+  IbDtstTabelaDTCAD.AsDateTime           := GetDateDB;
+  IbDtstTabelaBLOQUEADO.AsInteger        := Ord(False);
+  IbDtstTabelaEMITIR_NFE_DEVOLUCAO.Value := 0;
 
   IbDtstTabelaVENDEDOR_COD.Clear;
   IbDtstTabelaBLOQUEADO_DATA.Clear;
@@ -512,6 +515,10 @@ begin
   end;
 
   IbDtstTabelaUSUARIO.AsString := GetUserApp;
+
+  if IbDtstTabelaEMITIR_NFE_DEVOLUCAO.IsNull then
+    IbDtstTabelaEMITIR_NFE_DEVOLUCAO.Value := 0;
+
   inherited;
 end;
 

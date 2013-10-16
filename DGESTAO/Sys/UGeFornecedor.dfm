@@ -1,8 +1,8 @@
 inherited frmGeFornecedor: TfrmGeFornecedor
-  Left = 344
-  Top = 165
-  Width = 763
-  Height = 465
+  Left = 618
+  Top = 314
+  Width = 860
+  Height = 518
   ActiveControl = dbCodigo
   Caption = 'Cadastro de Fornecedores'
   OldCreateOrder = True
@@ -10,16 +10,16 @@ inherited frmGeFornecedor: TfrmGeFornecedor
   PixelsPerInch = 96
   TextHeight = 13
   inherited Bevel1: TBevel
-    Top = 423
-    Width = 747
+    Top = 476
+    Width = 844
   end
   inherited Bevel3: TBevel
-    Top = 384
-    Width = 747
+    Top = 437
+    Width = 844
   end
   inherited tlbBotoes: TToolBar
-    Top = 388
-    Width = 747
+    Top = 441
+    Width = 844
     inherited bvlToolExpandir: TBevel
       Width = 81
     end
@@ -31,17 +31,17 @@ inherited frmGeFornecedor: TfrmGeFornecedor
     end
   end
   inherited pgcGuias: TPageControl
-    Width = 747
-    Height = 384
+    Width = 844
+    Height = 437
     ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
-        Top = 289
-        Width = 739
+        Top = 342
+        Width = 836
       end
       inherited dbgDados: TDBGrid
-        Width = 739
-        Height = 289
+        Width = 836
+        Height = 342
         Columns = <
           item
             Expanded = False
@@ -75,10 +75,10 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           end>
       end
       inherited pnlFiltros: TPanel
-        Top = 293
-        Width = 739
+        Top = 346
+        Width = 836
         inherited grpBxFiltro: TGroupBox
-          Left = 464
+          Left = 561
           Width = 271
           inherited lbltFiltrar: TLabel
             Width = 67
@@ -97,28 +97,20 @@ inherited frmGeFornecedor: TfrmGeFornecedor
     inherited tbsCadastro: TTabSheet
       inherited Bevel8: TBevel
         Top = 113
-        Width = 739
+        Width = 836
       end
       object Bevel5: TBevel [1]
         Left = 0
         Top = 233
-        Width = 739
+        Width = 836
         Height = 4
         Align = alTop
         Shape = bsSpacer
       end
       inherited GrpBxDadosNominais: TGroupBox
-        Width = 739
+        Width = 836
         Height = 113
-        object lblCNPJ: TLabel [1]
-          Left = 192
-          Top = 24
-          Width = 58
-          Height = 13
-          Caption = 'CPF / CNPJ:'
-          FocusControl = dbCNPJ
-        end
-        object lblRazao: TLabel [2]
+        object lblRazao: TLabel [1]
           Left = 352
           Top = 24
           Width = 101
@@ -126,7 +118,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           Caption = 'Nome / Raz'#227'o Social:'
           FocusControl = dbRazao
         end
-        object lblIE: TLabel [3]
+        object lblIE: TLabel [2]
           Left = 16
           Top = 64
           Width = 115
@@ -134,7 +126,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           Caption = 'RG / Inscri'#231#227'o Estadual:'
           FocusControl = dbIE
         end
-        object lblIM: TLabel [4]
+        object lblIM: TLabel [3]
           Left = 192
           Top = 64
           Width = 93
@@ -142,12 +134,34 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           Caption = 'Inscri'#231#227'o Municipal:'
           FocusControl = dbIM
         end
-        object lblGrupo: TLabel [5]
+        object lblGrupo: TLabel [4]
           Left = 352
           Top = 64
           Width = 33
           Height = 13
           Caption = 'Grupo:'
+        end
+        object lblCNPJ: TLabel [5]
+          Left = 192
+          Top = 24
+          Width = 58
+          Height = 13
+          Caption = 'CPF / CNPJ:'
+          FocusControl = dbCNPJ
+        end
+        object lblDataCadastro: TLabel [6]
+          Left = 728
+          Top = 24
+          Width = 84
+          Height = 13
+          Caption = 'Data Cadastro:'
+          FocusControl = dbDataCadastro
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
         end
         inherited dbCodigo: TDBEdit
           Color = clMoneyGreen
@@ -164,22 +178,6 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           TabOrder = 1
           ValueChecked = '1'
           ValueUnchecked = '0'
-        end
-        object dbCNPJ: TDBEdit
-          Left = 192
-          Top = 40
-          Width = 153
-          Height = 21
-          CharCase = ecUpperCase
-          DataField = 'CNPJ'
-          DataSource = DtSrcTabela
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 2
         end
         object dbRazao: TDBEdit
           Left = 352
@@ -211,7 +209,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 4
+          TabOrder = 5
         end
         object dbIM: TDBEdit
           Left = 192
@@ -227,7 +225,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 5
+          TabOrder = 6
         end
         object dbGrupo: TDBLookupComboBox
           Left = 352
@@ -246,13 +244,102 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           ListField = 'GRF_DESCRICAO'
           ListSource = dtsGrupo
           ParentFont = False
-          TabOrder = 6
+          TabOrder = 7
+        end
+        object dbCNPJ: TRxDBComboEdit
+          Left = 192
+          Top = 40
+          Width = 153
+          Height = 21
+          ButtonHint = 'Consultar CPF/CNPJ junto a Receita Federal (Ctrl + P).'
+          CharCase = ecUpperCase
+          ClickKey = 16464
+          DataField = 'CNPJ'
+          DataSource = DtSrcTabela
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          Glyph.Data = {
+            36060000424D3606000000000000360000002800000020000000100000000100
+            180000000000000600000000000000000000000000000000000000FF0000FF00
+            00FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF009993
+            9D203040938B9300FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000
+            FF0000FF0000FF0000FF0000FF009696963333338E8E8E00FF0000FF00B0A090
+            6048306048306048306048306048306048306048306048306048305048403050
+            604078C03048609C989D00FF009C9C9C43434343434343434343434343434343
+            43434343434343434343434646465151518888884C4C4C99999900FF00B0A090
+            FFFFFFB0A090B0A090B0A090B0A090B0A090B0A090B0A0909088803050703080
+            D04098E050B0F050687000FF009C9C9CFFFFFF9C9C9C9C9C9C9C9C9C9C9C9C9C
+            9C9C9C9C9C9C9C9C868686565656909090A4A4A4B9B9B968686800FF00B0A090
+            FFFFFFFFFFFFFFF8FFF0F0F0D0D8D090989070686060686050586040709040A0
+            E060C8FF7090A0B7B3B500FF009C9C9CFFFFFFFFFFFFFAFAFAF0F0F0D4D4D494
+            9494666666646464595959747474A9A9A9CECECE919191B4B4B400FF00B0A090
+            FFFFFFFFFFFFFFFFFFE0E0E0909090B0A8A0D0C0B0D0B0A08078705058506090
+            B07098B0A6AAAE00FF0000FF009C9C9CFFFFFFFFFFFFFFFFFFE0E0E0909090A6
+            A6A6BCBCBCAEAEAE7676765454549494949B9B9BAAAAAA00FF0000FF00B0A090
+            FFFFFFFFFFFFFFFFFFB0B0B0C0B8B0FFF0E0FFE8E0F0D8C0F0D0B0807870988D
+            92A8ADB100FF0000FF0000FF009C9C9CFFFFFFFFFFFFFFFFFFB0B0B0B6B6B6EC
+            ECECE7E7E7D3D3D3C9C9C97676768F8F8FADADAD00FF0000FF0000FF00C0A890
+            FFFFFFFFFFFFFFFFFFA09890F0E8E0FFF8F0FFF0F0FFE8E0F0D8D0D0B0A06267
+            6000FF0000FF0000FF0000FF00A3A3A3FFFFFFFFFFFFFFFFFF969696E6E6E6F6
+            F6F6F1F1F1E7E7E7D8D8D8AEAEAE64646400FF0000FF0000FF0000FF00C0A8A0
+            FFFFFFFFFFFFFFFFFFA0A090F0E8E0FFFFFFFFF8F0FFF0F0FFE8E0E0C0B0716F
+            6F00FF0000FF0000FF0000FF00A8A8A8FFFFFFFFFFFFFFFFFF9B9B9BE6E6E6FF
+            FFFFF6F6F6F1F1F1E7E7E7BEBEBE6F6F6F00FF0000FF0000FF0000FF00C0B0A0
+            FFFFFFFFFFFFFFFFFFC0C8C0C0C0C0FFFFFFFFFFFFFFF8F0FFF0E0B0A090A5A0
+            A000FF0000FF0000FF0000FF00ACACACFFFFFFFFFFFFFFFFFFC4C4C4C0C0C0FF
+            FFFFFFFFFFF6F6F6ECECEC9C9C9CA0A0A000FF0000FF0000FF0000FF00D0B0A0
+            FFFFFFFFFFFFFFFFFFF0F8FFC0B8B0C0C0C0F0E8E0F0E8E0B0B0A070706000FF
+            0000FF0000FF0000FF0000FF00AEAEAEFFFFFFFFFFFFFFFFFFF9F9F9B6B6B6C0
+            C0C0E6E6E6E6E6E6ABABAB6B6B6B00FF0000FF0000FF0000FF0000FF00D0B8A0
+            FFFFFFFFFFFFFFFFFFFFFFFFF0F8FFC0C8C0A0A09090908090909060504000FF
+            0000FF0000FF0000FF0000FF00B3B3B3FFFFFFFFFFFFFFFFFFFFFFFFF9F9F9C4
+            C4C49B9B9B8B8B8B9090904C4C4C00FF0000FF0000FF0000FF0000FF00D0B8B0
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB0A09060483060483060483000FF
+            0000FF0000FF0000FF0000FF00B8B8B8FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFF9C9C9C43434343434343434300FF0000FF0000FF0000FF0000FF00D0C0B0
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC0A890D0C8C060483000FF0000FF
+            0000FF0000FF0000FF0000FF00BCBCBCFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFA3A3A3C6C6C643434300FF0000FF0000FF0000FF0000FF0000FF00E0C0B0
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC0A8A060483000FF0000FF0000FF
+            0000FF0000FF0000FF0000FF00BEBEBEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFA8A8A843434300FF0000FF0000FF0000FF0000FF0000FF0000FF00E0C0B0
+            E0C0B0E0C0B0E0C0B0E0C0B0D0C0B0D0B8B0D0B0A000FF0000FF0000FF0000FF
+            0000FF0000FF0000FF0000FF00BEBEBEBEBEBEBEBEBEBEBEBEBEBEBEBCBCBCB8
+            B8B8AEAEAE00FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF00
+            00FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF
+            0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000
+            FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF00}
+          NumGlyphs = 2
+          ParentFont = False
+          TabOrder = 2
+          OnButtonClick = dbCNPJButtonClick
+        end
+        object dbDataCadastro: TDBEdit
+          Left = 728
+          Top = 40
+          Width = 89
+          Height = 21
+          TabStop = False
+          Color = clMoneyGreen
+          DataField = 'DTCAD'
+          DataSource = DtSrcTabela
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 4
         end
       end
       object GroupBox1: TGroupBox
         Left = 0
         Top = 117
-        Width = 739
+        Width = 836
         Height = 116
         Align = alTop
         Caption = 'Endere'#231'o'
@@ -272,7 +359,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           Caption = 'Estado:'
         end
         object lblBairro: TLabel
-          Left = 416
+          Left = 456
           Top = 24
           Width = 32
           Height = 13
@@ -286,7 +373,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           Caption = 'Logradouro:'
         end
         object lblCEP: TLabel
-          Left = 616
+          Left = 712
           Top = 24
           Width = 23
           Height = 13
@@ -294,7 +381,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           FocusControl = dbCEP
         end
         object lblNumero: TLabel
-          Left = 416
+          Left = 456
           Top = 64
           Width = 41
           Height = 13
@@ -302,7 +389,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           FocusControl = dbNumero
         end
         object lblComplemento: TLabel
-          Left = 488
+          Left = 528
           Top = 64
           Width = 69
           Height = 13
@@ -310,7 +397,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           FocusControl = dbComplemento
         end
         object lblPais: TLabel
-          Left = 616
+          Left = 712
           Top = 64
           Width = 23
           Height = 13
@@ -319,7 +406,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
         object dbCidade: TRxDBComboEdit
           Left = 160
           Top = 40
-          Width = 249
+          Width = 289
           Height = 21
           ButtonHint = 'Pesquisar Cidade (Ctrl+P)'
           CharCase = ecUpperCase
@@ -467,9 +554,9 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           OnButtonClick = dbEstadoButtonClick
         end
         object dbBairro: TRxDBComboEdit
-          Left = 416
+          Left = 456
           Top = 40
-          Width = 193
+          Width = 249
           Height = 21
           ButtonHint = 'Pesquisar Bairro (Ctrl+P)'
           CharCase = ecUpperCase
@@ -544,7 +631,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
         object dbLogradouro: TRxDBComboEdit
           Left = 16
           Top = 80
-          Width = 393
+          Width = 433
           Height = 21
           ButtonHint = 'Pesquisar Logradouro (Ctrl+P)'
           CharCase = ecUpperCase
@@ -617,7 +704,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           OnButtonClick = dbLogradouroButtonClick
         end
         object dbCEP: TDBEdit
-          Left = 616
+          Left = 712
           Top = 40
           Width = 105
           Height = 21
@@ -633,7 +720,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           TabOrder = 3
         end
         object dbNumero: TDBEdit
-          Left = 416
+          Left = 456
           Top = 80
           Width = 65
           Height = 21
@@ -649,9 +736,9 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           TabOrder = 5
         end
         object dbComplemento: TDBEdit
-          Left = 488
+          Left = 528
           Top = 80
-          Width = 121
+          Width = 177
           Height = 21
           CharCase = ecUpperCase
           DataField = 'COMPLEMENTO'
@@ -665,7 +752,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           TabOrder = 6
         end
         object dbPais: TRxDBComboEdit
-          Left = 616
+          Left = 712
           Top = 80
           Width = 105
           Height = 21
@@ -743,8 +830,8 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       object pgcMaisDados: TPageControl
         Left = 0
         Top = 237
-        Width = 739
-        Height = 118
+        Width = 836
+        Height = 171
         ActivePage = tbsContato
         Align = alClient
         TabOrder = 2
@@ -753,21 +840,21 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           object lblFone: TLabel
             Left = 8
             Top = 0
-            Width = 28
+            Width = 69
             Height = 13
-            Caption = 'Fone:'
+            Caption = 'Telefone Fixo:'
             FocusControl = dbFone
           end
           object lblEmail: TLabel
-            Left = 120
-            Top = 0
+            Left = 8
+            Top = 40
             Width = 32
             Height = 13
             Caption = 'E-mail:'
             FocusControl = dbEmail
           end
           object lblHome: TLabel
-            Left = 8
+            Left = 328
             Top = 40
             Width = 58
             Height = 13
@@ -775,17 +862,33 @@ inherited frmGeFornecedor: TfrmGeFornecedor
             FocusControl = dbHome
           end
           object lblContato: TLabel
-            Left = 376
+            Left = 488
             Top = 0
             Width = 73
             Height = 13
             Caption = 'Nome Contato:'
             FocusControl = dbContato
           end
+          object lblFoneCelular: TLabel
+            Left = 168
+            Top = 0
+            Width = 82
+            Height = 13
+            Caption = 'Telefone Celular:'
+            FocusControl = dbFoneCelular
+          end
+          object lblFoneFax: TLabel
+            Left = 328
+            Top = 0
+            Width = 22
+            Height = 13
+            Caption = 'Fax:'
+            FocusControl = dbFoneFax
+          end
           object dbFone: TDBEdit
             Left = 8
             Top = 16
-            Width = 105
+            Width = 153
             Height = 21
             CharCase = ecUpperCase
             DataField = 'FONE'
@@ -799,9 +902,9 @@ inherited frmGeFornecedor: TfrmGeFornecedor
             TabOrder = 0
           end
           object dbEmail: TDBEdit
-            Left = 120
-            Top = 16
-            Width = 249
+            Left = 8
+            Top = 56
+            Width = 313
             Height = 21
             CharCase = ecLowerCase
             DataField = 'EMAIL'
@@ -812,10 +915,10 @@ inherited frmGeFornecedor: TfrmGeFornecedor
             Font.Name = 'MS Sans Serif'
             Font.Style = []
             ParentFont = False
-            TabOrder = 1
+            TabOrder = 4
           end
           object dbHome: TDBEdit
-            Left = 8
+            Left = 328
             Top = 56
             Width = 361
             Height = 21
@@ -828,13 +931,13 @@ inherited frmGeFornecedor: TfrmGeFornecedor
             Font.Name = 'MS Sans Serif'
             Font.Style = []
             ParentFont = False
-            TabOrder = 3
+            TabOrder = 5
             OnKeyPress = ProximoCampoKeyPress
           end
           object dbContato: TDBEdit
-            Left = 376
+            Left = 488
             Top = 16
-            Width = 249
+            Width = 321
             Height = 21
             DataField = 'CONTATO'
             DataSource = DtSrcTabela
@@ -843,6 +946,40 @@ inherited frmGeFornecedor: TfrmGeFornecedor
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
             Font.Style = []
+            ParentFont = False
+            TabOrder = 3
+          end
+          object dbFoneCelular: TDBEdit
+            Left = 168
+            Top = 16
+            Width = 153
+            Height = 21
+            CharCase = ecUpperCase
+            DataField = 'FONECEL'
+            DataSource = DtSrcTabela
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            MaxLength = 13
+            ParentFont = False
+            TabOrder = 1
+          end
+          object dbFoneFax: TDBEdit
+            Left = 328
+            Top = 16
+            Width = 153
+            Height = 21
+            CharCase = ecUpperCase
+            DataField = 'FONEFAX'
+            DataSource = DtSrcTabela
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            MaxLength = 13
             ParentFont = False
             TabOrder = 2
           end
@@ -869,6 +1006,612 @@ inherited frmGeFornecedor: TfrmGeFornecedor
         end
       end
     end
+    object tbsConsultarCNPJ: TTabSheet
+      Caption = 'Consultar CNPJ'
+      ImageIndex = 12
+      object BvlConsultar: TBevel
+        Left = 377
+        Top = 0
+        Width = 4
+        Height = 408
+        Align = alLeft
+        Shape = bsSpacer
+      end
+      object pnlConsultarCNPJ: TPanel
+        Left = 0
+        Top = 0
+        Width = 377
+        Height = 408
+        Align = alLeft
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -27
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        object lblCNPJX: TLabel
+          Left = 9
+          Top = 172
+          Width = 85
+          Height = 16
+          Caption = 'Digite o CNPJ:'
+          FocusControl = edCNPJ
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblCaptchaX: TLabel
+          Left = 9
+          Top = 238
+          Width = 96
+          Height = 16
+          Caption = 'Digite o Captcha'
+          FocusControl = edCaptcha
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+        end
+        object edCaptcha: TEdit
+          Left = 9
+          Top = 257
+          Width = 232
+          Height = 41
+          CharCase = ecUpperCase
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -27
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 2
+          OnKeyPress = edCaptchaKeyPress
+        end
+        object edCNPJ: TMaskEdit
+          Left = 9
+          Top = 191
+          Width = 352
+          Height = 41
+          EditMask = '00.000.000/0000-00;1;_'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -27
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxLength = 18
+          ParentFont = False
+          TabOrder = 1
+          Text = '  .   .   /    -  '
+          OnKeyPress = edCNPJKeyPress
+        end
+        object pnlCaptcha: TPanel
+          Left = 9
+          Top = 11
+          Width = 346
+          Height = 127
+          BevelOuter = bvLowered
+          Color = clWhite
+          ParentBackground = False
+          TabOrder = 0
+          object ImgCaptcha: TImage
+            Left = 1
+            Top = 1
+            Width = 344
+            Height = 106
+            Align = alClient
+            Center = True
+            Proportional = True
+            Stretch = True
+          end
+          object LabAtualizarCaptcha: TLabel
+            Left = 1
+            Top = 107
+            Width = 344
+            Height = 19
+            Cursor = crHandPoint
+            Align = alBottom
+            Alignment = taCenter
+            AutoSize = False
+            Caption = 'Atualizar Captcha'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlue
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold, fsUnderline]
+            ParentFont = False
+            Transparent = False
+            OnClick = LabAtualizarCaptchaClick
+          end
+        end
+        object ckRemoverEspacosDuplos: TCheckBox
+          Left = 10
+          Top = 150
+          Width = 359
+          Height = 17
+          Caption = 'Remover espa'#231'os duplos dos dados retornados'
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 4
+        end
+        object btnConsultarCNPJ: TButton
+          Left = 248
+          Top = 256
+          Width = 115
+          Height = 41
+          Caption = 'Consultar'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 3
+          OnClick = btnConsultarCNPJClick
+        end
+      end
+      object pnlRetornoCNPJ: TPanel
+        Left = 381
+        Top = 0
+        Width = 455
+        Height = 408
+        Align = alClient
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        object lblTipoX: TLabel
+          Left = 8
+          Top = 11
+          Width = 97
+          Height = 16
+          Caption = 'Tipo de Empresa'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblRazaoSocialX: TLabel
+          Left = 8
+          Top = 59
+          Width = 73
+          Height = 16
+          Caption = 'Raz'#227'o Social'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblAberturaX: TLabel
+          Left = 112
+          Top = 11
+          Width = 80
+          Height = 16
+          Caption = 'Data Abertura'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblEnderecoX: TLabel
+          Left = 176
+          Top = 107
+          Width = 58
+          Height = 16
+          Caption = 'Endere'#231'o:'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblNumeroX: TLabel
+          Left = 390
+          Top = 107
+          Width = 45
+          Height = 16
+          Caption = 'N'#250'mero'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblComplementoX: TLabel
+          Left = 8
+          Top = 153
+          Width = 79
+          Height = 16
+          Caption = 'Complemento'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblBairroX: TLabel
+          Left = 224
+          Top = 153
+          Width = 34
+          Height = 16
+          Caption = 'Bairro'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblCidadeX: TLabel
+          Left = 8
+          Top = 201
+          Width = 39
+          Height = 16
+          Caption = 'Cidade'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblUFX: TLabel
+          Left = 289
+          Top = 201
+          Width = 15
+          Height = 16
+          Caption = 'UF'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblCEPX: TLabel
+          Left = 328
+          Top = 201
+          Width = 22
+          Height = 16
+          Caption = 'CEP'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblSituacaoX: TLabel
+          Left = 208
+          Top = 11
+          Width = 49
+          Height = 16
+          Caption = 'Situa'#231#227'o'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object lblFantasiaX: TLabel
+          Left = 8
+          Top = 107
+          Width = 48
+          Height = 16
+          Caption = 'Fantasia'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object EditTipo: TEdit
+          Left = 8
+          Top = 29
+          Width = 98
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 0
+        end
+        object EditRazaoSocial: TEdit
+          Left = 8
+          Top = 77
+          Width = 433
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 3
+        end
+        object EditAbertura: TEdit
+          Left = 112
+          Top = 29
+          Width = 88
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 1
+        end
+        object EditEndereco: TEdit
+          Left = 176
+          Top = 125
+          Width = 209
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 5
+        end
+        object EditNumero: TEdit
+          Left = 390
+          Top = 125
+          Width = 51
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 6
+        end
+        object EditComplemento: TEdit
+          Left = 8
+          Top = 171
+          Width = 209
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 7
+        end
+        object EditBairro: TEdit
+          Left = 224
+          Top = 171
+          Width = 217
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 8
+        end
+        object EditCidade: TEdit
+          Left = 8
+          Top = 219
+          Width = 273
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 9
+        end
+        object EditUF: TEdit
+          Left = 289
+          Top = 219
+          Width = 33
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 10
+        end
+        object EditCEP: TEdit
+          Left = 328
+          Top = 219
+          Width = 114
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 11
+        end
+        object EditSituacao: TEdit
+          Left = 208
+          Top = 29
+          Width = 160
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 2
+        end
+        object EditFantasia: TEdit
+          Left = 8
+          Top = 125
+          Width = 161
+          Height = 24
+          TabStop = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 4
+        end
+        object btnVoltar: TButton
+          Left = 8
+          Top = 256
+          Width = 115
+          Height = 41
+          Caption = '&Voltar ao Cadastro'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 12
+          OnClick = btnVoltarClick
+        end
+        object btnRecuperarCNPJ: TButton
+          Left = 328
+          Top = 256
+          Width = 115
+          Height = 41
+          Caption = '&Recuperar Dados'
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 13
+          OnClick = btnRecuperarCNPJClick
+        end
+      end
+    end
+    object tbsConsultarCPF: TTabSheet
+      Caption = 'Consultar CPF'
+      ImageIndex = 12
+      object pnlConsultarCPF: TPanel
+        Left = 0
+        Top = 0
+        Width = 377
+        Height = 408
+        Align = alLeft
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -27
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        object lblCPFX: TLabel
+          Left = 9
+          Top = 172
+          Width = 78
+          Height = 16
+          Caption = 'Digite o CPF:'
+          FocusControl = edCPF
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+        end
+        object edCPF: TMaskEdit
+          Left = 9
+          Top = 191
+          Width = 350
+          Height = 41
+          EditMask = '000.000.000-00;1;_'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -27
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxLength = 14
+          ParentFont = False
+          TabOrder = 0
+          Text = '   .   .   -  '
+          OnKeyPress = edCNPJKeyPress
+        end
+        object btnConsultarCPF: TButton
+          Left = 248
+          Top = 256
+          Width = 115
+          Height = 41
+          Caption = 'Consultar'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+          OnClick = btnConsultarCPFClick
+        end
+      end
+    end
   end
   inherited IbDtstTabela: TIBDataSet
     OnNewRecord = IbDtstTabelaNewRecord
@@ -887,6 +1630,8 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       '  , f.Cidade'
       '  , f.Uf'
       '  , f.Fone'
+      '  , f.FoneCel'
+      '  , f.FoneFax'
       '  , f.Tlg_tipo'
       '  , f.Log_cod'
       '  , f.Bai_cod'
@@ -898,6 +1643,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       '  , f.Pais_id'
       '  , f.Grf_cod'
       '  , f.Transportadora'
+      '  , f.DtCad'
       
         '  , coalesce( cast(coalesce(coalesce(t.Tlg_sigla, t.Tlg_descrica' +
         'o) || '#39' '#39', '#39#39') || l.Log_nome as varchar(250)), f.Ender ) as Logr' +
@@ -995,6 +1741,20 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       EditMask = '(99)9999.9999;0; '
       Size = 11
     end
+    object IbDtstTabelaFONECEL: TIBStringField
+      FieldName = 'FONECEL'
+      Origin = '"TBFORNECEDOR"."FONECEL"'
+      ProviderFlags = [pfInUpdate]
+      EditMask = '(99)9999.9999;0; '
+      Size = 11
+    end
+    object IbDtstTabelaFONEFAX: TIBStringField
+      FieldName = 'FONEFAX'
+      Origin = '"TBFORNECEDOR"."FONEFAX"'
+      ProviderFlags = [pfInUpdate]
+      EditMask = '(99)9999.9999;0; '
+      Size = 11
+    end
     object IbDtstTabelaTLG_TIPO: TSmallintField
       DisplayLabel = 'Tipo Logradouro'
       FieldName = 'TLG_TIPO'
@@ -1055,6 +1815,11 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       FieldName = 'TRANSPORTADORA'
       Origin = '"TBFORNECEDOR"."TRANSPORTADORA"'
     end
+    object IbDtstTabelaDTCAD: TDateField
+      FieldName = 'DTCAD'
+      Origin = '"TBFORNECEDOR"."DTCAD"'
+      ProviderFlags = [pfInUpdate]
+    end
     object IbDtstTabelaLOGRADOURO: TIBStringField
       DisplayLabel = 'Logradouro'
       FieldName = 'LOGRADOURO'
@@ -1104,6 +1869,8 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       '  UF,'
       '  CONTATO,'
       '  FONE,'
+      '  FONECEL,'
+      '  FONEFAX,'
       '  EMAIL,'
       '  SITE,'
       '  TLG_TIPO,'
@@ -1113,7 +1880,8 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       '  EST_COD,'
       '  PAIS_ID,'
       '  GRF_COD,'
-      '  TRANSPORTADORA'
+      '  TRANSPORTADORA,'
+      '  DTCAD'
       'from TBFORNECEDOR '
       'where'
       '  CODFORN = :CODFORN')
@@ -1128,10 +1896,13 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       '  CODFORN = :CODFORN,'
       '  COMPLEMENTO = :COMPLEMENTO,'
       '  CONTATO = :CONTATO,'
+      '  DTCAD = :DTCAD,'
       '  EMAIL = :EMAIL,'
       '  ENDER = :ENDER,'
       '  EST_COD = :EST_COD,'
       '  FONE = :FONE,'
+      '  FONECEL = :FONECEL,'
+      '  FONEFAX = :FONEFAX,'
       '  GRF_COD = :GRF_COD,'
       '  INSCEST = :INSCEST,'
       '  INSCMUN = :INSCMUN,'
@@ -1152,23 +1923,23 @@ inherited frmGeFornecedor: TfrmGeFornecedor
         '  (BAI_COD, CEP, CID_COD, CIDADE, CNPJ, CODFORN, COMPLEMENTO, CO' +
         'NTATO, '
       
-        '   EMAIL, ENDER, EST_COD, FONE, GRF_COD, INSCEST, INSCMUN, LOG_C' +
-        'OD, NOMEFORN, '
+        '   DTCAD, EMAIL, ENDER, EST_COD, FONE, FONECEL, FONEFAX, GRF_COD' +
+        ', INSCEST, '
       
-        '   NUMERO_END, PAIS_ID, PESSOA_FISICA, SITE, TLG_TIPO, TRANSPORT' +
-        'ADORA, '
-      '   UF)'
+        '   INSCMUN, LOG_COD, NOMEFORN, NUMERO_END, PAIS_ID, PESSOA_FISIC' +
+        'A, SITE, '
+      '   TLG_TIPO, TRANSPORTADORA, UF)'
       'values'
       
         '  (:BAI_COD, :CEP, :CID_COD, :CIDADE, :CNPJ, :CODFORN, :COMPLEME' +
         'NTO, :CONTATO, '
       
-        '   :EMAIL, :ENDER, :EST_COD, :FONE, :GRF_COD, :INSCEST, :INSCMUN' +
-        ', :LOG_COD, '
+        '   :DTCAD, :EMAIL, :ENDER, :EST_COD, :FONE, :FONECEL, :FONEFAX, ' +
+        ':GRF_COD, '
       
-        '   :NOMEFORN, :NUMERO_END, :PAIS_ID, :PESSOA_FISICA, :SITE, :TLG' +
-        '_TIPO, '
-      '   :TRANSPORTADORA, :UF)')
+        '   :INSCEST, :INSCMUN, :LOG_COD, :NOMEFORN, :NUMERO_END, :PAIS_I' +
+        'D, :PESSOA_FISICA, '
+      '   :SITE, :TLG_TIPO, :TRANSPORTADORA, :UF)')
     DeleteSQL.Strings = (
       'delete from TBFORNECEDOR'
       'where'
@@ -1190,5 +1961,15 @@ inherited frmGeFornecedor: TfrmGeFornecedor
     DataSet = tblGrupo
     Left = 672
     Top = 72
+  end
+  object ACBrConsultaCNPJ: TACBrConsultaCNPJ
+    ProxyPort = '8080'
+    Left = 650
+    Top = 337
+  end
+  object ACBrConsultaCPF: TACBrConsultaCPF
+    ProxyPort = '8080'
+    Left = 648
+    Top = 382
   end
 end
