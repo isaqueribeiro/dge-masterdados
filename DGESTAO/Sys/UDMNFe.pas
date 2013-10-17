@@ -10,7 +10,7 @@ uses
   frxExportPDF, frxExportMail, UGeConfigurarNFeACBr,
 
   ACBrUtil, pcnConversao, pcnNFeW, pcnNFeRTXT, pcnAuxiliar, ACBrNFeUtil, SHDocVw,
-  IBUpdateSQL, IBSQL, frxDesgn;
+  IBUpdateSQL, IBSQL, frxDesgn, frxRich;
 
 type
   TDMNFe = class(TDataModule)
@@ -438,6 +438,7 @@ type
     SmallintField2: TSmallintField;
     IntegerField3: TIntegerField;
     frrBoletoEntrega: TfrxReport;
+    frxRichObject: TfrxRichObject;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);

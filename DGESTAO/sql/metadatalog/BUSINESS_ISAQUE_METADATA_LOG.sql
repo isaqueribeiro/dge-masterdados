@@ -12342,3 +12342,386 @@ ADD CONSTRAINT FK_TBFORNECEDOR_CLIENTE
 FOREIGN KEY (CLIENTE_ORIGEM)
 REFERENCES TBCLIENTE(CNPJ);
 
+
+
+
+/*------ SYSDBA 16/10/2013 13:09:08 --------*/
+
+ALTER TABLE TBCIDADE
+    ADD CUSTO_OPER_PERCENTUAL DMN_SMALLINT_N DEFAULT 1,
+    ADD CUSTO_OPER_FRETE DMN_PERCENTUAL_3 DEFAULT 0,
+    ADD CUSTO_OPER_OUTROS DMN_PERCENTUAL_3 DEFAULT 0;
+
+COMMENT ON COLUMN TBCIDADE.CUSTO_OPER_PERCENTUAL IS
+'Custo Operacional em Percentual:
+0 - Nao
+1 - Sim';
+
+COMMENT ON COLUMN TBCIDADE.CUSTO_OPER_FRETE IS
+'Custo Operacional (Frete) - Percentual ou Valor';
+
+COMMENT ON COLUMN TBCIDADE.CUSTO_OPER_OUTROS IS
+'Custo Operacional (Outros) - Percentual ou Valor';
+
+
+
+
+/*------ SYSDBA 16/10/2013 13:18:57 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_MONEY_4'
+where (RDB$FIELD_NAME = 'CUSTO_OPER_FRETE') and
+(RDB$RELATION_NAME = 'TBCIDADE')
+;
+
+
+
+
+/*------ SYSDBA 16/10/2013 13:19:04 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_MONEY_4'
+where (RDB$FIELD_NAME = 'CUSTO_OPER_OUTROS') and
+(RDB$RELATION_NAME = 'TBCIDADE')
+;
+
+
+
+
+/*------ SYSDBA 16/10/2013 13:20:13 --------*/
+
+ALTER TABLE TBVENDAS
+    ADD CUSTO_OPER_PERCENTUAL DMN_SMALLINT_N DEFAULT 1,
+    ADD CUSTO_OPER_FRETE DMN_MONEY_4 DEFAULT 0,
+    ADD CUSTO_OPER_OUTROS DMN_MONEY_4;
+
+COMMENT ON COLUMN TBVENDAS.CUSTO_OPER_PERCENTUAL IS
+'Custo Operacional em Percentual:
+0 - Nao
+1 - Sim';
+
+COMMENT ON COLUMN TBVENDAS.CUSTO_OPER_FRETE IS
+' Custo Operacional (Frete) - Percentual ou Valor';
+
+COMMENT ON COLUMN TBVENDAS.CUSTO_OPER_OUTROS IS
+'Custo Operacional (Outros) - Percentual ou Valor';
+
+
+
+
+/*------ SYSDBA 16/10/2013 13:20:23 --------*/
+
+ALTER TABLE TBVENDAS ADD IBE$$TEMP_COLUMN
+ NUMERIC(1,1) DEFAULT 0
+;
+
+UPDATE RDB$RELATION_FIELDS F1
+SET
+F1.RDB$DEFAULT_VALUE  = (SELECT F2.RDB$DEFAULT_VALUE
+                         FROM RDB$RELATION_FIELDS F2
+                         WHERE (F2.RDB$RELATION_NAME = 'TBVENDAS') AND
+                               (F2.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN')),
+F1.RDB$DEFAULT_SOURCE = (SELECT F3.RDB$DEFAULT_SOURCE FROM RDB$RELATION_FIELDS F3
+                         WHERE (F3.RDB$RELATION_NAME = 'TBVENDAS') AND
+                               (F3.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN'))
+WHERE (F1.RDB$RELATION_NAME = 'TBVENDAS') AND
+      (F1.RDB$FIELD_NAME = 'CUSTO_OPER_OUTROS');
+
+ALTER TABLE TBVENDAS DROP IBE$$TEMP_COLUMN;
+
+
+
+
+/*------ SYSDBA 16/10/2013 13:43:40 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_cidade_custo_oper for tbcidade
+active after insert or update position 10
+AS
+  declare variable empresa Varchar(18);
+  declare variable cliente Varchar(18);
+begin
+  if ( (new.custo_oper_frete > 0.0) or (new.custo_oper_outros > 0.0) ) then
+    for
+      Select distinct
+          v.codemp
+        , v.codcli
+      from TBVENDAS v
+        inner join TBCLIENTE c on (c.cnpj = v.codcli)
+      where v.ano = extract(Year from current_date)
+        and c.cid_cod = new.cid_cod
+        and ((v.custo_oper_frete is null) or (v.custo_oper_outros is null))
+      Into
+          empresa
+        , cliente
+    do
+    begin
+
+      Update TBVENDAS vd Set
+          vd.custo_oper_percentual = new.custo_oper_percentual
+        , vd.custo_oper_frete      = new.custo_oper_frete
+        , vd.custo_oper_outros     = new.custo_oper_outros
+      where vd.ano = extract(Year from current_date)
+        and ((vd.custo_oper_frete is null) or (vd.custo_oper_outros is null))
+        and vd.codemp = :empresa
+        and vd.codcli = :cliente;
+
+    end
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_CIDADE_CUSTO_OPER IS 'Trigger Definir Custo Operacional (Venda).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2013
+
+Trigger responsavel por definir percentuais ou valores de custos operacionais por cada venda realizada dentro de uma
+determinada cidade, quando este custo ainda nao fora definido.';
+
+
+
+
+/*------ SYSDBA 16/10/2013 13:50:28 --------*/
+
+ALTER TABLE TBCONFIGURACAO
+    ADD CUSTO_OPER_CALCULAR DMN_SMALLINT_N DEFAULT 0;
+
+COMMENT ON COLUMN TBCONFIGURACAO.CUSTO_OPER_CALCULAR IS
+'Calcular custo operacional nas vendas:
+0 - Nao
+1 - Sim';
+
+
+
+
+/*------ SYSDBA 16/10/2013 13:50:56 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_cidade_custo_oper for tbcidade
+active after insert or update position 10
+AS
+  declare variable empresa Varchar(18);
+  declare variable cliente Varchar(18);
+begin
+  if ( (new.custo_oper_frete > 0.0) or (new.custo_oper_outros > 0.0) ) then
+    for
+      Select distinct
+          v.codemp
+        , v.codcli
+      from TBVENDAS v
+        inner join TBCLIENTE c on (c.cnpj = v.codcli)
+        inner join TBCONFIGURACAO f on (f.empresa = v.codemp)
+      where f.custo_oper_calcular = 1
+        and v.ano     = extract(Year from current_date)
+        and c.cid_cod = new.cid_cod
+        and ((v.custo_oper_frete is null) or (v.custo_oper_outros is null))
+      Into
+          empresa
+        , cliente
+    do
+    begin
+
+      Update TBVENDAS vd Set
+          vd.custo_oper_percentual = new.custo_oper_percentual
+        , vd.custo_oper_frete      = new.custo_oper_frete
+        , vd.custo_oper_outros     = new.custo_oper_outros
+      where vd.ano = extract(Year from current_date)
+        and ((vd.custo_oper_frete is null) or (vd.custo_oper_outros is null))
+        and vd.codemp = :empresa
+        and vd.codcli = :cliente;
+
+    end
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 16/10/2013 13:58:47 --------*/
+
+ALTER TABLE TBCLIENTE
+    ADD CUSTO_OPER_PERCENTUAL DMN_SMALLINT_N DEFAULT 1,
+    ADD CUSTO_OPER_FRETE DMN_MONEY_4 DEFAULT 0,
+    ADD CUSTO_OPER_OUTROS DMN_MONEY_4 DEFAULT 0;
+
+COMMENT ON COLUMN TBCLIENTE.CUSTO_OPER_PERCENTUAL IS
+'Custo Operacional em Percentual:
+0 - Nao
+1 - Sim';
+
+COMMENT ON COLUMN TBCLIENTE.CUSTO_OPER_FRETE IS
+'Custo Operacional (Frete) - Percentual ou Valor';
+
+COMMENT ON COLUMN TBCLIENTE.CUSTO_OPER_OUTROS IS
+'Custo Operacional (Outros) - Percentual ou Valor';
+
+
+
+
+/*------ SYSDBA 16/10/2013 14:02:42 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_cliente_custo_oper for tbcliente
+active after insert or update position 10
+AS
+  declare variable empresa Varchar(18);
+  declare variable cliente Varchar(18);
+begin
+  if ( (new.custo_oper_frete > 0.0) or (new.custo_oper_outros > 0.0) ) then
+    for
+      Select distinct
+          v.codemp
+        , v.codcli
+      from TBVENDAS v
+        inner join TBCLIENTE c on (c.cnpj = v.codcli)
+        inner join TBCONFIGURACAO f on (f.empresa = v.codemp)
+      where f.custo_oper_calcular = 1
+        and v.ano     = extract(Year from current_date)
+        and c.cid_cod = new.cnpj
+        and ((v.custo_oper_frete is null) or (v.custo_oper_outros is null))
+      Into
+          empresa
+        , cliente
+    do
+    begin
+
+      Update TBVENDAS vd Set
+          vd.custo_oper_percentual = new.custo_oper_percentual
+        , vd.custo_oper_frete      = new.custo_oper_frete
+        , vd.custo_oper_outros     = new.custo_oper_outros
+      where vd.ano = extract(Year from current_date)
+        and ((vd.custo_oper_frete is null) or (vd.custo_oper_outros is null))
+        and vd.codemp = :empresa
+        and vd.codcli = new.cnpj;
+
+    end
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_CLIENTE_CUSTO_OPER IS 'Trigger Definir Custo Operacional (Venda).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2013
+
+Trigger responsavel por definir percentuais ou valores de custos operacionais por cada venda realizada para um
+determinado empresa/cliente, quando este custo ainda nao fora definido.';
+
+
+
+
+/*------ SYSDBA 16/10/2013 14:03:01 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_cliente_custo_oper for tbcliente
+active after insert or update position 10
+AS
+  declare variable empresa Varchar(18);
+begin
+  if ( (new.custo_oper_frete > 0.0) or (new.custo_oper_outros > 0.0) ) then
+    for
+      Select distinct
+          v.codemp
+      from TBVENDAS v
+        inner join TBCLIENTE c on (c.cnpj = v.codcli)
+        inner join TBCONFIGURACAO f on (f.empresa = v.codemp)
+      where f.custo_oper_calcular = 1
+        and v.ano     = extract(Year from current_date)
+        and c.cid_cod = new.cnpj
+        and ((v.custo_oper_frete is null) or (v.custo_oper_outros is null))
+      Into
+          empresa
+    do
+    begin
+
+      Update TBVENDAS vd Set
+          vd.custo_oper_percentual = new.custo_oper_percentual
+        , vd.custo_oper_frete      = new.custo_oper_frete
+        , vd.custo_oper_outros     = new.custo_oper_outros
+      where vd.ano = extract(Year from current_date)
+        and ((vd.custo_oper_frete is null) or (vd.custo_oper_outros is null))
+        and vd.codemp = :empresa
+        and vd.codcli = new.cnpj;
+
+    end
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 16/10/2013 14:03:31 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_cliente_custo_oper for tbcliente
+active after insert or update position 10
+AS
+  declare variable empresa Varchar(18);
+begin
+  if ( (new.custo_oper_frete > 0.0) or (new.custo_oper_outros > 0.0) ) then
+    for
+      Select distinct
+          v.codemp
+      from TBVENDAS v
+        inner join TBCLIENTE c on (c.cnpj = v.codcli)
+        inner join TBCONFIGURACAO f on (f.empresa = v.codemp)
+      where f.custo_oper_calcular = 1
+        and v.ano     = extract(Year from current_date)
+        and c.cid_cod = new.cnpj
+        and ((v.custo_oper_frete is null) or (v.custo_oper_outros is null))
+      Into
+          empresa
+    do
+    begin
+
+      Update TBVENDAS vd Set
+          vd.custo_oper_percentual = new.custo_oper_percentual
+        , vd.custo_oper_frete      = new.custo_oper_frete
+        , vd.custo_oper_outros     = new.custo_oper_outros
+      where vd.ano = extract(Year from current_date)
+        and ((vd.custo_oper_frete is null) or (vd.custo_oper_outros is null))
+        and vd.codemp = :empresa
+        and vd.codcli = new.cnpj;
+
+    end
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 16/10/2013 14:06:15 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_cidade_custo_oper for tbcidade
+active after insert or update position 10
+AS
+begin
+  if ( (new.custo_oper_frete > 0.0) or (new.custo_oper_outros > 0.0) ) then
+    Update TBCLIENTE c Set
+        c.custo_oper_percentual = new.custo_oper_percentual
+      , c.custo_oper_frete      = new.custo_oper_frete
+      , c.custo_oper_outros     = new.custo_oper_outros
+    where c.cid_cod = new.cid_cod;
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_CIDADE_CUSTO_OPER IS 'Trigger Definir Custo Operacional (Cliente).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2013
+
+Trigger responsavel por definir percentuais ou valores de custos operacionais por cada cliente dentro de uma
+determinada cidade, quando este custo ainda nao fora definido.';
+

@@ -2162,6 +2162,7 @@ object DMNFe: TDMNFe
     ModifySQL.Strings = (
       '')
     GeneratorField.ApplyEvent = gamOnPost
+    Active = True
     Left = 144
     Top = 24
     object qryEmitenteCODIGO: TIntegerField
@@ -7989,5 +7990,9 @@ object DMNFe: TDMNFe
         end
       end
     end
+  end
+  object frxRichObject: TfrxRichObject
+    Left = 24
+    Top = 360
   end
 end

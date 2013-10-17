@@ -193,6 +193,15 @@ type
     tbsDadosAdcionais: TTabSheet;
     DBCheckBox1: TDBCheckBox;
     IbDtstTabelaEMITIR_NFE_DEVOLUCAO: TSmallintField;
+    GrpBxCustosOper: TGroupBox;
+    lblFrete: TLabel;
+    lblOutros: TLabel;
+    dbCustoOperacional: TDBCheckBox;
+    dbFrete: TDBEdit;
+    dbOutros: TDBEdit;
+    IbDtstTabelaCUSTO_OPER_PERCENTUAL: TSmallintField;
+    IbDtstTabelaCUSTO_OPER_FRETE: TIBBCDField;
+    IbDtstTabelaCUSTO_OPER_OUTROS: TIBBCDField;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -482,6 +491,18 @@ begin
       IbDtstTabelaCNPJ.EditMask := '999.999.999-99;0; '
     else
       IbDtstTabelaCNPJ.EditMask := '99.999.999/9999-99;0; ';
+
+  if ( Field = IbDtstTabelaCUSTO_OPER_PERCENTUAL ) then
+    if ( IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger = 1 ) then
+    begin
+      lblFrete.Caption  := 'Frete (%):';
+      lblOutros.Caption := 'Outros (%):';
+    end
+    else
+    begin
+      lblFrete.Caption  := 'Frete (R$):';
+      lblOutros.Caption := 'Outros (R$):';
+    end;
 end;
 
 procedure TfrmGeCliente.btbtnSalvarClick(Sender: TObject);
@@ -515,6 +536,24 @@ begin
   end;
 
   IbDtstTabelaUSUARIO.AsString := GetUserApp;
+
+  if ( IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger = 1 ) then
+  begin
+    if ((IbDtstTabelaCUSTO_OPER_FRETE.AsCurrency < 0) or (IbDtstTabelaCUSTO_OPER_FRETE.AsCurrency > 100)) then
+    begin
+      ShowWarning('Percentual de custo operacional para "Frete" inválido!');
+      Exit;
+    end;
+
+    if ((IbDtstTabelaCUSTO_OPER_OUTROS.AsCurrency < 0) or (IbDtstTabelaCUSTO_OPER_OUTROS.AsCurrency > 100)) then
+    begin
+      ShowWarning('Percentual de custo operacional para "Outros" inválido!');
+      Exit;
+    end;
+  end;
+
+  if IbDtstTabelaCUSTO_OPER_PERCENTUAL.IsNull then
+    IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := 1;
 
   if IbDtstTabelaEMITIR_NFE_DEVOLUCAO.IsNull then
     IbDtstTabelaEMITIR_NFE_DEVOLUCAO.Value := 0;

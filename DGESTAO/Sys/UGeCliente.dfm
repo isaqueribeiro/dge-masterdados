@@ -1354,9 +1354,9 @@ inherited frmGeCliente: TfrmGeCliente
           Caption = 'Outras Informa'#231#245'es'
           ImageIndex = 2
           object DBCheckBox1: TDBCheckBox
-            Left = 8
+            Left = 13
             Top = 10
-            Width = 329
+            Width = 321
             Height = 17
             Caption = 'Permitir emiss'#227'o de NF-e de Devolu'#231#227'o para o cliente'
             DataField = 'EMITIR_NFE_DEVOLUCAO'
@@ -1370,6 +1370,81 @@ inherited frmGeCliente: TfrmGeCliente
             TabOrder = 0
             ValueChecked = '1'
             ValueUnchecked = '0'
+          end
+          object GrpBxCustosOper: TGroupBox
+            Left = 13
+            Top = 40
+            Width = 321
+            Height = 97
+            Align = alCustom
+            Caption = 'Custos Operacionais nas Vendas'
+            TabOrder = 1
+            object lblFrete: TLabel
+              Left = 16
+              Top = 48
+              Width = 30
+              Height = 13
+              Caption = 'Frete:'
+              FocusControl = dbFrete
+            end
+            object lblOutros: TLabel
+              Left = 120
+              Top = 48
+              Width = 37
+              Height = 13
+              Caption = 'Outros:'
+              FocusControl = dbOutros
+            end
+            object dbCustoOperacional: TDBCheckBox
+              Left = 16
+              Top = 24
+              Width = 225
+              Height = 17
+              Caption = 'Custo Operacional por Percentual'
+              DataField = 'CUSTO_OPER_PERCENTUAL'
+              DataSource = DtSrcTabela
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 0
+              ValueChecked = '1'
+              ValueUnchecked = '0'
+            end
+            object dbFrete: TDBEdit
+              Left = 16
+              Top = 64
+              Width = 97
+              Height = 21
+              CharCase = ecUpperCase
+              DataField = 'CUSTO_OPER_FRETE'
+              DataSource = DtSrcTabela
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'MS Sans Serif'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 1
+            end
+            object dbOutros: TDBEdit
+              Left = 120
+              Top = 64
+              Width = 97
+              Height = 21
+              CharCase = ecUpperCase
+              DataField = 'CUSTO_OPER_OUTROS'
+              DataSource = DtSrcTabela
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'MS Sans Serif'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 2
+            end
           end
         end
       end
@@ -2019,6 +2094,9 @@ inherited frmGeCliente: TfrmGeCliente
       '  , cl.DesBloqueado_data'
       '  , cl.Usuario'
       '  , cl.emitir_nfe_devolucao'
+      '  , cl.custo_oper_percentual'
+      '  , cl.custo_oper_frete'
+      '  , cl.custo_oper_outros'
       
         '  , coalesce( cast(coalesce(coalesce(t.Tlg_sigla, t.Tlg_descrica' +
         'o) || '#39' '#39', '#39#39') || l.Log_nome as varchar(250)), cl.Ender ) as Log' +
@@ -2247,6 +2325,28 @@ inherited frmGeCliente: TfrmGeCliente
       FieldName = 'EMITIR_NFE_DEVOLUCAO'
       Origin = '"TBCLIENTE"."EMITIR_NFE_DEVOLUCAO"'
     end
+    object IbDtstTabelaCUSTO_OPER_PERCENTUAL: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'CUSTO_OPER_PERCENTUAL'
+      Origin = '"TBCLIENTE"."CUSTO_OPER_PERCENTUAL"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbDtstTabelaCUSTO_OPER_FRETE: TIBBCDField
+      FieldName = 'CUSTO_OPER_FRETE'
+      Origin = '"TBCLIENTE"."CUSTO_OPER_FRETE"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.00#'
+      Precision = 18
+      Size = 4
+    end
+    object IbDtstTabelaCUSTO_OPER_OUTROS: TIBBCDField
+      FieldName = 'CUSTO_OPER_OUTROS'
+      Origin = '"TBCLIENTE"."CUSTO_OPER_OUTROS"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.00#'
+      Precision = 18
+      Size = 4
+    end
     object IbDtstTabelaUSUARIO: TIBStringField
       FieldName = 'USUARIO'
       Origin = '"TBCLIENTE"."USUARIO"'
@@ -2293,7 +2393,10 @@ inherited frmGeCliente: TfrmGeCliente
       '  DTCAD,'
       '  VENDEDOR_COD,'
       '  USUARIO,'
-      '  EMITIR_NFE_DEVOLUCAO'
+      '  EMITIR_NFE_DEVOLUCAO,'
+      '  CUSTO_OPER_PERCENTUAL,'
+      '  CUSTO_OPER_FRETE,'
+      '  CUSTO_OPER_OUTROS'
       'from TBCLIENTE '
       'where'
       '  CNPJ = :CNPJ')
@@ -2312,6 +2415,9 @@ inherited frmGeCliente: TfrmGeCliente
       '  CNPJ = :CNPJ,'
       '  CODIGO = :CODIGO,'
       '  COMPLEMENTO = :COMPLEMENTO,'
+      '  CUSTO_OPER_FRETE = :CUSTO_OPER_FRETE,'
+      '  CUSTO_OPER_OUTROS = :CUSTO_OPER_OUTROS,'
+      '  CUSTO_OPER_PERCENTUAL = :CUSTO_OPER_PERCENTUAL,'
       '  DESBLOQUEADO_DATA = :DESBLOQUEADO_DATA,'
       '  DTCAD = :DTCAD,'
       '  EMAIL = :EMAIL,'
@@ -2342,34 +2448,37 @@ inherited frmGeCliente: TfrmGeCliente
         '  (BAI_COD, BAIRRO, BLOQUEADO, BLOQUEADO_DATA, BLOQUEADO_MOTIVO,' +
         ' BLOQUEADO_USUARIO, '
       
-        '   CEP, CID_COD, CIDADE, CNPJ, CODIGO, COMPLEMENTO, DESBLOQUEADO' +
-        '_DATA, '
+        '   CEP, CID_COD, CIDADE, CNPJ, CODIGO, COMPLEMENTO, CUSTO_OPER_F' +
+        'RETE, CUSTO_OPER_OUTROS, '
       
-        '   DTCAD, EMAIL, EMITIR_NFE_DEVOLUCAO, ENDER, EST_COD, FONE, FON' +
-        'ECEL, FONECOMERC, '
+        '   CUSTO_OPER_PERCENTUAL, DESBLOQUEADO_DATA, DTCAD, EMAIL, EMITI' +
+        'R_NFE_DEVOLUCAO, '
       
-        '   INSCEST, INSCMUN, LOG_COD, NOME, NUMERO_END, PAIS_ID, PESSOA_' +
-        'FISICA, '
+        '   ENDER, EST_COD, FONE, FONECEL, FONECOMERC, INSCEST, INSCMUN, ' +
+        'LOG_COD, '
       
-        '   SITE, TLG_TIPO, UF, USUARIO, VALOR_LIMITE_COMPRA, VENDEDOR_CO' +
-        'D)'
+        '   NOME, NUMERO_END, PAIS_ID, PESSOA_FISICA, SITE, TLG_TIPO, UF,' +
+        ' USUARIO, '
+      '   VALOR_LIMITE_COMPRA, VENDEDOR_COD)'
       'values'
       
         '  (:BAI_COD, :BAIRRO, :BLOQUEADO, :BLOQUEADO_DATA, :BLOQUEADO_MO' +
         'TIVO, :BLOQUEADO_USUARIO, '
       
-        '   :CEP, :CID_COD, :CIDADE, :CNPJ, :CODIGO, :COMPLEMENTO, :DESBL' +
-        'OQUEADO_DATA, '
+        '   :CEP, :CID_COD, :CIDADE, :CNPJ, :CODIGO, :COMPLEMENTO, :CUSTO' +
+        '_OPER_FRETE, '
       
-        '   :DTCAD, :EMAIL, :EMITIR_NFE_DEVOLUCAO, :ENDER, :EST_COD, :FON' +
-        'E, :FONECEL, '
+        '   :CUSTO_OPER_OUTROS, :CUSTO_OPER_PERCENTUAL, :DESBLOQUEADO_DAT' +
+        'A, :DTCAD, '
       
-        '   :FONECOMERC, :INSCEST, :INSCMUN, :LOG_COD, :NOME, :NUMERO_END' +
-        ', :PAIS_ID, '
+        '   :EMAIL, :EMITIR_NFE_DEVOLUCAO, :ENDER, :EST_COD, :FONE, :FONE' +
+        'CEL, :FONECOMERC, '
       
-        '   :PESSOA_FISICA, :SITE, :TLG_TIPO, :UF, :USUARIO, :VALOR_LIMIT' +
-        'E_COMPRA, '
-      '   :VENDEDOR_COD)')
+        '   :INSCEST, :INSCMUN, :LOG_COD, :NOME, :NUMERO_END, :PAIS_ID, :' +
+        'PESSOA_FISICA, '
+      
+        '   :SITE, :TLG_TIPO, :UF, :USUARIO, :VALOR_LIMITE_COMPRA, :VENDE' +
+        'DOR_COD)')
     DeleteSQL.Strings = (
       'delete from TBCLIENTE'
       'where'
@@ -2600,7 +2709,7 @@ inherited frmGeCliente: TfrmGeCliente
   object popProcesso: TPopupMenu
     Images = ImgList
     Left = 696
-    Top = 446
+    Top = 430
     object mpClienteBloquear: TMenuItem
       Caption = '&Bloquear'
       ImageIndex = 37

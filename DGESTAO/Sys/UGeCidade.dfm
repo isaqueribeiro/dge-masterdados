@@ -1,11 +1,14 @@
 inherited frmGeCidade: TfrmGeCidade
   Left = 497
   Top = 273
+  ActiveControl = dbCodigo
   Caption = 'Tabela de Cidades (Munic'#237'pios)'
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   inherited pgcGuias: TPageControl
+    ActivePage = tbsCadastro
+    OnChange = pgcGuiasChange
     inherited tbsTabela: TTabSheet
       inherited dbgDados: TDBGrid
         Columns = <
@@ -42,7 +45,20 @@ inherited frmGeCidade: TfrmGeCidade
       end
     end
     inherited tbsCadastro: TTabSheet
+      inherited Bevel8: TBevel
+        Top = 225
+        Width = 727
+      end
+      object Bevel5: TBevel [1]
+        Left = 0
+        Top = 121
+        Width = 727
+        Height = 4
+        Align = alTop
+        Shape = bsSpacer
+      end
       inherited GrpBxDadosNominais: TGroupBox
+        Width = 727
         object lblNome: TLabel [1]
           Left = 88
           Top = 24
@@ -268,6 +284,81 @@ inherited frmGeCidade: TfrmGeCidade
           TabOrder = 7
         end
       end
+      object GrpBxCustosOper: TGroupBox
+        Left = 0
+        Top = 125
+        Width = 727
+        Height = 100
+        Align = alTop
+        Caption = 'Custos Operacionais para Clientes/Vendas'
+        TabOrder = 1
+        object lblFrete: TLabel
+          Left = 16
+          Top = 48
+          Width = 30
+          Height = 13
+          Caption = 'Frete:'
+          FocusControl = dbFrete
+        end
+        object lblOutros: TLabel
+          Left = 120
+          Top = 48
+          Width = 37
+          Height = 13
+          Caption = 'Outros:'
+          FocusControl = dbOutros
+        end
+        object dbCustoOperacional: TDBCheckBox
+          Left = 16
+          Top = 24
+          Width = 225
+          Height = 17
+          Caption = 'Custo Operacional por Percentual'
+          DataField = 'CUSTO_OPER_PERCENTUAL'
+          DataSource = DtSrcTabela
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          ValueChecked = '1'
+          ValueUnchecked = '0'
+        end
+        object dbFrete: TDBEdit
+          Left = 16
+          Top = 64
+          Width = 97
+          Height = 21
+          CharCase = ecUpperCase
+          DataField = 'CUSTO_OPER_FRETE'
+          DataSource = DtSrcTabela
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+        end
+        object dbOutros: TDBEdit
+          Left = 120
+          Top = 64
+          Width = 97
+          Height = 21
+          CharCase = ecUpperCase
+          DataField = 'CUSTO_OPER_OUTROS'
+          DataSource = DtSrcTabela
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 2
+        end
+      end
     end
   end
   inherited IbDtstTabela: TIBDataSet
@@ -282,6 +373,9 @@ inherited frmGeCidade: TfrmGeCidade
       '  , c.Cid_ddd'
       '  , c.Cid_cep_inicial'
       '  , c.Cid_cep_final'
+      '  , c.Custo_oper_percentual'
+      '  , c.Custo_oper_frete'
+      '  , c.Custo_oper_outros'
       '  , e.Est_nome'
       '  , e.Est_sigla'
       'from TBCIDADE c'
@@ -334,6 +428,27 @@ inherited frmGeCidade: TfrmGeCidade
       Origin = 'TBCIDADE.CID_CEP_FINAL'
       EditFormat = '00.000-000;0; '
     end
+    object IbDtstTabelaCUSTO_OPER_PERCENTUAL: TSmallintField
+      FieldName = 'CUSTO_OPER_PERCENTUAL'
+      Origin = '"TBCIDADE"."CUSTO_OPER_PERCENTUAL"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbDtstTabelaCUSTO_OPER_FRETE: TIBBCDField
+      FieldName = 'CUSTO_OPER_FRETE'
+      Origin = '"TBCIDADE"."CUSTO_OPER_FRETE"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.00#'
+      Precision = 18
+      Size = 4
+    end
+    object IbDtstTabelaCUSTO_OPER_OUTROS: TIBBCDField
+      FieldName = 'CUSTO_OPER_OUTROS'
+      Origin = '"TBCIDADE"."CUSTO_OPER_OUTROS"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.00#'
+      Precision = 18
+      Size = 4
+    end
     object IbDtstTabelaEST_NOME: TIBStringField
       DisplayLabel = 'Estado'
       FieldName = 'EST_NOME'
@@ -347,6 +462,9 @@ inherited frmGeCidade: TfrmGeCidade
       Size = 2
     end
   end
+  inherited DtSrcTabela: TDataSource
+    OnDataChange = DtSrcTabelaDataChange
+  end
   inherited IbUpdTabela: TIBUpdateSQL
     RefreshSQL.Strings = (
       'Select '
@@ -354,25 +472,49 @@ inherited frmGeCidade: TfrmGeCidade
       '  CID_NOME,'
       '  EST_COD,'
       '  CID_SIAFI,'
-      '  CID_IBGE'
+      '  CID_IBGE,'
+      '  CID_DDD,'
+      '  CID_CEP_INICIAL,'
+      '  CID_CEP_FINAL,'
+      '  CUSTO_OPER_PERCENTUAL,'
+      '  CUSTO_OPER_FRETE,'
+      '  CUSTO_OPER_OUTROS'
       'from TBCIDADE '
       'where'
       '  CID_COD = :CID_COD')
     ModifySQL.Strings = (
       'update TBCIDADE'
       'set'
+      '  CID_CEP_FINAL = :CID_CEP_FINAL,'
+      '  CID_CEP_INICIAL = :CID_CEP_INICIAL,'
       '  CID_COD = :CID_COD,'
+      '  CID_DDD = :CID_DDD,'
+      '  CID_IBGE = :CID_IBGE,'
       '  CID_NOME = :CID_NOME,'
-      '  EST_COD = :EST_COD,'
       '  CID_SIAFI = :CID_SIAFI,'
-      '  CID_IBGE = :CID_IBGE'
+      '  CUSTO_OPER_FRETE = :CUSTO_OPER_FRETE,'
+      '  CUSTO_OPER_OUTROS = :CUSTO_OPER_OUTROS,'
+      '  CUSTO_OPER_PERCENTUAL = :CUSTO_OPER_PERCENTUAL,'
+      '  EST_COD = :EST_COD'
       'where'
       '  CID_COD = :OLD_CID_COD')
     InsertSQL.Strings = (
       'insert into TBCIDADE'
-      '  (CID_COD, CID_NOME, EST_COD, CID_SIAFI, CID_IBGE)'
+      
+        '  (CID_CEP_FINAL, CID_CEP_INICIAL, CID_COD, CID_DDD, CID_IBGE, C' +
+        'ID_NOME, '
+      
+        '   CID_SIAFI, CUSTO_OPER_FRETE, CUSTO_OPER_OUTROS, CUSTO_OPER_PE' +
+        'RCENTUAL, '
+      '   EST_COD)'
       'values'
-      '  (:CID_COD, :CID_NOME, :EST_COD, :CID_SIAFI, :CID_IBGE)')
+      
+        '  (:CID_CEP_FINAL, :CID_CEP_INICIAL, :CID_COD, :CID_DDD, :CID_IB' +
+        'GE, :CID_NOME, '
+      
+        '   :CID_SIAFI, :CUSTO_OPER_FRETE, :CUSTO_OPER_OUTROS, :CUSTO_OPE' +
+        'R_PERCENTUAL, '
+      '   :EST_COD)')
     DeleteSQL.Strings = (
       'delete from TBCIDADE'
       'where'

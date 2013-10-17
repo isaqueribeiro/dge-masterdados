@@ -46,6 +46,9 @@ type
     chkNFE_SolicitaDHSaida: TDBCheckBox;
     IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE: TSmallintField;
     chkImprimirCodCliente: TDBCheckBox;
+    IbDtstTabelaCUSTO_OPER_CALCULAR: TSmallintField;
+    TabSheet1: TTabSheet;
+    dbCustoOperacional: TDBCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure DtSrcTabelaStateChange(Sender: TObject);
     procedure IbDtstTabelaEMPRESAGetText(Sender: TField; var Text: String;
@@ -109,6 +112,9 @@ begin
       Exit;
     end;
 
+  if IbDtstTabelaCUSTO_OPER_CALCULAR.IsNull then
+    IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger := 0;
+    
   inherited;
 end;
 
@@ -135,6 +141,7 @@ begin
 
   IbDtstTabelaNFE_SOLICITA_DH_SAIDA.AsInteger    := 0;
   IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE.AsInteger := 0;
+  IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger      := 0;
 end;
 
 initialization
