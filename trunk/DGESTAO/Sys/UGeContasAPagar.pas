@@ -6,7 +6,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UGrPadraoCadastro, ImgList, IBCustomDataSet, IBUpdateSQL, DB,
   Mask, DBCtrls, StdCtrls, Buttons, ExtCtrls, Grids, DBGrids, ComCtrls,
-  ToolWin, rxToolEdit, RXDBCtrl, IBTable, IBQuery;
+  ToolWin, rxToolEdit, RXDBCtrl, IBTable, IBQuery, frxClass, frxDBSet,
+  DBClient, Provider, Menus, ACBrBase, ACBrExtenso;
 
 type
   TfrmGeContasAPagar = class(TfrmGrPadraoCadastro)
@@ -92,6 +93,42 @@ type
     lblData: TLabel;
     e1Data: TDateEdit;
     e2Data: TDateEdit;
+    FrdRecibo: TfrxDBDataset;
+    FrRecibo: TfrxReport;
+    QryRecibo: TIBQuery;
+    DspRecibo: TDataSetProvider;
+    CdsRecibo: TClientDataSet;
+    CdsReciboANOLANC: TSmallintField;
+    CdsReciboNUMLANC: TIntegerField;
+    CdsReciboPARCELA: TSmallintField;
+    CdsReciboCODFORN: TSmallintField;
+    CdsReciboNOMEEMP: TStringField;
+    CdsReciboNOMEFORN: TStringField;
+    CdsReciboPESSOA_FISICA: TSmallintField;
+    CdsReciboCNPJ: TStringField;
+    CdsReciboNOTFISC: TStringField;
+    CdsReciboTIPPAG: TStringField;
+    CdsReciboDTEMISS: TDateField;
+    CdsReciboDTVENC: TDateField;
+    CdsReciboDTPAG: TDateField;
+    CdsReciboVALORPAG: TBCDField;
+    CdsReciboBANCO: TSmallintField;
+    CdsReciboBCO_NOME: TStringField;
+    CdsReciboNUMCHQ: TStringField;
+    CdsReciboPAGO_: TStringField;
+    CdsReciboDOCBAIX: TStringField;
+    CdsReciboQUITADO: TSmallintField;
+    CdsReciboCODTPDESP: TSmallintField;
+    CdsReciboDATA_PAGTO: TDateField;
+    CdsReciboFORMA_PAGTO_DESC: TStringField;
+    CdsReciboHISTORICO: TMemoField;
+    CdsReciboVALOR_BAIXA: TBCDField;
+    CdsReciboVALOR_BAIXA_EXTENSO: TStringField;
+    CdsReciboFORMA_PAGTO: TSmallintField;
+    CdsReciboSEQ: TSmallintField;
+    popImprimir: TPopupMenu;
+    popGerarRecibo: TMenuItem;
+    ACBrExtenso: TACBrExtenso;
     procedure FormCreate(Sender: TObject);
     procedure dbFornecedorButtonClick(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
@@ -108,6 +145,10 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure dbgDadosKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure popGerarReciboClick(Sender: TObject);
+    procedure btbtnListaClick(Sender: TObject);
+    procedure CdsReciboCalcFields(DataSet: TDataSet);
+    procedure FrReciboGetValue(const VarName: String; var Value: Variant);
   private
     { Private declarations }
     SQL_Pagamentos : TStringList;
@@ -294,9 +335,15 @@ end;
 procedure TfrmGeContasAPagar.HabilitarDesabilitar_Btns;
 begin
   if ( pgcGuias.ActivePage = tbsCadastro ) then
-    btbtnEfetuarPagto.Enabled := (IbDtstTabelaQUITADO.AsInteger = STATUS_APAGAR_PENDENTE) and (not IbDtstTabela.IsEmpty)
+  begin
+    btbtnEfetuarPagto.Enabled := (IbDtstTabelaQUITADO.AsInteger = STATUS_APAGAR_PENDENTE) and (not IbDtstTabela.IsEmpty);
+    popGerarRecibo.Enabled    := (not cdsPagamentos.IsEmpty);
+  end
   else
+  begin
     btbtnEfetuarPagto.Enabled := False;
+    popGerarRecibo.Enabled    := False;
+  end;
 end;
 
 procedure TfrmGeContasAPagar.btbtnSalvarClick(Sender: TObject);
@@ -495,6 +542,50 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TfrmGeContasAPagar.popGerarReciboClick(Sender: TObject);
+begin
+  with CdsRecibo, Params do
+  begin
+    Close;
+    ParamByName('ano').AsInteger    := cdsPagamentosANOLANC.AsInteger;
+    ParamByName('numero').AsInteger := cdsPagamentosNUMLANC.AsInteger;
+    ParamByName('baixa').AsInteger  := cdsPagamentosSEQ.AsInteger;
+    Open;
+  end;
+
+  frReport := FrRecibo;
+  SetVariablesDefault(frReport);
+
+  frReport.PrepareReport;
+  frReport.ShowReport;
+end;
+
+procedure TfrmGeContasAPagar.btbtnListaClick(Sender: TObject);
+begin
+  popImprimir.Popup(btbtnLista.ClientOrigin.X, btbtnLista.ClientOrigin.Y + btbtnLista.Height);
+end;
+
+procedure TfrmGeContasAPagar.CdsReciboCalcFields(DataSet: TDataSet);
+begin
+  CdsReciboVALOR_BAIXA_EXTENSO.AsString := AnsiUpperCase(ACBrExtenso.ValorToTexto(CdsReciboVALOR_BAIXA.AsCurrency, ACBrExtenso.Formato));
+end;
+
+procedure TfrmGeContasAPagar.FrReciboGetValue(const VarName: String;
+  var Value: Variant);
+begin
+  if ( VarName = VAR_TITLE ) then
+    Value := 'RECIBO';
+
+  if ( VarName = VAR_EMPRESA ) then
+    Value := GetEmpresaNomeDefault;
+
+  if ( VarName = VAR_USER ) then
+    Value := GetUserApp;
+
+  if ( VarName = VAR_SYSTEM ) then
+    Value := Application.Title + ' - versão ' + ver.FileVersion;
 end;
 
 initialization

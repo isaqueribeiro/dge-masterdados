@@ -34,9 +34,22 @@ type
     dbCEPInicial: TDBEdit;
     lblCEPFinal: TLabel;
     dbCEPFinal: TDBEdit;
+    GrpBxCustosOper: TGroupBox;
+    dbCustoOperacional: TDBCheckBox;
+    IbDtstTabelaCUSTO_OPER_PERCENTUAL: TSmallintField;
+    IbDtstTabelaCUSTO_OPER_FRETE: TIBBCDField;
+    IbDtstTabelaCUSTO_OPER_OUTROS: TIBBCDField;
+    lblFrete: TLabel;
+    dbFrete: TDBEdit;
+    lblOutros: TLabel;
+    dbOutros: TDBEdit;
+    Bevel5: TBevel;
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
+    procedure DtSrcTabelaDataChange(Sender: TObject; Field: TField);
+    procedure pgcGuiasChange(Sender: TObject);
+    procedure btbtnSalvarClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -135,6 +148,55 @@ begin
     IbDtstTabelaEST_COD.AsInteger := GetEstadoIDDefault;
     IbDtstTabelaEST_NOME.AsString := GetEstadoNomeDefault;
   end;
+  
+  IbDtstTabelaCUSTO_OPER_PERCENTUAL.Value := 0;
+  IbDtstTabelaCUSTO_OPER_FRETE.Clear;
+  IbDtstTabelaCUSTO_OPER_OUTROS.Clear;
+end;
+
+procedure TfrmGeCidade.DtSrcTabelaDataChange(Sender: TObject;
+  Field: TField);
+begin
+  if ( Field = IbDtstTabelaCUSTO_OPER_PERCENTUAL ) then
+    if ( IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger = 1 ) then
+    begin
+      lblFrete.Caption  := 'Frete (%):';
+      lblOutros.Caption := 'Outros (%):';
+    end
+    else
+    begin
+      lblFrete.Caption  := 'Frete (R$):';
+      lblOutros.Caption := 'Outros (R$):';
+    end;
+end;
+
+procedure TfrmGeCidade.pgcGuiasChange(Sender: TObject);
+begin
+  inherited;
+  DtSrcTabelaDataChange(IbDtstTabelaCUSTO_OPER_PERCENTUAL, IbDtstTabelaCUSTO_OPER_PERCENTUAL);
+end;
+
+procedure TfrmGeCidade.btbtnSalvarClick(Sender: TObject);
+begin
+  if ( IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger = 1 ) then
+  begin
+    if ((IbDtstTabelaCUSTO_OPER_FRETE.AsCurrency < 0) or (IbDtstTabelaCUSTO_OPER_FRETE.AsCurrency > 100)) then
+    begin
+      ShowWarning('Percentual de custo operacional para "Frete" inválido!');
+      Exit;
+    end;
+
+    if ((IbDtstTabelaCUSTO_OPER_OUTROS.AsCurrency < 0) or (IbDtstTabelaCUSTO_OPER_OUTROS.AsCurrency > 100)) then
+    begin
+      ShowWarning('Percentual de custo operacional para "Outros" inválido!');
+      Exit;
+    end;
+  end;
+
+  if IbDtstTabelaCUSTO_OPER_PERCENTUAL.IsNull then
+    IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := 1;
+
+  inherited;
 end;
 
 initialization

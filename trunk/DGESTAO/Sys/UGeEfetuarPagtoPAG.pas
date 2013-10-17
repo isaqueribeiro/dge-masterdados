@@ -164,8 +164,11 @@ begin
     else
     if ( ShowConfirm('Confirma a efetuação do pagamento?') ) then
     begin
-      cdsPagamentosHISTORICO.AsString := UpperCase(cdsPagamentosHISTORICO.AsString);
-      
+      cdsPagamentosHISTORICO.AsString := AnsiUpperCase(Trim(cdsPagamentosHISTORICO.AsString));
+
+      if (Copy(cdsPagamentosHISTORICO.AsString, Length(cdsPagamentosHISTORICO.AsString), 1) = '.') then
+        cdsPagamentosHISTORICO.AsString := Copy(cdsPagamentosHISTORICO.AsString, 1, Length(cdsPagamentosHISTORICO.AsString) - 1);
+
       cdsPagamentos.Post;
       cdsPagamentos.ApplyUpdates;
       CommitTransaction;

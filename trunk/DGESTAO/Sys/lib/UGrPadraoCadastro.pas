@@ -4,9 +4,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DB, UGrPadrao, IBCustomDataSet, StdCtrls, Buttons, ExtCtrls, Grids,
+  Dialogs, DB, UGrPadrao, UInfoVersao, IBCustomDataSet, StdCtrls, Buttons, ExtCtrls, Grids,
   DBGrids, ComCtrls, ToolWin, Mask, DBCtrls, IBUpdateSQL, ImgList, TypInfo,
-  DBClient, EUserAcs;
+  DBClient, EUserAcs, frxClass;
 
 type
   TfrmGrPadraoCadastro = class(TfrmGrPadrao)
@@ -81,12 +81,20 @@ type
     fAbrirTabelaAuto: Boolean;
     sSQL : TStringList;
     fControlFirst : TWinControl;
+
+    _ver : TInfoVersao;
+    _frReport: TfrxReport;
+    _SubTituloRelario : String;
+    _Todos ,
+    _ApenasConsolidado : Boolean;
+
     procedure CentralizarCodigo;
     procedure SetWhereAdditional(Value : String);
     procedure ClearFieldEmptyStr;
     procedure CarregarControleAcesso;
   public
     { Public declarations }
+    property ver : TInfoVersao read _ver;
     property DisplayFormatCodigo : String read fDisplayFormat write fDisplayFormat;
     property NomeTabela : String read fNomeTabela write fNomeTabela;
     property CampoCodigo : String read fCampoCodigo write fCampoCodigo;
@@ -97,9 +105,12 @@ type
     property AbrirTabelaAuto : Boolean read fAbrirTabelaAuto write fAbrirTabelaAuto;
     property SQLTabela : TStringList read sSQL;
     property ControlFirstEdit : TWinControl read fControlFirst write fControlFirst;
+    property frReport : TfrxReport read _frReport write _frReport;
+
     procedure UpdateGenerator(const sWhr : String = '');
     procedure RedimencionarBevel(const ToolBar : TToolBar; const bvl : TBevel);
   protected
+    procedure SetVariablesDefault(const pFastReport : TfrxReport);
     procedure FiltarDados; overload;
     procedure FecharAbrirTabela(const Tabela : TIBDataSet; const Vazia : Boolean = FALSE); overload;
     function SelecionarRegistro(var Codigo : Integer; var Descricao : String; const FiltroAdicional : String = '') : Boolean; overload;
@@ -108,9 +119,22 @@ type
 var
   frmGrPadraoCadastro: TfrmGrPadraoCadastro;
 
+const
+  CATEGORY_VAR = 'Local';
+  VAR_TITLE    = 'Titulo';
+  VAR_SUBTITLE = 'SubTitulo';
+  VAR_PERIODO  = 'Periodo';
+  VAR_TODOS    = 'Todos';
+  VAR_APENASCONSOLIDADO = 'ApenasConsolidado';
+  VAR_SYSTEM            = 'Sistema';
+  VAR_USER              = 'Usuario';
+  VAR_EMPRESA           = 'Entidade';
+  VAR_DEPARTAMENTO      = 'Depto';
+
 implementation
 
-uses UDMBusiness, UGrCampoRequisitado;
+uses
+  UDMBusiness, UGrCampoRequisitado;
 
 {$R *.dfm}
 
@@ -122,6 +146,8 @@ end;
 procedure TfrmGrPadraoCadastro.FormCreate(Sender: TObject);
 begin
   inherited;
+  _ver := TInfoVersao.GetInstance;
+  
   DisplayFormatCodigo := '00000';
   NomeTabela      := EmptyStr;
   CampoCodigo     := EmptyStr;
@@ -657,6 +683,55 @@ begin
       RegistrarControleAcesso(Self, TEvUserAccess(Components[I]));
       GetControleAcesso(Self, TEvUserAccess(Components[I]));
     end;
+end;
+
+procedure TfrmGrPadraoCadastro.SetVariablesDefault(
+  const pFastReport: TfrxReport);
+
+  function VariableExist(VariableName : String) : Boolean;
+  begin
+    Result := (frReport.Variables.IndexOf(VariableName) > -1);
+  end;
+
+begin
+  if Assigned(frReport) then
+  begin
+    if (frReport.ReportOptions.Name) = EmptyStr then
+      frReport.ReportOptions.Name := Application.Title;
+
+    if (frReport.ReportOptions.Author) = EmptyStr then
+      frReport.ReportOptions.Author := GetUserApp;
+
+    if ( not VariableExist(CATEGORY_VAR) ) then
+      frReport.Variables.AddVariable(EmptyStr, CATEGORY_VAR, null);
+
+    if ( not VariableExist(VAR_TITLE) ) then
+      frReport.Variables.AddVariable(CATEGORY_VAR, VAR_TITLE, EmptyStr);
+
+    if ( not VariableExist(VAR_SUBTITLE) ) then
+      frReport.Variables.AddVariable(CATEGORY_VAR, VAR_SUBTITLE, EmptyStr);
+
+    if ( not VariableExist(VAR_PERIODO) ) then
+      frReport.Variables.AddVariable(CATEGORY_VAR, VAR_PERIODO, EmptyStr);
+
+    if ( not VariableExist(VAR_EMPRESA) ) then
+      frReport.Variables.AddVariable(CATEGORY_VAR, VAR_EMPRESA, GetEmpresaNomeDefault);
+
+    if ( not VariableExist(VAR_USER) ) then
+      frReport.Variables.AddVariable(CATEGORY_VAR, VAR_USER, GetUserApp);
+
+    if ( not VariableExist(VAR_DEPARTAMENTO) ) then
+      frReport.Variables.AddVariable(CATEGORY_VAR, VAR_DEPARTAMENTO, EmptyStr);
+
+    if ( not VariableExist(VAR_TODOS) ) then
+      frReport.Variables.AddVariable(CATEGORY_VAR, VAR_TODOS, 1);
+
+    if ( not VariableExist(VAR_APENASCONSOLIDADO) ) then
+      frReport.Variables.AddVariable(CATEGORY_VAR, VAR_APENASCONSOLIDADO, 0);
+
+    if ( not VariableExist(VAR_SYSTEM) ) then
+      frReport.Variables.AddVariable(CATEGORY_VAR, VAR_SYSTEM, Application.Title + ' - versão ' + ver.FileVersion);
+  end;
 end;
 
 end.

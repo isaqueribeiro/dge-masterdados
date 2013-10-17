@@ -318,6 +318,28 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
             ValueUnchecked = '0'
           end
         end
+        object TabSheet1: TTabSheet
+          Caption = 'Outras Configura'#231#245'es'
+          ImageIndex = 2
+          object dbCustoOperacional: TDBCheckBox
+            Left = 16
+            Top = 16
+            Width = 313
+            Height = 17
+            Caption = 'Calcular Custo Operacional nas vendas por Cliente'
+            DataField = 'CUSTO_OPER_CALCULAR'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
+        end
       end
     end
   end
@@ -337,6 +359,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  , c.email_mensagem_padrao'
       '  , c.nfe_solicita_dh_saida'
       '  , c.nfe_imprimir_cod_cliente'
+      '  , c.custo_oper_calcular'
       '  , e.rzsoc'
       '  , e.nmfant'
       'from TBCONFIGURACAO c'
@@ -408,13 +431,21 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       Size = 250
     end
     object IbDtstTabelaNFE_SOLICITA_DH_SAIDA: TSmallintField
+      Alignment = taLeftJustify
       FieldName = 'NFE_SOLICITA_DH_SAIDA'
       Origin = '"TBCONFIGURACAO"."NFE_SOLICITA_DH_SAIDA"'
       ProviderFlags = [pfInUpdate]
     end
     object IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE: TSmallintField
+      Alignment = taLeftJustify
       FieldName = 'NFE_IMPRIMIR_COD_CLIENTE'
       Origin = '"TBCONFIGURACAO"."NFE_IMPRIMIR_COD_CLIENTE"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbDtstTabelaCUSTO_OPER_CALCULAR: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'CUSTO_OPER_CALCULAR'
+      Origin = '"TBCONFIGURACAO"."CUSTO_OPER_CALCULAR"'
       ProviderFlags = [pfInUpdate]
     end
     object IbDtstTabelaRZSOC: TIBStringField
@@ -443,13 +474,16 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  EMAIL_CONEXAO_SSL,'
       '  EMAIL_ASSUNTO_PADRAO,'
       '  EMAIL_MENSAGEM_PADRAO,'
-      '  NFE_SOLICITA_DH_SAIDA'
+      '  NFE_SOLICITA_DH_SAIDA,'
+      '  NFE_IMPRIMIR_COD_CLIENTE,'
+      '  CUSTO_OPER_CALCULAR'
       'from TBCONFIGURACAO '
       'where'
       '  EMPRESA = :EMPRESA')
     ModifySQL.Strings = (
       'update TBCONFIGURACAO'
       'set'
+      '  CUSTO_OPER_CALCULAR = :CUSTO_OPER_CALCULAR,'
       '  EMAIL_ASSUNTO_PADRAO = :EMAIL_ASSUNTO_PADRAO,'
       '  EMAIL_CONEXAO_SSL = :EMAIL_CONEXAO_SSL,'
       '  EMAIL_CONTA = :EMAIL_CONTA,'
@@ -460,26 +494,32 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  EMAIL_SMTP = :EMAIL_SMTP,'
       '  EMAIL_SMTP_PORTA = :EMAIL_SMTP_PORTA,'
       '  EMPRESA = :EMPRESA,'
+      '  NFE_IMPRIMIR_COD_CLIENTE = :NFE_IMPRIMIR_COD_CLIENTE,'
       '  NFE_SOLICITA_DH_SAIDA = :NFE_SOLICITA_DH_SAIDA'
       'where'
       '  EMPRESA = :OLD_EMPRESA')
     InsertSQL.Strings = (
       'insert into TBCONFIGURACAO'
       
-        '  (EMAIL_ASSUNTO_PADRAO, EMAIL_CONEXAO_SSL, EMAIL_CONTA, EMAIL_M' +
-        'ENSAGEM_PADRAO, '
+        '  (CUSTO_OPER_CALCULAR, EMAIL_ASSUNTO_PADRAO, EMAIL_CONEXAO_SSL,' +
+        ' EMAIL_CONTA, '
       
-        '   EMAIL_POP, EMAIL_REQUER_AUTENTICACAO, EMAIL_SENHA, EMAIL_SMTP' +
-        ', EMAIL_SMTP_PORTA, '
-      '   EMPRESA, NFE_SOLICITA_DH_SAIDA)'
+        '   EMAIL_MENSAGEM_PADRAO, EMAIL_POP, EMAIL_REQUER_AUTENTICACAO, ' +
+        'EMAIL_SENHA, '
+      
+        '   EMAIL_SMTP, EMAIL_SMTP_PORTA, EMPRESA, NFE_IMPRIMIR_COD_CLIEN' +
+        'TE, NFE_SOLICITA_DH_SAIDA)'
       'values'
       
-        '  (:EMAIL_ASSUNTO_PADRAO, :EMAIL_CONEXAO_SSL, :EMAIL_CONTA, :EMA' +
-        'IL_MENSAGEM_PADRAO, '
+        '  (:CUSTO_OPER_CALCULAR, :EMAIL_ASSUNTO_PADRAO, :EMAIL_CONEXAO_S' +
+        'SL, :EMAIL_CONTA, '
       
-        '   :EMAIL_POP, :EMAIL_REQUER_AUTENTICACAO, :EMAIL_SENHA, :EMAIL_' +
-        'SMTP, :EMAIL_SMTP_PORTA, '
-      '   :EMPRESA, :NFE_SOLICITA_DH_SAIDA)')
+        '   :EMAIL_MENSAGEM_PADRAO, :EMAIL_POP, :EMAIL_REQUER_AUTENTICACA' +
+        'O, :EMAIL_SENHA, '
+      
+        '   :EMAIL_SMTP, :EMAIL_SMTP_PORTA, :EMPRESA, :NFE_IMPRIMIR_COD_C' +
+        'LIENTE, '
+      '   :NFE_SOLICITA_DH_SAIDA)')
     DeleteSQL.Strings = (
       'delete from TBCONFIGURACAO'
       'where'

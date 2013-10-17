@@ -1,6 +1,6 @@
 inherited frmGeContasAPagar: TfrmGeContasAPagar
-  Left = 331
-  Top = 111
+  Left = 341
+  Top = 138
   Width = 950
   Height = 600
   ActiveControl = dbCodigo
@@ -19,6 +19,10 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
   inherited tlbBotoes: TToolBar
     Top = 523
     Width = 934
+    inherited btbtnLista: TBitBtn
+      Visible = True
+      OnClick = btbtnListaClick
+    end
     object btbtnEfetuarPagto: TBitBtn
       Left = 726
       Top = 2
@@ -1299,5 +1303,747 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       'order by tipodesp')
     Left = 864
     Top = 104
+  end
+  object FrdRecibo: TfrxDBDataset
+    UserName = 'FrdRecibo'
+    CloseDataSource = True
+    FieldAliases.Strings = (
+      'ANOLANC=ANOLANC'
+      'NUMLANC=NUMLANC'
+      'PARCELA=PARCELA'
+      'CODFORN=CODFORN'
+      'NOMEEMP=NOMEEMP'
+      'NOMEFORN=NOMEFORN'
+      'PESSOA_FISICA=PESSOA_FISICA'
+      'CNPJ=CNPJ'
+      'NOTFISC=NOTFISC'
+      'TIPPAG=TIPPAG'
+      'DTEMISS=DTEMISS'
+      'DTVENC=DTVENC'
+      'DTPAG=DTPAG'
+      'VALORPAG=VALORPAG'
+      'BANCO=BANCO'
+      'BCO_NOME=BCO_NOME'
+      'NUMCHQ=NUMCHQ'
+      'PAGO_=PAGO_'
+      'DOCBAIX=DOCBAIX'
+      'QUITADO=QUITADO'
+      'CODTPDESP=CODTPDESP'
+      'SEQ=SEQ'
+      'DATA_PAGTO=DATA_PAGTO'
+      'FORMA_PAGTO=FORMA_PAGTO'
+      'FORMA_PAGTO_DESC=FORMA_PAGTO_DESC'
+      'HISTORICO=HISTORICO'
+      'VALOR_BAIXA=VALOR_BAIXA'
+      'VALOR_BAIXA_EXTENSO=VALOR_BAIXA_EXTENSO')
+    DataSet = CdsRecibo
+    BCDToCurrency = True
+    Left = 588
+    Top = 289
+  end
+  object FrRecibo: TfrxReport
+    Version = '4.9.72'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PreviewOptions.ZoomMode = zmPageWidth
+    PrintOptions.Printer = 'Padr'#227'o'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 41557.397184305600000000
+    ReportOptions.Name = 'Teste!'
+    ReportOptions.LastChange = 41557.397184305600000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      'begin'
+      ''
+      'end.')
+    OnGetValue = FrReciboGetValue
+    Left = 560
+    Top = 288
+    Datasets = <
+      item
+        DataSet = DMNFe.frdEmpresa
+        DataSetName = 'frdEmpresa'
+      end
+      item
+        DataSet = FrdRecibo
+        DataSetName = 'FrdRecibo'
+      end>
+    Variables = <
+      item
+        Name = ' Local'
+        Value = Null
+      end
+      item
+        Name = 'Titulo'
+        Value = #39'RECIBO'#39
+      end
+      item
+        Name = 'Sistema'
+        Value = #39'Sistema'#39
+      end
+      item
+        Name = 'Usuario'
+        Value = #39'Usu'#225'rio'#39
+      end>
+    Style = <>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Page1: TfrxReportPage
+      PaperWidth = 210.000000000000000000
+      PaperHeight = 297.000000000000000000
+      PaperSize = 9
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
+      TopMargin = 10.000000000000000000
+      BottomMargin = 10.000000000000000000
+      object BndPageHeader: TfrxPageHeader
+        Height = 102.047310000000000000
+        Top = 18.897650000000000000
+        Width = 718.110700000000000000
+        object Picture1: TfrxPictureView
+          Left = 3.779530000000000000
+          Top = 7.559060000000000000
+          Width = 109.606370000000000000
+          Height = 79.370130000000000000
+          ShowHint = False
+          DataField = 'LOGO'
+          DataSet = DMNFe.frdEmpresa
+          DataSetName = 'frdEmpresa'
+          HightQuality = False
+          Transparent = False
+          TransparentColor = clWhite
+        end
+        object frdEmpresaRZSOC: TfrxMemoView
+          Left = 113.385900000000000000
+          Top = 7.559060000000000000
+          Width = 464.882190000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = DMNFe.frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            '[frdEmpresa."RZSOC"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object frdEmpresaNMFANT: TfrxMemoView
+          Left = 113.385900000000000000
+          Top = 26.456710000000000000
+          Width = 464.882190000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = DMNFe.frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              'CNPJ.: [FormatMaskText('#39'##.###.###/####-##;0;'#39',<frdEmpresa."CNPJ' +
+              '">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdFone: TfrxMemoView
+          Left = 113.385900000000000000
+          Top = 41.574830000000000000
+          Width = 464.882190000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = DMNFe.frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            'FONE: [FormatMaskText('#39'(##)####.####;0;'#39',<frdEmpresa."FONE">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo11: TfrxMemoView
+          Left = 113.385900000000000000
+          Top = 56.692950000000000000
+          Width = 464.882190000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = DMNFe.frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              '[frdEmpresa."TLG_SIGLA"] [frdEmpresa."LOG_NOME"], [frdEmpresa."N' +
+              'UMERO_END"], [frdEmpresa."BAI_NOME"] - [frdEmpresa."CID_NOME"]/[' +
+              'frdEmpresa."EST_SIGLA"] CEP.: [FormatMaskText('#39'##.###-###;0;'#39',<f' +
+              'rdEmpresa."CEP">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Line1: TfrxLineView
+          Top = 94.488250000000000000
+          Width = 718.110700000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+        end
+        object Memo44: TfrxMemoView
+          Left = 113.385900000000000000
+          Top = 71.811070000000000000
+          Width = 464.882190000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = DMNFe.frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            'Site / E-mail: [frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo1: TfrxMemoView
+          Left = 578.268090000000000000
+          Top = 7.559060000000000000
+          Width = 139.842610000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = DMNFe.frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Documento Baixa ')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo6: TfrxMemoView
+          Left = 578.268090000000000000
+          Top = 26.456710000000000000
+          Width = 139.842610000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = DMNFe.frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            
+              '[FrdRecibo."ANOLANC"]/[FormatFloat('#39'00000'#39',<FrdRecibo."NUMLANC">' +
+              ')].B[FormatFloat('#39'00'#39',<FrdRecibo."SEQ">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object BndPageFooter: TfrxPageFooter
+        Height = 30.236240000000000000
+        Top = 737.008350000000000000
+        Width = 718.110700000000000000
+        object Memo2: TfrxMemoView
+          Width = 582.047620000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [Sistema]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaBottom
+        end
+        object Memo3: TfrxMemoView
+          Top = 15.118120000000000000
+          Width = 582.047620000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Impresso em [Date] '#195#160's [Time] por [Usuario]')
+          ParentFont = False
+          WordWrap = False
+        end
+        object Memo4: TfrxMemoView
+          Left = 582.047620000000000000
+          Width = 136.063080000000000000
+          Height = 30.236240000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'P'#195#161'gina [Page#] / [TotalPages#]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object BndMasterData: TfrxMasterData
+        Height = 279.685220000000000000
+        Top = 181.417440000000000000
+        Width = 718.110700000000000000
+        Child = FrRecibo.BndChildAssinatura
+        DataSet = FrdRecibo
+        DataSetName = 'FrdRecibo'
+        RowCount = 0
+        Stretched = True
+        object Rich1: TfrxRichView
+          Top = 196.535560000000000000
+          Width = 718.110700000000000000
+          Height = 83.149660000000000000
+          ShowHint = False
+          StretchMode = smMaxHeight
+          GapX = 2.000000000000000000
+          GapY = 1.000000000000000000
+          RichEdit = {
+            7B5C727466315C616E73695C616E7369637067313235325C64656666305C6465
+            666C616E67313034367B5C666F6E7474626C7B5C66305C666E696C5C66636861
+            7273657430205461686F6D613B7D7D0D0A7B5C2A5C67656E657261746F72204D
+            7366746564697420352E34312E32312E323531303B7D5C766965776B696E6434
+            5C7563315C706172645C6669313030305C6C693134305C72693138305C736231
+            32305C73613132305C736C3336305C736C6D756C74315C716A5C66305C667332
+            34205265636562656D6F73206461205C62205B667264456D70726573612E2252
+            5A534F43225D5C623020206120696D706F72745C2765326E636961206465205C
+            62205B46726452656369626F2E2256414C4F525F42414958415F455854454E53
+            4F225D5C623020207265666572656E7465205C276530205C62205B4672645265
+            6369626F2E22484953544F5249434F225D202D20284C616E5C276537616D656E
+            746F205B46726452656369626F2E22414E4F4C414E43225D2F5B466F726D6174
+            466C6F617428273030303030272C3C46726452656369626F2E224E554D4C414E
+            43223E295D2E505B466F726D6174466C6F617428273030272C3C467264526563
+            69626F2E2250415243454C41223E295D295C6230202E5C7061720D0A7D0D0A00}
+        end
+        object Rich2: TfrxRichView
+          Width = 718.110700000000000000
+          Height = 196.535560000000000000
+          ShowHint = False
+          GapX = 2.000000000000000000
+          GapY = 1.000000000000000000
+          RichEdit = {
+            7B5C727466315C616E73695C616E7369637067313235325C64656666305C6465
+            666C616E67313034367B5C666F6E7474626C7B5C66305C666E696C5C66636861
+            7273657430205461686F6D613B7D7D0D0A7B5C2A5C67656E657261746F72204D
+            7366746564697420352E34312E32312E323531303B7D5C766965776B696E6434
+            5C7563315C706172645C6669313030305C6C693134305C72693138305C736231
+            32305C73613132305C736C3336305C736C6D756C74315C71635C625C66305C66
+            733332205B546974756C6F5D5C7061720D0A5C7061720D0A5C706172645C6669
+            313030305C6C693134305C72693138305C73623132305C73613132305C736C33
+            36305C736C6D756C74315C71725C62302056616C6F723A205C756C5C62205224
+            205B466F726D6174466C6F617428272C302E3030272C3C46726452656369626F
+            2E2256414C4F525F4241495841223E295D5C756C6E6F6E655C62305C7061720D
+            0A5C706172645C6C693138305C72693138305C716A5C7061720D0A7D0D0A00}
+        end
+      end
+      object BndChildAssinatura: TfrxChild
+        Height = 192.756030000000000000
+        Top = 483.779840000000000000
+        Width = 718.110700000000000000
+        object Memo9: TfrxMemoView
+          Left = 75.590600000000000000
+          Top = 166.299320000000000000
+          Width = 377.953000000000000000
+          Height = 26.456710000000000000
+          ShowHint = False
+          DataSet = DMNFe.frdEmpresa
+          DataSetName = 'frdEmpresa'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            
+              ' [IIF(<FrdRecibo."PESSOA_FISICA">=1,'#39'CPF'#39','#39'CNPJ'#39')]: [IIF(<FrdRec' +
+              'ibo."PESSOA_FISICA">=1,FormatMaskText('#39'###.###.###-##;0;'#39',<FrdRe' +
+              'cibo."CNPJ">),FormatMaskText('#39'##.###.###/####-##;0;'#39',<FrdRecibo.' +
+              '"CNPJ">))]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo5: TfrxMemoView
+          Left = 75.590600000000000000
+          Top = 139.842610000000000000
+          Width = 377.953000000000000000
+          Height = 26.456710000000000000
+          ShowHint = False
+          DataSet = DMNFe.frdEmpresa
+          DataSetName = 'frdEmpresa'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [FrdRecibo."NOMEFORN"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Rich3: TfrxRichView
+          Width = 718.110700000000000000
+          Height = 105.826840000000000000
+          ShowHint = False
+          StretchMode = smMaxHeight
+          GapX = 2.000000000000000000
+          GapY = 1.000000000000000000
+          RichEdit = {
+            7B5C727466315C616E73695C616E7369637067313235325C64656666305C6465
+            666C616E67313034367B5C666F6E7474626C7B5C66305C666E696C5C66636861
+            7273657430205461686F6D613B7D7D0D0A7B5C2A5C67656E657261746F72204D
+            7366746564697420352E34312E32312E323531303B7D5C766965776B696E6434
+            5C7563315C706172645C6669313030305C6C693134305C72693138305C736231
+            32305C73613132305C736C3336305C736C6D756C74315C716A5C66305C667332
+            34205B667264456D70726573612E224349445F4E4F4D45225D2F5B667264456D
+            70726573612E224553545F5349474C41225D2C205B466F726D61744461746554
+            696D652827646420222064652022206D6D6D6D20222064652022207979797927
+            2C203C46726452656369626F2E22444154415F504147544F223E295D2E5C7061
+            720D0A7D0D0A00}
+        end
+      end
+    end
+  end
+  object QryRecibo: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'Select'
+      '    p.Anolanc'
+      '  , p.Numlanc'
+      '  , p.Parcela'
+      '  , p.Codforn'
+      '  , p.Nomeemp'
+      '  , f.Nomeforn'
+      '  , f.pessoa_fisica'
+      '  , f.Cnpj'
+      '  , p.Notfisc'
+      '  , p.Tippag'
+      '  , p.Dtemiss'
+      '  , p.Dtvenc'
+      '  , p.Dtpag'
+      '  , p.Valorpag'
+      '  , p.Banco'
+      '  , b.Bco_nome'
+      '  , p.Numchq'
+      '  , Case when p.Quitado = 1 then '#39'X'#39' else '#39'.'#39' end as Pago_'
+      '  , p.Docbaix'
+      '  , p.Quitado'
+      '  , p.Codtpdesp'
+      ''
+      '  , bx.seq'
+      '  , bx.data_pagto'
+      '  , bx.forma_pagto'
+      '  , fp.descri as forma_pagto_desc'
+      '  , bx.historico'
+      '  , bx.valor_baixa'
+      'from TBCONTPAG p'
+      '  inner join TBFORNECEDOR f on (f.Codforn = p.Codforn)'
+      
+        '  inner join TBCONTPAG_BAIXA bx on (bx.anolanc = p.anolanc and b' +
+        'x.numlanc = p.numlanc)'
+      '  left join TBBANCO_BOLETO b on (b.Bco_cod = p.Banco)'
+      '  left join TBFORMPAGTO fp on (fp.cod = bx.forma_pagto)'
+      ''
+      'where p.anolanc = :ano'
+      '  and p.numlanc = :numero'
+      '  and bx.seq    = :baixa')
+    Left = 556
+    Top = 337
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'ano'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftInteger
+        Name = 'numero'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftInteger
+        Name = 'baixa'
+        ParamType = ptInput
+        Value = 0
+      end>
+  end
+  object DspRecibo: TDataSetProvider
+    DataSet = QryRecibo
+    Left = 588
+    Top = 337
+  end
+  object CdsRecibo: TClientDataSet
+    Aggregates = <>
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'ano'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftInteger
+        Name = 'numero'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftInteger
+        Name = 'baixa'
+        ParamType = ptInput
+        Value = 0
+      end>
+    ProviderName = 'DspRecibo'
+    OnCalcFields = CdsReciboCalcFields
+    Left = 620
+    Top = 337
+    object CdsReciboANOLANC: TSmallintField
+      FieldName = 'ANOLANC'
+      Origin = '"TBCONTPAG"."ANOLANC"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object CdsReciboNUMLANC: TIntegerField
+      FieldName = 'NUMLANC'
+      Origin = '"TBCONTPAG"."NUMLANC"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object CdsReciboPARCELA: TSmallintField
+      FieldName = 'PARCELA'
+      Origin = '"TBCONTPAG"."PARCELA"'
+    end
+    object CdsReciboCODFORN: TSmallintField
+      FieldName = 'CODFORN'
+      Origin = '"TBCONTPAG"."CODFORN"'
+    end
+    object CdsReciboNOMEEMP: TStringField
+      FieldName = 'NOMEEMP'
+      Origin = '"TBCONTPAG"."NOMEEMP"'
+      Size = 40
+    end
+    object CdsReciboNOMEFORN: TStringField
+      FieldName = 'NOMEFORN'
+      Origin = '"TBFORNECEDOR"."NOMEFORN"'
+      Size = 60
+    end
+    object CdsReciboPESSOA_FISICA: TSmallintField
+      FieldName = 'PESSOA_FISICA'
+      Origin = '"TBFORNECEDOR"."PESSOA_FISICA"'
+    end
+    object CdsReciboCNPJ: TStringField
+      FieldName = 'CNPJ'
+      Origin = '"TBFORNECEDOR"."CNPJ"'
+      Size = 18
+    end
+    object CdsReciboNOTFISC: TStringField
+      FieldName = 'NOTFISC'
+      Origin = '"TBCONTPAG"."NOTFISC"'
+      Size = 15
+    end
+    object CdsReciboTIPPAG: TStringField
+      FieldName = 'TIPPAG'
+      Origin = '"TBCONTPAG"."TIPPAG"'
+      Size = 35
+    end
+    object CdsReciboDTEMISS: TDateField
+      FieldName = 'DTEMISS'
+      Origin = '"TBCONTPAG"."DTEMISS"'
+    end
+    object CdsReciboDTVENC: TDateField
+      FieldName = 'DTVENC'
+      Origin = '"TBCONTPAG"."DTVENC"'
+    end
+    object CdsReciboDTPAG: TDateField
+      FieldName = 'DTPAG'
+      Origin = '"TBCONTPAG"."DTPAG"'
+    end
+    object CdsReciboVALORPAG: TBCDField
+      FieldName = 'VALORPAG'
+      Origin = '"TBCONTPAG"."VALORPAG"'
+      Precision = 18
+      Size = 2
+    end
+    object CdsReciboBANCO: TSmallintField
+      FieldName = 'BANCO'
+      Origin = '"TBCONTPAG"."BANCO"'
+    end
+    object CdsReciboBCO_NOME: TStringField
+      FieldName = 'BCO_NOME'
+      Origin = '"TBBANCO_BOLETO"."BCO_NOME"'
+      Size = 50
+    end
+    object CdsReciboNUMCHQ: TStringField
+      FieldName = 'NUMCHQ'
+      Origin = '"TBCONTPAG"."NUMCHQ"'
+      Size = 10
+    end
+    object CdsReciboPAGO_: TStringField
+      FieldName = 'PAGO_'
+      ProviderFlags = []
+      FixedChar = True
+      Size = 1
+    end
+    object CdsReciboDOCBAIX: TStringField
+      FieldName = 'DOCBAIX'
+      Origin = '"TBCONTPAG"."DOCBAIX"'
+      Size = 15
+    end
+    object CdsReciboQUITADO: TSmallintField
+      FieldName = 'QUITADO'
+      Origin = '"TBCONTPAG"."QUITADO"'
+    end
+    object CdsReciboCODTPDESP: TSmallintField
+      FieldName = 'CODTPDESP'
+      Origin = '"TBCONTPAG"."CODTPDESP"'
+    end
+    object CdsReciboSEQ: TSmallintField
+      FieldName = 'SEQ'
+      Origin = '"TBCONTPAG_BAIXA"."SEQ"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object CdsReciboDATA_PAGTO: TDateField
+      FieldName = 'DATA_PAGTO'
+      Origin = '"TBCONTPAG_BAIXA"."DATA_PAGTO"'
+    end
+    object CdsReciboFORMA_PAGTO: TSmallintField
+      FieldName = 'FORMA_PAGTO'
+      Origin = '"TBCONTPAG_BAIXA"."FORMA_PAGTO"'
+    end
+    object CdsReciboFORMA_PAGTO_DESC: TStringField
+      FieldName = 'FORMA_PAGTO_DESC'
+      Origin = '"TBFORMPAGTO"."DESCRI"'
+      Size = 30
+    end
+    object CdsReciboHISTORICO: TMemoField
+      FieldName = 'HISTORICO'
+      Origin = '"TBCONTPAG_BAIXA"."HISTORICO"'
+      ProviderFlags = [pfInUpdate]
+      BlobType = ftMemo
+      Size = 8
+    end
+    object CdsReciboVALOR_BAIXA: TBCDField
+      FieldName = 'VALOR_BAIXA'
+      Origin = '"TBCONTPAG_BAIXA"."VALOR_BAIXA"'
+      Precision = 18
+      Size = 2
+    end
+    object CdsReciboVALOR_BAIXA_EXTENSO: TStringField
+      FieldKind = fkInternalCalc
+      FieldName = 'VALOR_BAIXA_EXTENSO'
+      Size = 250
+    end
+  end
+  object popImprimir: TPopupMenu
+    Images = ImgList
+    Left = 696
+    Top = 446
+    object popGerarRecibo: TMenuItem
+      Bitmap.Data = {
+        16050000424D160500000000000036040000280000000E0000000E0000000100
+        080000000000E000000000000000000000000001000000000000000000000000
+        80000080000000808000800000008000800080800000C0C0C000C0DCC000F0CA
+        A6000020400000206000002080000020A0000020C0000020E000004000000040
+        20000040400000406000004080000040A0000040C0000040E000006000000060
+        20000060400000606000006080000060A0000060C0000060E000008000000080
+        20000080400000806000008080000080A0000080C0000080E00000A0000000A0
+        200000A0400000A0600000A0800000A0A00000A0C00000A0E00000C0000000C0
+        200000C0400000C0600000C0800000C0A00000C0C00000C0E00000E0000000E0
+        200000E0400000E0600000E0800000E0A00000E0C00000E0E000400000004000
+        20004000400040006000400080004000A0004000C0004000E000402000004020
+        20004020400040206000402080004020A0004020C0004020E000404000004040
+        20004040400040406000404080004040A0004040C0004040E000406000004060
+        20004060400040606000406080004060A0004060C0004060E000408000004080
+        20004080400040806000408080004080A0004080C0004080E00040A0000040A0
+        200040A0400040A0600040A0800040A0A00040A0C00040A0E00040C0000040C0
+        200040C0400040C0600040C0800040C0A00040C0C00040C0E00040E0000040E0
+        200040E0400040E0600040E0800040E0A00040E0C00040E0E000800000008000
+        20008000400080006000800080008000A0008000C0008000E000802000008020
+        20008020400080206000802080008020A0008020C0008020E000804000008040
+        20008040400080406000804080008040A0008040C0008040E000806000008060
+        20008060400080606000806080008060A0008060C0008060E000808000008080
+        20008080400080806000808080008080A0008080C0008080E00080A0000080A0
+        200080A0400080A0600080A0800080A0A00080A0C00080A0E00080C0000080C0
+        200080C0400080C0600080C0800080C0A00080C0C00080C0E00080E0000080E0
+        200080E0400080E0600080E0800080E0A00080E0C00080E0E000C0000000C000
+        2000C0004000C0006000C0008000C000A000C000C000C000E000C0200000C020
+        2000C0204000C0206000C0208000C020A000C020C000C020E000C0400000C040
+        2000C0404000C0406000C0408000C040A000C040C000C040E000C0600000C060
+        2000C0604000C0606000C0608000C060A000C060C000C060E000C0800000C080
+        2000C0804000C0806000C0808000C080A000C080C000C080E000C0A00000C0A0
+        2000C0A04000C0A06000C0A08000C0A0A000C0A0C000C0A0E000C0C00000C0C0
+        2000C0C04000C0C06000C0C08000C0C0A000F0FBFF00A4A0A000808080000000
+        FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF003E3E3E3E3E3E
+        3E3E3E3E3E3E3E3E00003E3E3E3E3E3E3E3E3E3E3E3E3E3E00003E3E3E3E3E3E
+        3E3E3E3E3E3E3E3E00003E3E3E3E3E3E3E3E3E3E3E3E3E3E00003E3E3E3E3E3E
+        3E3E3E3E3E3E3E3E00003E3E3E3E3E3E3E3E3E3E3E3E3E3E00003E3E3E3E3E3E
+        3E3E3E3E3E3E3E3E00003E3E3E3E3E3E3E3E3E3E3E3E3E3E00003E3E3E3E3E3E
+        3E3E3E3E3E3E3E3E00003E3E3E3E3E3E3E3E3E3E3E3E3E3E00003E3E3E3E3E3E
+        3E3E3E3E3E3E3E3E00003E3E3E3E3E3E3E3E3E3E3E3E3E3E00003E3E3E3E3E3E
+        3E3E3E3E3E3E3E3E00003E3E3E3E3E3E3E3E3E3E3E3E3E3E0000}
+      Caption = 'Gerar Recibo'
+      OnClick = popGerarReciboClick
+    end
+  end
+  object ACBrExtenso: TACBrExtenso
+    StrMoeda = 'Real'
+    StrMoedas = 'Reais'
+    StrCentavo = 'Centavo'
+    StrCentavos = 'Centavos'
+    Left = 620
+    Top = 289
   end
 end
