@@ -125,6 +125,8 @@ begin
   CampoDescricao := 'cid_nome';
 
   UpdateGenerator;
+
+  GrpBxCustosOper.Enabled := GetCalcularCustoOperEmpresa(GetEmpresaIDDefault);
 end;
 
 procedure TfrmGeCidade.dbEstadoButtonClick(Sender: TObject);
@@ -149,7 +151,7 @@ begin
     IbDtstTabelaEST_NOME.AsString := GetEstadoNomeDefault;
   end;
   
-  IbDtstTabelaCUSTO_OPER_PERCENTUAL.Value := 0;
+  IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := Ord(False);
   IbDtstTabelaCUSTO_OPER_FRETE.Clear;
   IbDtstTabelaCUSTO_OPER_OUTROS.Clear;
 end;
