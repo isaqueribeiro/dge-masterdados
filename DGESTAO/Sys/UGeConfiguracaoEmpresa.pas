@@ -113,7 +113,7 @@ begin
     end;
 
   if IbDtstTabelaCUSTO_OPER_CALCULAR.IsNull then
-    IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger := 0;
+    IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger := Ord(False);
     
   inherited;
 end;

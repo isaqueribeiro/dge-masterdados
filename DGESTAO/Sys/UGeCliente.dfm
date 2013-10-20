@@ -974,7 +974,7 @@ inherited frmGeCliente: TfrmGeCliente
         Top = 237
         Width = 836
         Height = 189
-        ActivePage = tbsContato
+        ActivePage = tbsDadosAdcionais
         Align = alClient
         TabOrder = 2
         TabStop = False
@@ -1377,7 +1377,7 @@ inherited frmGeCliente: TfrmGeCliente
             Width = 321
             Height = 97
             Align = alCustom
-            Caption = 'Custos Operacionais nas Vendas'
+            Caption = 'Custos Operacionais nas Vendas para o cliente'
             TabOrder = 1
             object lblFrete: TLabel
               Left = 16

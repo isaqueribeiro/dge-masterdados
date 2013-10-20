@@ -12725,3 +12725,482 @@ COMMENT ON TRIGGER TG_CIDADE_CUSTO_OPER IS 'Trigger Definir Custo Operacional (C
 Trigger responsavel por definir percentuais ou valores de custos operacionais por cada cliente dentro de uma
 determinada cidade, quando este custo ainda nao fora definido.';
 
+
+
+
+/*------ SYSDBA 18/10/2013 19:36:25 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_VCHAR_50'
+where (RDB$FIELD_NAME = 'USUARIO') and
+(RDB$RELATION_NAME = 'TBAJUSTESTOQ')
+;
+
+
+
+
+/*------ SYSDBA 19/10/2013 20:35:45 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger trgajustestoq for tbajustestoq
+active after insert position 0
+AS
+begin
+  update TBPRODUTO p set
+    p.qtde = coalesce(p.qtde, 0) + coalesce(new.qtdenova, 0)
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa;
+
+  Insert Into TBPRODHIST (
+      Codempresa
+    , Codprod
+    , Doc
+    , Historico
+    , Dthist
+    , Qtdeatual
+    , Qtdenova
+    , Qtdefinal
+    , Resp
+    , Motivo
+  ) values (
+      new.codempresa
+    , new.codprod
+    , new.doc
+    , case when new.qtdeatual > 0 then 'AJUSTE DE ESTOQUE - ENTRADA' else 'AJUSTE DE ESTOQUE - SAIDA' end
+    , new.dtajust
+    , new.qtdeatual
+    , new.qtdenova
+    , new.qtdefinal
+    , coalesce(new.Usuario, user)
+    , substring(trim(new.motivo) from 1 for 40)
+  );
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 19/10/2013 20:36:33 --------*/
+
+DROP TRIGGER TRGAJUSTESTOQ;
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_ajust_estoque_historico for tbajustestoq
+active after insert position 0
+AS
+begin
+  update TBPRODUTO p set
+    p.qtde = coalesce(p.qtde, 0) + coalesce(new.qtdenova, 0)
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa;
+
+  Insert Into TBPRODHIST (
+      Codempresa
+    , Codprod
+    , Doc
+    , Historico
+    , Dthist
+    , Qtdeatual
+    , Qtdenova
+    , Qtdefinal
+    , Resp
+    , Motivo
+  ) values (
+      new.codempresa
+    , new.codprod
+    , new.doc
+    , case when new.qtdeatual > 0 then 'AJUSTE DE ESTOQUE - ENTRADA' else 'AJUSTE DE ESTOQUE - SAIDA' end
+    , new.dtajust
+    , new.qtdeatual
+    , new.qtdenova
+    , new.qtdefinal
+    , coalesce(new.Usuario, user)
+    , substring(trim(new.motivo) from 1 for 40)
+  );
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 19/10/2013 21:17:18 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_ajust_estoque_historico for tbajustestoq
+active after insert position 0
+AS
+begin
+  update TBPRODUTO p set
+    p.qtde = coalesce(p.qtde, 0) + coalesce(new.qtdenova, 0)
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa;
+
+  Insert Into TBPRODHIST (
+      Codempresa
+    , Codprod
+    , Doc
+    , Historico
+    , Dthist
+    , Qtdeatual
+    , Qtdenova
+    , Qtdefinal
+    , Resp
+    , Motivo
+  ) values (
+      new.codempresa
+    , new.codprod
+    , new.doc
+    , case when new.qtdenova > 0 then 'AJUSTE DE ESTOQUE - ENTRADA' else 'AJUSTE DE ESTOQUE - SAIDA' end
+    , new.dtajust
+    , new.qtdeatual
+    , new.qtdenova
+    , new.qtdefinal
+    , coalesce(new.Usuario, user)
+    , substring(trim(new.motivo) from 1 for 40)
+  );
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 19/10/2013 21:25:50 --------*/
+
+UPDATE RDB$RELATION_FIELDS F1
+SET F1.RDB$DEFAULT_VALUE = NULL,
+    F1.RDB$DEFAULT_SOURCE = NULL
+WHERE (F1.RDB$RELATION_NAME = 'TBCLIENTE') AND
+      (F1.RDB$FIELD_NAME = 'CUSTO_OPER_FRETE');
+
+
+
+
+/*------ SYSDBA 19/10/2013 21:25:56 --------*/
+
+UPDATE RDB$RELATION_FIELDS F1
+SET F1.RDB$DEFAULT_VALUE = NULL,
+    F1.RDB$DEFAULT_SOURCE = NULL
+WHERE (F1.RDB$RELATION_NAME = 'TBCLIENTE') AND
+      (F1.RDB$FIELD_NAME = 'CUSTO_OPER_OUTROS');
+
+
+
+
+/*------ SYSDBA 19/10/2013 21:26:08 --------*/
+
+ALTER TABLE TBCLIENTE ADD IBE$$TEMP_COLUMN
+ NUMERIC(1,1) DEFAULT 0
+;
+
+UPDATE RDB$RELATION_FIELDS F1
+SET
+F1.RDB$DEFAULT_VALUE  = (SELECT F2.RDB$DEFAULT_VALUE
+                         FROM RDB$RELATION_FIELDS F2
+                         WHERE (F2.RDB$RELATION_NAME = 'TBCLIENTE') AND
+                               (F2.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN')),
+F1.RDB$DEFAULT_SOURCE = (SELECT F3.RDB$DEFAULT_SOURCE FROM RDB$RELATION_FIELDS F3
+                         WHERE (F3.RDB$RELATION_NAME = 'TBCLIENTE') AND
+                               (F3.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN'))
+WHERE (F1.RDB$RELATION_NAME = 'TBCLIENTE') AND
+      (F1.RDB$FIELD_NAME = 'CUSTO_OPER_FRETE');
+
+ALTER TABLE TBCLIENTE DROP IBE$$TEMP_COLUMN;
+
+
+
+
+/*------ SYSDBA 19/10/2013 21:26:12 --------*/
+
+ALTER TABLE TBCLIENTE ADD IBE$$TEMP_COLUMN
+ NUMERIC(1,1) DEFAULT 0
+;
+
+UPDATE RDB$RELATION_FIELDS F1
+SET
+F1.RDB$DEFAULT_VALUE  = (SELECT F2.RDB$DEFAULT_VALUE
+                         FROM RDB$RELATION_FIELDS F2
+                         WHERE (F2.RDB$RELATION_NAME = 'TBCLIENTE') AND
+                               (F2.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN')),
+F1.RDB$DEFAULT_SOURCE = (SELECT F3.RDB$DEFAULT_SOURCE FROM RDB$RELATION_FIELDS F3
+                         WHERE (F3.RDB$RELATION_NAME = 'TBCLIENTE') AND
+                               (F3.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN'))
+WHERE (F1.RDB$RELATION_NAME = 'TBCLIENTE') AND
+      (F1.RDB$FIELD_NAME = 'CUSTO_OPER_OUTROS');
+
+ALTER TABLE TBCLIENTE DROP IBE$$TEMP_COLUMN;
+
+
+
+
+/*------ SYSDBA 19/10/2013 21:39:41 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_cliente_custo_oper for tbcliente
+active after insert or update position 10
+AS
+  declare variable empresa Varchar(18);
+begin
+  if ( (new.custo_oper_frete > 0.0) or (new.custo_oper_outros > 0.0) ) then
+    for
+      Select distinct
+          v.codemp
+      from TBVENDAS v
+        inner join TBCLIENTE c on (c.cnpj = v.codcli)
+        inner join TBCONFIGURACAO f on (f.empresa = v.codemp)
+      where f.custo_oper_calcular = 1
+        and v.ano    = extract(Year from current_date)
+        and v.codcli = new.cnpj
+        and ((v.custo_oper_frete is null) or (v.custo_oper_outros is null))
+      Into
+          empresa
+    do
+    begin
+
+      Update TBVENDAS vd Set
+          vd.custo_oper_percentual = new.custo_oper_percentual
+        , vd.custo_oper_frete      = new.custo_oper_frete
+        , vd.custo_oper_outros     = new.custo_oper_outros
+      where vd.ano = extract(Year from current_date)
+        and ((vd.custo_oper_frete is null) or (vd.custo_oper_outros is null))
+        and vd.codemp = :empresa
+        and vd.codcli = new.cnpj;
+
+    end
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 19/10/2013 23:18:08 --------*/
+
+ALTER TABLE TBVENDAS
+    ADD CUSTO_OPER_GERAR DMN_SMALLINT_N DEFAULT 0;
+
+COMMENT ON COLUMN TBVENDAS.CUSTO_OPER_GERAR IS
+'Gerar Custo Operacional:
+0 - Nao
+1 - Sim';
+
+alter table TBVENDAS
+alter ANO position 1;
+
+alter table TBVENDAS
+alter CODCONTROL position 2;
+
+alter table TBVENDAS
+alter CODEMP position 3;
+
+alter table TBVENDAS
+alter CODCLI position 4;
+
+alter table TBVENDAS
+alter DTVENDA position 5;
+
+alter table TBVENDAS
+alter STATUS position 6;
+
+alter table TBVENDAS
+alter TOTALVENDA_BRUTA position 7;
+
+alter table TBVENDAS
+alter DESCONTO position 8;
+
+alter table TBVENDAS
+alter TOTALVENDA position 9;
+
+alter table TBVENDAS
+alter TOTALCUSTO position 10;
+
+alter table TBVENDAS
+alter DTFINALIZACAO_VENDA position 11;
+
+alter table TBVENDAS
+alter OBS position 12;
+
+alter table TBVENDAS
+alter FORMAPAG position 13;
+
+alter table TBVENDAS
+alter FATDIAS position 14;
+
+alter table TBVENDAS
+alter SERIE position 15;
+
+alter table TBVENDAS
+alter NFE position 16;
+
+alter table TBVENDAS
+alter DATAEMISSAO position 17;
+
+alter table TBVENDAS
+alter HORAEMISSAO position 18;
+
+alter table TBVENDAS
+alter CFOP position 19;
+
+alter table TBVENDAS
+alter VERIFICADOR_NFE position 20;
+
+alter table TBVENDAS
+alter XML_NFE position 21;
+
+alter table TBVENDAS
+alter VENDEDOR_COD position 22;
+
+alter table TBVENDAS
+alter USUARIO position 23;
+
+alter table TBVENDAS
+alter FORMAPAGTO_COD position 24;
+
+alter table TBVENDAS
+alter CONDICAOPAGTO_COD position 25;
+
+alter table TBVENDAS
+alter VENDA_PRAZO position 26;
+
+alter table TBVENDAS
+alter PRAZO_01 position 27;
+
+alter table TBVENDAS
+alter PRAZO_02 position 28;
+
+alter table TBVENDAS
+alter PRAZO_03 position 29;
+
+alter table TBVENDAS
+alter PRAZO_04 position 30;
+
+alter table TBVENDAS
+alter PRAZO_05 position 31;
+
+alter table TBVENDAS
+alter PRAZO_06 position 32;
+
+alter table TBVENDAS
+alter PRAZO_07 position 33;
+
+alter table TBVENDAS
+alter PRAZO_08 position 34;
+
+alter table TBVENDAS
+alter PRAZO_09 position 35;
+
+alter table TBVENDAS
+alter PRAZO_10 position 36;
+
+alter table TBVENDAS
+alter PRAZO_11 position 37;
+
+alter table TBVENDAS
+alter PRAZO_12 position 38;
+
+alter table TBVENDAS
+alter LOTE_NFE_ANO position 39;
+
+alter table TBVENDAS
+alter LOTE_NFE_NUMERO position 40;
+
+alter table TBVENDAS
+alter LOTE_NFE_RECIBO position 41;
+
+alter table TBVENDAS
+alter NFE_ENVIADA position 42;
+
+alter table TBVENDAS
+alter CANCEL_USUARIO position 43;
+
+alter table TBVENDAS
+alter CANCEL_DATAHORA position 44;
+
+alter table TBVENDAS
+alter CANCEL_MOTIVO position 45;
+
+alter table TBVENDAS
+alter XML_NFE_FILENAME position 46;
+
+alter table TBVENDAS
+alter NFE_MODALIDADE_FRETE position 47;
+
+alter table TBVENDAS
+alter NFE_TRANSPORTADORA position 48;
+
+alter table TBVENDAS
+alter NFE_PLACA_VEICULO position 49;
+
+alter table TBVENDAS
+alter NFE_PLACA_UF position 50;
+
+alter table TBVENDAS
+alter NFE_PLACA_RNTC position 51;
+
+alter table TBVENDAS
+alter NFE_VALOR_BASE_ICMS position 52;
+
+alter table TBVENDAS
+alter NFE_VALOR_ICMS position 53;
+
+alter table TBVENDAS
+alter NFE_VALOR_BASE_ICMS_SUBST position 54;
+
+alter table TBVENDAS
+alter NFE_VALOR_ICMS_SUBST position 55;
+
+alter table TBVENDAS
+alter NFE_VALOR_TOTAL_PRODUTO position 56;
+
+alter table TBVENDAS
+alter NFE_VALOR_FRETE position 57;
+
+alter table TBVENDAS
+alter NFE_VALOR_SEGURO position 58;
+
+alter table TBVENDAS
+alter NFE_VALOR_DESCONTO position 59;
+
+alter table TBVENDAS
+alter NFE_VALOR_TOTAL_II position 60;
+
+alter table TBVENDAS
+alter NFE_VALOR_TOTAL_IPI position 61;
+
+alter table TBVENDAS
+alter NFE_VALOR_PIS position 62;
+
+alter table TBVENDAS
+alter NFE_VALOR_COFINS position 63;
+
+alter table TBVENDAS
+alter NFE_VALOR_OUTROS position 64;
+
+alter table TBVENDAS
+alter NFE_VALOR_TOTAL_NOTA position 65;
+
+alter table TBVENDAS
+alter CUSTO_OPER_GERAR position 66;
+
+alter table TBVENDAS
+alter CUSTO_OPER_PERCENTUAL position 67;
+
+alter table TBVENDAS
+alter CUSTO_OPER_FRETE position 68;
+
+alter table TBVENDAS
+alter CUSTO_OPER_OUTROS position 69;
+
+
+
+
+/*------ SYSDBA 19/10/2013 23:19:34 --------*/
+
+ALTER TABLE TBVENDAS DROP CUSTO_OPER_GERAR;
+

@@ -336,6 +336,8 @@ begin
 
   if not (GetUserFunctionID in [FUNCTION_USER_ID_DIRETORIA, FUNCTION_USER_ID_GERENTE_FIN, FUNCTION_USER_ID_SYSTEM_ADM]) then
     dbValorLimiteCompra.Enabled := False;
+
+  GrpBxCustosOper.Enabled := GetCalcularCustoOperEmpresa(GetEmpresaIDDefault);
 end;
 
 procedure TfrmGeCliente.ProximoCampoKeyPress(Sender: TObject;
@@ -434,8 +436,8 @@ begin
   IbDtstTabelaPAIS_ID.AsString           := GetPaisIDDefault;
   IbDtstTabelaPAIS_NOME.AsString         := GetPaisNomeDefault;
   IbDtstTabelaDTCAD.AsDateTime           := GetDateDB;
-  IbDtstTabelaBLOQUEADO.AsInteger        := Ord(False);
-  IbDtstTabelaEMITIR_NFE_DEVOLUCAO.Value := 0;
+  IbDtstTabelaBLOQUEADO.AsInteger            := Ord(False);
+  IbDtstTabelaEMITIR_NFE_DEVOLUCAO.AsInteger := Ord(False);
 
   IbDtstTabelaVENDEDOR_COD.Clear;
   IbDtstTabelaBLOQUEADO_DATA.Clear;
@@ -741,7 +743,6 @@ procedure TfrmGeCliente.dbCNPJButtonClick(Sender: TObject);
 begin
   if dbPessoaFisica.Checked then
   begin
-
     tbsConsultarCPF.TabVisible := True;
     pgcGuias.ActivePage        := tbsConsultarCPF;
 
