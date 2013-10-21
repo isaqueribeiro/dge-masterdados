@@ -50,6 +50,7 @@ type
     procedure DtSrcTabelaDataChange(Sender: TObject; Field: TField);
     procedure pgcGuiasChange(Sender: TObject);
     procedure btbtnSalvarClick(Sender: TObject);
+    procedure btbtnAlterarClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -151,7 +152,7 @@ begin
     IbDtstTabelaEST_NOME.AsString := GetEstadoNomeDefault;
   end;
   
-  IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := Ord(False);
+  IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := 0; // Ord(False);
   IbDtstTabelaCUSTO_OPER_FRETE.Clear;
   IbDtstTabelaCUSTO_OPER_OUTROS.Clear;
 end;
@@ -199,6 +200,14 @@ begin
     IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := 1;
 
   inherited;
+end;
+
+procedure TfrmGeCidade.btbtnAlterarClick(Sender: TObject);
+begin
+  inherited;
+  if (not btbtnAlterar.Enabled) then
+    if IbDtstTabelaCUSTO_OPER_PERCENTUAL.IsNull then
+      IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := 1;
 end;
 
 initialization

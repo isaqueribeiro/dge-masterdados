@@ -69,8 +69,9 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           end
           item
             Expanded = False
-            FieldName = 'INSCMUN'
-            Width = 120
+            FieldName = 'CIDADE'
+            Title.Caption = 'Cidade (UF)'
+            Width = 150
             Visible = True
           end>
       end

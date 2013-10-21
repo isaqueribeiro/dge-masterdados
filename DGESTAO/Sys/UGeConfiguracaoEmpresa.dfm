@@ -339,6 +339,23 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
             ValueChecked = '1'
             ValueUnchecked = '0'
           end
+          object DBCheckBox1: TDBCheckBox
+            Left = 16
+            Top = 40
+            Width = 321
+            Height = 17
+            Caption = 'Permitir venda de produtos com estoque insuficiente'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
         end
       end
     end
