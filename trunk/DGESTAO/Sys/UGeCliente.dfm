@@ -144,9 +144,9 @@ inherited frmGeCliente: TfrmGeCliente
           end
           item
             Expanded = False
-            FieldName = 'INSCMUN'
-            Title.Caption = 'Inscri'#231#227'o Municipal'
-            Width = 130
+            FieldName = 'CIDADE'
+            Title.Caption = 'Cidade (UF)'
+            Width = 150
             Visible = True
           end>
       end
@@ -2324,6 +2324,7 @@ inherited frmGeCliente: TfrmGeCliente
       Alignment = taLeftJustify
       FieldName = 'EMITIR_NFE_DEVOLUCAO'
       Origin = '"TBCLIENTE"."EMITIR_NFE_DEVOLUCAO"'
+      ProviderFlags = [pfInUpdate]
     end
     object IbDtstTabelaCUSTO_OPER_PERCENTUAL: TSmallintField
       Alignment = taLeftJustify

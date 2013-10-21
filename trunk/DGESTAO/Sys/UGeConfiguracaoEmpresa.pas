@@ -49,12 +49,14 @@ type
     IbDtstTabelaCUSTO_OPER_CALCULAR: TSmallintField;
     TabSheet1: TTabSheet;
     dbCustoOperacional: TDBCheckBox;
+    DBCheckBox1: TDBCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure DtSrcTabelaStateChange(Sender: TObject);
     procedure IbDtstTabelaEMPRESAGetText(Sender: TField; var Text: String;
       DisplayText: Boolean);
     procedure btbtnSalvarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
+    procedure btbtnAlterarClick(Sender: TObject);
   private
     { Private declarations }
     function GetConfiguracaoCadastrada(sEmpresa : String) : Boolean;
@@ -113,8 +115,8 @@ begin
     end;
 
   if IbDtstTabelaCUSTO_OPER_CALCULAR.IsNull then
-    IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger := Ord(False);
-    
+    IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger := 0; //Ord(False);
+
   inherited;
 end;
 
@@ -142,6 +144,14 @@ begin
   IbDtstTabelaNFE_SOLICITA_DH_SAIDA.AsInteger    := 0;
   IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE.AsInteger := 0;
   IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger      := 0;
+end;
+
+procedure TfrmGeConfiguracaoEmpresa.btbtnAlterarClick(Sender: TObject);
+begin
+  inherited;
+  if (not btbtnAlterar.Enabled) then
+    if IbDtstTabelaCUSTO_OPER_CALCULAR.IsNull then
+      IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger := 0; //Ord(False);
 end;
 
 initialization

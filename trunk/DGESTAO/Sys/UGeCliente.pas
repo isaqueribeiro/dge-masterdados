@@ -436,8 +436,9 @@ begin
   IbDtstTabelaPAIS_ID.AsString           := GetPaisIDDefault;
   IbDtstTabelaPAIS_NOME.AsString         := GetPaisNomeDefault;
   IbDtstTabelaDTCAD.AsDateTime           := GetDateDB;
-  IbDtstTabelaBLOQUEADO.AsInteger            := Ord(False);
-  IbDtstTabelaEMITIR_NFE_DEVOLUCAO.AsInteger := Ord(False);
+  IbDtstTabelaBLOQUEADO.AsInteger             := 0; // Ord(False);
+  IbDtstTabelaEMITIR_NFE_DEVOLUCAO.AsInteger  := 0; // Ord(False);
+  IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := 0; // Ord(False);
 
   IbDtstTabelaVENDEDOR_COD.Clear;
   IbDtstTabelaBLOQUEADO_DATA.Clear;
@@ -640,8 +641,16 @@ procedure TfrmGeCliente.btbtnAlterarClick(Sender: TObject);
 begin
   inherited;
   if ( not btbtnAlterar.Enabled ) then
+  begin
+    if IbDtstTabelaCUSTO_OPER_PERCENTUAL.IsNull then
+      IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := 1;
+
+    if IbDtstTabelaEMITIR_NFE_DEVOLUCAO.IsNull then
+      IbDtstTabelaEMITIR_NFE_DEVOLUCAO.Value := 0;
+
     if ( IbDtstTabelaDTCAD.IsNull ) then
       IbDtstTabelaDTCAD.AsDateTime := GetDateTimeDB;
+  end;
 end;
 
 procedure TfrmGeCliente.mpClienteDesbloquearClick(Sender: TObject);

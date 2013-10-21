@@ -263,9 +263,9 @@ inherited frmGeCaixa: TfrmGeCaixa
         object lblCaixaCancelado: TLabel [1]
           Left = 2
           Top = 24
-          Width = 100
+          Width = 114
           Height = 13
-          Caption = '* Caixas Cancelos'
+          Caption = '* Caixas Cancelados'
           Font.Charset = ANSI_CHARSET
           Font.Color = clRed
           Font.Height = -11

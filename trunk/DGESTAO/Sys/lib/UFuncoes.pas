@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Forms, Messages, SysUtils, Classes, ExtCtrls, ShellApi, Printers,
-  Graphics, IniFiles, PSApi, Winsock, WinSvc;
+  Graphics, IniFiles, PSApi, Winsock, WinSvc, WinInet;
 
   function GetExeVersion(const FileName : TFileName) : String; overload;
   function GetExeVersion : String; overload;
@@ -15,6 +15,7 @@ uses
   function GetFileDescription : String;
   function GetCompanyName : String;
   function GetContacts : String;
+  function GetConectedInternet : Boolean;
 
 implementation
 
@@ -128,6 +129,24 @@ end;
 function GetContacts : String;
 begin
   Result := TInfoVersao.GetInstance().getPropertyValue(ivCONTACTS);
+end;
+
+function GetConectedInternet : Boolean;
+var
+  Flags : Cardinal;
+begin
+  if ( not InternetGetConnectedState(@Flags, 0) ) then
+    Result := False
+  else
+  if ( (Flags and INTERNET_CONNECTION_LAN) <> 0 ) then
+    // Há conexão com a Internet através de um roteador
+    Result := True
+  else
+  if ( (Flags and INTERNET_CONNECTION_PROXY) <> 0 ) then
+    // Há conexão com a Internet através de um proxy
+    Result := True
+  else
+    Result := False;
 end;
 
 end.
