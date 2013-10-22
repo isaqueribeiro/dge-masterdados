@@ -128,7 +128,7 @@ var
 
 implementation
 
-uses UDMBusiness, UDMNFe;
+uses UDMBusiness, UDMNFe, UFuncoes;
 
 {$R *.dfm}
 
@@ -226,6 +226,12 @@ var
   bOK : Boolean;
   sDH : String;
 begin
+  if not GetConectedInternet then
+  begin
+    ShowWarning('Estação de trabalho sem acesso a Internet!');
+    Exit;
+  end;
+
   if ( ShowConfirm('Confirma a geração da NF-e?') ) then
   begin
     sDH := FormatDateTime('dd/mm/yyyy', cdsVendaDATAEMISSAO.AsDateTime) + ' ' +

@@ -1353,9 +1353,9 @@ inherited frmGeCliente: TfrmGeCliente
         object tbsDadosAdcionais: TTabSheet
           Caption = 'Outras Informa'#231#245'es'
           ImageIndex = 2
-          object DBCheckBox1: TDBCheckBox
-            Left = 13
-            Top = 10
+          object dbNFeDevolucao: TDBCheckBox
+            Left = 5
+            Top = 114
             Width = 321
             Height = 17
             Caption = 'Permitir emiss'#227'o de NF-e de Devolu'#231#227'o para o cliente'
@@ -1367,18 +1367,18 @@ inherited frmGeCliente: TfrmGeCliente
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 0
+            TabOrder = 1
             ValueChecked = '1'
             ValueUnchecked = '0'
           end
           object GrpBxCustosOper: TGroupBox
-            Left = 13
-            Top = 40
+            Left = 5
+            Top = 8
             Width = 321
             Height = 97
             Align = alCustom
             Caption = 'Custos Operacionais nas Vendas para o cliente'
-            TabOrder = 1
+            TabOrder = 0
             object lblFrete: TLabel
               Left = 16
               Top = 48
@@ -1445,6 +1445,23 @@ inherited frmGeCliente: TfrmGeCliente
               ParentFont = False
               TabOrder = 2
             end
+          end
+          object dbEntregaFracionada: TDBCheckBox
+            Left = 5
+            Top = 138
+            Width = 260
+            Height = 17
+            Caption = 'Entrega fracionada de produtos vendidos'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 2
+            ValueChecked = '1'
+            ValueUnchecked = '0'
           end
         end
       end

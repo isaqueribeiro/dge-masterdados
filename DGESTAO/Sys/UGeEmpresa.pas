@@ -112,6 +112,7 @@ type
     IbDtstTabelaFONE2: TIBStringField;
     lblFone2: TLabel;
     dbFone2: TDBEdit;
+    IbDtstTabelaUSUARIO: TIBStringField;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -334,7 +335,7 @@ begin
       Abort;
     end;
   end;
-    
+
   inherited;
 end;
 

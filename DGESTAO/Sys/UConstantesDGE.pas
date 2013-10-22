@@ -5,7 +5,8 @@ interface
 const
   VERSION_NUMBER = '1.0.3.5';
 
-  MODELO_NFE = 55;
+  MODELO_NFE  = 55; // NF-e  (Nota Fiscal Eletrônica de Venda)
+  MODELO_NFCE = 65; // NFC-e (Nota Fiscal Eletrônica de Venda ao Consumidor Final)
 
   SEGMENTO_PADRAO_ID         = 0;
   SEGMENTO_VAREJO_ATACADO_ID = 1;

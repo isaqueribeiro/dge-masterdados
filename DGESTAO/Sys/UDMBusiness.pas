@@ -138,6 +138,7 @@ var
   function GetControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess) : Boolean;
   function GetEmailEmpresa(const sCNPJEmpresa : String) : String;
   function GetCalcularCustoOperEmpresa(const sCNPJEmpresa : String) : Boolean;
+  function GetPermitirVendaEstoqueInsEmpresa(const sCNPJEmpresa : String) : Boolean;
 
   function StrIsCNPJ(const Num: string): Boolean;
   function StrIsCPF(const Num: string): Boolean;
@@ -827,6 +828,21 @@ begin
     Open;
 
     Result := (FieldByName('calcular').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
+function GetPermitirVendaEstoqueInsEmpresa(const sCNPJEmpresa : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select permitir_venda_estoque_ins as permitir from TBCONFIGURACAO where empresa = ' + QuotedStr(sCNPJEmpresa));
+    Open;
+
+    Result := (FieldByName('permitir').AsInteger = 1);
 
     Close;
   end;
