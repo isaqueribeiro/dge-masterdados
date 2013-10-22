@@ -130,6 +130,7 @@ const
   VAR_USER              = 'Usuario';
   VAR_EMPRESA           = 'Entidade';
   VAR_DEPARTAMENTO      = 'Depto';
+  CAMPO_USUARIO         = 'USUARIO';
 
 implementation
 
@@ -325,6 +326,9 @@ begin
       fOcorreuErro := False;
       if ( Application.MessageBox('Deseja salvar a inserção/edição do registro?', 'Salvar', MB_YESNO + MB_ICONQUESTION + MB_DEFBUTTON2) = ID_YES ) then
       begin
+        if Assigned( IbDtstTabela.Fields.FindField(CAMPO_USUARIO) ) then
+          IbDtstTabela.FieldByName(CAMPO_USUARIO).AsString := GetUserApp;
+          
         IbDtstTabela.Post;
         IbDtstTabela.ApplyUpdates;
         CommitTransaction;

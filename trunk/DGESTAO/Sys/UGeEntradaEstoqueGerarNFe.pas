@@ -123,7 +123,7 @@ var
 
 implementation
 
-uses UDMBusiness, UDMNFe;
+uses UDMBusiness, UDMNFe, UFuncoes;
 
 {$R *.dfm}
 
@@ -212,6 +212,12 @@ procedure TfrmGeEntradaEstoqueGerarNFe.btnConfirmarClick(Sender: TObject);
 var
   bOK : Boolean;
 begin
+  if not GetConectedInternet then
+  begin
+    ShowWarning('Estação de trabalho sem acesso a Internet!');
+    Exit;
+  end;
+
   if ( ShowConfirm('Confirma a geração da NF-e de Entrada?') ) then
   begin
     if ( cdsCompra.State = dsEdit ) then

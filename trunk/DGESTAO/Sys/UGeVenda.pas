@@ -1371,15 +1371,20 @@ procedure TfrmGeVenda.btbtnFinalizarClick(Sender: TObject);
   var
     Return : Boolean;
   begin
-    Return := False;
+    Return := not GetPermitirVendaEstoqueInsEmpresa(IbDtstTabelaCODEMP.AsString);
 
-    cdsTabelaItens.First;
-    while not cdsTabelaItens.Eof do
+    if Return then
     begin
-      Return := ( (cdsTabelaItensQTDE.AsInteger > (cdsTabelaItensESTOQUE.AsInteger - cdsTabelaItensRESERVA.AsInteger)) or (cdsTabelaItensESTOQUE.AsInteger <= 0) );
-      if ( Return ) then
-        Break;
-      cdsTabelaItens.Next;
+
+      cdsTabelaItens.First;
+      while not cdsTabelaItens.Eof do
+      begin
+        Return := ( (cdsTabelaItensQTDE.AsInteger > (cdsTabelaItensESTOQUE.AsInteger - cdsTabelaItensRESERVA.AsInteger)) or (cdsTabelaItensESTOQUE.AsInteger <= 0) );
+        if ( Return ) then
+          Break;
+        cdsTabelaItens.Next;
+      end;
+
     end;
 
     Result := Return;

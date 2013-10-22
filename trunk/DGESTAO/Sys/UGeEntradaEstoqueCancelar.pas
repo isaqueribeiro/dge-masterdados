@@ -97,7 +97,7 @@ var
 
 implementation
 
-uses UDMBusiness, UDMNFe;
+uses UDMBusiness, UDMNFe, UFuncoes;
 
 {$R *.dfm}
 
@@ -160,6 +160,12 @@ begin
     if ( Cont ) then
       if ( cdsEntradaSTATUS.AsInteger = STATUS_CMP_NFE ) then
       begin
+        if not GetConectedInternet then
+        begin
+          ShowWarning('Estação de trabalho sem acesso a Internet!');
+          Exit;
+        end;
+
         if not DMNFe.GetValidadeCertificado then
           Exit;
 

@@ -50,6 +50,9 @@ type
     TabSheet1: TTabSheet;
     dbCustoOperacional: TDBCheckBox;
     DBCheckBox1: TDBCheckBox;
+    IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS: TSmallintField;
+    IbDtstTabelaUSUARIO: TIBStringField;
+    dbEstoqueUnico: TDBCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure DtSrcTabelaStateChange(Sender: TObject);
     procedure IbDtstTabelaEMPRESAGetText(Sender: TField; var Text: String;
@@ -117,6 +120,9 @@ begin
   if IbDtstTabelaCUSTO_OPER_CALCULAR.IsNull then
     IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger := 0; //Ord(False);
 
+  if IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.IsNull then
+    IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.AsInteger := 0; //Ord(False);
+
   inherited;
 end;
 
@@ -150,8 +156,13 @@ procedure TfrmGeConfiguracaoEmpresa.btbtnAlterarClick(Sender: TObject);
 begin
   inherited;
   if (not btbtnAlterar.Enabled) then
+  begin
     if IbDtstTabelaCUSTO_OPER_CALCULAR.IsNull then
       IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger := 0; //Ord(False);
+
+    if IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.IsNull then
+      IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.AsInteger := 0; //Ord(False);
+  end;
 end;
 
 initialization

@@ -191,7 +191,7 @@ type
     btnConsultarCPF: TButton;
     lblCPFX: TLabel;
     tbsDadosAdcionais: TTabSheet;
-    DBCheckBox1: TDBCheckBox;
+    dbNFeDevolucao: TDBCheckBox;
     IbDtstTabelaEMITIR_NFE_DEVOLUCAO: TSmallintField;
     GrpBxCustosOper: TGroupBox;
     lblFrete: TLabel;
@@ -202,6 +202,7 @@ type
     IbDtstTabelaCUSTO_OPER_PERCENTUAL: TSmallintField;
     IbDtstTabelaCUSTO_OPER_FRETE: TIBBCDField;
     IbDtstTabelaCUSTO_OPER_OUTROS: TIBBCDField;
+    dbEntregaFracionada: TDBCheckBox;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);

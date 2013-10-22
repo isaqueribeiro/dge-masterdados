@@ -509,8 +509,9 @@ type
     function InutilizaNumeroNFeACBr(const sCNPJEmitente : String; iAno, iModelo, iSerie, iNumeroInicial, iNumeroFinal : Integer; const sJustificativa : String; var sRetorno : String) : Boolean;
     function ConsultarNumeroLoteNFeACBr(const sCNPJEmitente : String; sNumeroRecibo : String; var sChaveNFe, sRetorno : String) : Boolean;
     function ConsultarChaveNFeACBr(const sCNPJEmitente, sChave : String;
-      var iSerieNFe, iNumeroNFe, iTipoNFe : Integer; var FileNameXML, ChaveNFE, ProtocoloNFE : String;
+      var iSerieNFe, iNumeroNFe, iTipoNFe : Integer; var DestinatarioNFE, FileNameXML, ChaveNFE, ProtocoloNFE : String;
       var DataEmissao : TDateTime; const Imprimir : Boolean = TRUE) : Boolean;
+    function DownloadNFeACBr(const sCNPJEmitente, sCNPJDestinatario, sChaveNFe : String; var FileNameXML : String) : Boolean;
 
   end;
 
@@ -526,7 +527,11 @@ const
   DIRECTORY_CLIENT = 'NFe\Clientes\';
 
   PROCESSO_NFE_AUTORIZADA  = 100;
+  PROCESSO_NFE_LOTE_PROCES = 103; // Processo: Lote recebido com Sucesso
   REJEICAO_NFE_DUPLICIDADE = 204;
+  REJEICAO_NFE_DESCOMPACT  = 416; // Rejeição: Falha na descompactação da área de dados
+  REJEICAO_NFE_MODELO_DIF  = 450; // Rejeição: Modelo da NF-e diferente de 55
+  REJEICAO_NFCE_MODELO_DIF = 775; // Rejeição: Modelo da NFC-e diferente de 65
 
   procedure ConfigurarNFeACBr(const sCNPJEmitente : String = '');
 
@@ -843,12 +848,12 @@ begin
       end
       else
       begin
-        edtSmtpHost.Text      := ReadString( 'Email', 'Host'   ,'') ;
-        edtSmtpPort.Text      := ReadString( 'Email', 'Port'   ,'') ;
-        edtSmtpUser.Text      := ReadString( 'Email', 'User'   ,'') ;
-        edtSmtpPass.Text      := ReadString( 'Email', 'Pass'   ,'') ;
-        edtEmailAssunto.Text  := ReadString( 'Email', 'Assunto','') ;
-        cbEmailSSL.Checked    := ReadBool(   'Email', 'SSL'    ,False) ;
+        edtSmtpHost.Text      := ReadString( 'Email', 'Host'   , '') ;
+        edtSmtpPort.Text      := ReadString( 'Email', 'Port'   , '') ;
+        edtSmtpUser.Text      := ReadString( 'Email', 'User'   , '') ;
+        edtSmtpPass.Text      := ReadString( 'Email', 'Pass'   , '') ;
+        edtEmailAssunto.Text  := ReadString( 'Email', 'Assunto', '') ;
+        cbEmailSSL.Checked    := ReadBool(   'Email', 'SSL'    , False) ;
       end;
 
       StreamMemo := TMemoryStream.Create;
@@ -969,9 +974,10 @@ begin
     GerarNFEACBr(sCNPJEmitente, sCNPJDestinatario, sDataHoraSaida, iAnoVenda, iNumVenda, DtHoraEmiss, iSerieNFe, iNumeroNFe, FileNameXML);
 
     iNumeroLote := GetNextID('TBEMPRESA', 'LOTE_NUM_NFE', 'where CNPJ = ' + QuotedStr(sCNPJEmitente) + ' and LOTE_ANO_NFE = ' + qryEmitenteLOTE_ANO_NFE.AsString);
-    GuardarLoteNFeVenda(sCNPJEmitente, iAnoVenda, iNumVenda, iNumeroLote, EmptyStr);
 
     Result := ACBrNFe.Enviar( iNumeroLote, Imprimir );
+
+    GuardarLoteNFeVenda(sCNPJEmitente, iAnoVenda, iNumVenda, iNumeroLote, EmptyStr);
 
     if ( Result ) then
     begin
@@ -2219,9 +2225,10 @@ begin
     GerarNFEEntradaACBr(sCNPJEmitente, iCodFornecedor, iAnoCompra, iNumCompra, DtHoraEmiss, iSerieNFe, iNumeroNFe, FileNameXML);
 
     iNumeroLote := GetNextID('TBEMPRESA', 'LOTE_NUM_NFE', 'where CNPJ = ' + QuotedStr(sCNPJEmitente) + ' and LOTE_ANO_NFE = ' + qryEmitenteLOTE_ANO_NFE.AsString);
-    GuardarLoteNFeEntrada(sCNPJEmitente, iAnoCompra, iNumCompra, iNumeroLote, EmptyStr);
 
     Result := ACBrNFe.Enviar( iNumeroLote, Imprimir );
+
+    GuardarLoteNFeEntrada(sCNPJEmitente, iAnoCompra, iNumCompra, iNumeroLote, EmptyStr);
 
     if ( Result ) then
     begin
@@ -3213,7 +3220,7 @@ begin
       SQL.Add('Update TBVENDAS Set');
       SQL.Add('    LOTE_NFE_ANO    = ' + qryEmitenteLOTE_ANO_NFE.AsString);
       SQL.Add('  , LOTE_NFE_NUMERO = ' + FormatFloat('#########', NumeroLote));
-      SQL.Add('  , LOTE_NFE_RECIBO = ' + QuotedStr(Trim(Recibo)));
+      SQL.Add('  , LOTE_NFE_RECIBO = ' + IfThen(Recibo = EmptyStr, 'NULL', QuotedStr(Trim(Recibo))));
       SQL.Add('Where CODEMP     = ' + QuotedStr(sCNPJEmitente));
       SQL.Add('  and ANO        = ' + FormatFloat('#########', Ano));
       SQL.Add('  and CODCONTROL = ' + FormatFloat('#########', Numero));
@@ -3237,7 +3244,7 @@ begin
       SQL.Add('Update TBCOMPRAS Set');
       SQL.Add('    LOTE_NFE_ANO    = ' + qryEmitenteLOTE_ANO_NFE.AsString);
       SQL.Add('  , LOTE_NFE_NUMERO = ' + FormatFloat('#########', NumeroLote));
-      SQL.Add('  , LOTE_NFE_RECIBO = ' + QuotedStr(Trim(Recibo)));
+      SQL.Add('  , LOTE_NFE_RECIBO = ' + IfThen(Recibo = EmptyStr, 'NULL', QuotedStr(Trim(Recibo))));
       SQL.Add('Where CODEMP     = ' + QuotedStr(sCNPJEmitente));
       SQL.Add('  and ANO        = ' + FormatFloat('#########', Ano));
       SQL.Add('  and CODCONTROL = ' + FormatFloat('#########', Numero));
@@ -3287,7 +3294,7 @@ begin
             'Status Trn.: ' + IntToStr(WebServices.Recibo.NFeRetorno.cStat)        + #13 +
             '---'     + #13 +
             'Emitente:    ' + sCNPJEmitente + #13 +
-            'Chave NF-e:  ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].chNFe + #13 +
+            'Chave NF-e:  ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].chNFe   + #13 +
             'Motivo:      ' + WebServices.Recibo.NFeRetorno.xMotivo + #13 +
             '             ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].xMotivo + #13 +
             'Mensagem:    ' + WebServices.Recibo.NFeRetorno.xMsg    + #13 +
@@ -3311,7 +3318,7 @@ begin
 end;
 
 function TDMNFe.ConsultarChaveNFeACBr(const sCNPJEmitente, sChave: String;
-  var iSerieNFe, iNumeroNFe, iTipoNFe : Integer; var FileNameXML, ChaveNFE,
+  var iSerieNFe, iNumeroNFe, iTipoNFe : Integer; var DestinatarioNFE, FileNameXML, ChaveNFE,
   ProtocoloNFE : String; var DataEmissao : TDateTime; const Imprimir: Boolean): Boolean;
 begin
   try
@@ -3320,30 +3327,17 @@ begin
 
     with ACBrNFe do
     begin
+
       WebServices.Consulta.NFeChave := sChave;
       Result := WebServices.Consulta.Executar;
 
       if Result then
       begin
+
         ChaveNFE     := WebServices.Consulta.NFeChave;
         ProtocoloNFE := WebServices.Consulta.Protocolo;
 
-        // (Início) Fazer download da NF-e encontrada
-
-        DownloadNFe.Download.Chaves.Clear;
-        DownloadNFe.Download.Chaves.Add.chNFe := sChave;
-        DownloadNFe.Download.CNPJ             := sCNPJEmitente;
-
-        if ( WebServices.DownloadNFe.Executar ) then
-          FileNameXML := WebServices.DownloadNFe.PathArqResp
-        else
-          raise Exception.Create('Erro ao tentar fazer download do arquivo XML do servidor da SEFA.');
-
-        // (Final) Fazer download da NF-e encontrada
-
-        if not FileExists(FileNameXML) then
-          raise Exception.Create(Format('Arquivo %s não encontrado.', [QuotedStr(FileNameXML)]))
-        else
+        if DownloadNFeACBr(sCNPJEmitente, DestinatarioNFE, ChaveNFE, FileNameXML) then
         begin
           NotasFiscais.Clear;
           NotasFiscais.LoadFromFile( FileNameXML );
@@ -3368,13 +3362,48 @@ begin
           NotasFiscais.ImprimirPDF
 
         end;
+
       end;
+
     end;
 
   except
     On E : Exception do
     begin
       ShowError('Erro ao tentar consultar NF-e pela chave.' + #13#13 + 'ConsultarChaveNFeACBr() --> ' + e.Message);
+      Result := False;
+    end;
+  end;
+end;
+
+function TDMNFe.DownloadNFeACBr(const sCNPJEmitente, sCNPJDestinatario, sChaveNFe: String;
+  var FileNameXML: String): Boolean;
+begin
+  try
+
+    LerConfiguracao(sCNPJEmitente);
+
+    with ACBrNFe do
+    begin
+      DownloadNFe.Download.Chaves.Clear;
+      DownloadNFe.Download.Chaves.Add.chNFe := sChaveNFe;
+      DownloadNFe.Download.CNPJ             := sCNPJDestinatario;
+                       
+      if ( WebServices.DownloadNFe.Executar ) then
+        FileNameXML := WebServices.DownloadNFe.PathArqResp
+      else
+        raise Exception.Create('Erro ao tentar fazer download do arquivo XML do servidor da SEFA.');
+
+      if not FileExists(FileNameXML) then
+        raise Exception.Create(Format('Arquivo %s não encontrado.', [QuotedStr(FileNameXML)]))
+      else
+        Result := True;  
+    end;
+
+  except
+    On E : Exception do
+    begin
+      ShowError('Erro ao tentar executar download da NF-e.' + #13#13 + 'DownloadNFeACBr() --> ' + e.Message);
       Result := False;
     end;
   end;

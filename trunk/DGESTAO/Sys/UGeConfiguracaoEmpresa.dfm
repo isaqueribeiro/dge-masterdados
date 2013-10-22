@@ -345,6 +345,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
             Width = 321
             Height = 17
             Caption = 'Permitir venda de produtos com estoque insuficiente'
+            DataField = 'PERMITIR_VENDA_ESTOQUE_INS'
             DataSource = DtSrcTabela
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
@@ -353,6 +354,23 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
             Font.Style = []
             ParentFont = False
             TabOrder = 1
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
+          object dbEstoqueUnico: TDBCheckBox
+            Left = 16
+            Top = 64
+            Width = 257
+            Height = 17
+            Caption = 'Trabalhar com estoque '#250'nico de produtos'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 2
             ValueChecked = '1'
             ValueUnchecked = '0'
           end
@@ -377,6 +395,8 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  , c.nfe_solicita_dh_saida'
       '  , c.nfe_imprimir_cod_cliente'
       '  , c.custo_oper_calcular'
+      '  , c.permitir_venda_estoque_ins'
+      '  , c.usuario'
       '  , e.rzsoc'
       '  , e.nmfant'
       'from TBCONFIGURACAO c'
@@ -465,6 +485,18 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       Origin = '"TBCONFIGURACAO"."CUSTO_OPER_CALCULAR"'
       ProviderFlags = [pfInUpdate]
     end
+    object IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'PERMITIR_VENDA_ESTOQUE_INS'
+      Origin = '"TBCONFIGURACAO"."PERMITIR_VENDA_ESTOQUE_INS"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbDtstTabelaUSUARIO: TIBStringField
+      FieldName = 'USUARIO'
+      Origin = '"TBCONFIGURACAO"."USUARIO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 50
+    end
     object IbDtstTabelaRZSOC: TIBStringField
       FieldName = 'RZSOC'
       Origin = '"TBEMPRESA"."RZSOC"'
@@ -493,7 +525,8 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  EMAIL_MENSAGEM_PADRAO,'
       '  NFE_SOLICITA_DH_SAIDA,'
       '  NFE_IMPRIMIR_COD_CLIENTE,'
-      '  CUSTO_OPER_CALCULAR'
+      '  CUSTO_OPER_CALCULAR,'
+      '  PERMITIR_VENDA_ESTOQUE_INS'
       'from TBCONFIGURACAO '
       'where'
       '  EMPRESA = :EMPRESA')
@@ -512,7 +545,8 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  EMAIL_SMTP_PORTA = :EMAIL_SMTP_PORTA,'
       '  EMPRESA = :EMPRESA,'
       '  NFE_IMPRIMIR_COD_CLIENTE = :NFE_IMPRIMIR_COD_CLIENTE,'
-      '  NFE_SOLICITA_DH_SAIDA = :NFE_SOLICITA_DH_SAIDA'
+      '  NFE_SOLICITA_DH_SAIDA = :NFE_SOLICITA_DH_SAIDA,'
+      '  PERMITIR_VENDA_ESTOQUE_INS = :PERMITIR_VENDA_ESTOQUE_INS'
       'where'
       '  EMPRESA = :OLD_EMPRESA')
     InsertSQL.Strings = (
@@ -525,7 +559,8 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
         'EMAIL_SENHA, '
       
         '   EMAIL_SMTP, EMAIL_SMTP_PORTA, EMPRESA, NFE_IMPRIMIR_COD_CLIEN' +
-        'TE, NFE_SOLICITA_DH_SAIDA)'
+        'TE, NFE_SOLICITA_DH_SAIDA, '
+      '   PERMITIR_VENDA_ESTOQUE_INS)'
       'values'
       
         '  (:CUSTO_OPER_CALCULAR, :EMAIL_ASSUNTO_PADRAO, :EMAIL_CONEXAO_S' +
@@ -536,7 +571,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       
         '   :EMAIL_SMTP, :EMAIL_SMTP_PORTA, :EMPRESA, :NFE_IMPRIMIR_COD_C' +
         'LIENTE, '
-      '   :NFE_SOLICITA_DH_SAIDA)')
+      '   :NFE_SOLICITA_DH_SAIDA, :PERMITIR_VENDA_ESTOQUE_INS)')
     DeleteSQL.Strings = (
       'delete from TBCONFIGURACAO'
       'where'

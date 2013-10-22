@@ -1129,6 +1129,7 @@ inherited frmGeEmpresa: TfrmGeEmpresa
       '  , e.Lote_Ano_nfe'
       '  , e.Lote_Num_nfe'
       '  , e.Pais_id'
+      '  , e.Usuario'
       
         '  , cast(coalesce(coalesce(t.Tlg_sigla, t.Tlg_descricao) || '#39' '#39',' +
         ' '#39#39') || l.Log_nome as varchar(250)) as Logradouro'
@@ -1332,6 +1333,12 @@ inherited frmGeEmpresa: TfrmGeEmpresa
       Origin = 'TBEMPRESA.PAIS_ID'
       Size = 5
     end
+    object IbDtstTabelaUSUARIO: TIBStringField
+      FieldName = 'USUARIO'
+      Origin = '"TBEMPRESA"."USUARIO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 50
+    end
     object IbDtstTabelaLOGRADOURO: TIBStringField
       DisplayLabel = 'Logradouro'
       FieldName = 'LOGRADOURO'
@@ -1392,7 +1399,8 @@ inherited frmGeEmpresa: TfrmGeEmpresa
       '  SERIE_NFE,'
       '  NUMERO_NFE,'
       '  LOTE_ANO_NFE,'
-      '  LOTE_NUM_NFE'
+      '  LOTE_NUM_NFE,'
+      '  USUARIO'
       'from TBEMPRESA '
       'where'
       '  CNPJ = :CNPJ')
@@ -1431,7 +1439,8 @@ inherited frmGeEmpresa: TfrmGeEmpresa
       '  SERIE_NFE = :SERIE_NFE,'
       '  TIPO_REGIME_NFE = :TIPO_REGIME_NFE,'
       '  TLG_TIPO = :TLG_TIPO,'
-      '  UF = :UF'
+      '  UF = :UF,'
+      '  USUARIO = :USUARIO'
       'where'
       '  CNPJ = :OLD_CNPJ')
     InsertSQL.Strings = (
@@ -1448,7 +1457,7 @@ inherited frmGeEmpresa: TfrmGeEmpresa
       
         '   NUMERO_NFE, PAIS_ID, PESSOA_FISICA, RZSOC, SEGMENTO, SERIE_NF' +
         'E, TIPO_REGIME_NFE, '
-      '   TLG_TIPO, UF)'
+      '   TLG_TIPO, UF, USUARIO)'
       'values'
       
         '  (:BAI_COD, :BAIRRO, :CEP, :CHAVE_ACESSO_NFE, :CID_COD, :CIDADE' +
@@ -1462,7 +1471,9 @@ inherited frmGeEmpresa: TfrmGeEmpresa
       
         '   :NMFANT, :NUMERO_END, :NUMERO_NFE, :PAIS_ID, :PESSOA_FISICA, ' +
         ':RZSOC, '
-      '   :SEGMENTO, :SERIE_NFE, :TIPO_REGIME_NFE, :TLG_TIPO, :UF)')
+      
+        '   :SEGMENTO, :SERIE_NFE, :TIPO_REGIME_NFE, :TLG_TIPO, :UF, :USU' +
+        'ARIO)')
     DeleteSQL.Strings = (
       'delete from TBEMPRESA'
       'where'
