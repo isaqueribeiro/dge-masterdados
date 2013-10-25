@@ -324,6 +324,7 @@ type
     IbDtstTabelaLOTE_NFE_RECIBO: TIBStringField;
     qryNFEEMPRESA: TIBStringField;
     nmGerarImprimirBoletos: TMenuItem;
+    IbDtstTabelaGERAR_ESTOQUE_CLIENTE: TSmallintField;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -401,6 +402,7 @@ type
     function PossuiTitulosPagos(AnoVenda : Smallint; NumVenda : Integer) : Boolean;
     function GetTotalValorFormaPagto : Currency;
     function GetTotalValorFormaPagto_APrazo : Currency;
+    function GetGerarEstoqueCliente : Integer;
   public
     { Public declarations }
   end;
@@ -531,8 +533,9 @@ begin
   IbDtstTabelaTOTALVENDA_BRUTA.Value  := 0;
   IbDtstTabelaDESCONTO.Value          := 0;
   IbDtstTabelaTOTALVENDA.Value        := 0;
-  IbDtstTabelaNFE_ENVIADA.Value          := 0;
-  IbDtstTabelaNFE_MODALIDADE_FRETE.Value := MODALIDADE_FRETE_SEMFRETE;
+  IbDtstTabelaGERAR_ESTOQUE_CLIENTE.Value := 0;
+  IbDtstTabelaNFE_ENVIADA.Value           := 0;
+  IbDtstTabelaNFE_MODALIDADE_FRETE.Value  := MODALIDADE_FRETE_SEMFRETE;
   IbDtstTabelaUSUARIO.Value     := GetUserApp;
 
   IbDtstTabelaFORMAPAGTO_COD.Clear;
@@ -1391,6 +1394,7 @@ procedure TfrmGeVenda.btbtnFinalizarClick(Sender: TObject);
   end;
 
 var
+  iGerarEstoqueCliente,
   CxAno    ,
   CxNumero ,
   CxContaCorrente : Integer;
@@ -1483,11 +1487,14 @@ begin
       end;
     end;
 
+    iGerarEstoqueCliente := GetGerarEstoqueCliente;
+
     IbDtstTabela.Edit;
 
-    IbDtstTabelaSTATUS.Value              := STATUS_VND_FIN;
-    IbDtstTabelaDTVENDA.Value             := GetDateTimeDB;
-    IbDtstTabelaDTFINALIZACAO_VENDA.Value := GetDateTimeDB;
+    IbDtstTabelaSTATUS.Value                := STATUS_VND_FIN;
+    IbDtstTabelaDTVENDA.Value               := GetDateTimeDB;
+    IbDtstTabelaDTFINALIZACAO_VENDA.Value   := GetDateTimeDB;
+    IbDtstTabelaGERAR_ESTOQUE_CLIENTE.Value := iGerarEstoqueCliente;
 
     IbDtstTabela.Post;
     IbDtstTabela.ApplyUpdates;
@@ -2353,6 +2360,36 @@ begin
   finally
     qryTitulos.Filter   := EmptyStr;
     qryTitulos.Filtered := False;
+  end;
+end;
+
+function TfrmGeVenda.GetGerarEstoqueCliente: Integer;
+var
+  iReturn : Integer;
+begin
+  iReturn := 0;
+  try
+    with DMBusiness, qryBusca do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('Select');
+      SQL.Add('  coalesce(entrega_fracionada_venda, 0) as gerar_estoque');
+      SQL.Add('from TBCLIENTE');
+      SQL.Add('where cnpj = ' + QuotedStr(IbDtstTabelaCODCLI.AsString));
+      Open;
+
+      iReturn := FieldByName('gerar_estoque').AsInteger;
+
+      if ( iReturn = 1 ) then
+        if not ShowConfirm('Cliente trabalha com recebimento fracionado de produtos comprados nesta empresa.' + #13#13 +
+          'Deseja gerar um estoque satélite para o cliente para entregas facionadas a partir de requisições?', 'Estoque Cliente') then
+          iReturn := 0;
+
+      Close;
+    end;
+  finally
+    Result := iReturn;
   end;
 end;
 
