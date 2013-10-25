@@ -363,6 +363,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
             Width = 257
             Height = 17
             Caption = 'Trabalhar com estoque '#250'nico de produtos'
+            DataField = 'ESTOQUE_UNICO_EMPRESAS'
             DataSource = DtSrcTabela
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
@@ -396,6 +397,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  , c.nfe_imprimir_cod_cliente'
       '  , c.custo_oper_calcular'
       '  , c.permitir_venda_estoque_ins'
+      '  , c.estoque_unico_empresas'
       '  , c.usuario'
       '  , e.rzsoc'
       '  , e.nmfant'
@@ -491,6 +493,12 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       Origin = '"TBCONFIGURACAO"."PERMITIR_VENDA_ESTOQUE_INS"'
       ProviderFlags = [pfInUpdate]
     end
+    object IbDtstTabelaESTOQUE_UNICO_EMPRESAS: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'ESTOQUE_UNICO_EMPRESAS'
+      Origin = '"TBCONFIGURACAO"."ESTOQUE_UNICO_EMPRESAS"'
+      ProviderFlags = [pfInUpdate]
+    end
     object IbDtstTabelaUSUARIO: TIBStringField
       FieldName = 'USUARIO'
       Origin = '"TBCONFIGURACAO"."USUARIO"'
@@ -526,7 +534,9 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  NFE_SOLICITA_DH_SAIDA,'
       '  NFE_IMPRIMIR_COD_CLIENTE,'
       '  CUSTO_OPER_CALCULAR,'
-      '  PERMITIR_VENDA_ESTOQUE_INS'
+      '  PERMITIR_VENDA_ESTOQUE_INS,'
+      '  ESTOQUE_UNICO_EMPRESAS,'
+      '  USUARIO'
       'from TBCONFIGURACAO '
       'where'
       '  EMPRESA = :EMPRESA')
@@ -544,9 +554,11 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  EMAIL_SMTP = :EMAIL_SMTP,'
       '  EMAIL_SMTP_PORTA = :EMAIL_SMTP_PORTA,'
       '  EMPRESA = :EMPRESA,'
+      '  ESTOQUE_UNICO_EMPRESAS = :ESTOQUE_UNICO_EMPRESAS,'
       '  NFE_IMPRIMIR_COD_CLIENTE = :NFE_IMPRIMIR_COD_CLIENTE,'
       '  NFE_SOLICITA_DH_SAIDA = :NFE_SOLICITA_DH_SAIDA,'
-      '  PERMITIR_VENDA_ESTOQUE_INS = :PERMITIR_VENDA_ESTOQUE_INS'
+      '  PERMITIR_VENDA_ESTOQUE_INS = :PERMITIR_VENDA_ESTOQUE_INS,'
+      '  USUARIO = :USUARIO'
       'where'
       '  EMPRESA = :OLD_EMPRESA')
     InsertSQL.Strings = (
@@ -558,9 +570,9 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
         '   EMAIL_MENSAGEM_PADRAO, EMAIL_POP, EMAIL_REQUER_AUTENTICACAO, ' +
         'EMAIL_SENHA, '
       
-        '   EMAIL_SMTP, EMAIL_SMTP_PORTA, EMPRESA, NFE_IMPRIMIR_COD_CLIEN' +
-        'TE, NFE_SOLICITA_DH_SAIDA, '
-      '   PERMITIR_VENDA_ESTOQUE_INS)'
+        '   EMAIL_SMTP, EMAIL_SMTP_PORTA, EMPRESA, ESTOQUE_UNICO_EMPRESAS' +
+        ', NFE_IMPRIMIR_COD_CLIENTE, '
+      '   NFE_SOLICITA_DH_SAIDA, PERMITIR_VENDA_ESTOQUE_INS, USUARIO)'
       'values'
       
         '  (:CUSTO_OPER_CALCULAR, :EMAIL_ASSUNTO_PADRAO, :EMAIL_CONEXAO_S' +
@@ -569,9 +581,11 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
         '   :EMAIL_MENSAGEM_PADRAO, :EMAIL_POP, :EMAIL_REQUER_AUTENTICACA' +
         'O, :EMAIL_SENHA, '
       
-        '   :EMAIL_SMTP, :EMAIL_SMTP_PORTA, :EMPRESA, :NFE_IMPRIMIR_COD_C' +
-        'LIENTE, '
-      '   :NFE_SOLICITA_DH_SAIDA, :PERMITIR_VENDA_ESTOQUE_INS)')
+        '   :EMAIL_SMTP, :EMAIL_SMTP_PORTA, :EMPRESA, :ESTOQUE_UNICO_EMPR' +
+        'ESAS, :NFE_IMPRIMIR_COD_CLIENTE, '
+      
+        '   :NFE_SOLICITA_DH_SAIDA, :PERMITIR_VENDA_ESTOQUE_INS, :USUARIO' +
+        ')')
     DeleteSQL.Strings = (
       'delete from TBCONFIGURACAO'
       'where'

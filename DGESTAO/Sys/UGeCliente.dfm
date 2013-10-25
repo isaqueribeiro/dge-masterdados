@@ -1105,6 +1105,122 @@ inherited frmGeCliente: TfrmGeCliente
             TabOrder = 2
           end
         end
+        object tbsDadosAdcionais: TTabSheet
+          Caption = 'Outras Informa'#231#245'es'
+          ImageIndex = 2
+          object dbNFeDevolucao: TDBCheckBox
+            Left = 5
+            Top = 114
+            Width = 321
+            Height = 17
+            Caption = 'Permitir emiss'#227'o de NF-e de Devolu'#231#227'o para o cliente'
+            DataField = 'EMITIR_NFE_DEVOLUCAO'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
+          object GrpBxCustosOper: TGroupBox
+            Left = 5
+            Top = 8
+            Width = 321
+            Height = 97
+            Align = alCustom
+            Caption = 'Custos Operacionais nas Vendas para o cliente'
+            TabOrder = 0
+            object lblFrete: TLabel
+              Left = 16
+              Top = 48
+              Width = 30
+              Height = 13
+              Caption = 'Frete:'
+              FocusControl = dbFrete
+            end
+            object lblOutros: TLabel
+              Left = 120
+              Top = 48
+              Width = 37
+              Height = 13
+              Caption = 'Outros:'
+              FocusControl = dbOutros
+            end
+            object dbCustoOperacional: TDBCheckBox
+              Left = 16
+              Top = 24
+              Width = 225
+              Height = 17
+              Caption = 'Custo Operacional por Percentual'
+              DataField = 'CUSTO_OPER_PERCENTUAL'
+              DataSource = DtSrcTabela
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 0
+              ValueChecked = '1'
+              ValueUnchecked = '0'
+            end
+            object dbFrete: TDBEdit
+              Left = 16
+              Top = 64
+              Width = 97
+              Height = 21
+              CharCase = ecUpperCase
+              DataField = 'CUSTO_OPER_FRETE'
+              DataSource = DtSrcTabela
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'MS Sans Serif'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 1
+            end
+            object dbOutros: TDBEdit
+              Left = 120
+              Top = 64
+              Width = 97
+              Height = 21
+              CharCase = ecUpperCase
+              DataField = 'CUSTO_OPER_OUTROS'
+              DataSource = DtSrcTabela
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'MS Sans Serif'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 2
+            end
+          end
+          object dbEntregaFracionada: TDBCheckBox
+            Left = 5
+            Top = 138
+            Width = 260
+            Height = 17
+            Caption = 'Entrega fracionada de produtos vendidos'
+            DataField = 'ENTREGA_FRACIONADA_VENDA'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 2
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+            OnKeyPress = ProximoCampoKeyPress
+          end
+        end
         object tbsFinanceiro: TTabSheet
           Caption = 'Financeiro'
           ImageIndex = 1
@@ -1346,120 +1462,6 @@ inherited frmGeCliente: TfrmGeCliente
             ParentFont = False
             ReadOnly = True
             TabOrder = 4
-            ValueChecked = '1'
-            ValueUnchecked = '0'
-          end
-        end
-        object tbsDadosAdcionais: TTabSheet
-          Caption = 'Outras Informa'#231#245'es'
-          ImageIndex = 2
-          object dbNFeDevolucao: TDBCheckBox
-            Left = 5
-            Top = 114
-            Width = 321
-            Height = 17
-            Caption = 'Permitir emiss'#227'o de NF-e de Devolu'#231#227'o para o cliente'
-            DataField = 'EMITIR_NFE_DEVOLUCAO'
-            DataSource = DtSrcTabela
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 1
-            ValueChecked = '1'
-            ValueUnchecked = '0'
-          end
-          object GrpBxCustosOper: TGroupBox
-            Left = 5
-            Top = 8
-            Width = 321
-            Height = 97
-            Align = alCustom
-            Caption = 'Custos Operacionais nas Vendas para o cliente'
-            TabOrder = 0
-            object lblFrete: TLabel
-              Left = 16
-              Top = 48
-              Width = 30
-              Height = 13
-              Caption = 'Frete:'
-              FocusControl = dbFrete
-            end
-            object lblOutros: TLabel
-              Left = 120
-              Top = 48
-              Width = 37
-              Height = 13
-              Caption = 'Outros:'
-              FocusControl = dbOutros
-            end
-            object dbCustoOperacional: TDBCheckBox
-              Left = 16
-              Top = 24
-              Width = 225
-              Height = 17
-              Caption = 'Custo Operacional por Percentual'
-              DataField = 'CUSTO_OPER_PERCENTUAL'
-              DataSource = DtSrcTabela
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 0
-              ValueChecked = '1'
-              ValueUnchecked = '0'
-            end
-            object dbFrete: TDBEdit
-              Left = 16
-              Top = 64
-              Width = 97
-              Height = 21
-              CharCase = ecUpperCase
-              DataField = 'CUSTO_OPER_FRETE'
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 1
-            end
-            object dbOutros: TDBEdit
-              Left = 120
-              Top = 64
-              Width = 97
-              Height = 21
-              CharCase = ecUpperCase
-              DataField = 'CUSTO_OPER_OUTROS'
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 2
-            end
-          end
-          object dbEntregaFracionada: TDBCheckBox
-            Left = 5
-            Top = 138
-            Width = 260
-            Height = 17
-            Caption = 'Entrega fracionada de produtos vendidos'
-            DataSource = DtSrcTabela
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 2
             ValueChecked = '1'
             ValueUnchecked = '0'
           end
@@ -2114,6 +2116,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  , cl.custo_oper_percentual'
       '  , cl.custo_oper_frete'
       '  , cl.custo_oper_outros'
+      '  , cl.entrega_fracionada_venda'
       
         '  , coalesce( cast(coalesce(coalesce(t.Tlg_sigla, t.Tlg_descrica' +
         'o) || '#39' '#39', '#39#39') || l.Log_nome as varchar(250)), cl.Ender ) as Log' +
@@ -2365,6 +2368,12 @@ inherited frmGeCliente: TfrmGeCliente
       Precision = 18
       Size = 4
     end
+    object IbDtstTabelaENTREGA_FRACIONADA_VENDA: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'ENTREGA_FRACIONADA_VENDA'
+      Origin = '"TBCLIENTE"."ENTREGA_FRACIONADA_VENDA"'
+      ProviderFlags = [pfInUpdate]
+    end
     object IbDtstTabelaUSUARIO: TIBStringField
       FieldName = 'USUARIO'
       Origin = '"TBCLIENTE"."USUARIO"'
@@ -2414,7 +2423,8 @@ inherited frmGeCliente: TfrmGeCliente
       '  EMITIR_NFE_DEVOLUCAO,'
       '  CUSTO_OPER_PERCENTUAL,'
       '  CUSTO_OPER_FRETE,'
-      '  CUSTO_OPER_OUTROS'
+      '  CUSTO_OPER_OUTROS,'
+      '  ENTREGA_FRACIONADA_VENDA'
       'from TBCLIENTE '
       'where'
       '  CNPJ = :CNPJ')
@@ -2441,6 +2451,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  EMAIL = :EMAIL,'
       '  EMITIR_NFE_DEVOLUCAO = :EMITIR_NFE_DEVOLUCAO,'
       '  ENDER = :ENDER,'
+      '  ENTREGA_FRACIONADA_VENDA = :ENTREGA_FRACIONADA_VENDA,'
       '  EST_COD = :EST_COD,'
       '  FONE = :FONE,'
       '  FONECEL = :FONECEL,'
@@ -2472,12 +2483,14 @@ inherited frmGeCliente: TfrmGeCliente
         '   CUSTO_OPER_PERCENTUAL, DESBLOQUEADO_DATA, DTCAD, EMAIL, EMITI' +
         'R_NFE_DEVOLUCAO, '
       
-        '   ENDER, EST_COD, FONE, FONECEL, FONECOMERC, INSCEST, INSCMUN, ' +
-        'LOG_COD, '
+        '   ENDER, ENTREGA_FRACIONADA_VENDA, EST_COD, FONE, FONECEL, FONE' +
+        'COMERC, '
       
-        '   NOME, NUMERO_END, PAIS_ID, PESSOA_FISICA, SITE, TLG_TIPO, UF,' +
-        ' USUARIO, '
-      '   VALOR_LIMITE_COMPRA, VENDEDOR_COD)'
+        '   INSCEST, INSCMUN, LOG_COD, NOME, NUMERO_END, PAIS_ID, PESSOA_' +
+        'FISICA, '
+      
+        '   SITE, TLG_TIPO, UF, USUARIO, VALOR_LIMITE_COMPRA, VENDEDOR_CO' +
+        'D)'
       'values'
       
         '  (:BAI_COD, :BAIRRO, :BLOQUEADO, :BLOQUEADO_DATA, :BLOQUEADO_MO' +
@@ -2489,14 +2502,15 @@ inherited frmGeCliente: TfrmGeCliente
         '   :CUSTO_OPER_OUTROS, :CUSTO_OPER_PERCENTUAL, :DESBLOQUEADO_DAT' +
         'A, :DTCAD, '
       
-        '   :EMAIL, :EMITIR_NFE_DEVOLUCAO, :ENDER, :EST_COD, :FONE, :FONE' +
-        'CEL, :FONECOMERC, '
+        '   :EMAIL, :EMITIR_NFE_DEVOLUCAO, :ENDER, :ENTREGA_FRACIONADA_VE' +
+        'NDA, :EST_COD, '
       
-        '   :INSCEST, :INSCMUN, :LOG_COD, :NOME, :NUMERO_END, :PAIS_ID, :' +
-        'PESSOA_FISICA, '
+        '   :FONE, :FONECEL, :FONECOMERC, :INSCEST, :INSCMUN, :LOG_COD, :' +
+        'NOME, :NUMERO_END, '
       
-        '   :SITE, :TLG_TIPO, :UF, :USUARIO, :VALOR_LIMITE_COMPRA, :VENDE' +
-        'DOR_COD)')
+        '   :PAIS_ID, :PESSOA_FISICA, :SITE, :TLG_TIPO, :UF, :USUARIO, :V' +
+        'ALOR_LIMITE_COMPRA, '
+      '   :VENDEDOR_COD)')
     DeleteSQL.Strings = (
       'delete from TBCLIENTE'
       'where'

@@ -203,6 +203,7 @@ type
     IbDtstTabelaCUSTO_OPER_FRETE: TIBBCDField;
     IbDtstTabelaCUSTO_OPER_OUTROS: TIBBCDField;
     dbEntregaFracionada: TDBCheckBox;
+    IbDtstTabelaENTREGA_FRACIONADA_VENDA: TSmallintField;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -347,8 +348,12 @@ begin
   if ( Key = #13 ) then
   begin
     Key := #0;
+    //  pgcMaisDados.SelectNextPage(False);
     if ( Sender = dbHome ) then
-      pgcMaisDados.SelectNextPage(False);
+      pgcMaisDados.ActivePage := tbsDadosAdcionais
+    else
+    if ( Sender = dbEntregaFracionada ) then
+      pgcMaisDados.ActivePage := tbsFinanceiro;
   end;
 end;
 
@@ -440,6 +445,7 @@ begin
   IbDtstTabelaBLOQUEADO.AsInteger             := 0; // Ord(False);
   IbDtstTabelaEMITIR_NFE_DEVOLUCAO.AsInteger  := 0; // Ord(False);
   IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := 0; // Ord(False);
+  IbDtstTabelaENTREGA_FRACIONADA_VENDA.Value  := 0; // Ord(False);
 
   IbDtstTabelaVENDEDOR_COD.Clear;
   IbDtstTabelaBLOQUEADO_DATA.Clear;
@@ -562,6 +568,9 @@ begin
   if IbDtstTabelaEMITIR_NFE_DEVOLUCAO.IsNull then
     IbDtstTabelaEMITIR_NFE_DEVOLUCAO.Value := 0;
 
+  if IbDtstTabelaENTREGA_FRACIONADA_VENDA.IsNull then
+    IbDtstTabelaENTREGA_FRACIONADA_VENDA.Value := 0;
+
   inherited;
 end;
 
@@ -648,6 +657,9 @@ begin
 
     if IbDtstTabelaEMITIR_NFE_DEVOLUCAO.IsNull then
       IbDtstTabelaEMITIR_NFE_DEVOLUCAO.Value := 0;
+
+    if IbDtstTabelaENTREGA_FRACIONADA_VENDA.IsNull then
+      IbDtstTabelaENTREGA_FRACIONADA_VENDA.Value := 0;
 
     if ( IbDtstTabelaDTCAD.IsNull ) then
       IbDtstTabelaDTCAD.AsDateTime := GetDateTimeDB;

@@ -25,6 +25,11 @@ type
     IbDtstTabelaLkp_ContaCorrente: TStringField;
     dbcDecrementarLimite: TDBCheckBox;
     IbDtstTabelaDEBITAR_LIMITE_CLIENTE: TSmallintField;
+    lblFormaPagtoNCFe: TLabel;
+    dbFormaPagtoNCFe: TDBLookupComboBox;
+    tblFormaPagtoNCFe: TIBTable;
+    dtsFormaPagtoNCFe: TDataSource;
+    IbDtstTabelaFORMAPAGTO_NFCE: TIBStringField;
     procedure FormCreate(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
   private
@@ -73,7 +78,8 @@ procedure TfrmGeFormaPagto.FormCreate(Sender: TObject);
 begin
   inherited;
   tblContaCorrente.Open;
-  
+  tblFormaPagtoNCFe.Open;
+
   ControlFirstEdit := dbNome;
 
   DisplayFormatCodigo := '00';
@@ -91,6 +97,7 @@ begin
   IbDtstTabelaCOD.Value       := GetNextID(NomeTabela, CampoCodigo);
   IbDtstTabelaACRESCIMO.Value := 0;
   IbDtstTabelaDEBITAR_LIMITE_CLIENTE.Value := 1;
+  IbDtstTabelaFORMAPAGTO_NFCE.Clear;
 end;
 
 initialization

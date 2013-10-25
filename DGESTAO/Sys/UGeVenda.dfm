@@ -3088,6 +3088,7 @@ inherited frmGeVenda: TfrmGeVenda
       '  , v.nfe_placa_veiculo'
       '  , v.nfe_placa_uf'
       '  , v.nfe_placa_rntc'
+      '  , v.gerar_estoque_cliente'
       '  , t.nomeforn as transp_nome'
       '  , t.cnpj     as transp_cnpj'
       '  , t.inscest  as transp_iest'
@@ -3382,6 +3383,11 @@ inherited frmGeVenda: TfrmGeVenda
       FieldName = 'NFE_PLACA_RNTC'
       Origin = '"TBVENDAS"."NFE_PLACA_RNTC"'
       Size = 10
+    end
+    object IbDtstTabelaGERAR_ESTOQUE_CLIENTE: TSmallintField
+      FieldName = 'GERAR_ESTOQUE_CLIENTE'
+      Origin = '"TBVENDAS"."GERAR_ESTOQUE_CLIENTE"'
+      ProviderFlags = [pfInUpdate]
     end
     object IbDtstTabelaTRANSP_NOME: TIBStringField
       FieldName = 'TRANSP_NOME'

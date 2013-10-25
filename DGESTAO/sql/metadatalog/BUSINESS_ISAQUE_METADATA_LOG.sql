@@ -14620,3 +14620,123 @@ ALTER TABLE TBVENDAS ALTER COLUMN CUSTO_OPER_OUTROS POSITION 68;
 /*------ 22/10/2013 13:57:20 --------*/
 
 ALTER TABLE TBVENDAS ALTER COLUMN GERAR_ESTOQUE_CLIENTE POSITION 69;
+
+/*------ 24/10/2013 19:26:12 --------*/
+
+CREATE VIEW VW_FORMA_PAGTO_NFC_E(
+CODIGO,
+DESCRICAO)
+ AS 
+Select first 1 '01' as codigo, 'Dinheiro' as descricao          from TBEMPRESA union
+Select first 1 '02' as codigo, 'Cheque' as descricao            from TBEMPRESA union
+Select first 1 '03' as codigo, 'Cartao de Credito' as descricao from TBEMPRESA union
+Select first 1 '04' as codigo, 'Cartao de Debito' as descricao  from TBEMPRESA union
+Select first 1 '05' as codigo, 'Credito Loja' as descricao      from TBEMPRESA union
+Select first 1 '10' as codigo, 'Vale Alimentacao' as descricao  from TBEMPRESA union
+Select first 1 '11' as codigo, 'Vale Refeicao' as descricao     from TBEMPRESA union
+Select first 1 '12' as codigo, 'Vale Presente' as descricao     from TBEMPRESA union
+Select first 1 '13' as codigo, 'Vale Combustivel' as descricao  from TBEMPRESA union
+Select first 1 '99' as codigo, 'Outros' as descricao            from TBEMPRESA;
+
+/*------ 24/10/2013 19:26:13 --------*/
+
+SET TERM ^ ;
+
+ALTER TRIGGER TG_VENDAS_ATUALIZAR_ESTOQUE
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque integer;
+  declare variable quantidade integer;
+  declare variable reserva integer;
+  declare variable valor_produto numeric(15,2);
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+
+    -- Baixar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Reserva, 0)
+        , coalesce(p.Preco, 0)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , reserva
+        , valor_produto
+    do
+    begin
+      reserva = 0; -- :reserva - :Quantidade;  -- Descontinuada RESERVA
+      estoque = :Estoque - :Quantidade;
+
+      -- Baixar estoque
+      Update TBPRODUTO p Set
+          p.Reserva = :Reserva
+        , p.Qtde    = :Estoque
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gravar posicao de estoque
+      Update TVENDASITENS i Set
+        i.Qtdefinal = :Estoque
+      where i.Ano        = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'SAIDA - VENDA'
+        , Current_time
+        , :Estoque + :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Usuario
+        , 'Venda no valor de R$ ' || :Valor_produto
+      );
+    end
+     
+  end 
+end^
+
+/*------ 24/10/2013 19:26:13 --------*/
+
+SET TERM ; ^
+
+GRANT ALL ON TBPRODUTO_ROTATIVIDADE TO PUBLIC;
+
+/*------ 24/10/2013 19:26:13 --------*/
+
+GRANT ALL ON VW_FORMA_PAGTO_NFC_E TO PUBLIC;
+
+/*------ 24/10/2013 19:26:13 --------*/
+
+GRANT ALL ON VW_FORMA_PAGTO_NFC_E TO SYSDBA WITH GRANT OPTION;
+
+/*------ 24/10/2013 19:26:13 --------*/
+
+GRANT ALL ON VW_LAYOUT_REM_RET_BANCO TO PUBLIC;

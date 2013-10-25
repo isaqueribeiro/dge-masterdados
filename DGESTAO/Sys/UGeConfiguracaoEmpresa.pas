@@ -53,6 +53,7 @@ type
     IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS: TSmallintField;
     IbDtstTabelaUSUARIO: TIBStringField;
     dbEstoqueUnico: TDBCheckBox;
+    IbDtstTabelaESTOQUE_UNICO_EMPRESAS: TSmallintField;
     procedure FormCreate(Sender: TObject);
     procedure DtSrcTabelaStateChange(Sender: TObject);
     procedure IbDtstTabelaEMPRESAGetText(Sender: TField; var Text: String;
@@ -62,6 +63,8 @@ type
     procedure btbtnAlterarClick(Sender: TObject);
   private
     { Private declarations }
+    procedure Aplicar_ModeloEstoque;
+
     function GetConfiguracaoCadastrada(sEmpresa : String) : Boolean;
   public
     { Public declarations }
@@ -123,7 +126,13 @@ begin
   if IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.IsNull then
     IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.AsInteger := 0; //Ord(False);
 
+  if IbDtstTabelaESTOQUE_UNICO_EMPRESAS.IsNull then
+    IbDtstTabelaESTOQUE_UNICO_EMPRESAS.AsInteger := 0; //Ord(False);
+
   inherited;
+
+  if not btbtnSalvar.Enabled then
+    Aplicar_ModeloEstoque;
 end;
 
 function TfrmGeConfiguracaoEmpresa.GetConfiguracaoCadastrada(
@@ -150,6 +159,8 @@ begin
   IbDtstTabelaNFE_SOLICITA_DH_SAIDA.AsInteger    := 0;
   IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE.AsInteger := 0;
   IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger      := 0;
+  IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.AsInteger := 0;
+  IbDtstTabelaESTOQUE_UNICO_EMPRESAS.AsInteger     := 0;
 end;
 
 procedure TfrmGeConfiguracaoEmpresa.btbtnAlterarClick(Sender: TObject);
@@ -162,6 +173,23 @@ begin
 
     if IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.IsNull then
       IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.AsInteger := 0; //Ord(False);
+
+    if IbDtstTabelaESTOQUE_UNICO_EMPRESAS.IsNull then
+      IbDtstTabelaESTOQUE_UNICO_EMPRESAS.AsInteger := 0; //Ord(False);
+  end;
+end;
+
+procedure TfrmGeConfiguracaoEmpresa.Aplicar_ModeloEstoque;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Update TBCONFIGURACAO Set estoque_unico_empresas = ' + IbDtstTabelaESTOQUE_UNICO_EMPRESAS.AsString);
+    SQL.Add('where empresa <> ' + QuotedStr(IbDtstTabelaEMPRESA.AsString));
+    ExecSQL;
+
+    CommitTransaction;
   end;
 end;
 
