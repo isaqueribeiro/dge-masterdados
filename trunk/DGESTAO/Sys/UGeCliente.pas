@@ -204,6 +204,43 @@ type
     IbDtstTabelaCUSTO_OPER_OUTROS: TIBBCDField;
     dbEntregaFracionada: TDBCheckBox;
     IbDtstTabelaENTREGA_FRACIONADA_VENDA: TSmallintField;
+    tbsEstoqueSatelite: TTabSheet;
+    pnlPesquisarEstoqueSatelite: TPanel;
+    GroupBox2: TGroupBox;
+    btnPesquisarEstoqueSatelite: TSpeedButton;
+    edFiltrarEstoqueSatelite: TEdit;
+    edFiltrarTipoEstoqueSatelite: TComboBox;
+    Bevel11: TBevel;
+    Label1: TLabel;
+    dbgEstoqueSatelite: TDBGrid;
+    pnlControleRequisicao: TPanel;
+    Bevel12: TBevel;
+    chkProdutoComEstoque: TCheckBox;
+    QryEstoqueSatelite: TIBDataSet;
+    UpdEstoqueSatelite: TIBUpdateSQL;
+    DtsEstoqueSatelite: TDataSource;
+    QryEstoqueSateliteCOD_CLIENTE: TIBStringField;
+    QryEstoqueSateliteCOD_PRODUTO: TIBStringField;
+    QryEstoqueSateliteQUANTIDADE: TIntegerField;
+    QryEstoqueSateliteUSUARIO: TIBStringField;
+    QryEstoqueSateliteANO_VENDA_ULT: TSmallintField;
+    QryEstoqueSateliteCOD_VENDA_ULT: TIntegerField;
+    QryEstoqueSateliteDESCRI: TIBStringField;
+    QryEstoqueSateliteAPRESENTACAO: TIBStringField;
+    QryEstoqueSateliteDESCRI_APRESENTACAO: TIBStringField;
+    QryEstoqueSateliteMODELO: TIBStringField;
+    QryEstoqueSateliteREFERENCIA: TIBStringField;
+    QryEstoqueSateliteSECAO: TIBStringField;
+    QryEstoqueSatelitePRECO: TIBBCDField;
+    QryEstoqueSateliteUNIDADE: TIBStringField;
+    QryEstoqueSateliteDESCRICAO_GRUPO: TIBStringField;
+    QryEstoqueSateliteNOME_FABRICANTE: TIBStringField;
+    QryEstoqueSateliteDESCRICAO_SECAO: TIBStringField;
+    QryEstoqueSateliteDESCRICAO_UNIDADE: TIBStringField;
+    QryEstoqueSateliteUNP_SIGLA: TIBStringField;
+    BtnRequisicoes: TBitBtn;
+    CmbBxFiltrarTipo: TComboBox;
+    QryEstoqueSateliteVALOR_MEDIO: TIBBCDField;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -232,22 +269,43 @@ type
     procedure edCNPJKeyPress(Sender: TObject; var Key: Char);
     procedure btnConsultarCPFClick(Sender: TObject);
     procedure edCaptchaKeyPress(Sender: TObject; var Key: Char);
+    procedure IbDtstTabelaAfterScroll(DataSet: TDataSet);
+    procedure QryEstoqueSateliteCOD_VENDA_ULTGetText(Sender: TField;
+      var Text: String; DisplayText: Boolean);
+    procedure btnPesquisarEstoqueSateliteClick(Sender: TObject);
+    procedure edFiltrarEstoqueSateliteKeyDown(Sender: TObject;
+      var Key: Word; Shift: TShiftState);
+    procedure dbgEstoqueSateliteKeyPress(Sender: TObject; var Key: Char);
+    procedure btnFiltrarClick(Sender: TObject);
+    procedure ProdutoSelecionado(Sender: TObject);
   private
     { Private declarations }
+    bApenasPossuiEstoque : Boolean;
+    FSQLEstoqueSatelite  : TStringList;
     procedure GetComprasAbertas(sCNPJ : String);
+    procedure HabilitarAbaEstoque;
+    procedure EstoqueSateliteFiltarDados(const iTipoPesquisa : Integer);
+
+    function GetUserVisualizaEstoque : Boolean;
   public
     { Public declarations }
     procedure Update(Observeble: IObservable); overload;
     procedure Update(Observeble: IObservable; sMessage: string); overload;
+    procedure FiltarDados(const iTipoPesquisa : Integer); overload;
   end;
 
 var
   frmGeCliente: TfrmGeCliente;
 
   procedure MostrarTabelaClientes(const AOwner : TComponent);
+
   function SelecionarCliente(const AOwner : TComponent; var Codigo : Integer; var Nome : String) : Boolean; overload;
+  function SelecionarCliente(const AOwner : TComponent; var Codigo : Integer; var CNPJ, Nome : String; const PossueEstoque : Boolean) : Boolean; overload;
   function SelecionarCliente(const AOwner : TComponent; var Codigo : Integer; var CNPJ, Nome : String) : Boolean; overload;
   function SelecionarCliente(const AOwner : TComponent; var Codigo : Integer; var CNPJ, Nome : String; var Bloqueado : Boolean; var MotivoBloqueio : String) : Boolean; overload;
+
+  function SelecionarProdutoCliente(const AOwner : TComponent; sCNPJ : String; var sCodigo, sDescricao : String; var iEstoque : Integer;
+    var cValorMedio : Currency) : Boolean;
 
 implementation
 
@@ -275,6 +333,24 @@ begin
   frm := TfrmGeCliente.Create(AOwner);
   try
     Result := frm.SelecionarRegistro(Codigo, Nome);
+  finally
+    frm.Destroy;
+  end;
+end;
+
+function SelecionarCliente(const AOwner : TComponent; var Codigo : Integer; var CNPJ, Nome : String; const PossueEstoque : Boolean) : Boolean;
+var
+  frm : TfrmGeCliente;
+begin
+  frm := TfrmGeCliente.Create(AOwner);
+  try
+    frm.bApenasPossuiEstoque  := PossueEstoque;
+    frm.Bevel10.Visible       := not PossueEstoque;
+    frm.BtBtnProcesso.Visible := not PossueEstoque;
+
+    Result := frm.SelecionarRegistro(Codigo, Nome);
+    if ( Result ) then
+      CNPJ := frm.IbDtstTabelaCNPJ.AsString;
   finally
     frm.Destroy;
   end;
@@ -316,9 +392,71 @@ begin
   end;
 end;
 
+function SelecionarProdutoCliente(const AOwner : TComponent; sCNPJ : String; var sCodigo, sDescricao : String; var iEstoque : Integer;
+  var cValorMedio : Currency) : Boolean;
+var
+  frm : TfrmGeCliente;
+begin
+  frm := TfrmGeCliente.Create(AOwner);
+  try
+    with frm do
+    begin
+      btbtnIncluir.Visible  := False;
+      btbtnAlterar.Visible  := False;
+      btbtnExcluir.Visible  := False;
+      bvlTool1.Visible      := False;
+      btbtnCancelar.Visible := False;
+      btbtnSalvar.Visible   := False;
+      bvlTool2.Visible      := False;
+      btbtnLista.Visible    := False;
+      bvlTool3.Visible      := False;
+      btbtnFechar.TabStop   := False;
+//      btbtnFechar.Visible   := False;
+
+      btbtnFechar.Cancel    := True;
+
+      btbtnSelecionar.Visible := True;
+
+      btbtnSelecionar.OnClick := ProdutoSelecionado;
+
+      Bevel10.Visible         := False;
+      BtBtnProcesso.Visible   := False;
+
+      AbrirTabelaAuto := True;
+
+      IbDtstTabela.SelectSQL.Add('where cl.cnpj = ' + QuotedStr(sCNPJ));
+      IbDtstTabela.Open;
+
+      Caption := 'Cliente : ' +
+        IbDtstTabelaNOME.AsString + ' - ' +
+        IfThen(StrIsCPF(sCNPJ), 'CPF: ' + StrFormatarCpf(sCNPJ), 'CNPJ: ' + StrFormatarCnpj(sCNPJ));
+
+      pgcMaisDados.ActivePage := tbsEstoqueSatelite;
+      tbsTabela.TabVisible    := False;
+      tbsCadastro.TabVisible  := False;
+
+      Result := (ShowModal = mrOk);
+
+      if Result then
+      begin
+        sCodigo     := QryEstoqueSateliteCOD_PRODUTO.AsString;
+        sDescricao  := QryEstoqueSateliteDESCRI.AsString;
+        iEstoque    := QryEstoqueSateliteQUANTIDADE.AsInteger;
+        cValorMedio := QryEstoqueSateliteVALOR_MEDIO.AsCurrency;
+      end;
+    end;
+  finally
+    frm.Destroy;
+  end;
+end;
+
 procedure TfrmGeCliente.FormCreate(Sender: TObject);
 begin
+  FSQLEstoqueSatelite := TStringList.Create;
+  FSQLEstoqueSatelite.AddStrings( QryEstoqueSatelite.SelectSQL );
+
   inherited;
+
   tblVendedor.Open;
 
   BloquearClientes;
@@ -339,7 +477,9 @@ begin
   if not (GetUserFunctionID in [FUNCTION_USER_ID_DIRETORIA, FUNCTION_USER_ID_GERENTE_FIN, FUNCTION_USER_ID_SYSTEM_ADM]) then
     dbValorLimiteCompra.Enabled := False;
 
-  GrpBxCustosOper.Enabled := GetCalcularCustoOperEmpresa(GetEmpresaIDDefault);
+  tbsEstoqueSatelite.TabVisible := False;
+  GrpBxCustosOper.Enabled       := GetCalcularCustoOperEmpresa(GetEmpresaIDDefault);
+  dbEntregaFracionada.Enabled   := GetEstoqueSateliteEmpresa(GetEmpresaIDDefault);
 end;
 
 procedure TfrmGeCliente.ProximoCampoKeyPress(Sender: TObject;
@@ -572,6 +712,8 @@ begin
     IbDtstTabelaENTREGA_FRACIONADA_VENDA.Value := 0;
 
   inherited;
+
+  HabilitarAbaEstoque;
 end;
 
 procedure TfrmGeCliente.GetComprasAbertas(sCNPJ: String);
@@ -633,6 +775,15 @@ begin
 
     dbgTitulos.DefaultDrawDataCell(Rect, dbgTitulos.Columns[DataCol].Field, State);
   end
+  else
+  if ( Sender = dbgEstoqueSatelite ) then
+  begin
+    // Estoque satélite zerado
+    if ( QryEstoqueSateliteQUANTIDADE.AsInteger < 1 ) then
+      dbgEstoqueSatelite.Canvas.Font.Color := GrpBxBloqueio.Font.Color;
+
+    dbgEstoqueSatelite.DefaultDrawDataCell(Rect, dbgEstoqueSatelite.Columns[DataCol].Field, State);
+  end;
 end;
 
 procedure TfrmGeCliente.FormClose(Sender: TObject;
@@ -967,6 +1118,234 @@ begin
     else
     if ( pgcGuias.ActivePage = tbsConsultarCPF ) then
       btnConsultarCPF.Click;
+end;
+
+procedure TfrmGeCliente.IbDtstTabelaAfterScroll(DataSet: TDataSet);
+begin
+  HabilitarAbaEstoque;
+  QryEstoqueSatelite.Close;
+end;
+
+procedure TfrmGeCliente.HabilitarAbaEstoque;
+begin
+  tbsEstoqueSatelite.TabVisible := GetEstoqueSateliteEmpresa(GetEmpresaIDDefault) and (IbDtstTabelaENTREGA_FRACIONADA_VENDA.AsInteger = 1)
+    and GetUserVisualizaEstoque;
+end;
+
+procedure TfrmGeCliente.QryEstoqueSateliteCOD_VENDA_ULTGetText(
+  Sender: TField; var Text: String; DisplayText: Boolean);
+begin
+  if Sender.IsNull then
+    Exit;
+
+  Text :=  QryEstoqueSateliteANO_VENDA_ULT.AsString + FormatFloat('"/"###00000', Sender.AsInteger);
+end;
+
+procedure TfrmGeCliente.EstoqueSateliteFiltarDados(
+  const iTipoPesquisa: Integer);
+begin
+  try
+
+    with QryEstoqueSatelite, SelectSQL do
+    begin
+      Close;
+      Clear;
+      AddStrings( FSQLEstoqueSatelite );
+
+      if ( Trim(edFiltrarEstoqueSatelite.Text) <> EmptyStr ) then
+      begin
+
+        Case iTipoPesquisa of
+          // Por Código, Descrição
+          0:
+            if ( StrToIntDef(Trim(edFiltrarEstoqueSatelite.Text), 0) > 0 ) then
+              Add( 'where p.codigo = ' + Trim(edFiltrarEstoqueSatelite.Text) )
+            else
+              Add( 'where (upper(p.Descri) like ' + QuotedStr('%' + UpperCase(Trim(edFiltrarEstoqueSatelite.Text)) + '%') +
+                   '    or upper(p.Descri) like ' + QuotedStr('%' + UpperCase(FuncoesString.StrRemoveAllAccents(Trim(edFiltrarEstoqueSatelite.Text))) + '%') + ')');
+
+          // Por Referência
+          1:
+            Add( 'where p.Referencia = ' + QuotedStr(Trim(edFiltrarEstoqueSatelite.Text)) );
+
+          // Por Fabricante
+          2:
+            if ( StrToIntDef(Trim(edFiltrarEstoqueSatelite.Text), 0) > 0 ) then
+              Add( 'where p.Codfabricante = ' + Trim(edFiltrarEstoqueSatelite.Text) )
+            else
+              Add( 'where (upper(f.Nome) like ' + QuotedStr('%' + UpperCase(Trim(edFiltrarEstoqueSatelite.Text)) + '%') + ')' );
+
+          // Por Grupo
+          3:
+            if ( StrToIntDef(Trim(edFiltrarEstoqueSatelite.Text), 0) > 0 ) then
+              Add( 'where p.Codgrupo = ' + Trim(edFiltrarEstoqueSatelite.Text) )
+            else
+              Add( 'where (upper(g.Descri) like ' + QuotedStr('%' + UpperCase(Trim(edFiltrarEstoqueSatelite.Text)) + '%') + ')' );
+        end;
+
+      end;
+
+      if ( Pos('where', SelectSQL.Text) > 0 ) then
+        Add( '  and (e.cod_cliente = ' + QuotedStr(IbDtstTabelaCNPJ.AsString) + ')' )
+      else
+        Add( 'where (e.cod_cliente = ' + QuotedStr(IbDtstTabelaCNPJ.AsString) + ')' );
+
+      if chkProdutoComEstoque.Checked then
+        Add('  and (e.quantidade > 0)');
+
+      Add( 'order by p.Descri' );
+
+      Open;
+
+      if ( not IsEmpty ) then
+        dbgEstoqueSatelite.SetFocus
+      else
+      begin
+        ShowWarning('Não existe registros de produtos no estoque satélite do cliente para este tipo de pesquisa');
+
+        edFiltrarEstoqueSatelite.SetFocus;
+        edFiltrarEstoqueSatelite.SelectAll;
+      end;
+    end;
+  except
+    On E : Exception do
+      ShowWarning('Erro ao tentar filtrar registros de produtos no estoque satélite do cliente.' + #13#13 + E.Message + #13#13 + 'Script:' + #13 + QryEstoqueSatelite.SelectSQL.Text);
+  end;
+end;
+
+procedure TfrmGeCliente.btnPesquisarEstoqueSateliteClick(Sender: TObject);
+begin
+  EstoqueSateliteFiltarDados(edFiltrarTipoEstoqueSatelite.ItemIndex);
+end;
+
+procedure TfrmGeCliente.edFiltrarEstoqueSateliteKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if ( Key = 13 ) then
+    btnPesquisarEstoqueSatelite.Click;
+end;
+
+procedure TfrmGeCliente.dbgEstoqueSateliteKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if ( Key in ['0'..'9', ' '] ) then
+  begin
+    edFiltrarEstoqueSatelite.Text := Trim(Key);
+    edFiltrarEstoqueSatelite.SetFocus;
+    edFiltrarEstoqueSatelite.SelStart := Length(edFiltrarEstoqueSatelite.Text);
+  end;
+end;
+
+function TfrmGeCliente.GetUserVisualizaEstoque: Boolean;
+begin
+  Result := (GetUserFunctionID in [
+      FUNCTION_USER_ID_DIRETORIA
+    , FUNCTION_USER_ID_GERENTE_ADM
+    , FUNCTION_USER_ID_ESTOQUISTA
+    , FUNCTION_USER_ID_SUPORTE_TI
+    , FUNCTION_USER_ID_SYSTEM_ADM ]);
+end;
+
+procedure TfrmGeCliente.btnFiltrarClick(Sender: TObject);
+begin
+  if bApenasPossuiEstoque then
+    WhereAdditional := '(cl.entrega_fracionada_venda = 1)';
+
+  // inherited;
+  FiltarDados(CmbBxFiltrarTipo.ItemIndex);
+end;
+
+procedure TfrmGeCliente.FiltarDados(const iTipoPesquisa: Integer);
+begin
+  try
+
+    if (Trim(CampoCodigo) = EmptyStr) or ((Trim(CampoDescricao) = EmptyStr)) then
+    begin
+      ShowWarning('O nome do campo chave e/ou de descrição não foram informados');
+      Abort;
+    end;
+
+    with IbDtstTabela, SelectSQL do
+    begin
+      if ( Trim(CampoOrdenacao) = EmptyStr ) then
+        CampoOrdenacao := CampoDescricao;
+
+      Close;
+      Clear;
+      AddStrings( SQLTabela );
+
+      if ( Trim(edtFiltrar.Text) <> EmptyStr ) then
+      begin
+
+        Case iTipoPesquisa of
+          // Por Código, Razão
+          0:
+            if ( StrToIntDef(Trim(edtFiltrar.Text), 0) > 0 ) then
+              Add( 'where ' + CampoCodigo +  ' = ' + Trim(edtFiltrar.Text) )
+            else
+              Add( 'where (upper(' + CampoDescricao +  ') like ' + QuotedStr('%' + UpperCase(Trim(edtFiltrar.Text)) + '%') +
+                   '    or upper(' + CampoDescricao +  ') like ' + QuotedStr('%' + UpperCase(FuncoesString.StrRemoveAllAccents(Trim(edtFiltrar.Text))) + '%') + ')');
+
+          // Por CPF/CNPJ
+          1:
+            Add( 'where cl.cnpj like ' + QuotedStr('%' + Trim(edtFiltrar.Text) + '%') );
+        end;
+
+      end;
+
+      if ( WhereAdditional <> EmptyStr ) then
+        if ( Pos('where', SelectSQL.Text) > 0 ) then
+          Add( '  and (' + WhereAdditional + ')' )
+        else
+          Add( 'where (' + WhereAdditional + ')' );
+
+      Add( 'order by ' + CampoOrdenacao );
+
+      Open;
+
+      try
+      
+        if ( not IsEmpty ) then
+          dbgDados.SetFocus
+        else
+        begin
+          ShowWarning('Não existe registros na tabela para este tipo de pesquisa');
+
+          edtFiltrar.SetFocus;
+          edtFiltrar.SelectAll;
+        end;
+
+      except
+      end;
+
+    end;
+  except
+    On E : Exception do
+      ShowWarning('Erro ao tentar filtrar registros na tabela.' + #13#13 + E.Message + #13#13 + 'Script:' + #13 + IbDtstTabela.SelectSQL.Text);
+  end;
+end;
+
+procedure TfrmGeCliente.ProdutoSelecionado(Sender: TObject);
+begin
+  if not TBitBtn(Sender).Visible then
+    Exit;
+
+  if ( not IbDtstTabela.Active ) then
+    Exit;
+
+  if ( not QryEstoqueSatelite.Active ) then
+    Exit;
+
+  if ( QryEstoqueSatelite.IsEmpty ) then
+    Exit;
+
+  if ( QryEstoqueSateliteQUANTIDADE.AsInteger <= 0 ) then
+  begin
+    ShowWarning('Produto selecionado sem estoque disponível para atender!');
+    Exit;
+  end;
+
+  ModalResult := mrOk;
 end;
 
 initialization

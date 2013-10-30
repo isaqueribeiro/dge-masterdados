@@ -439,6 +439,10 @@ type
     IntegerField3: TIntegerField;
     frrBoletoEntrega: TfrxReport;
     frxRichObject: TfrxRichObject;
+    frrRequisicaoCliente: TfrxReport;
+    FrrECFPoolerRequisicaoCliente: TfrxReport;
+    qryRequisicaoCliente: TIBQuery;
+    frdRequisicaoCliente: TfrxDBDataset;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);

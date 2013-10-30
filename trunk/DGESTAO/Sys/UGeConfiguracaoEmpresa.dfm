@@ -375,6 +375,24 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
             ValueChecked = '1'
             ValueUnchecked = '0'
           end
+          object DBCheckBox2: TDBCheckBox
+            Left = 16
+            Top = 88
+            Width = 241
+            Height = 17
+            Caption = 'Habilitar estoque satelite para clientes'
+            DataField = 'ESTOQUE_SATELITE_CLIENTE'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 3
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
         end
       end
     end
@@ -398,6 +416,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  , c.custo_oper_calcular'
       '  , c.permitir_venda_estoque_ins'
       '  , c.estoque_unico_empresas'
+      '  , c.estoque_satelite_cliente'
       '  , c.usuario'
       '  , e.rzsoc'
       '  , e.nmfant'
@@ -499,6 +518,12 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       Origin = '"TBCONFIGURACAO"."ESTOQUE_UNICO_EMPRESAS"'
       ProviderFlags = [pfInUpdate]
     end
+    object IbDtstTabelaESTOQUE_SATELITE_CLIENTE: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'ESTOQUE_SATELITE_CLIENTE'
+      Origin = '"TBCONFIGURACAO"."ESTOQUE_SATELITE_CLIENTE"'
+      ProviderFlags = [pfInUpdate]
+    end
     object IbDtstTabelaUSUARIO: TIBStringField
       FieldName = 'USUARIO'
       Origin = '"TBCONFIGURACAO"."USUARIO"'
@@ -536,6 +561,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  CUSTO_OPER_CALCULAR,'
       '  PERMITIR_VENDA_ESTOQUE_INS,'
       '  ESTOQUE_UNICO_EMPRESAS,'
+      '  ESTOQUE_SATELITE_CLIENTE,'
       '  USUARIO'
       'from TBCONFIGURACAO '
       'where'
@@ -554,6 +580,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  EMAIL_SMTP = :EMAIL_SMTP,'
       '  EMAIL_SMTP_PORTA = :EMAIL_SMTP_PORTA,'
       '  EMPRESA = :EMPRESA,'
+      '  ESTOQUE_SATELITE_CLIENTE = :ESTOQUE_SATELITE_CLIENTE,'
       '  ESTOQUE_UNICO_EMPRESAS = :ESTOQUE_UNICO_EMPRESAS,'
       '  NFE_IMPRIMIR_COD_CLIENTE = :NFE_IMPRIMIR_COD_CLIENTE,'
       '  NFE_SOLICITA_DH_SAIDA = :NFE_SOLICITA_DH_SAIDA,'
@@ -570,9 +597,12 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
         '   EMAIL_MENSAGEM_PADRAO, EMAIL_POP, EMAIL_REQUER_AUTENTICACAO, ' +
         'EMAIL_SENHA, '
       
-        '   EMAIL_SMTP, EMAIL_SMTP_PORTA, EMPRESA, ESTOQUE_UNICO_EMPRESAS' +
-        ', NFE_IMPRIMIR_COD_CLIENTE, '
-      '   NFE_SOLICITA_DH_SAIDA, PERMITIR_VENDA_ESTOQUE_INS, USUARIO)'
+        '   EMAIL_SMTP, EMAIL_SMTP_PORTA, EMPRESA, ESTOQUE_SATELITE_CLIEN' +
+        'TE, ESTOQUE_UNICO_EMPRESAS, '
+      
+        '   NFE_IMPRIMIR_COD_CLIENTE, NFE_SOLICITA_DH_SAIDA, PERMITIR_VEN' +
+        'DA_ESTOQUE_INS, '
+      '   USUARIO)'
       'values'
       
         '  (:CUSTO_OPER_CALCULAR, :EMAIL_ASSUNTO_PADRAO, :EMAIL_CONEXAO_S' +
@@ -581,11 +611,12 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
         '   :EMAIL_MENSAGEM_PADRAO, :EMAIL_POP, :EMAIL_REQUER_AUTENTICACA' +
         'O, :EMAIL_SENHA, '
       
-        '   :EMAIL_SMTP, :EMAIL_SMTP_PORTA, :EMPRESA, :ESTOQUE_UNICO_EMPR' +
-        'ESAS, :NFE_IMPRIMIR_COD_CLIENTE, '
+        '   :EMAIL_SMTP, :EMAIL_SMTP_PORTA, :EMPRESA, :ESTOQUE_SATELITE_C' +
+        'LIENTE, '
       
-        '   :NFE_SOLICITA_DH_SAIDA, :PERMITIR_VENDA_ESTOQUE_INS, :USUARIO' +
-        ')')
+        '   :ESTOQUE_UNICO_EMPRESAS, :NFE_IMPRIMIR_COD_CLIENTE, :NFE_SOLI' +
+        'CITA_DH_SAIDA, '
+      '   :PERMITIR_VENDA_ESTOQUE_INS, :USUARIO)')
     DeleteSQL.Strings = (
       'delete from TBCONFIGURACAO'
       'where'

@@ -3,7 +3,7 @@ inherited frmGeCliente: TfrmGeCliente
   Top = 230
   Width = 860
   Height = 536
-  ActiveControl = dbCodigo
+  ActiveControl = edFiltrarTipoEstoqueSatelite
   Caption = 'Cadastro de Clientes'
   OldCreateOrder = True
   OnClose = FormClose
@@ -20,6 +20,7 @@ inherited frmGeCliente: TfrmGeCliente
   inherited tlbBotoes: TToolBar
     Top = 459
     Width = 844
+    Caption = ''
     inherited bvlToolExpandir: TBevel
       Width = 28
     end
@@ -107,7 +108,7 @@ inherited frmGeCliente: TfrmGeCliente
   inherited pgcGuias: TPageControl
     Width = 844
     Height = 455
-    ActivePage = tbsCadastro
+    ActivePage = tbsEstoqueSatelite
     OnChange = pgcGuiasChange
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
@@ -154,7 +155,7 @@ inherited frmGeCliente: TfrmGeCliente
         Top = 364
         Width = 836
         object Bevel6: TBevel [0]
-          Left = 557
+          Left = 460
           Top = 4
           Width = 4
           Height = 54
@@ -162,27 +163,43 @@ inherited frmGeCliente: TfrmGeCliente
           Shape = bsSpacer
         end
         inherited grpBxFiltro: TGroupBox
-          Left = 561
-          Width = 271
+          Left = 464
+          Width = 368
           DesignSize = (
-            271
+            368
             54)
           inherited lbltFiltrar: TLabel
             Width = 42
             Caption = 'Cliente:'
+            Visible = False
           end
           inherited btnFiltrar: TSpeedButton
-            Left = 226
+            Left = 323
           end
           inherited edtFiltrar: TEdit
-            Left = 56
-            Width = 166
+            Left = 160
+            Width = 159
+            TabOrder = 1
+          end
+          object CmbBxFiltrarTipo: TComboBox
+            Left = 8
+            Top = 21
+            Width = 153
+            Height = 21
+            Style = csDropDownList
+            ItemHeight = 13
+            ItemIndex = 0
+            TabOrder = 0
+            Text = 'por C'#243'digo / Raz'#227'o'
+            Items.Strings = (
+              'por C'#243'digo / Raz'#227'o'
+              'por CPF / CNPJ')
           end
         end
         object GrpBxBloqueio: TGroupBox
           Left = 4
           Top = 4
-          Width = 553
+          Width = 456
           Height = 54
           Align = alClient
           Font.Charset = ANSI_CHARSET
@@ -193,7 +210,7 @@ inherited frmGeCliente: TfrmGeCliente
           ParentFont = False
           TabOrder = 1
           object Bevel7: TBevel
-            Left = 547
+            Left = 450
             Top = 15
             Width = 4
             Height = 37
@@ -211,7 +228,7 @@ inherited frmGeCliente: TfrmGeCliente
           object dbmMotivoBloqueio: TDBMemo
             Left = 6
             Top = 15
-            Width = 541
+            Width = 444
             Height = 37
             TabStop = False
             Align = alClient
@@ -2074,8 +2091,308 @@ inherited frmGeCliente: TfrmGeCliente
         end
       end
     end
+    object tbsEstoqueSatelite: TTabSheet
+      Caption = 'Estoque &Sat'#233'lite'
+      ImageIndex = 30
+      object Bevel11: TBevel
+        Left = 0
+        Top = 62
+        Width = 836
+        Height = 4
+        Align = alTop
+        Shape = bsSpacer
+      end
+      object Bevel12: TBevel
+        Left = 0
+        Top = 391
+        Width = 836
+        Height = 4
+        Align = alBottom
+        Shape = bsSpacer
+        Visible = False
+      end
+      object pnlPesquisarEstoqueSatelite: TPanel
+        Left = 0
+        Top = 0
+        Width = 836
+        Height = 62
+        Align = alTop
+        BevelOuter = bvNone
+        BorderWidth = 4
+        TabOrder = 0
+        object Label1: TLabel
+          Left = 4
+          Top = 4
+          Width = 269
+          Height = 54
+          Align = alLeft
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 
+            '* Este estoque de produtos '#233' alimentado de forma autom'#225'tica a pa' +
+            'rtir de vendas finalizadas que n'#227'o tiveram seus produtos entregu' +
+            'es na sua totalizada, pois o cliente trabalha com recebimento fr' +
+            'acionado.'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clRed
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          Transparent = True
+          WordWrap = True
+        end
+        object GroupBox2: TGroupBox
+          Left = 275
+          Top = 4
+          Width = 557
+          Height = 54
+          Align = alRight
+          Caption = 'Pesquisar    '
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          DesignSize = (
+            557
+            54)
+          object btnPesquisarEstoqueSatelite: TSpeedButton
+            Left = 512
+            Top = 16
+            Width = 29
+            Height = 27
+            Hint = 'Clique aqui para executar a pesquisa ...'
+            Anchors = [akTop, akRight, akBottom]
+            Flat = True
+            Glyph.Data = {
+              76010000424D7601000000000000760000002800000020000000100000000100
+              0400000000000001000000000000000000001000000000000000000000000000
+              8000008000000080800080000000800080008080000080808000C0C0C0000000
+              FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+              333333333333333333FF33333333333330003FF3FFFFF3333777003000003333
+              300077F777773F333777E00BFBFB033333337773333F7F33333FE0BFBF000333
+              330077F3337773F33377E0FBFBFBF033330077F3333FF7FFF377E0BFBF000000
+              333377F3337777773F3FE0FBFBFBFBFB039977F33FFFFFFF7377E0BF00000000
+              339977FF777777773377000BFB03333333337773FF733333333F333000333333
+              3300333777333333337733333333333333003333333333333377333333333333
+              333333333333333333FF33333333333330003333333333333777333333333333
+              3000333333333333377733333333333333333333333333333333}
+            NumGlyphs = 2
+            ParentShowHint = False
+            ShowHint = True
+            OnClick = btnPesquisarEstoqueSateliteClick
+          end
+          object edFiltrarEstoqueSatelite: TEdit
+            Left = 224
+            Top = 21
+            Width = 283
+            Height = 21
+            Hint = 'Digite aqui a palavra-chave da pesquisa'
+            Anchors = [akLeft, akTop, akRight]
+            CharCase = ecUpperCase
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 2
+            OnKeyDown = edFiltrarEstoqueSateliteKeyDown
+          end
+          object edFiltrarTipoEstoqueSatelite: TComboBox
+            Left = 16
+            Top = 21
+            Width = 209
+            Height = 21
+            Style = csDropDownList
+            ItemHeight = 13
+            ItemIndex = 0
+            TabOrder = 1
+            Text = 'por Produto (C'#243'digo / Descri'#231#227'o)'
+            Items.Strings = (
+              'por Produto (C'#243'digo / Descri'#231#227'o)'
+              'por Refer'#234'ncia'
+              'por Fabricante'
+              'por Grupo')
+          end
+          object chkProdutoComEstoque: TCheckBox
+            Left = 68
+            Top = -1
+            Width = 194
+            Height = 17
+            TabStop = False
+            Caption = 'A&penas produtos com estoque'
+            Checked = True
+            State = cbChecked
+            TabOrder = 0
+          end
+        end
+      end
+      object dbgEstoqueSatelite: TDBGrid
+        Left = 0
+        Top = 66
+        Width = 836
+        Height = 325
+        Align = alClient
+        DataSource = DtsEstoqueSatelite
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 1
+        TitleFont.Charset = ANSI_CHARSET
+        TitleFont.Color = clBlack
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = [fsBold]
+        OnDrawColumnCell = dbgDadosDrawColumnCell
+        OnKeyDown = dbgDadosKeyDown
+        OnKeyPress = dbgEstoqueSateliteKeyPress
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'COD_PRODUTO'
+            Title.Caption = 'C'#243'digo'
+            Width = 60
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'DESCRI'
+            Title.Caption = 'Descri'#231#227'o'
+            Width = 280
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'REFERENCIA'
+            Title.Caption = 'Refer'#234'ncia'
+            Width = 80
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'QUANTIDADE'
+            Title.Caption = 'Estoque'
+            Width = 75
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'UNP_SIGLA'
+            Title.Alignment = taCenter
+            Title.Caption = 'Und.'
+            Width = 50
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'NOME_FABRICANTE'
+            Title.Caption = 'Fabricante'
+            Width = 150
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'DESCRICAO_GRUPO'
+            Title.Caption = 'Grupo'
+            Width = 150
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'USUARIO'
+            Title.Caption = 'Usu'#225'rio'
+            Width = 150
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'COD_VENDA_ULT'
+            Title.Caption = 'Venda ('#218'lt.)'
+            Width = 80
+            Visible = True
+          end>
+      end
+      object pnlControleRequisicao: TPanel
+        Left = 0
+        Top = 395
+        Width = 836
+        Height = 31
+        Align = alBottom
+        BevelOuter = bvNone
+        TabOrder = 2
+        Visible = False
+        object BtnRequisicoes: TBitBtn
+          Left = 1
+          Top = 0
+          Width = 223
+          Height = 31
+          Caption = 'Controle de Requisi'#231#245'es (F5)'
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+          Glyph.Data = {
+            36060000424D3606000000000000360000002800000020000000100000000100
+            1800000000000006000000000000000000000000000000000000FF00FFFF00FF
+            FF00FFFF00FFFF00FFB0A0906048306048306048306048306048306048306048
+            30604830604830705040FF00FFFF00FFFF00FFFF00FFFF00FF9C9C9C43434343
+            43434343434343434343434343434343434343434343434E4E4EFF00FFFF00FF
+            FF00FFFF00FFFF00FFC0A8A0FFF0F0E0E0E0E0E0D0905840F0F0E0E0C8C0E0C8
+            B0E0C0B0E0B8A0705040FF00FFFF00FFFF00FFFF00FFFF00FFA8A8A8F1F1F1E0
+            E0E0DBDBDB565656EBEBEBC8C8C8C3C3C3BEBEBEB4B4B44E4E4E708890608090
+            6078806088906090A0C0B0A0FFFFFFFFF8F0E0D8D0A06040FFF0F0FFE8E0FFE8
+            D0F0E0D0D0B8A0705040888888818181787878868686909090ACACACFFFFFFF6
+            F6F6D6D6D65C5C5CF1F1F1E7E7E7E3E3E3DCDCDCB3B3B34E4E4E70889090A0B0
+            70B0D00090D030B0E0D0B8A0FFFFFFB08870E0E0E0A07050FFF8F0C09080C088
+            70B07860D0B8A0705040888888A3A3A3B3B3B3949494B1B1B1B3B3B3FFFFFF84
+            8484E0E0E06B6B6BF6F6F6909090868686767676B3B3B34E4E4E80889080C0D0
+            90A8B080E0FF50B8E0D0B8A0FFFFFFFFFFFFE0E0E0A07860FFF8F0FFF0F0FFF0
+            E0FFE8E0D0B8A0705040898989BEBEBEA8A8A8DFDFDFB9B9B9B3B3B3FFFFFFFF
+            FFFFE0E0E0747474F6F6F6F1F1F1ECECECE7E7E7B3B3B34E4E4E8090A080D0F0
+            90A8B090C0D060C0E0D0B8A0FFFFFFB09890E0E0E0B08060FFF8FFC0A090C098
+            80C08870D0B8B0705040939393D1D1D1A8A8A8C0C0C0C0C0C0B3B3B3FFFFFF98
+            9898E0E0E07B7B7BFAFAFA9E9E9E949494868686B8B8B84E4E4E8090A080D8F0
+            80C8E090A8B060C0E0D0B8A0FFFFFFFFFFFFFFFFFFB08060FFFFFFFFF8FFFFF8
+            F0FFF8F0FFF0F0705040939393D6D6D6C8C8C8A8A8A8C0C0C0B3B3B3FFFFFFFF
+            FFFFFFFFFF7B7B7BFFFFFFFAFAFAF6F6F6F6F6F6F1F1F14E4E4E8098A090E0F0
+            90E0FF90A8B090C0D0E0A080F0A890F0A080F09870E09060E08850E07840E078
+            40E07040E07040D06030989898DCDCDCE1E1E1A8A8A8C0C0C09C9C9CA8A8A89E
+            9E9E9494948989898080807171717171716C6C6C6C6C6C5C5C5C8098A090E0F0
+            A0E8FF80C8E080C0D0D09870FFC0A0FFB8A0FFB890FFB090FFA880FFA880F0A0
+            70F09870F09870D07040989898DCDCDCE7E7E7C8C8C8BEBEBE919191BCBCBCB7
+            B7B7B3B3B3AEAEAEA4A4A4A4A4A49999999494949494946B6B6B90A0A0A0E8F0
+            A0E8FFA0E8FF90C8D0C09070D09070D09070E09870D09070E09870E09060E088
+            50E08050E07840E070409E9E9EE3E3E3E7E7E7E7E7E7C4C4C48B8B8B8C8C8C8C
+            8C8C9393938C8C8C9393938989898080807B7B7B7171716C6C6C90A0B0A0E8F0
+            A0F0FFA0E8FFA0E8FF80D0F070C8F070C8F070C8F070C8F070C8F070C8F090B0
+            C0FF00FFFF00FFFF00FFA3A3A3E3E3E3ECECECE7E7E7E7E7E7D1D1D1CBCBCBCB
+            CBCBCBCBCBCBCBCBCBCBCBCBCBCBB1B1B1FF00FFFF00FFFF00FF90A0B0A0F0F0
+            B0F0F0A0F0FFA0E8FFA0E8FF70D8FF90A0A08098A08098A08090A08090907088
+            90FF00FFFF00FFFF00FFA3A3A3E8E8E8E9E9E9ECECECE7E7E7E7E7E7D9D9D99E
+            9E9E9898989898989393938E8E8E888888FF00FFFF00FFFF00FF90A8B0A0D0E0
+            B0F0F0B0F0F0A0F0FFA0E8FF90A0B0B1C3C7FF00FFFF00FFFF00FFFF00FFFF00
+            FF906850906850906850A8A8A8D0D0D0E9E9E9E9E9E9ECECECE7E7E7A3A3A3C2
+            C2C2FF00FFFF00FFFF00FFFF00FFFF00FF646464646464646464C8CDD090A8B0
+            90A8B090A8B090A8B090A8B0B4BFC4FF00FFFF00FFFF00FFFF00FFFF00FFFF00
+            FFCDBEBC906850906850CDCDCDA8A8A8A8A8A8A8A8A8A8A8A8A8A8A8BFBFBFFF
+            00FFFF00FFFF00FFFF00FFFF00FFFF00FFBEBEBE646464646464FF00FFFF00FF
+            FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF907860C3B2A9FF00FFDED8
+            D8A09080CDC3BC907860FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FF737373B1B1B1FF00FFD8D8D88C8C8CC1C1C1737373FF00FFFF00FF
+            FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFD2CDC7A09080A08880B098
+            80C1B7AFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+            00FFFF00FFCBCBCB8C8C8C888888939393B5B5B5FF00FFFF00FF}
+          NumGlyphs = 2
+        end
+      end
+    end
   end
   inherited IbDtstTabela: TIBDataSet
+    AfterScroll = IbDtstTabelaAfterScroll
     OnNewRecord = IbDtstTabelaNewRecord
     SelectSQL.Strings = (
       'Select'
@@ -2756,11 +3073,228 @@ inherited frmGeCliente: TfrmGeCliente
   object ACBrConsultaCNPJ: TACBrConsultaCNPJ
     ProxyPort = '8080'
     Left = 650
-    Top = 337
+    Top = 265
   end
   object ACBrConsultaCPF: TACBrConsultaCPF
     ProxyPort = '8080'
     Left = 648
-    Top = 382
+    Top = 310
+  end
+  object QryEstoqueSatelite: TIBDataSet
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    ForcedRefresh = True
+    OnUpdateError = IbDtstTabelaUpdateError
+    CachedUpdates = True
+    RefreshSQL.Strings = (
+      '')
+    SelectSQL.Strings = (
+      'Select'
+      '    e.cod_cliente'
+      '  , e.cod_produto'
+      '  , e.quantidade'
+      '  , e.valor_medio'
+      '  , e.usuario'
+      '  , e.ano_venda_ult'
+      '  , e.cod_venda_ult'
+      ''
+      '  , p.Descri'
+      '  , p.Apresentacao'
+      '  , p.Descri_apresentacao'
+      '  , p.Modelo'
+      '  , p.Referencia'
+      '  , p.Secao'
+      '  , p.Preco'
+      '  , p.Unidade'
+      '  , g.Descri as Descricao_Grupo'
+      '  , f.Nome   as Nome_Fabricante'
+      '  , coalesce(s.Scp_descricao, p.Secao) as Descricao_Secao'
+      '  , coalesce(u.Unp_descricao, p.Unidade) as Descricao_Unidade'
+      '  , u.Unp_sigla'
+      'from TBCLIENTE_ESTOQUE e'
+      '  inner join TBPRODUTO p on (p.cod = e.cod_produto)'
+      '  left join TBGRUPOPROD g on (g.Cod = p.Codgrupo)'
+      '  left join TBSECAOPROD s on (s.Scp_cod = p.Codsecao)'
+      '  left join TBUNIDADEPROD u on (u.Unp_cod = p.Codunidade)'
+      '  left join TBFABRICANTE f on (f.Cod = p.Codfabricante)')
+    ModifySQL.Strings = (
+      '')
+    GeneratorField.Field = 'CODIGO'
+    GeneratorField.Generator = 'GEN_CLIENTE_ID'
+    GeneratorField.ApplyEvent = gamOnPost
+    UpdateObject = UpdEstoqueSatelite
+    Left = 648
+    Top = 152
+    object QryEstoqueSateliteCOD_CLIENTE: TIBStringField
+      FieldName = 'COD_CLIENTE'
+      Origin = '"TBCLIENTE_ESTOQUE"."COD_CLIENTE"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+      Size = 18
+    end
+    object QryEstoqueSateliteCOD_PRODUTO: TIBStringField
+      FieldName = 'COD_PRODUTO'
+      Origin = '"TBCLIENTE_ESTOQUE"."COD_PRODUTO"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+      Size = 10
+    end
+    object QryEstoqueSateliteQUANTIDADE: TIntegerField
+      FieldName = 'QUANTIDADE'
+      Origin = '"TBCLIENTE_ESTOQUE"."QUANTIDADE"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object QryEstoqueSateliteVALOR_MEDIO: TIBBCDField
+      FieldName = 'VALOR_MEDIO'
+      Origin = '"TBCLIENTE_ESTOQUE"."VALOR_MEDIO"'
+      ProviderFlags = [pfInUpdate]
+      Precision = 18
+      Size = 4
+    end
+    object QryEstoqueSateliteUSUARIO: TIBStringField
+      FieldName = 'USUARIO'
+      Origin = '"TBCLIENTE_ESTOQUE"."USUARIO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 50
+    end
+    object QryEstoqueSateliteANO_VENDA_ULT: TSmallintField
+      FieldName = 'ANO_VENDA_ULT'
+      Origin = '"TBCLIENTE_ESTOQUE"."ANO_VENDA_ULT"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object QryEstoqueSateliteCOD_VENDA_ULT: TIntegerField
+      FieldName = 'COD_VENDA_ULT'
+      Origin = '"TBCLIENTE_ESTOQUE"."COD_VENDA_ULT"'
+      ProviderFlags = [pfInUpdate]
+      OnGetText = QryEstoqueSateliteCOD_VENDA_ULTGetText
+    end
+    object QryEstoqueSateliteDESCRI: TIBStringField
+      FieldName = 'DESCRI'
+      Origin = '"TBPRODUTO"."DESCRI"'
+      ProviderFlags = []
+      Size = 50
+    end
+    object QryEstoqueSateliteAPRESENTACAO: TIBStringField
+      FieldName = 'APRESENTACAO'
+      Origin = '"TBPRODUTO"."APRESENTACAO"'
+      ProviderFlags = []
+      Size = 50
+    end
+    object QryEstoqueSateliteDESCRI_APRESENTACAO: TIBStringField
+      FieldName = 'DESCRI_APRESENTACAO'
+      Origin = '"TBPRODUTO"."DESCRI_APRESENTACAO"'
+      ProviderFlags = []
+      Size = 100
+    end
+    object QryEstoqueSateliteMODELO: TIBStringField
+      FieldName = 'MODELO'
+      Origin = '"TBPRODUTO"."MODELO"'
+      ProviderFlags = []
+      Size = 40
+    end
+    object QryEstoqueSateliteREFERENCIA: TIBStringField
+      FieldName = 'REFERENCIA'
+      Origin = '"TBPRODUTO"."REFERENCIA"'
+      ProviderFlags = []
+      Size = 15
+    end
+    object QryEstoqueSateliteSECAO: TIBStringField
+      FieldName = 'SECAO'
+      Origin = '"TBPRODUTO"."SECAO"'
+      ProviderFlags = []
+    end
+    object QryEstoqueSatelitePRECO: TIBBCDField
+      FieldName = 'PRECO'
+      Origin = '"TBPRODUTO"."PRECO"'
+      ProviderFlags = []
+      Precision = 18
+      Size = 2
+    end
+    object QryEstoqueSateliteUNIDADE: TIBStringField
+      FieldName = 'UNIDADE'
+      Origin = '"TBPRODUTO"."UNIDADE"'
+      ProviderFlags = []
+      Size = 5
+    end
+    object QryEstoqueSateliteDESCRICAO_GRUPO: TIBStringField
+      FieldName = 'DESCRICAO_GRUPO'
+      Origin = '"TBGRUPOPROD"."DESCRI"'
+      ProviderFlags = []
+      Size = 30
+    end
+    object QryEstoqueSateliteNOME_FABRICANTE: TIBStringField
+      FieldName = 'NOME_FABRICANTE'
+      Origin = '"TBFABRICANTE"."NOME"'
+      ProviderFlags = []
+      Size = 50
+    end
+    object QryEstoqueSateliteDESCRICAO_SECAO: TIBStringField
+      FieldName = 'DESCRICAO_SECAO'
+      ProviderFlags = []
+      Size = 50
+    end
+    object QryEstoqueSateliteDESCRICAO_UNIDADE: TIBStringField
+      FieldName = 'DESCRICAO_UNIDADE'
+      ProviderFlags = []
+      Size = 50
+    end
+    object QryEstoqueSateliteUNP_SIGLA: TIBStringField
+      FieldName = 'UNP_SIGLA'
+      Origin = '"TBUNIDADEPROD"."UNP_SIGLA"'
+      ProviderFlags = []
+      Size = 5
+    end
+  end
+  object UpdEstoqueSatelite: TIBUpdateSQL
+    RefreshSQL.Strings = (
+      'Select '
+      '  COD_CLIENTE,'
+      '  COD_PRODUTO,'
+      '  QUANTIDADE,'
+      '  VALOR_MEDIO,'
+      '  USUARIO,'
+      '  ANO_VENDA_ULT,'
+      '  COD_VENDA_ULT'
+      'from TBCLIENTE_ESTOQUE '
+      'where'
+      '  COD_CLIENTE = :COD_CLIENTE and'
+      '  COD_PRODUTO = :COD_PRODUTO')
+    ModifySQL.Strings = (
+      'update TBCLIENTE_ESTOQUE'
+      'set'
+      '  ANO_VENDA_ULT = :ANO_VENDA_ULT,'
+      '  COD_CLIENTE = :COD_CLIENTE,'
+      '  COD_PRODUTO = :COD_PRODUTO,'
+      '  COD_VENDA_ULT = :COD_VENDA_ULT,'
+      '  QUANTIDADE = :QUANTIDADE,'
+      '  USUARIO = :USUARIO,'
+      '  VALOR_MEDIO = :VALOR_MEDIO'
+      'where'
+      '  COD_CLIENTE = :OLD_COD_CLIENTE and'
+      '  COD_PRODUTO = :OLD_COD_PRODUTO')
+    InsertSQL.Strings = (
+      'insert into TBCLIENTE_ESTOQUE'
+      
+        '  (ANO_VENDA_ULT, COD_CLIENTE, COD_PRODUTO, COD_VENDA_ULT, QUANT' +
+        'IDADE, '
+      '   USUARIO, VALOR_MEDIO)'
+      'values'
+      
+        '  (:ANO_VENDA_ULT, :COD_CLIENTE, :COD_PRODUTO, :COD_VENDA_ULT, :' +
+        'QUANTIDADE, '
+      '   :USUARIO, :VALOR_MEDIO)')
+    DeleteSQL.Strings = (
+      'delete from TBCLIENTE_ESTOQUE'
+      'where'
+      '  COD_CLIENTE = :OLD_COD_CLIENTE and'
+      '  COD_PRODUTO = :OLD_COD_PRODUTO')
+    Left = 680
+    Top = 152
+  end
+  object DtsEstoqueSatelite: TDataSource
+    AutoEdit = False
+    DataSet = QryEstoqueSatelite
+    Left = 712
+    Top = 152
   end
 end

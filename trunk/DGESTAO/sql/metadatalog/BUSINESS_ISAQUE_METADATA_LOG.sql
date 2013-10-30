@@ -14740,3 +14740,1734 @@ GRANT ALL ON VW_FORMA_PAGTO_NFC_E TO SYSDBA WITH GRANT OPTION;
 /*------ 24/10/2013 19:26:13 --------*/
 
 GRANT ALL ON VW_LAYOUT_REM_RET_BANCO TO PUBLIC;
+
+/*------ 26/10/2013 17:20:46 --------*/
+
+ALTER TABLE TBCFOP ADD CFOP_ALTERA_CUSTO_PRODUTO DMN_LOGICO DEFAULT 1;
+
+/*------ 26/10/2013 17:20:47 --------*/
+
+SET TERM ^ ;
+
+ALTER TRIGGER TG_COMPRAS_ATUALIZAR_ESTOQUE
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque integer;
+  declare variable quantidade integer;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+    do
+    begin
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = :Estoque + :Quantidade
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = :Estoque + :Quantidade
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'ENTRADA - COMPRA'
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque + :Quantidade
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+/*------ 26/10/2013 17:20:47 --------*/
+
+ALTER TRIGGER TG_VENDAS_ATUALIZAR_ESTOQUE
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque integer;
+  declare variable quantidade integer;
+  declare variable reserva integer;
+  declare variable valor_produto numeric(15,2);
+  declare variable estoque_unico Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Baixar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Reserva, 0)
+        , coalesce(p.Preco, 0)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , reserva
+        , valor_produto
+    do
+    begin
+      reserva = 0; -- :reserva - :Quantidade;  -- Descontinuada RESERVA
+      estoque = :Estoque - :Quantidade;
+
+      -- Baixar estoque
+      Update TBPRODUTO p Set
+          p.Qtde    = :Estoque
+        --, p.Reserva = :Reserva               -- Descontinuada RESERVA
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TVENDASITENS i Set
+        i.Qtdefinal = :Estoque
+      where i.Ano        = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'SAIDA - VENDA'
+        , Current_time
+        , :Estoque + :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Usuario
+        , 'Venda no valor de R$ ' || :Valor_produto
+      );
+    end
+     
+  end 
+end^
+
+/*------ 26/10/2013 17:20:47 --------*/
+
+SET TERM ; ^
+
+DROP TRIGGER TG_VENDASITENS_RESERVAR;
+
+/*------ 26/10/2013 17:20:47 --------*/
+
+SET TERM ^ ;
+
+CREATE TRIGGER TG_VENDASITENS_RESERVAR FOR TVENDASITENS
+INACTIVE AFTER INSERT OR UPDATE OR DELETE POSITION 1 
+AS
+  --declare variable status_venda Smallint;
+  declare variable reserva integer;
+begin
+  /*
+  Select
+    v.Status
+  from TBVENDAS v
+  where v.Ano = new.Ano
+    and v.Codcontrol = new.Codcontrol
+  into
+    status_venda;
+  */
+
+  Exit; -- Descontinuada RESERVA
+
+  if ( Inserting or Updating  ) then
+  begin
+      Select
+         coalesce(p.Reserva, 0) - coalesce(old.Qtde, 0) + coalesce(new.Qtde, 0)
+      from TBPRODUTO p
+      where p.Cod    = new.Codprod
+        and p.Codemp = new.Codemp
+      into
+        Reserva;
+  end
+
+  else
+
+  if ( Deleting  ) then
+  begin
+      Select
+         coalesce(p.Reserva, 0) - coalesce(old.Qtde, 0)
+      from TBPRODUTO p
+      where p.Cod    = old.Codprod
+        and p.Codemp = old.Codemp
+      into
+        Reserva;
+  end
+
+  Update TBPRODUTO Set
+    Reserva = :Reserva
+  where Cod    = new.Codprod
+    and Codemp = new.Codemp;
+end^
+
+/*------ 26/10/2013 17:20:47 --------*/
+
+SET TERM ; ^
+
+ALTER TABLE TBCFOP ALTER COLUMN CFOP_COD POSITION 1;
+
+/*------ 26/10/2013 17:20:47 --------*/
+
+ALTER TABLE TBCFOP ALTER COLUMN CFOP_DESCRICAO POSITION 2;
+
+/*------ 26/10/2013 17:20:47 --------*/
+
+ALTER TABLE TBCFOP ALTER COLUMN CFOP_ESPECIFICACAO POSITION 3;
+
+/*------ 26/10/2013 17:20:47 --------*/
+
+ALTER TABLE TBCFOP ALTER COLUMN CFOP_ALTERA_CUSTO_PRODUTO POSITION 4;
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+DROP TRIGGER TG_VENDAS_ATUALIZAR_ESTOQUE;
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+CREATE TABLE TBCLIENTE_ESTOQUE(COD_CLIENTE DMN_CNPJ NOT NULL,
+COD_PRODUTO VARCHAR(10) NOT NULL,
+QUANTIDADE INTEGER,
+USUARIO VARCHAR(50),
+ANO_VENDA_ULT DMN_SMALLINT_N,
+COD_VENDA_ULT DMN_INTEGER_N);
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ADD CONSTRAINT PK_TBCLIENTE_ESTOQUE PRIMARY KEY (COD_CLIENTE, COD_PRODUTO);
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ADD CONSTRAINT FK_TBCLIENTE_ESTOQUE_CLI FOREIGN KEY (COD_CLIENTE) REFERENCES TBCLIENTE (CNPJ);
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ADD CONSTRAINT FK_TBCLIENTE_ESTOQUE_PRD FOREIGN KEY (COD_PRODUTO) REFERENCES TBPRODUTO (COD);
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ADD CONSTRAINT FK_TBCLIENTE_ESTOQUE_VND FOREIGN KEY (ANO_VENDA_ULT, COD_VENDA_ULT) REFERENCES TBVENDAS (ANO, CODCONTROL);
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+SET TERM ^ ;
+
+CREATE TRIGGER TG_VENDAS_ESTOQUE_ATUALIZAR FOR TBVENDAS
+ACTIVE AFTER UPDATE POSITION 1 
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque integer;
+  declare variable quantidade integer;
+  declare variable reserva integer;
+  declare variable valor_produto numeric(15,2);
+  declare variable estoque_unico Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Baixar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Reserva, 0)
+        , coalesce(p.Preco, 0)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , reserva
+        , valor_produto
+    do
+    begin
+      reserva = 0; -- :reserva - :Quantidade;  -- Descontinuada RESERVA
+      estoque = :Estoque - :Quantidade;
+
+      -- Baixar estoque
+      Update TBPRODUTO p Set
+          p.Qtde    = :Estoque
+        --, p.Reserva = :Reserva               -- Descontinuada RESERVA
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TVENDASITENS i Set
+        i.Qtdefinal = :Estoque
+      where i.Ano        = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'SAIDA - VENDA'
+        , Current_time
+        , :Estoque + :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Usuario
+        , 'Venda no valor de R$ ' || :Valor_produto
+      );
+    end
+     
+  end 
+end^
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+CREATE TRIGGER TG_VENDAS_ESTOQUE_CLIENTE FOR TBVENDAS
+ACTIVE AFTER UPDATE POSITION 0 
+AS
+  declare variable produto varchar(10);
+  declare variable quantidade integer;
+  declare variable estoque integer;
+begin
+
+  /* Gerar Estoque para o Cliente na Finalizacao da Venda */
+
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+    if ( new.gerar_estoque_cliente = 1 ) then
+    begin
+
+      for
+        Select
+            i.Codprod
+          , i.Qtde                    -- Quantidade vendida
+          , coalesce(c.quantidade, 0) -- Estoque
+        from TVENDASITENS i
+          left join TBCLIENTE_ESTOQUE c on (c.cod_cliente = new.codcli and c.cod_produto = i.codprod)
+        where i.Ano        = new.Ano
+          and i.Codcontrol = new.Codcontrol
+        into
+            produto
+          , quantidade
+          , estoque
+      do
+      begin
+
+        if (not exists(
+          Select
+            ec.cod_cliente
+          from TBCLIENTE_ESTOQUE ec
+          where ec.cod_cliente = new.codcli
+            and ec.cod_produto = :produto
+        )) then
+        begin
+
+          -- Gerar Estoque
+          Insert Into TBCLIENTE_ESTOQUE (
+              cod_cliente
+            , cod_produto
+            , quantidade
+            , usuario
+            , ano_venda_ult
+            , cod_venda_ult
+          ) values (
+              new.codcli
+            , :produto
+            , :quantidade
+            , new.usuario
+            , new.ano
+            , new.codcontrol
+          );
+
+        end
+        else
+        begin
+
+          -- Atualizar estoque cliente
+          Update TBCLIENTE_ESTOQUE ec Set
+            ec.quantidade = coalesce(:quantidade, 0) + coalesce(:estoque, 0)
+          where ec.cod_cliente = new.codcli
+            and ec.cod_produto = :produto;
+
+        end 
+
+      end 
+
+    end
+  end
+
+  else
+
+  /* Atualizar Estoque do Cliente no Cancelamento da Venda */
+
+  if ( (coalesce(old.Status, 0) in (3, 4)) and (new.Status = 5)) then /* 5. Cancelada */
+  begin
+
+    if ( new.gerar_estoque_cliente = 1 ) then
+    begin
+
+      for
+        Select
+            i.Codprod
+          , i.Qtde                    -- Quantidade vendida cancelada
+          , coalesce(c.quantidade, 0) -- Estoque
+        from TVENDASITENS i
+          left join TBCLIENTE_ESTOQUE c on (c.cod_cliente = new.codcli and c.cod_produto = i.codprod)
+        where i.Ano        = new.Ano
+          and i.Codcontrol = new.Codcontrol
+        into
+            produto
+          , quantidade
+          , estoque
+      do
+      begin
+
+          -- Atualizar estoque cliente
+          Update TBCLIENTE_ESTOQUE ec Set
+            ec.quantidade = coalesce(:estoque, 0) - coalesce(:quantidade, 0)
+          where ec.cod_cliente = new.codcli
+            and ec.cod_produto = :produto;
+
+      end
+
+    end
+
+  end
+
+end^
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+SET TERM ; ^
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+DROP TRIGGER TG_VENDAS_CANCELAR;
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+SET TERM ^ ;
+
+CREATE TRIGGER TG_VENDAS_CANCELAR FOR TBVENDAS
+ACTIVE AFTER UPDATE POSITION 3 
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque integer;
+  declare variable quantidade integer;
+  declare variable valor_produto numeric(15,2);
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 5)) then /* 5. Cancelada */
+  begin
+
+    -- Retornar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Preco, 0)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , valor_produto
+    do
+    begin
+      estoque = :Estoque + :Quantidade;
+
+      -- Retornar estoque
+      Update TBPRODUTO p Set
+        p.Qtde = :Estoque
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'ENTRADA - VENDA CANCELADA'
+        , Current_time
+        , :Estoque - :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Cancel_usuario
+        , 'Venda no valor de R$ ' || :Valor_produto
+      );
+
+    end
+
+    -- Cancelar Contas A Receber (Apenas parcelas nao pagas)
+    Update TBCONTREC r Set
+        r.status   = 'CANCELADA'
+      , r.Situacao = 0 -- Cancelado
+      , r.enviado  = 0 -- Enviar boleto novamente para o banco
+    where r.anovenda = new.ano
+      and r.numvenda = new.codcontrol
+      and coalesce(r.Valorrectot, 0) = 0;
+
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Cliente = new.Codcli
+      and m.Venda_ano = new.Ano
+      and m.Venda_num = new.Codcontrol;
+     
+  end 
+end^
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+SET TERM ; ^
+
+DROP TRIGGER TG_VENDAS_CUSTO_OPERACIONAL;
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+SET TERM ^ ;
+
+CREATE TRIGGER TG_VENDAS_CUSTO_OPERACIONAL FOR TBVENDAS
+ACTIVE BEFORE UPDATE POSITION 4 
+AS
+  declare variable gerar_custo_oper      Smallint;
+  declare variable custo_oper_percentual Smallint;
+  declare variable custo_oper_frete      Numeric(15,4);
+  declare variable custo_oper_outros     Numeric(15,4);
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+    /* Buscar FLAG de controle */
+    Select
+      coalesce(c.custo_oper_calcular, 0)
+    from TBCONFIGURACAO c
+    where c.empresa = new.codemp
+    Into
+      gerar_custo_oper;
+
+    /* Buscar valores para calculo de custo operacional caso a empresa esteja configurada para este processo */
+    if ( :gerar_custo_oper = 1 ) then
+    begin
+      Select First 1
+          c.custo_oper_percentual
+        , c.custo_oper_frete
+        , c.custo_oper_outros
+      from TBCLIENTE c
+      where c.cnpj = new.codcli
+      Into
+          custo_oper_percentual
+        , custo_oper_frete
+        , custo_oper_outros;
+
+      new.custo_oper_percentual = :custo_oper_percentual;
+      new.custo_oper_frete      = :custo_oper_frete;
+      new.custo_oper_outros     = :custo_oper_outros;
+    end 
+  end
+end^
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+SET TERM ; ^
+
+GRANT ALL ON TBCLIENTE_ESTOQUE TO PUBLIC;
+
+/*------ 26/10/2013 18:51:18 --------*/
+
+GRANT ALL ON TBCLIENTE_ESTOQUE TO SYSDBA WITH GRANT OPTION;
+
+
+/*------ SYSDBA 26/10/2013 18:53:05 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_estoque_cliente for tbvendas
+active after update position 2
+AS
+  declare variable produto varchar(10);
+  declare variable quantidade integer;
+  declare variable estoque integer;
+begin
+
+  /* Gerar Estoque para o Cliente na Finalizacao da Venda */
+
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+    if ( new.gerar_estoque_cliente = 1 ) then
+    begin
+
+      for
+        Select
+            i.Codprod
+          , i.Qtde                    -- Quantidade vendida
+          , coalesce(c.quantidade, 0) -- Estoque
+        from TVENDASITENS i
+          left join TBCLIENTE_ESTOQUE c on (c.cod_cliente = new.codcli and c.cod_produto = i.codprod)
+        where i.Ano        = new.Ano
+          and i.Codcontrol = new.Codcontrol
+        into
+            produto
+          , quantidade
+          , estoque
+      do
+      begin
+
+        if (not exists(
+          Select
+            ec.cod_cliente
+          from TBCLIENTE_ESTOQUE ec
+          where ec.cod_cliente = new.codcli
+            and ec.cod_produto = :produto
+        )) then
+        begin
+
+          -- Gerar Estoque
+          Insert Into TBCLIENTE_ESTOQUE (
+              cod_cliente
+            , cod_produto
+            , quantidade
+            , usuario
+            , ano_venda_ult
+            , cod_venda_ult
+          ) values (
+              new.codcli
+            , :produto
+            , :quantidade
+            , new.usuario
+            , new.ano
+            , new.codcontrol
+          );
+
+        end
+        else
+        begin
+
+          -- Atualizar estoque cliente
+          Update TBCLIENTE_ESTOQUE ec Set
+            ec.quantidade = coalesce(:quantidade, 0) + coalesce(:estoque, 0)
+          where ec.cod_cliente = new.codcli
+            and ec.cod_produto = :produto;
+
+        end 
+
+      end 
+
+    end
+  end
+
+  else
+
+  /* Atualizar Estoque do Cliente no Cancelamento da Venda */
+
+  if ( (coalesce(old.Status, 0) in (3, 4)) and (new.Status = 5)) then /* 5. Cancelada */
+  begin
+
+    if ( new.gerar_estoque_cliente = 1 ) then
+    begin
+
+      for
+        Select
+            i.Codprod
+          , i.Qtde                    -- Quantidade vendida cancelada
+          , coalesce(c.quantidade, 0) -- Estoque
+        from TVENDASITENS i
+          left join TBCLIENTE_ESTOQUE c on (c.cod_cliente = new.codcli and c.cod_produto = i.codprod)
+        where i.Ano        = new.Ano
+          and i.Codcontrol = new.Codcontrol
+        into
+            produto
+          , quantidade
+          , estoque
+      do
+      begin
+
+          -- Atualizar estoque cliente
+          Update TBCLIENTE_ESTOQUE ec Set
+            ec.quantidade = coalesce(:estoque, 0) - coalesce(:quantidade, 0)
+          where ec.cod_cliente = new.codcli
+            and ec.cod_produto = :produto;
+
+      end
+
+    end
+
+  end
+
+end^
+
+SET TERM ; ^
+
+
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ADD ESTOQUE_SATELITE_CLIENTE DMN_LOGICO DEFAULT 0;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN EMPRESA POSITION 1;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN EMAIL_CONTA POSITION 2;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN EMAIL_SENHA POSITION 3;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN EMAIL_POP POSITION 4;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN EMAIL_SMTP POSITION 5;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN EMAIL_SMTP_PORTA POSITION 6;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN EMAIL_REQUER_AUTENTICACAO POSITION 7;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN EMAIL_CONEXAO_SSL POSITION 8;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN EMAIL_ASSUNTO_PADRAO POSITION 9;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN EMAIL_MENSAGEM_PADRAO POSITION 10;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN NFE_SOLICITA_DH_SAIDA POSITION 11;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN NFE_IMPRIMIR_COD_CLIENTE POSITION 12;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN CUSTO_OPER_CALCULAR POSITION 13;
+
+/*------ 26/10/2013 19:44:58 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN PERMITIR_VENDA_ESTOQUE_INS POSITION 14;
+
+/*------ 26/10/2013 19:44:59 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN ESTOQUE_UNICO_EMPRESAS POSITION 15;
+
+/*------ 26/10/2013 19:44:59 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN ESTOQUE_SATELITE_CLIENTE POSITION 16;
+
+/*------ 26/10/2013 19:44:59 --------*/
+
+ALTER TABLE TBCONFIGURACAO ALTER COLUMN USUARIO POSITION 17;
+
+/*------ 29/10/2013 11:30:23 --------*/
+
+CREATE TABLE TBCLIENTE_REQUISICAO(ANO DMN_SMALLINT_NN NOT NULL,
+NUMERO DMN_INTEGER_NN NOT NULL,
+CODCLIENTE DMN_CNPJ NOT NULL,
+DATA_MOVIMENTO DMN_DATE,
+INSERCAO_DATA DMN_DATE,
+INSERCAO_HORA DMN_TIME,
+INSERCAO_USUARIO DMN_VCHAR_50,
+SITUACAO DMN_SMALLINT_NN DEFAULT 0 NOT NULL,
+OBSERVACOES DMN_TEXTO,
+AUTORIZACAO_DATA DMN_DATE,
+AUTORIZACAO_USUARIO DMN_VCHAR_50,
+RECEBEDOR_NOME DMN_VCHAR_50,
+RECEBEDOR_RG DMN_RG,
+CANCELADO_DATA DMN_DATE,
+CANCELADO_MOTIVO DMN_TEXTO);
+
+/*------ 29/10/2013 11:30:23 --------*/
+
+CREATE TABLE TBCLIENTE_REQUISICAO_ITEM(ANO DMN_SMALLINT_NN NOT NULL,
+NUMERO DMN_INTEGER_NN NOT NULL,
+ITEM DMN_SMALLINT_NN NOT NULL,
+CODPRODUTO DMN_VCHAR_10 NOT NULL,
+QUANTIDADE DMN_INTEGER_N DEFAULT 1,
+UNIDADE DMN_SMALLINT_N,
+USUARIO DMN_VCHAR_50);
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+ALTER TABLE TBUSERS ADD ATIVO DMN_LOGICO DEFAULT 1;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+CREATE GENERATOR GEN_REQUISICAO_2011;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+CREATE GENERATOR GEN_REQUISICAO_2012;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+CREATE GENERATOR GEN_REQUISICAO_2013;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+CREATE GENERATOR GEN_REQUISICAO_2014;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+CREATE GENERATOR GEN_REQUISICAO_2015;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+CREATE GENERATOR GEN_REQUISICAO_2016;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+CREATE GENERATOR GEN_REQUISICAO_2017;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+CREATE GENERATOR GEN_REQUISICAO_2018;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+CREATE GENERATOR GEN_REQUISICAO_2019;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+CREATE GENERATOR GEN_REQUISICAO_2020;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ADD CONSTRAINT PK_TBCLIENTE_REQUISICAO PRIMARY KEY (ANO, NUMERO);
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ADD CONSTRAINT PK_TBCLIENTE_REQUISICAO_ITEM PRIMARY KEY (ANO, NUMERO, ITEM);
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ADD CONSTRAINT FK_TBCLIENTE_REQ_ITEM_PRD FOREIGN KEY (CODPRODUTO) REFERENCES TBPRODUTO (COD);
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ADD CONSTRAINT FK_TBCLIENTE_REQ_ITEM_REQ FOREIGN KEY (ANO, NUMERO) REFERENCES TBCLIENTE_REQUISICAO (ANO, NUMERO) ON UPDATE CASCADE ON DELETE CASCADE;
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ADD CONSTRAINT FK_TBCLIENTE_REQ_ITEM_UND FOREIGN KEY (UNIDADE) REFERENCES TBUNIDADEPROD (UNP_COD);
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ADD CONSTRAINT FK_TBCLIENTE_REQUISICAO_CLI FOREIGN KEY (CODCLIENTE) REFERENCES TBCLIENTE (CNPJ);
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+SET TERM ^ ;
+
+CREATE TRIGGER TG_CLIENTE_REQUISICAO_ESTOQUE FOR TBCLIENTE_REQUISICAO
+ACTIVE BEFORE UPDATE POSITION 1 
+AS
+  declare variable produto    Varchar(10);
+  declare variable quantidade Integer;
+  declare variable estoque    Integer;
+begin
+  /* 1. AUTORIZADA - Decrementar estoque satelite do cliente quando a requisicao for autorizada  */
+
+  if ( (old.situacao <> new.situacao) and (new.situacao = 1) ) then
+  begin
+    for
+      Select
+          i.codproduto
+        , i.quantidade
+        , e.quantidade as estoque
+      from TBCLIENTE_REQUISICAO_ITEM i
+        left join TBCLIENTE_ESTOQUE e on (e.cod_cliente = new.codcliente and e.cod_produto = i.codproduto)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+      Into
+          produto
+        , quantidade
+        , estoque
+    do
+    begin
+
+      Update TBCLIENTE_ESTOQUE e Set
+        e.quantidade = coalesce(:estoque, 0) - coalesce(:quantidade, 0) -- Retirar estoque
+      where e.cod_cliente = new.codcliente
+        and e.cod_produto = :produto;
+
+    end 
+  end 
+
+  else
+
+  /* 3. CANCELADA - Incfementar estoque satelite do cliente quando a requisicao for cancelada  */
+
+  if ( (old.situacao <> new.situacao) and (new.situacao = 3) ) then
+  begin
+    for
+      Select
+          i.codproduto
+        , i.quantidade
+        , e.quantidade as estoque
+      from TBCLIENTE_REQUISICAO_ITEM i
+        left join TBCLIENTE_ESTOQUE e on (e.cod_cliente = new.codcliente and e.cod_produto = i.codproduto)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+      Into
+          produto
+        , quantidade
+        , estoque
+    do
+    begin
+
+      Update TBCLIENTE_ESTOQUE e Set
+        e.quantidade = coalesce(:estoque, 0) + coalesce(:quantidade, 0) -- Devolver estoque
+      where e.cod_cliente = new.codcliente
+        and e.cod_produto = :produto;
+
+    end 
+  end
+end^
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+SET TERM ; ^
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+SET TERM ^ ;
+
+CREATE TRIGGER TG_CLIENTE_REQUISICAO_ITEM_SEQ FOR TBCLIENTE_REQUISICAO_ITEM
+ACTIVE BEFORE INSERT POSITION 0 
+AS
+begin
+  if ( coalesce(new.item, 0) = 0 ) then
+    Select
+      coalesce(max(i.item), 0) + 1
+    from TBCLIENTE_REQUISICAO_ITEM i
+    where i.ano    = new.ano
+      and i.numero = new.numero
+    Into
+      new.item;
+
+  if ( new.usuario is null ) then
+    new.usuario = user;
+end^
+
+/*------ 29/10/2013 11:30:24 --------*/
+
+SET TERM ; ^
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+SET TERM ^ ;
+
+CREATE TRIGGER TG_CLIENTE_REQUISICAO_NOVA FOR TBCLIENTE_REQUISICAO
+ACTIVE BEFORE INSERT POSITION 0 
+AS
+begin
+  if ( coalesce(new.ano, 0) = 0 ) then
+    new.ano = extract(year from current_date);
+
+  if ( coalesce(new.numero, 0) = 0 ) then
+    if ( new.ano = 2011 ) then
+      new.numero = gen_id(GEN_REQUISICAO_2011, 1);
+    else
+    if ( new.ano = 2012 ) then
+      new.numero = gen_id(GEN_REQUISICAO_2012, 1);
+    else
+    if ( new.ano = 2013 ) then
+      new.numero = gen_id(GEN_REQUISICAO_2013, 1);
+    else
+    if ( new.ano = 2014 ) then
+      new.numero = gen_id(GEN_REQUISICAO_2014, 1);
+    else
+    if ( new.ano = 2015 ) then
+      new.numero = gen_id(GEN_REQUISICAO_2015, 1);
+    else
+    if ( new.ano = 2016 ) then
+      new.numero = gen_id(GEN_REQUISICAO_2016, 1);
+    else
+    if ( new.ano = 2017 ) then
+      new.numero = gen_id(GEN_REQUISICAO_2017, 1);
+    else
+    if ( new.ano = 2018 ) then
+      new.numero = gen_id(GEN_REQUISICAO_2018, 1);
+    else
+    if ( new.ano = 2019 ) then
+      new.numero = gen_id(GEN_REQUISICAO_2019, 1);
+    else
+    if ( new.ano = 2020 ) then
+      new.numero = gen_id(GEN_REQUISICAO_2020, 1);
+
+  if ( new.insercao_data is null ) then
+    new.insercao_data = current_date;
+
+  if ( new.insercao_hora is null ) then
+    new.insercao_usuario = current_time;
+
+  if ( new.insercao_usuario is null ) then
+    new.insercao_usuario = user;
+end^
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+SET TERM ; ^
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+ALTER TABLE TBUSERS ALTER COLUMN NOME POSITION 1;
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+ALTER TABLE TBUSERS ALTER COLUMN SENHA POSITION 2;
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+ALTER TABLE TBUSERS ALTER COLUMN NOMECOMPLETO POSITION 3;
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+ALTER TABLE TBUSERS ALTER COLUMN CODFUNCAO POSITION 4;
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+ALTER TABLE TBUSERS ALTER COLUMN LIMIDESC POSITION 5;
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+ALTER TABLE TBUSERS ALTER COLUMN ATIVO POSITION 6;
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+GRANT ALL ON TBCLIENTE_REQUISICAO TO PUBLIC;
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+GRANT ALL ON TBCLIENTE_REQUISICAO TO SYSDBA WITH GRANT OPTION;
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+GRANT ALL ON TBCLIENTE_REQUISICAO_ITEM TO PUBLIC;
+
+/*------ 29/10/2013 11:30:25 --------*/
+
+GRANT ALL ON TBCLIENTE_REQUISICAO_ITEM TO SYSDBA WITH GRANT OPTION;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ADD CODEMPRESA DMN_CNPJ;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ADD CONSTRAINT FK_TBCLIENTE_REQUISICAO_EMP FOREIGN KEY (CODEMPRESA) REFERENCES TBEMPRESA (CNPJ);
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN ANO POSITION 1;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN NUMERO POSITION 2;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN CODEMPRESA POSITION 3;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN CODCLIENTE POSITION 4;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN DATA_MOVIMENTO POSITION 5;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN INSERCAO_DATA POSITION 6;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN INSERCAO_HORA POSITION 7;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN INSERCAO_USUARIO POSITION 8;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN SITUACAO POSITION 9;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN OBSERVACOES POSITION 10;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN AUTORIZACAO_DATA POSITION 11;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN AUTORIZACAO_USUARIO POSITION 12;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN RECEBEDOR_NOME POSITION 13;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN RECEBEDOR_RG POSITION 14;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN CANCELADO_DATA POSITION 15;
+
+/*------ 29/10/2013 12:22:25 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO ALTER COLUMN CANCELADO_MOTIVO POSITION 16;
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ADD QUANTIDADE_FINAL DMN_INTEGER_N DEFAULT 0;
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+SET TERM ^ ;
+
+ALTER TRIGGER TG_CLIENTE_REQUISICAO_ESTOQUE
+AS
+  declare variable item       Smallint;
+  declare variable produto    Varchar(10);
+  declare variable quantidade Integer;
+  declare variable estoque    Integer;
+begin
+  /* 1. AUTORIZADA - Decrementar estoque satelite do cliente quando a requisicao for autorizada  */
+
+  if ( (old.situacao <> new.situacao) and (new.situacao = 1) ) then
+  begin
+    for
+      Select
+          i.numero
+        , i.codproduto
+        , i.quantidade
+        , e.quantidade as estoque
+      from TBCLIENTE_REQUISICAO_ITEM i
+        left join TBCLIENTE_ESTOQUE e on (e.cod_cliente = new.codcliente and e.cod_produto = i.codproduto)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+      Into
+          item
+        , produto
+        , quantidade
+        , estoque
+    do
+    begin
+
+      -- Baixar estoque
+      Update TBCLIENTE_ESTOQUE e Set
+        e.quantidade = coalesce(:estoque, 0) - coalesce(:quantidade, 0) -- Retirar estoque
+      where e.cod_cliente = new.codcliente
+        and e.cod_produto = :produto;
+
+      -- Guardar historico estoque satelite
+      Update TBCLIENTE_REQUISICAO_ITEM i Set
+        i.quantidade_final = coalesce(:estoque, 0) - coalesce(:quantidade, 0)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+        and i.item   = :item;
+
+    end 
+  end 
+
+  else
+
+  /* 3. CANCELADA - Incfementar estoque satelite do cliente quando a requisicao for cancelada  */
+
+  if ( (old.situacao <> new.situacao) and (new.situacao = 3) ) then
+  begin
+    for
+      Select
+          i.codproduto
+        , i.quantidade
+        , e.quantidade as estoque
+      from TBCLIENTE_REQUISICAO_ITEM i
+        left join TBCLIENTE_ESTOQUE e on (e.cod_cliente = new.codcliente and e.cod_produto = i.codproduto)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+      Into
+          produto
+        , quantidade
+        , estoque
+    do
+    begin
+
+      Update TBCLIENTE_ESTOQUE e Set
+        e.quantidade = coalesce(:estoque, 0) + coalesce(:quantidade, 0) -- Devolver estoque
+      where e.cod_cliente = new.codcliente
+        and e.cod_produto = :produto;
+
+    end 
+  end
+end^
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+SET TERM ; ^
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN ANO POSITION 1;
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN NUMERO POSITION 2;
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN ITEM POSITION 3;
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN CODPRODUTO POSITION 4;
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN QUANTIDADE POSITION 5;
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN QUANTIDADE_FINAL POSITION 6;
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN UNIDADE POSITION 7;
+
+/*------ 29/10/2013 14:36:34 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN USUARIO POSITION 8;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ADD CODEMPRESA DMN_CNPJ;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ADD CODCLIENTE DMN_CNPJ;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ADD CONSTRAINT FK_TBCLIENTE_REQ_ITEM_CLI FOREIGN KEY (CODCLIENTE) REFERENCES TBCLIENTE (CNPJ);
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ADD CONSTRAINT FK_TBCLIENTE_REQ_ITEM_EMP FOREIGN KEY (CODEMPRESA) REFERENCES TBEMPRESA (CNPJ);
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN ANO POSITION 1;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN NUMERO POSITION 2;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN ITEM POSITION 3;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN CODEMPRESA POSITION 4;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN CODCLIENTE POSITION 5;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN CODPRODUTO POSITION 6;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN QUANTIDADE POSITION 7;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN QUANTIDADE_FINAL POSITION 8;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN UNIDADE POSITION 9;
+
+/*------ 29/10/2013 14:42:19 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN USUARIO POSITION 10;
+
+/*------ 29/10/2013 15:44:38 --------*/
+
+SET TERM ^ ;
+
+ALTER TRIGGER TG_CLIENTE_REQUISICAO_ESTOQUE
+AS
+  declare variable item       Smallint;
+  declare variable produto    Varchar(10);
+  declare variable quantidade Integer;
+  declare variable estoque    Integer;
+begin
+  /* 2. AUTORIZADA - Decrementar estoque satelite do cliente quando a requisicao for autorizada  */
+
+  if ( (old.situacao <> new.situacao) and (new.situacao = 2) ) then
+  begin
+    for
+      Select
+          i.numero
+        , i.codproduto
+        , i.quantidade
+        , e.quantidade as estoque
+      from TBCLIENTE_REQUISICAO_ITEM i
+        left join TBCLIENTE_ESTOQUE e on (e.cod_cliente = new.codcliente and e.cod_produto = i.codproduto)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+      Into
+          item
+        , produto
+        , quantidade
+        , estoque
+    do
+    begin
+
+      -- Baixar estoque
+      Update TBCLIENTE_ESTOQUE e Set
+        e.quantidade = coalesce(:estoque, 0) - coalesce(:quantidade, 0) -- Retirar estoque
+      where e.cod_cliente = new.codcliente
+        and e.cod_produto = :produto;
+
+      -- Guardar historico estoque satelite
+      Update TBCLIENTE_REQUISICAO_ITEM i Set
+        i.quantidade_final = coalesce(:estoque, 0) - coalesce(:quantidade, 0)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+        and i.item   = :item;
+
+    end 
+  end 
+
+  else
+
+  /* 4. CANCELADA - Incfementar estoque satelite do cliente quando a requisicao for cancelada  */
+
+  if ( (old.situacao <> new.situacao) and (new.situacao = 4) ) then
+  begin
+    for
+      Select
+          i.codproduto
+        , i.quantidade
+        , e.quantidade as estoque
+      from TBCLIENTE_REQUISICAO_ITEM i
+        left join TBCLIENTE_ESTOQUE e on (e.cod_cliente = new.codcliente and e.cod_produto = i.codproduto)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+      Into
+          produto
+        , quantidade
+        , estoque
+    do
+    begin
+
+      Update TBCLIENTE_ESTOQUE e Set
+        e.quantidade = coalesce(:estoque, 0) + coalesce(:quantidade, 0) -- Devolver estoque
+      where e.cod_cliente = new.codcliente
+        and e.cod_produto = :produto;
+
+    end 
+  end
+end^
+
+/*------ 29/10/2013 15:44:38 --------*/
+
+SET TERM ; ^
+
+/*------ 29/10/2013 19:12:26 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ADD VALOR_MEDIO DMN_MONEY_4;
+
+/*------ 29/10/2013 19:12:26 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ADD VALOR_MEDIO DMN_MONEY_4;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+SET TERM ^ ;
+
+ALTER TRIGGER TG_VENDAS_ESTOQUE_CLIENTE
+AS
+  declare variable produto varchar(10);
+  declare variable quantidade integer;
+  declare variable estoque integer;
+  declare variable valor_medio numeric(15,4);
+  declare variable valor_venda numeric(15,2);
+begin
+
+  /* Gerar Estoque para o Cliente na Finalizacao da Venda */
+
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+    if ( new.gerar_estoque_cliente = 1 ) then
+    begin
+
+      for
+        Select
+            i.Codprod
+          , i.Qtde                    -- Quantidade vendida
+          , coalesce(c.quantidade, 0) -- Estoque
+          , (coalesce(c.valor_medio, 0) * coalesce(c.quantidade, 0))
+          , i.total_liquido
+        from TVENDASITENS i
+          left join TBCLIENTE_ESTOQUE c on (c.cod_cliente = new.codcli and c.cod_produto = i.codprod)
+        where i.Ano        = new.Ano
+          and i.Codcontrol = new.Codcontrol
+        into
+            produto
+          , quantidade
+          , estoque
+          , valor_medio
+          , valor_venda
+      do
+      begin
+
+        -- Recalcular valor medio ja existente
+        if ( :estoque <= 0 ) then
+          valor_medio = 0.0;
+
+        -- Gerar novo valor medio
+        valor_medio = (:valor_medio + :valor_venda) / (:quantidade + :estoque);
+
+        if (not exists(
+          Select
+            ec.cod_cliente
+          from TBCLIENTE_ESTOQUE ec
+          where ec.cod_cliente = new.codcli
+            and ec.cod_produto = :produto
+        )) then
+        begin
+
+          -- Gerar Estoque
+          Insert Into TBCLIENTE_ESTOQUE (
+              cod_cliente
+            , cod_produto
+            , quantidade
+            , valor_medio
+            , usuario
+            , ano_venda_ult
+            , cod_venda_ult
+          ) values (
+              new.codcli
+            , :produto
+            , :quantidade
+            , :valor_medio
+            , new.usuario
+            , new.ano
+            , new.codcontrol
+          );
+
+        end
+        else
+        begin
+
+          -- Atualizar estoque cliente
+          Update TBCLIENTE_ESTOQUE ec Set
+              ec.quantidade  = coalesce(:quantidade, 0) + coalesce(:estoque, 0)
+            , ec.valor_medio = :valor_medio
+          where ec.cod_cliente = new.codcli
+            and ec.cod_produto = :produto;
+
+        end 
+
+      end 
+
+    end
+  end
+
+  else
+
+  /* Atualizar Estoque do Cliente no Cancelamento da Venda */
+
+  if ( (coalesce(old.Status, 0) in (3, 4)) and (new.Status = 5)) then /* 5. Cancelada */
+  begin
+
+    if ( new.gerar_estoque_cliente = 1 ) then
+    begin
+
+      for
+        Select
+            i.Codprod
+          , i.Qtde                    -- Quantidade vendida cancelada
+          , coalesce(c.quantidade, 0) -- Estoque
+        from TVENDASITENS i
+          left join TBCLIENTE_ESTOQUE c on (c.cod_cliente = new.codcli and c.cod_produto = i.codprod)
+        where i.Ano        = new.Ano
+          and i.Codcontrol = new.Codcontrol
+        into
+            produto
+          , quantidade
+          , estoque
+      do
+      begin
+
+          -- Atualizar estoque cliente
+          Update TBCLIENTE_ESTOQUE ec Set
+            ec.quantidade = coalesce(:estoque, 0) - coalesce(:quantidade, 0)
+          where ec.cod_cliente = new.codcli
+            and ec.cod_produto = :produto;
+
+      end
+
+    end
+
+  end
+
+end^
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+SET TERM ; ^
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ALTER COLUMN COD_CLIENTE POSITION 1;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ALTER COLUMN COD_PRODUTO POSITION 2;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ALTER COLUMN QUANTIDADE POSITION 3;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ALTER COLUMN VALOR_MEDIO POSITION 4;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ALTER COLUMN USUARIO POSITION 5;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ALTER COLUMN ANO_VENDA_ULT POSITION 6;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_ESTOQUE ALTER COLUMN COD_VENDA_ULT POSITION 7;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN ANO POSITION 1;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN NUMERO POSITION 2;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN ITEM POSITION 3;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN CODEMPRESA POSITION 4;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN CODCLIENTE POSITION 5;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN CODPRODUTO POSITION 6;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN QUANTIDADE POSITION 7;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN QUANTIDADE_FINAL POSITION 8;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN VALOR_MEDIO POSITION 9;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN UNIDADE POSITION 10;
+
+/*------ 29/10/2013 19:12:27 --------*/
+
+ALTER TABLE TBCLIENTE_REQUISICAO_ITEM ALTER COLUMN USUARIO POSITION 11;

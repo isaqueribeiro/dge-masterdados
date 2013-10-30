@@ -205,7 +205,7 @@ begin
   if ( Key = #13 ) then
   begin
     Key := #0;
-    pgcGuias.SelectNextPage(False);
+    pgcGuias.ActivePage := tbsCadastro;
   end
   else
   if ( Key in ['0'..'9', ' ', 'a'..'z', 'A'..'Z'] ) then
@@ -218,7 +218,7 @@ end;
 
 procedure TfrmGrPadraoCadastro.dbgDadosDblClick(Sender: TObject);
 begin
-  pgcGuias.SelectNextPage(False);
+  pgcGuias.ActivePage := tbsCadastro;
 end;
 
 procedure TfrmGrPadraoCadastro.DtSrcTabelaStateChange(Sender: TObject);
@@ -321,7 +321,10 @@ begin
     try
       ClearFieldEmptyStr;
       if ( CamposRequiridos(Self, TClientDataSet(IbDtstTabela), Self.Caption) ) then
+      begin
+        fOcorreuErro := True;
         Exit;
+      end;
 
       fOcorreuErro := False;
       if ( Application.MessageBox('Deseja salvar a inserção/edição do registro?', 'Salvar', MB_YESNO + MB_ICONQUESTION + MB_DEFBUTTON2) = ID_YES ) then
@@ -344,6 +347,25 @@ end;
 
 procedure TfrmGrPadraoCadastro.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
+
+  function GetPriorPage : Integer;
+  var
+    I : Integer;
+  begin
+    I := (pgcGuias.ActivePageIndex - 1);
+    if (I = 0) then
+      Result := I
+    else
+    begin
+      while not pgcGuias.Pages[I].TabVisible do
+        I := I - 1;
+
+      Result := I;  
+    end;
+  end;
+
+var
+  iPage : Integer;
 begin
   Case Key of
     VK_F2 : if ( btbtnSelecionar.Visible and btbtnSelecionar.Enabled ) then
@@ -354,7 +376,12 @@ begin
                 else
                 if ( pgcGuias.ActivePageIndex <> 0 ) then
                 begin
-                  pgcGuias.SelectNextPage(True);
+                  if not tbsTabela.TabVisible then
+                    Exit;
+
+                  iPage := GetPriorPage;
+                  if ( iPage > -1 ) then
+                    pgcGuias.ActivePageIndex := iPage;
                   if ( pgcGuias.ActivePageIndex = 0 ) then
                     dbgDados.SetFocus;
                 end
@@ -544,7 +571,7 @@ begin
   if ( not AbrirTabelaAuto ) then
     IbDtstTabela.Close;
 
-  if ( (pgcGuias.ActivePage = tbsTabela) and (edtFiltrar.Visible) and (edtFiltrar.Enabled) ) then
+  if ( tbsTabela.TabVisible and (pgcGuias.ActivePage = tbsTabela) and (edtFiltrar.Visible) and (edtFiltrar.Enabled) ) then
     edtFiltrar.SetFocus;
 end;
 
@@ -613,6 +640,7 @@ begin
 
   if ( not IbDtstTabela.Active ) then
     Exit;
+    
   ModalResult := mrOk;
 end;
 

@@ -41,7 +41,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
     Left = 0
     Top = 0
     Width = 912
-    Height = 121
+    Height = 161
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 4
@@ -50,7 +50,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
       Left = 4
       Top = 4
       Width = 904
-      Height = 113
+      Height = 153
       Align = alClient
       Caption = 
         'Dados para processar arquivo de retorno de boletos recebidos pel' +
@@ -64,13 +64,14 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
       TabOrder = 0
       DesignSize = (
         904
-        113)
+        153)
       object lblBanco: TLabel
         Left = 8
         Top = 24
         Width = 197
         Height = 13
         Caption = 'Selecionar a entidade financeira (Banco):'
+        FocusControl = edBanco
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -84,6 +85,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
         Width = 163
         Height = 13
         Caption = 'Diret'#243'rio dos arquivos de retorno:'
+        FocusControl = edDiretorioRetorno
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -99,6 +101,20 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
         Caption = 
           'Rela'#231#227'o de arquivos de retorno da entidade financeira selecionad' +
           'a:'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object lblFormaPagto: TLabel
+        Left = 8
+        Top = 104
+        Width = 160
+        Height = 13
+        Caption = 'Forma de Pagamento para Baixa:'
+        FocusControl = edFormaPagto
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -140,7 +156,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
         Left = 280
         Top = 40
         Width = 613
-        Height = 60
+        Height = 97
         Anchors = [akLeft, akTop, akRight]
         Columns = 2
         ItemHeight = 13
@@ -155,7 +171,22 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
           '8'
           '9'
           '10')
+        TabOrder = 3
+      end
+      object edFormaPagto: TComboBox
+        Left = 8
+        Top = 120
+        Width = 257
+        Height = 21
+        Style = csDropDownList
+        ItemHeight = 13
+        ItemIndex = 0
         TabOrder = 2
+        Text = '001 - Banco do Brasil'
+        OnChange = edFormaPagtoChange
+        Items.Strings = (
+          '001 - Banco do Brasil'
+          '341 - Ita'#250)
       end
     end
   end
@@ -377,9 +408,9 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
   end
   object pnlTitulos: TPanel
     Left = 0
-    Top = 121
+    Top = 161
     Width = 912
-    Height = 278
+    Height = 238
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -421,7 +452,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
       Left = 4
       Top = 28
       Width = 904
-      Height = 246
+      Height = 206
       TabStop = False
       Align = alClient
       DataSource = DtsTitulos
@@ -953,5 +984,28 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
       '  BCO_COD = :OLD_BCO_COD')
     Left = 48
     Top = 216
+  end
+  object QryFormaPagto: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'Select'
+      '    fp.cod     as forma_pagto'
+      '  , fp.descri  as forma_pagto_desc'
+      'from TBBANCO_BOLETO bb'
+      
+        '  inner join TBCONTA_CORRENTE cc on (cc.conta_banco_boleto = bb.' +
+        'bco_cod)'
+      '  inner join TBFORMPAGTO fp on (fp.conta_corrente = cc.codigo)'
+      'where bb.bco_cod = :banco')
+    Left = 112
+    Top = 216
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'banco'
+        ParamType = ptInput
+        Value = 0
+      end>
   end
 end

@@ -39,9 +39,11 @@ const
   ivPRODUCT_VERSION   = 'ProductVersion';
   ivCOMMENTS          = 'Comments';
   ivRELEASE_DATE      = 'ReleaseDate';
-  ivSYSTEM_ANALYST    = 'SystemAnalyst';
+  ivSYSTEM_ANALYST    = 'Systems Analyst';
   ivCONTACTS          = 'Contacts';
   ivOWNER             = 'Owner';
+  ivSPLASHNAME        = 'SplashName';
+  ivSPLASHDESCRIPTION = 'SplashDescription';
 
 implementation
 

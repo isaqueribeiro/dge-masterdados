@@ -14,7 +14,7 @@ object frmGrPadraoCadastro: TfrmGrPadraoCadastro
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  Position = poScreenCenter
+  Position = poMainFormCenter
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown

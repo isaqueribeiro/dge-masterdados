@@ -130,8 +130,8 @@ var
   function GetVendedorIDDefault : Integer;
   function GetFormaPagtoIDDefault : Integer;
   function GetCondicaoPagtoIDDefault : Integer;
-  function GetEmitirBoleto : Boolean;
-  function GetCondicaoPagtoIDBoleto : Integer;
+  function GetEstacaoEmitiBoleto : Boolean;
+  function GetCondicaoPagtoIDBoleto_Descontinuada : Integer;  // Descontinuada
   function GetEmitirCupom : Boolean;
   function GetModeloEmissaoCupom : Integer;
   function GetSegmentoID(const CNPJ : String) : Integer;
@@ -139,6 +139,8 @@ var
   function GetEmailEmpresa(const sCNPJEmpresa : String) : String;
   function GetCalcularCustoOperEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetPermitirVendaEstoqueInsEmpresa(const sCNPJEmpresa : String) : Boolean;
+  function GetEstoqueUnicoEmpresa(const sCNPJEmpresa : String) : Boolean;
+  function GetEstoqueSateliteEmpresa(const sCNPJEmpresa : String) : Boolean;
 
   function StrIsCNPJ(const Num: string): Boolean;
   function StrIsCPF(const Num: string): Boolean;
@@ -195,16 +197,18 @@ const
   DB_USER_PASSWORD = 'masterkey';
   DB_LC_CTYPE      = 'ISO8859_2';
 
+  MODELO_CUPOM_POOLER = 0;
+
   FUNCTION_USER_ID_DIRETORIA   =  1;
-  FUNCTION_USER_ID_GERENTE_ADM =  5;
   FUNCTION_USER_ID_GERENTE_VND =  2;
   FUNCTION_USER_ID_GERENTE_FIN =  3;
-  FUNCTION_USER_ID_SUPERV_CX   =  9;
-  FUNCTION_USER_ID_ESTOQUISTA  = 10;
-  FUNCTION_USER_ID_CAIXA       =  6;
   FUNCTION_USER_ID_VENDEDOR    =  4;
+  FUNCTION_USER_ID_GERENTE_ADM =  5;
+  FUNCTION_USER_ID_CAIXA       =  6;
   FUNCTION_USER_ID_AUX_FINANC1 =  7;
   FUNCTION_USER_ID_AUX_FINANC2 =  8;
+  FUNCTION_USER_ID_SUPERV_CX   =  9;
+  FUNCTION_USER_ID_ESTOQUISTA  = 10;
   FUNCTION_USER_ID_SUPORTE_TI  = 11;
   FUNCTION_USER_ID_SYSTEM_ADM  = 12;
 
@@ -222,6 +226,11 @@ const
   STATUS_CMP_FIN = 2;
   STATUS_CMP_CAN = 3;
   STATUS_CMP_NFE = 4;
+
+  STATUS_REQ_ABR = 1;
+  STATUS_REQ_AUT = 2;
+  STATUS_REQ_FCH = 3;
+  STATUS_REQ_CAN = 4;
 
   // Mensagens padrões do sistema
   CLIENTE_BLOQUEADO_PORDEBITO = 'Cliente bloqueado, automaticamente, pelo sistema por se encontrar com títulos vencidos. Favor buscar mais informações junto ao FINANCEIRO.';
@@ -500,7 +509,7 @@ begin
     SQL.Add('      and r.Situacao = 1');
     SQL.Add('      and r.Dtvenc < Current_date');
     SQL.Add('      and r.Baixado = 0');
-    SQL.Add('      and r.Cnpj <> ' + QuotedStr('99999999999999')); // CONSUMIDOR FINAL
+    SQL.Add('      and r.Cnpj <> ' + QuotedStr(CODIGO_CONSUMIDOR_FINAL)); 
     SQL.Add('  )');
     ExecSQL;
 
@@ -749,12 +758,12 @@ begin
   Result := FileINI.ReadInteger('Default', 'CondicaoPagtoID', 1);
 end;
 
-function GetEmitirBoleto : Boolean;
+function GetEstacaoEmitiBoleto : Boolean;
 begin
   Result := FileINI.ReadBool('Boleto', 'EmitirBoleto', False);
 end;
 
-function GetCondicaoPagtoIDBoleto : Integer;
+function GetCondicaoPagtoIDBoleto_Descontinuada : Integer; // Descontinuada
 begin
   Result := FileINI.ReadInteger('Boleto', 'FormaPagtoID', 1);
 end;
@@ -840,6 +849,36 @@ begin
     Close;
     SQL.Clear;
     SQL.Add('Select permitir_venda_estoque_ins as permitir from TBCONFIGURACAO where empresa = ' + QuotedStr(sCNPJEmpresa));
+    Open;
+
+    Result := (FieldByName('permitir').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
+function GetEstoqueUnicoEmpresa(const sCNPJEmpresa : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select estoque_unico_empresas as estoque_unico from TBCONFIGURACAO where empresa = ' + QuotedStr(sCNPJEmpresa));
+    Open;
+
+    Result := (FieldByName('estoque_unico').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
+function GetEstoqueSateliteEmpresa(const sCNPJEmpresa : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select estoque_satelite_cliente as permitir from TBCONFIGURACAO where empresa = ' + QuotedStr(sCNPJEmpresa));
     Open;
 
     Result := (FieldByName('permitir').AsInteger = 1);

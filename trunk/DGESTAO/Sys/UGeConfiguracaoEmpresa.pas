@@ -54,6 +54,8 @@ type
     IbDtstTabelaUSUARIO: TIBStringField;
     dbEstoqueUnico: TDBCheckBox;
     IbDtstTabelaESTOQUE_UNICO_EMPRESAS: TSmallintField;
+    IbDtstTabelaESTOQUE_SATELITE_CLIENTE: TSmallintField;
+    DBCheckBox2: TDBCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure DtSrcTabelaStateChange(Sender: TObject);
     procedure IbDtstTabelaEMPRESAGetText(Sender: TField; var Text: String;
@@ -129,6 +131,9 @@ begin
   if IbDtstTabelaESTOQUE_UNICO_EMPRESAS.IsNull then
     IbDtstTabelaESTOQUE_UNICO_EMPRESAS.AsInteger := 0; //Ord(False);
 
+  if IbDtstTabelaESTOQUE_SATELITE_CLIENTE.IsNull then
+    IbDtstTabelaESTOQUE_SATELITE_CLIENTE.AsInteger := 0; //Ord(False);
+
   inherited;
 
   if not btbtnSalvar.Enabled then
@@ -161,6 +166,7 @@ begin
   IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger      := 0;
   IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.AsInteger := 0;
   IbDtstTabelaESTOQUE_UNICO_EMPRESAS.AsInteger     := 0;
+  IbDtstTabelaESTOQUE_SATELITE_CLIENTE.AsInteger   := 0;
 end;
 
 procedure TfrmGeConfiguracaoEmpresa.btbtnAlterarClick(Sender: TObject);
@@ -176,6 +182,9 @@ begin
 
     if IbDtstTabelaESTOQUE_UNICO_EMPRESAS.IsNull then
       IbDtstTabelaESTOQUE_UNICO_EMPRESAS.AsInteger := 0; //Ord(False);
+
+    if IbDtstTabelaESTOQUE_SATELITE_CLIENTE.IsNull then
+      IbDtstTabelaESTOQUE_SATELITE_CLIENTE.AsInteger := 0; //Ord(False);
   end;
 end;
 
