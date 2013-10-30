@@ -2,6 +2,7 @@ inherited frmGeTabelaCFOP: TfrmGeTabelaCFOP
   Left = 554
   Top = 267
   Width = 744
+  ActiveControl = dbCodigo
   Caption = 'Tabela CFOP (C'#243'digo Fiscal de Opera'#231#245'es e Presta'#231#245'es)'
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -17,6 +18,7 @@ inherited frmGeTabelaCFOP: TfrmGeTabelaCFOP
   end
   inherited pgcGuias: TPageControl
     Width = 728
+    ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
         Width = 720
@@ -110,14 +112,43 @@ inherited frmGeTabelaCFOP: TfrmGeTabelaCFOP
           TabOrder = 2
         end
       end
+      object GrpBxParametros: TGroupBox
+        Left = 0
+        Top = 229
+        Width = 720
+        Height = 101
+        Align = alClient
+        Caption = 'Par'#226'metros'
+        TabOrder = 1
+        object dbCustoOperacional: TDBCheckBox
+          Left = 16
+          Top = 24
+          Width = 265
+          Height = 17
+          Caption = 'CFOP altera o Custo do Produto na Entrada'
+          DataField = 'CFOP_ALTERA_CUSTO_PRODUTO'
+          DataSource = DtSrcTabela
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          ValueChecked = '1'
+          ValueUnchecked = '0'
+        end
+      end
     end
   end
   inherited IbDtstTabela: TIBDataSet
+    OnNewRecord = IbDtstTabelaNewRecord
     SelectSQL.Strings = (
       'Select'
       '    c.Cfop_cod'
       '  , c.Cfop_descricao'
       '  , c.Cfop_especificacao'
+      '  , c.Cfop_altera_custo_produto'
       'from TBCFOP c')
     object IbDtstTabelaCFOP_COD: TIntegerField
       DisplayLabel = 'C'#243'digo'
@@ -137,6 +168,12 @@ inherited frmGeTabelaCFOP: TfrmGeTabelaCFOP
       Origin = 'TBCFOP.CFOP_ESPECIFICACAO'
       BlobType = ftMemo
       Size = 8
+    end
+    object IbDtstTabelaCFOP_ALTERA_CUSTO_PRODUTO: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'CFOP_ALTERA_CUSTO_PRODUTO'
+      Origin = '"TBCFOP"."CFOP_ALTERA_CUSTO_PRODUTO"'
+      ProviderFlags = [pfInUpdate]
     end
   end
   inherited IbUpdTabela: TIBUpdateSQL

@@ -17,7 +17,13 @@ type
     IbDtstTabelaCFOP_ESPECIFICACAO: TMemoField;
     lblEspecificacao: TLabel;
     dbEspecificacao: TDBMemo;
+    GrpBxParametros: TGroupBox;
+    dbCustoOperacional: TDBCheckBox;
+    IbDtstTabelaCFOP_ALTERA_CUSTO_PRODUTO: TSmallintField;
     procedure FormCreate(Sender: TObject);
+    procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
+    procedure btbtnAlterarClick(Sender: TObject);
+    procedure btbtnSalvarClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -69,6 +75,28 @@ begin
   NomeTabela     := 'TBCFOP';
   CampoCodigo    := 'CFOP_COD';
   CampoDescricao := 'CFOP_DESCRICAO';
+end;
+
+procedure TfrmGeTabelaCFOP.IbDtstTabelaNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  IbDtstTabelaCFOP_ALTERA_CUSTO_PRODUTO.AsInteger := 1;
+end;
+
+procedure TfrmGeTabelaCFOP.btbtnAlterarClick(Sender: TObject);
+begin
+  inherited;
+  if not btbtnAlterar.Enabled then
+    if IbDtstTabelaCFOP_ALTERA_CUSTO_PRODUTO.IsNull then
+      IbDtstTabelaCFOP_ALTERA_CUSTO_PRODUTO.AsInteger := 1;
+end;
+
+procedure TfrmGeTabelaCFOP.btbtnSalvarClick(Sender: TObject);
+begin
+  if IbDtstTabelaCFOP_ALTERA_CUSTO_PRODUTO.IsNull then
+    IbDtstTabelaCFOP_ALTERA_CUSTO_PRODUTO.AsInteger := 1;
+
+  inherited;
 end;
 
 initialization

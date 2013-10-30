@@ -240,8 +240,7 @@ object frmGrUsuarioAlterarSenha: TfrmGrUsuarioAlterarSenha
   object tblUsers: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
+    CachedUpdates = True
     DeleteSQL.Strings = (
       'delete from TBUSERS'
       'where'

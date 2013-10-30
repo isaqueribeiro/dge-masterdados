@@ -124,7 +124,7 @@ begin
             SQL[3]  := '  , cast(null as varchar(30)) as Grupo';
             SQL[9]  := '  , cast(null as varchar(60)) as Vendedor';
 
-            if ( edPesquisar.Text = '99999999999999' ) then
+            if ( edPesquisar.Text = CODIGO_CONSUMIDOR_FINAL ) then
               SQL.Add('  and v.codcli = ' + QuotedStr(edPesquisar.Text))
             else  
             if FuncoesString.StrIsCPF( StringReplace(StringReplace(edPesquisar.Text, '.', '', [rfReplaceAll]), '-', '', [rfReplaceAll]) ) then

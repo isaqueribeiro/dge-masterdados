@@ -803,7 +803,7 @@ begin
 
     BtnTransporteInforme.Enabled := btbtnFinalizar.Enabled or btbtnGerarNFe.Enabled;
 
-    btnGerarBoleto.Enabled   := GetEmitirBoleto and (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_FIN); // and (IbDtstTabelaFORMAPAGTO_COD.AsInteger = GetCondicaoPagtoIDBoleto);
+    btnGerarBoleto.Enabled   := GetEstacaoEmitiBoleto and (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_FIN); // and (IbDtstTabelaFORMAPAGTO_COD.AsInteger = GetCondicaoPagtoIDBoleto);
 
     nmGerarImprimirBoletos.Enabled := (not qryTitulos.IsEmpty) and (IbDtstTabelaSTATUS.AsInteger < STATUS_VND_CAN);
 
@@ -864,13 +864,13 @@ var
   sMsg : String;
 begin
   RecarregarRegistro;
-  
+
   if ( IbDtstTabelaSTATUS.AsInteger > STATUS_VND_ABR ) then
   begin
     Case IbDtstTabelaSTATUS.AsInteger of
-      STATUS_VND_FIN : sMsg := 'Esta venda não pode ser alterada porque está finalizada.';
-      STATUS_VND_NFE : sMsg := 'Esta venda não pode ser alterada porque tem NF-e emitida';
-      STATUS_VND_CAN : sMsg := 'Esta venda não pode ser alterada porque está cancelada';
+      STATUS_VND_FIN : sMsg := 'Esta venda não pode ser excluída porque está finalizada.';
+      STATUS_VND_NFE : sMsg := 'Esta venda não pode ser excluída porque tem NF-e emitida';
+      STATUS_VND_CAN : sMsg := 'Esta venda não pode ser excluída porque está cancelada';
     end;
 
     ShowWarning(sMsg);
@@ -885,7 +885,7 @@ begin
       AbrirTabelaFormasPagto( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
       AbrirTabelaVolume( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
       AbrirTabelaTitulos( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
-    end;  
+    end;
   end;
 end;
 
@@ -1256,7 +1256,7 @@ var
   sMsg : String;
 begin
   RecarregarRegistro;
-  
+
   if ( IbDtstTabelaSTATUS.AsInteger > STATUS_VND_ABR ) then
   begin
     Case IbDtstTabelaSTATUS.AsInteger of
@@ -1277,7 +1277,7 @@ begin
       AbrirTabelaFormasPagto( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
       AbrirTabelaVolume( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
       AbrirTabelaTitulos( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
-    end;  
+    end;
   end;
 end;
 
@@ -1513,15 +1513,7 @@ begin
         AbrirTabelaTitulos( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
 
     HabilitarDesabilitar_Btns;
-(*
-    // Forma de Pagamento: BOLETA BANCÁRIA
 
-    if GetEmitirBoleto then
-      if ( cdsVendaFormaPagto.Locate('VENDA_PRAZO', 1, []) ) then
-        if ( cdsVendaFormaPagtoFORMAPAGTO_COD.AsInteger = GetCondicaoPagtoIDBoleto ) then
-          if ( ShowConfirm('Deseja gerar boletos para os títulos da venda.') ) then
-            btnGerarBoleto.Click;
-*)
     // Formas de Pagamento que nao seja a prazo
 
     cdsVendaFormaPagto.First;
@@ -1783,7 +1775,7 @@ begin
 
     if ( ShowConfirm('Deseja imprimir em formato CUPOM?', 'Impressão', MB_DEFBUTTON1) ) then
     begin
-      if ( GetModeloEmissaoCupom = 0 ) then
+      if ( GetModeloEmissaoCupom = MODELO_CUPOM_POOLER ) then
       begin
         FrECFPooler.PrepareReport;
         FrECFPooler.Print;
@@ -1840,8 +1832,11 @@ end;
 
 procedure TfrmGeVenda.btnGerarBoletoClick(Sender: TObject);
 begin
-  if ( not GetEmitirBoleto ) then
+  if ( not GetEstacaoEmitiBoleto ) then
+  begin
+    ShowWarning('Estação de trabalho não habilitada para gerar boletos!');
     Exit;
+  end;
 
   if ( not qryTitulos.IsEmpty ) then
   begin
@@ -2332,13 +2327,13 @@ begin
   try
     if (not BoletosGerados) and bExisteTitulo then
     begin
-      bProsseguir := GetEmitirBoleto;
+      bProsseguir := GetEstacaoEmitiBoleto;
 
       if bProsseguir then
         bProsseguir := cdsVendaFormaPagto.Locate('VENDA_PRAZO', 1, []);
 
-      if bProsseguir then
-        bProsseguir := (cdsVendaFormaPagtoFORMAPAGTO_COD.AsInteger = GetCondicaoPagtoIDBoleto);
+      //if bProsseguir then
+      //  bProsseguir := (cdsVendaFormaPagtoFORMAPAGTO_COD.AsInteger = GetCondicaoPagtoIDBoleto); // Descontinuada
 
       if bProsseguir then
         bProsseguir := ShowConfirm('Deseja gerar boletos para os títulos da venda.');
@@ -2369,25 +2364,26 @@ var
 begin
   iReturn := 0;
   try
-    with DMBusiness, qryBusca do
-    begin
-      Close;
-      SQL.Clear;
-      SQL.Add('Select');
-      SQL.Add('  coalesce(entrega_fracionada_venda, 0) as gerar_estoque');
-      SQL.Add('from TBCLIENTE');
-      SQL.Add('where cnpj = ' + QuotedStr(IbDtstTabelaCODCLI.AsString));
-      Open;
+    if GetEstoqueSateliteEmpresa(GetEmpresaIDDefault) then
+      with DMBusiness, qryBusca do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Add('Select');
+        SQL.Add('  coalesce(entrega_fracionada_venda, 0) as gerar_estoque');
+        SQL.Add('from TBCLIENTE');
+        SQL.Add('where cnpj = ' + QuotedStr(IbDtstTabelaCODCLI.AsString));
+        Open;
 
-      iReturn := FieldByName('gerar_estoque').AsInteger;
+        iReturn := FieldByName('gerar_estoque').AsInteger;
 
-      if ( iReturn = 1 ) then
-        if not ShowConfirm('Cliente trabalha com recebimento fracionado de produtos comprados nesta empresa.' + #13#13 +
-          'Deseja gerar um estoque satélite para o cliente para entregas facionadas a partir de requisições?', 'Estoque Cliente') then
-          iReturn := 0;
+        if ( iReturn = 1 ) then
+          if not ShowConfirm('Cliente trabalha com recebimento fracionado de produtos comprados nesta empresa.' + #13#13 +
+            'Deseja gerar um estoque satélite para o cliente para entregas fracionadas a partir de requisições?', 'Estoque Cliente') then
+            iReturn := 0;
 
-      Close;
-    end;
+        Close;
+      end;
   finally
     Result := iReturn;
   end;

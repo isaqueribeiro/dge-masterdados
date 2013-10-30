@@ -86,6 +86,9 @@ type
     IbQryBancosUF: TIBStringField;
     IbQryBancosEMAIL: TIBStringField;
     IbUpdBancos: TIBUpdateSQL;
+    lblFormaPagto: TLabel;
+    edFormaPagto: TComboBox;
+    QryFormaPagto: TIBQuery;
     procedure edBancoChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
@@ -98,10 +101,12 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure edFormaPagtoChange(Sender: TObject);
   private
     { Private declarations }
     CobreBemX : Variant;
     procedure CarregarBancos;
+    procedure CarregarFormaPagto(const iBanco : Integer);
     procedure DefinirDiretorioArquivo( iBanco : Integer );
     procedure ListarArquivosRetorno(sDiretorio, sMascara : String; Lista : TStrings);
 
@@ -231,6 +236,9 @@ begin
   DefinirDiretorioArquivo( edBanco.Tag );
 
   ListarArquivosRetorno( edDiretorioRetorno.Text, '*.*', lstBxRetorno.Items);
+
+  CarregarFormaPagto(IbQryBancosBCO_COD.AsInteger);
+  edFormaPagtoChange(edFormaPagto);
 end;
 
 procedure TfrmGeRetornoBoleto.FormShow(Sender: TObject);
@@ -614,13 +622,13 @@ begin
     CxNumero := 0;
     CxContaCorrente := 0;
 
-    if ( not CaixaAberto(GetUserApp, GetDateDB, GetCondicaoPagtoIDBoleto, CxAno, CxNumero, CxContaCorrente) ) then
+    if ( not CaixaAberto(GetUserApp, GetDateDB, edFormaPagto.Tag, CxAno, CxNumero, CxContaCorrente) ) then
     begin
       ShowWarning('Não existe caixa aberto para o usuário na forma de pagamento BOLETO.');
       Exit;
     end;
 
-    if ( GetCondicaoPagtoIDBoleto = 0 ) then
+    if ( edFormaPagto.Tag = 0 ) then
     begin
       ShowInformation('O código da forma de pagamento BOLETO ainda não foi configurado.' + #13#13 + 'Favor entrar em contato com suporte.');
       Exit;
@@ -718,7 +726,7 @@ begin
         ParamByName('seq').AsInteger   := iSeq;
         ParamByName('hist').AsString   := sHist;
         ParamByName('data').AsDateTime := DataPagamento;
-        ParamByName('forma').AsInteger := GetCondicaoPagtoIDBoleto;
+        ParamByName('forma').AsInteger := edFormaPagto.Tag;
         ParamByName('pago').AsCurrency := ValorPago;
         ParamByName('doc').AsString    := NossoNumero;
         ExecQuery;
@@ -750,7 +758,41 @@ begin
     inherited;
 end;
 
-initialization  
+procedure TfrmGeRetornoBoleto.CarregarFormaPagto(const iBanco: Integer);
+begin
+  with QryFormaPagto, edFormaPagto do
+  begin
+    Close;
+    ParamByName('banco').AsInteger := iBanco;
+    Open;
+
+    if ( not IsEmpty ) then
+      Clear;
+
+    while not Eof do
+    begin
+      Items.Add( FormatFloat('000', FieldByName('forma_pagto').AsInteger) + ' - ' + FieldByName('forma_pagto_desc').AsString );
+
+      Next;
+    end;
+
+    First;
+
+    edFormaPagto.Tag       := FieldByName('forma_pagto').AsInteger;
+    edFormaPagto.ItemIndex := 0;
+  end;
+end;
+
+procedure TfrmGeRetornoBoleto.edFormaPagtoChange(Sender: TObject);
+begin
+  if ( not QryFormaPagto.Active ) then
+    QryFormaPagto.Open;
+
+  if ( QryFormaPagto.Locate('forma_pagto', StrToIntDef(Copy(edFormaPagto.Text, 1, 3), 0), []) ) then
+    edFormaPagto.Tag := QryFormaPagto.FieldByName('forma_pagto').AsInteger;
+end;
+
+initialization
   FormFunction.RegisterForm('frmGeRetornoBoleto', TfrmGeRetornoBoleto);
 
 end.

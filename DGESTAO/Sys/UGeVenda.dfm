@@ -6,7 +6,6 @@ inherited frmGeVenda: TfrmGeVenda
   ActiveControl = nil
   Caption = 'Controle de Vendas'
   OldCreateOrder = True
-  Position = poMainFormCenter
   OnActivate = FormActivate
   PixelsPerInch = 96
   TextHeight = 13
@@ -3557,7 +3556,8 @@ inherited frmGeVenda: TfrmGeVenda
       '  VENDEDOR_COD = :VENDEDOR_COD,'
       '  VERIFICADOR_NFE = :VERIFICADOR_NFE,'
       '  XML_NFE = :XML_NFE,'
-      '  XML_NFE_FILENAME = :XML_NFE_FILENAME'
+      '  XML_NFE_FILENAME = :XML_NFE_FILENAME,'
+      '  GERAR_ESTOQUE_CLIENTE =:GERAR_ESTOQUE_CLIENTE'
       'where'
       '  ANO = :OLD_ANO and'
       '  CODCONTROL = :OLD_CODCONTROL')
@@ -3576,8 +3576,8 @@ inherited frmGeVenda: TfrmGeVenda
         '   NFE, NFE_ENVIADA, NFE_MODALIDADE_FRETE, NFE_PLACA_RNTC, NFE_P' +
         'LACA_UF, '
       
-        '   NFE_PLACA_VEICULO, NFE_TRANSPORTADORA, OBS, PRAZO_01, PRAZO_0' +
-        '2, PRAZO_03, '
+        '   NFE_PLACA_VEICULO, NFE_TRANSPORTADORA, OBS, GERAR_ESTOQUE_CLI' +
+        'ENTE, PRAZO_01, PRAZO_02, PRAZO_03, '
       
         '   PRAZO_04, PRAZO_05, PRAZO_06, PRAZO_07, PRAZO_08, PRAZO_09, P' +
         'RAZO_10, '
@@ -3602,7 +3602,7 @@ inherited frmGeVenda: TfrmGeVenda
         ':NFE_PLACA_RNTC, '
       
         '   :NFE_PLACA_UF, :NFE_PLACA_VEICULO, :NFE_TRANSPORTADORA, :OBS,' +
-        ' :PRAZO_01, '
+        ' :GERAR_ESTOQUE_CLIENTE, :PRAZO_01, '
       
         '   :PRAZO_02, :PRAZO_03, :PRAZO_04, :PRAZO_05, :PRAZO_06, :PRAZO' +
         '_07, :PRAZO_08, '
@@ -4413,8 +4413,8 @@ inherited frmGeVenda: TfrmGeVenda
       end>
   end
   object ppImprimir: TPopupMenu
-    Left = 32
-    Top = 304
+    Left = 24
+    Top = 312
     object nmImprimirVenda: TMenuItem
       Caption = 'Or'#231'amento / Venda'
       OnClick = nmImprimirVendaClick
