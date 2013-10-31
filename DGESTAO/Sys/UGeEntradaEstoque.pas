@@ -189,7 +189,6 @@ type
     cdsTabelaItensCODPROD: TIBStringField;
     cdsTabelaItensCODFORN: TIntegerField;
     cdsTabelaItensDTENT: TDateField;
-    cdsTabelaItensQTDE: TSmallintField;
     cdsTabelaItensQTDEANTES: TIntegerField;
     cdsTabelaItensQTDEFINAL: TIntegerField;
     cdsTabelaItensPRECOUNIT: TIBBCDField;
@@ -275,6 +274,7 @@ type
     IbDtstTabelaLOTE_NFE_NUMERO: TIntegerField;
     IbDtstTabelaLOTE_NFE_RECIBO: TIBStringField;
     qryNFEEMPRESA: TIBStringField;
+    cdsTabelaItensQTDE: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -810,7 +810,7 @@ var
   cPercRedBC    : Currency;
 begin
   if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
-    if ( SelecionarProduto(Self, iCodigo, sCodigoAlfa, sDescricao, sUnidade, sCST, iUnidade, iCFOP, cAliquota, cAliquotaPIS, cAliquotaCOFINS, cValorVenda, cValorPromocao, cValorIPI, cPercRedBC, iEstoque, iReserva) ) then
+    if ( SelecionarProdutoParaEntrada(Self, iCodigo, sCodigoAlfa, sDescricao, sUnidade, sCST, iUnidade, iCFOP, cAliquota, cAliquotaPIS, cAliquotaCOFINS, cValorVenda, cValorPromocao, cValorIPI, cPercRedBC, iEstoque, iReserva) ) then
     begin
       cdsTabelaItensCODPROD.AsString     := sCodigoAlfa;
       cdsTabelaItensDESCRI.AsString      := sDescricao;
