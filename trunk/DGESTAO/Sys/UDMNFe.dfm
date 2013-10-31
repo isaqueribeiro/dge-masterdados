@@ -8864,8 +8864,12 @@ object DMNFe: TDMNFe
           Memo.UTF8 = (
             
               '                 Autorizamos a sa'#195#173'da do(s) produto(s) acima rel' +
-              'acionado(s) para o cliente [frdCliente."NOME"] pelas m'#195#163'os do(a)' +
-              ' Sr(a). [frdRequisicaoCliente."RECEBEDOR_NOME"].')
+              'acionado(s) para o cliente [frdCliente."NOME"], [IIF(<frdCliente' +
+              '."PESSOA_FISICA">=1,'#39'CPF'#39','#39'CNPJ'#39')] [IIF(<frdCliente."PESSOA_FISI' +
+              'CA">=1,FormatMaskText('#39'###.###.###-##;0;'#39',<frdCliente."CNPJ">),F' +
+              'ormatMaskText('#39'##.###.###/####-##;0;'#39',<frdCliente."CNPJ">))], so' +
+              'b a responsabilidade e/ou a pedido de [frdRequisicaoCliente."REC' +
+              'EBEDOR_NOME"].')
           ParentFont = False
         end
         object Memo15: TfrxMemoView
@@ -8883,7 +8887,7 @@ object DMNFe: TDMNFe
           HAlign = haCenter
           Memo.UTF8 = (
             '[frdRequisicaoCliente."RECEBEDOR_NOME"]'
-            'RG: [frdRequisicaoCliente."RECEBEDOR_RG"]')
+            '[frdRequisicaoCliente."RECEBEDOR_RG"]')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter

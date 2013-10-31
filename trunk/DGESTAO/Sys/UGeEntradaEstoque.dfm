@@ -6,7 +6,6 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
   ActiveControl = nil
   Caption = 'Controle de Entradas no Estoque'
   OldCreateOrder = True
-  Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 13
   inherited Bevel1: TBevel
@@ -3462,10 +3461,10 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       FieldName = 'DTENT'
       Origin = 'TBCOMPRASITENS.DTENT'
     end
-    object cdsTabelaItensQTDE: TSmallintField
+    object cdsTabelaItensQTDE: TIntegerField
       DisplayLabel = 'Quantidade'
       FieldName = 'QTDE'
-      Origin = 'TBCOMPRASITENS.QTDE'
+      Origin = '"TBCOMPRASITENS"."QTDE"'
     end
     object cdsTabelaItensQTDEANTES: TIntegerField
       FieldName = 'QTDEANTES'

@@ -45,6 +45,8 @@ type
     bvlToolExpandir: TBevel;
     btbtnSelecionar: TBitBtn;
     bvlTool4: TBevel;
+    procedure dbgDadosKeyPressENTER(Sender: TObject; var Key: Char);
+    procedure dbgDadosKeyPressNO_ENTER(Sender: TObject; var Key: Char);
     procedure btbtnFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure dbgDadosDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -763,6 +765,34 @@ begin
 
     if ( not VariableExist(VAR_SYSTEM) ) then
       frReport.Variables.AddVariable(CATEGORY_VAR, VAR_SYSTEM, Application.Title + ' - versão ' + ver.FileVersion);
+  end;
+end;
+
+procedure TfrmGrPadraoCadastro.dbgDadosKeyPressENTER(Sender: TObject;
+  var Key: Char);
+begin
+  if ( Key = #13 ) then
+  begin
+    Key := #0;
+    pgcGuias.ActivePage := tbsCadastro;
+  end
+  else
+  if ( Key in ['0'..'9', ' ', 'a'..'z', 'A'..'Z'] ) then
+  begin
+    edtFiltrar.Text := Trim(Key);
+    edtFiltrar.SetFocus;
+    edtFiltrar.SelStart := Length(edtFiltrar.Text);
+  end;
+end;
+
+procedure TfrmGrPadraoCadastro.dbgDadosKeyPressNO_ENTER(Sender: TObject;
+  var Key: Char);
+begin
+  if ( Key in ['0'..'9', ' ', 'a'..'z', 'A'..'Z'] ) then
+  begin
+    edtFiltrar.Text := Trim(Key);
+    edtFiltrar.SetFocus;
+    edtFiltrar.SelStart := Length(edtFiltrar.Text);
   end;
 end;
 
