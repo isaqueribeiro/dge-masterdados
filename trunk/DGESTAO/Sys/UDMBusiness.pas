@@ -29,6 +29,7 @@ type
     ConexaoSeguraSSL   : Boolean;
   end;
 
+  TTipoRegime = (trSimplesNacional, trSimplesExcessoReceita, trRegimeNormal);
   TTipoMovimentoCaixa = (tmcxCredito, tmcxDebito);
   TDMBusiness = class(TDataModule)
     ibdtbsBusiness: TIBDatabase;
@@ -131,6 +132,7 @@ var
   function GetFormaPagtoIDDefault : Integer;
   function GetCondicaoPagtoIDDefault : Integer;
   function GetEstacaoEmitiBoleto : Boolean;
+  function GetEstacaoEmitiNFe : Boolean;
   function GetCondicaoPagtoIDBoleto_Descontinuada : Integer;  // Descontinuada
   function GetEmitirCupom : Boolean;
   function GetModeloEmissaoCupom : Integer;
@@ -141,6 +143,7 @@ var
   function GetPermitirVendaEstoqueInsEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetEstoqueUnicoEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetEstoqueSateliteEmpresa(const sCNPJEmpresa : String) : Boolean;
+  function GetRegimeEmpresa(const sCNPJEmpresa : String) : TTipoRegime;
 
   function StrIsCNPJ(const Num: string): Boolean;
   function StrIsCPF(const Num: string): Boolean;
@@ -763,6 +766,11 @@ begin
   Result := FileINI.ReadBool('Boleto', 'EmitirBoleto', False);
 end;
 
+function GetEstacaoEmitiNFe : Boolean;
+begin
+  Result := (Trim(FileINI.ReadString('Certificado', 'NumSerie', EmptyStr)) <> EmptyStr);
+end;
+
 function GetCondicaoPagtoIDBoleto_Descontinuada : Integer; // Descontinuada
 begin
   Result := FileINI.ReadInteger('Boleto', 'FormaPagtoID', 1);
@@ -882,6 +890,21 @@ begin
     Open;
 
     Result := (FieldByName('permitir').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
+function GetRegimeEmpresa(const sCNPJEmpresa : String) : TTipoRegime;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select tipo_regime_nfe as regime from TBEMPRESA where cnpj = ' + QuotedStr(sCNPJEmpresa));
+    Open;
+
+    Result := TTipoRegime(FieldByName('regime').AsInteger);
 
     Close;
   end;

@@ -390,6 +390,8 @@ begin
   CampoOrdenacao := 'c.dtEnt, f.NomeForn';
 
   UpdateGenerator( 'where Ano = ' + FormatFloat('0000', YearOf(Date)) );
+
+  btbtnGerarNFe.Visible := GetEstacaoEmitiNFe;
 end;
 
 procedure TfrmGeEntradaEstoque.btnFiltrarClick(Sender: TObject);

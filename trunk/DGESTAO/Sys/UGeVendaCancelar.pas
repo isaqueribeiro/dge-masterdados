@@ -145,6 +145,12 @@ begin
           Exit;
         end;
 
+        if not GetEstacaoEmitiNFe then
+        begin
+          ShowWarning('Estação de trabalho não habilitada para cancelar Venda/NFe!');
+          Exit;
+        end;
+
         if not DMNFe.GetValidadeCertificado then
           Exit;
 
