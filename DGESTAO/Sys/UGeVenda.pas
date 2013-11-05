@@ -505,6 +505,7 @@ begin
   btnConsultarProduto.Hint    := 'Consultar ' + StrDescricaoProduto;
 
   RdgStatusVenda.Controls[2].Enabled := False;
+  btbtnGerarNFe.Visible              := GetEstacaoEmitiNFe;
 end;
 
 procedure TfrmGeVenda.btnFiltrarClick(Sender: TObject);

@@ -1431,7 +1431,7 @@ begin
           Prod.cProd    := qryDadosProdutoCODPROD.AsString;
 
           if ( GetSegmentoID(qryEmitenteCNPJ.AsString) <> SEGMENTO_MERCADO_CARRO_ID ) then
-            Prod.xProd  := qryDadosProdutoDESCRI.AsString
+            Prod.xProd  := qryDadosProdutoDESCRI_APRESENTACAO.AsString
           else
             Prod.xProd  := qryDadosProdutoDESCRI.AsString + ' ' + qryDadosProdutoANO_FAB_MODELO_VEICULO.AsString;
 
@@ -2469,7 +2469,7 @@ begin
           Prod.cProd    := qryEntradaDadosProdutoCODPROD.AsString;
 
           if ( GetSegmentoID(qryEmitenteCNPJ.AsString) <> SEGMENTO_MERCADO_CARRO_ID ) then
-            Prod.xProd  := qryEntradaDadosProdutoDESCRI.AsString
+            Prod.xProd  := qryEntradaDadosProdutoDESCRI_APRESENTACAO.AsString
           else
             Prod.xProd  := qryEntradaDadosProdutoDESCRI.AsString + ' ' + qryEntradaDadosProdutoANO_FAB_MODELO_VEICULO.AsString;
 
