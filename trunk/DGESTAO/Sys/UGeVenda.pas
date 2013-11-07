@@ -2308,12 +2308,33 @@ procedure TfrmGeVenda.nmGerarImprimirBoletosClick(Sender: TObject);
 var
   bExisteTitulo,
   bProsseguir  : Boolean;
+  sDestinatario,
+  sMensagem    ,
+  sDocumento   : String;
+const
+  MSG_REF_NFE = 'Referente a NF-e %s';
+  MSG_REF_DOC = 'Referente a venda No. %s';
 begin
   if IbDtstTabela.IsEmpty then
     Exit;
 
   if (IbDtstTabela.State in [dsEdit, dsInsert]) then
     Exit;
+
+  // Montar identificação do documento para título de e-mail
+  if ( IbDtstTabelaNFE.AsLargeInt > 0 ) then
+  begin
+    sMensagem  := Format(MSG_REF_NFE, [FormatFloat('###0000000', IbDtstTabelaNFE.AsLargeInt)]);
+    sDocumento := 'NFe ' + FormatFloat('###0000000', IbDtstTabelaNFE.AsLargeInt) + '-' + IbDtstTabelaSERIE.AsString;
+  end
+  else
+  begin
+    sMensagem  := Format(MSG_REF_DOC, [IbDtstTabelaANO.AsString + '/' + FormatFloat('##00000', IbDtstTabelaCODCONTROL.AsInteger)]);
+    sDocumento := 'Venda ' + IbDtstTabelaANO.AsString + '/' + FormatFloat('##00000', IbDtstTabelaCODCONTROL.AsInteger);
+  end;
+  sDestinatario := GetClienteEmail(IbDtstTabelaCODCLI.AsString);
+
+  DMNFe.ConfigurarEmail(IbDtstTabelaCODEMP.AsString, sDestinatario, 'Boleta Bancária - ' + sDocumento, sMensagem);
 
   if BoletosGerados then
   begin

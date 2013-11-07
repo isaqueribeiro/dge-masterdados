@@ -3105,8 +3105,6 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
   object QryListaProduto: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    p.codigo as Sequencial'
@@ -3148,8 +3146,6 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
   object QryProduto: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'select'
       '    p.cod as Codigo'
@@ -3517,8 +3513,6 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
   object QryGrupo: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'select'
       '    p.codgrupo as Codigo'
@@ -3962,8 +3956,6 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
   object QryTotal: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'select'
       '    sum( coalesce(p.qtde, 0) ) as qtde'
@@ -4194,8 +4186,6 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
   object QryFabricante: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    p.codfabricante as Codigo'
@@ -4603,7 +4593,6 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
   end
   object smtpEmail: TIdSMTP
     MaxLineAction = maException
-    ReadTimeout = 0
     Port = 25
     AuthenticationType = atNone
     Left = 312
@@ -4613,6 +4602,7 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
     AttachmentEncoding = 'MIME'
     BccList = <>
     CCList = <>
+    DeleteTempFiles = False
     Encoding = meMIME
     Priority = mpHigh
     Recipients = <>

@@ -2089,9 +2089,11 @@ object DMNFe: TDMNFe
     UseFileCache = True
     ShowProgress = True
     OverwritePrompt = False
+    Lines.Strings = (
+      'Teste')
     ShowExportDialog = True
     SmtpPort = 587
-    UseIniFile = True
+    UseIniFile = False
     TimeOut = 60
     ConfurmReading = False
     Left = 24

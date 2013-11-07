@@ -122,12 +122,14 @@ inherited frmGeUnidade: TfrmGeUnidade
       DisplayLabel = 'Descri'#231#227'o'
       FieldName = 'UNP_DESCRICAO'
       Origin = 'TBUNIDADEPROD.UNP_DESCRICAO'
+      Required = True
       Size = 50
     end
     object IbDtstTabelaUNP_SIGLA: TIBStringField
-      DisplayLabel = 'SIGLA'
+      DisplayLabel = 'Sigla'
       FieldName = 'UNP_SIGLA'
       Origin = 'TBUNIDADEPROD.UNP_SIGLA'
+      Required = True
       Size = 5
     end
   end
