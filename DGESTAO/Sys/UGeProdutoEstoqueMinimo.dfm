@@ -978,8 +978,6 @@ inherited FrmGeProdutoEstoqueMinimo: TFrmGeProdutoEstoqueMinimo
   object QryProduto: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    p.codemp'
@@ -1162,8 +1160,6 @@ inherited FrmGeProdutoEstoqueMinimo: TFrmGeProdutoEstoqueMinimo
   object QryGrupo: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'select'
       '    p.codgrupo as Codigo'
@@ -1301,8 +1297,6 @@ inherited FrmGeProdutoEstoqueMinimo: TFrmGeProdutoEstoqueMinimo
   object QryFabricante: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'select'
       '    p.codfabricante as Codigo'
@@ -1481,7 +1475,6 @@ inherited FrmGeProdutoEstoqueMinimo: TFrmGeProdutoEstoqueMinimo
   end
   object smtpEmail: TIdSMTP
     MaxLineAction = maException
-    ReadTimeout = 0
     Port = 25
     AuthenticationType = atNone
     Left = 312
@@ -1491,6 +1484,7 @@ inherited FrmGeProdutoEstoqueMinimo: TFrmGeProdutoEstoqueMinimo
     AttachmentEncoding = 'MIME'
     BccList = <>
     CCList = <>
+    DeleteTempFiles = False
     Encoding = meMIME
     Priority = mpHigh
     Recipients = <>
@@ -1509,8 +1503,6 @@ inherited FrmGeProdutoEstoqueMinimo: TFrmGeProdutoEstoqueMinimo
   object QryTotal: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'select'
       '    sum( coalesce(p.qtde, 0) ) as qtde'

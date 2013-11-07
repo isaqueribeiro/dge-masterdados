@@ -117,7 +117,7 @@ var
   procedure BloquearCliente(CNPJ : String; const Motivo : String = '');
   procedure RegistrarSegmentos(Codigo : Integer; Descricao : String);
   procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
-  procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String);
+  procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
   procedure SetEmpresaIDDefault(CNPJ : String);
 
   function DelphiIsRunning : Boolean;
@@ -144,6 +144,8 @@ var
   function GetEstoqueUnicoEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetEstoqueSateliteEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetRegimeEmpresa(const sCNPJEmpresa : String) : TTipoRegime;
+  function GetRazaoSocialEmpresa(const sCNPJEmpresa : String) : String;
+  function GetNomeFantasiaEmpresa(const sCNPJEmpresa : String) : String;
 
   function StrIsCNPJ(const Num: string): Boolean;
   function StrIsCPF(const Num: string): Boolean;
@@ -176,6 +178,7 @@ var
   function GetCfopNomeDefault : String;
   function GetEmpresaNomeDefault : String;
   function GetClienteNomeDefault : String;
+  function GetClienteEmail(const sCNPJ : String) : String;
   function GetVendedorNomeDefault : String;
   function GetFormaPagtoNomeDefault : String;
   function GetCondicaoPagtoNomeDefault : String;
@@ -598,7 +601,7 @@ begin
   end;
 end;
 
-procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String);
+procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
 var
   sMsg : String;
   bFaltaConfigurado : Boolean;
@@ -684,18 +687,20 @@ begin
 
     gContaEmail.RequerAutenticacao := (FieldByName('email_requer_autenticacao').AsInteger = 1);
     gContaEmail.ConexaoSeguraSSL   := (FieldByName('email_conexao_ssl').AsInteger = 1);
-(*
-    gContaEmail.Assinatura_Padrao := Format(sHTML, [sMsg,
+
+    AssinaturaHtml := Format(sHTML, [sMsg,
       FieldByName('empresa_razao').AsString,
       FieldByName('empresa_fone_1').AsString,
       FieldByName('empresa_email').AsString,
       FieldByName('empresa_homepage').AsString, FieldByName('empresa_homepage').AsString]);
-*)
-    gContaEmail.Assinatura_Padrao := '-'     + #13 +
+
+    AssinaturaTXT := '--' + #13 +
       FieldByName('empresa_razao').AsString  + #13 +
       FieldByName('empresa_fone_1').AsString + #13 +
       FieldByName('empresa_email').AsString  + #13 +
       FieldByName('empresa_homepage').AsString;
+
+    gContaEmail.Assinatura_Padrao := AssinaturaTXT;
   end;
 end;
 
@@ -905,6 +910,36 @@ begin
     Open;
 
     Result := TTipoRegime(FieldByName('regime').AsInteger);
+
+    Close;
+  end;
+end;
+
+function GetRazaoSocialEmpresa(const sCNPJEmpresa : String) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select rzsoc from TBEMPRESA where cnpj = ' + QuotedStr(sCNPJEmpresa));
+    Open;
+
+    Result := AnsiUpperCase( Trim(FieldByName('rzsoc').AsString) );
+
+    Close;
+  end;
+end;
+
+function GetNomeFantasiaEmpresa(const sCNPJEmpresa : String) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select coalesce(nullif(Trim(nmfant), ''''), rzsoc) as fantasia from TBEMPRESA where cnpj = ' + QuotedStr(sCNPJEmpresa));
+    Open;
+
+    Result := AnsiUpperCase( Trim(FieldByName('fantasia').AsString) );
 
     Close;
   end;
@@ -1454,6 +1489,21 @@ begin
     Open;
 
     Result := FieldByName('nome').AsString;
+
+    Close;
+  end;
+end;
+
+function GetClienteEmail(const sCNPJ : String) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select email from TBCLIENTE where Cnpj = ' + QuotedStr(sCNPJ));
+    Open;
+
+    Result := AnsiLowerCase(Trim(FieldByName('email').AsString));
 
     Close;
   end;

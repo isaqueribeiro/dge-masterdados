@@ -472,6 +472,7 @@ type
 
     procedure LerConfiguracao(const sCNPJEmitente : String);
     procedure GravarConfiguracao(const sCNPJEmitente : String);
+    procedure ConfigurarEmail(const sCNPJEmitente, sDestinatario, sAssunto, sMensagem : String);
 
     procedure AbrirEmitente(sCNPJ : String);
     procedure AbrirDestinatario(sCNPJ : String);
@@ -732,9 +733,9 @@ begin
       StreamMemo := TMemoryStream.Create;
 
       mmEmailMsg.Lines.SaveToStream(StreamMemo);
-      StreamMemo.Seek(0,soFromBeginning);
+      StreamMemo.Seek(0, soFromBeginning);
 
-      WriteBinaryStream( 'Email', 'Mensagem',StreamMemo) ;
+      WriteBinaryStream( 'Email', 'Mensagem', StreamMemo) ;
 
       StreamMemo.Free;
     end;
@@ -748,7 +749,9 @@ Var
   Ok : Boolean;
   StreamMemo : TMemoryStream;
   sPrefixoSecao,
-  sFileNFE     : String;
+  sAssinaturaHtml,
+  sAssinaturaTxt ,
+  sFileNFE       : String;
 begin
   try
 
@@ -840,7 +843,7 @@ begin
 
       // Configuração para envio de e-mails
 
-      CarregarConfiguracoesEmpresa(GetEmpresaIDDefault, 'Envio de NF-e (Emitente: ' + edtEmitRazao.Text + ')');
+      CarregarConfiguracoesEmpresa(GetEmpresaIDDefault, 'Envio de NF-e (Emitente: ' + edtEmitRazao.Text + ')', sAssinaturaHtml, sAssinaturaTxt);
       if ( Trim(gContaEmail.Conta) <> EmptyStr ) then
       begin
         edtSmtpHost.Text      := gContaEmail.Servidor_SMTP;
@@ -3410,6 +3413,35 @@ begin
       ShowError('Erro ao tentar executar download da NF-e.' + #13#13 + 'DownloadNFeACBr() --> ' + e.Message);
       Result := False;
     end;
+  end;
+end;
+
+procedure TDMNFe.ConfigurarEmail(const sCNPJEmitente, sDestinatario, sAssunto, sMensagem: String);
+var
+  sAssinaturaHtml,
+  sAssinaturaTxt : String;
+begin
+  CarregarConfiguracoesEmpresa(sCNPJEmitente, sAssunto, sAssinaturaHtml, sAssinaturaTxt);
+
+  // Configurar conta de e-mail no Fast Report
+  with frxMailExport do
+  begin
+    SmtpHost := gContaEmail.Servidor_SMTP;
+    SmtpPort := gContaEmail.Porta_SMTP;
+    Login    := gContaEmail.Conta;
+    Password := gContaEmail.Senha;
+
+    FromCompany := GetRazaoSocialEmpresa( sCNPJEmitente );
+    FromMail    := gContaEmail.Conta; // GetEmailEmpresa( sCNPJEmitente );
+    FromName    := GetNomeFantasiaEmpresa( sCNPJEmitente );
+    Subject     := Trim(sAssunto);
+    Address     := AnsiLowerCase(Trim(sDestinatario));
+
+    Lines.Clear;
+    Lines.Add( sMensagem );
+
+    Signature.Clear;
+    Signature.Add(sAssinaturaTxt);
   end;
 end;
 

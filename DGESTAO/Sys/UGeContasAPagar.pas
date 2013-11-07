@@ -546,6 +546,9 @@ end;
 
 procedure TfrmGeContasAPagar.popGerarReciboClick(Sender: TObject);
 begin
+  if ( IbDtstTabela.IsEmpty ) then
+    Exit;
+
   with CdsRecibo, Params do
   begin
     Close;
@@ -553,6 +556,9 @@ begin
     ParamByName('numero').AsInteger := cdsPagamentosNUMLANC.AsInteger;
     ParamByName('baixa').AsInteger  := cdsPagamentosSEQ.AsInteger;
     Open;
+
+    if IsEmpty then
+      Exit;
   end;
 
   frReport := FrRecibo;

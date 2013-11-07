@@ -982,8 +982,10 @@ procedure TFrmGeProdutoRotatividadePRC.btBtnEnviarEmailClick(
 var
   sAssunto  ,
   sEmailTo  ,
-  sFileNameHtml,
-  sFileNameXls : String;
+  sAssinaturaHtml,
+  sAssinaturaTxt ,
+  sFileNameHtml  ,
+  sFileNameXls   : String;
 begin
   Case PgcTabelas.ActivePageIndex of
     TIPO_GRP:
@@ -1042,7 +1044,7 @@ begin
   try
     try
       sAssunto := FormatDateTime('dd/mm/yyyy', Date) + ' - Rotatividade de Produtos (' + edTipoProcesso.Text + ')';;
-      CarregarConfiguracoesEmpresa(GetEmpresaIDDefault, sAssunto);
+      CarregarConfiguracoesEmpresa(GetEmpresaIDDefault, sAssunto, sAssinaturaHtml, sAssinaturaTxt);
 
       smtpEmail.Username    := gContaEmail.Conta;
       smtpEmail.Password    := gContaEmail.Senha;

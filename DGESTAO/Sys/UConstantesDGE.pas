@@ -48,6 +48,8 @@ const
 
   PORTA_SMTP_PADRAO = 587;
 
+  STR_TAMANHO_NCMSH = 8;
+
 implementation
 
 end.
