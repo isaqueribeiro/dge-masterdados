@@ -1,23 +1,23 @@
 [Closed Files]
-File_0=SourceModule,'C:\Delphi\ACBr\Fontes\PCN2\pcnConversao.pas',0,1,114,22,147,0,0
-File_1=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\UGeConsultarLoteNFe.pas',0,1,251,123,265,0,0
-File_2=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\UGeProdutoEstoqueMinimo.pas',0,1,1,95,11,0,0
-File_3=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\UGeConfiguracaoEmpresa.pas',0,1,1,97,14,0,0
-File_4=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\UGeInutilizarNumeroNFe.pas',0,1,1,86,4,1,0
-File_5=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\UGeProdutoRotatividadePRC.pas',0,1,309,92,315,0,0
-File_6=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uGerRelCP.pas',0,1,31,59,31,1,0
-File_7=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uGerRelCR.pas',0,1,188,61,190,1,0
-File_8=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uRelCR.pas',0,1,1,1,1,1,0
-File_9=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\lib\FuncoesFormulario.pas',0,1,105,1,141,0,0
+File_0=SourceModule,'E:\Projetos\MasterDados\trunk\DGESTAO\Sys\lib\FuncoesFormulario.pas',0,1,115,1,144,0,0
+File_1=SourceModule,'C:\Delphi\ACBr\Fontes\PCN2\pcnConversao.pas',0,1,114,22,147,0,0
+File_2=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\UGeConsultarLoteNFe.pas',0,1,251,123,265,0,0
+File_3=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\UGeProdutoEstoqueMinimo.pas',0,1,1,95,11,0,0
+File_4=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\UGeConfiguracaoEmpresa.pas',0,1,1,97,14,0,0
+File_5=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\UGeInutilizarNumeroNFe.pas',0,1,1,86,4,1,0
+File_6=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\UGeProdutoRotatividadePRC.pas',0,1,309,92,315,0,0
+File_7=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uGerRelCP.pas',0,1,31,59,31,1,0
+File_8=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uGerRelCR.pas',0,1,188,61,190,1,0
+File_9=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uRelCR.pas',0,1,1,1,1,1,0
 
 [Modules]
-Module0=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\lib\FuncoesFormulario.pas
+Module0=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UfrmAcessoSistema.pas
 Module1=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UPrinc.pas
 Module2=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\DGE.dpr
 Count=3
 EditWindowCount=1
 
-[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\lib\FuncoesFormulario.pas]
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UfrmAcessoSistema.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -33,6 +33,10 @@ FormState=0
 FormOnTop=0
 
 [C:\Program Files (x86)\Borland\Delphi7\Projects\ProjectGroup1.bpg]
+FormState=0
+FormOnTop=0
+
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\lib\UGrPadrao.pas]
 FormState=0
 FormOnTop=0
 
@@ -78,10 +82,10 @@ TopLine=609
 LeftCol=1
 
 [View2]
-Module=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\lib\FuncoesFormulario.pas
+Module=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UfrmAcessoSistema.pas
 CursorX=1
-CursorY=144
-TopLine=115
+CursorY=1
+TopLine=76
 LeftCol=1
 
 [Watches]

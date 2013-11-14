@@ -506,6 +506,13 @@ begin
 
   RdgStatusVenda.Controls[2].Enabled := False;
   btbtnGerarNFe.Visible              := GetEstacaoEmitiNFe;
+
+  if GetUserPermitirAlterarValorVenda then
+  begin
+    dbValorUnit.ReadOnly := False;
+    dbValorUnit.TabStop  := True;
+    dbValorUnit.Color    := dbProduto.Color;
+  end;
 end;
 
 procedure TfrmGeVenda.btnFiltrarClick(Sender: TObject);
@@ -1026,7 +1033,7 @@ begin
       dbQuantidade.SetFocus;
     end
     else
-    if ( cdsTabelaItensPUNIT.Value < 0 ) then
+    if ( cdsTabelaItensPUNIT.Value <= 0 ) then
     begin
       ShowWarning('Valor unitário inválida.');
       dbValorUnit.SetFocus;
@@ -1187,7 +1194,7 @@ begin
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
       CarregarDadosCFOP( cdsTabelaItensCFOP_COD.AsInteger );
 
-  if ( (Sender = dbQuantidade) or (Sender = dbDesconto) ) then
+  if ( (Sender = dbQuantidade) or (Sender = dbValorUnit) or (Sender = dbDesconto) ) then
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
     begin
       if ( cdsTabelaItensPUNIT_PROMOCAO.IsNull ) then

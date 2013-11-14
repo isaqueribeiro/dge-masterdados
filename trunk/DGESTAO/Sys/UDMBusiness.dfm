@@ -193,7 +193,21 @@ object DMBusiness: TDMBusiness
       'where'
       '  NOME = :NOME')
     SelectSQL.Strings = (
-      'select * from TBUSERS')
+      'Select'
+      '    u.nome'
+      '  , u.senha'
+      '  , u.nomecompleto'
+      '  , u.codfuncao'
+      '  , u.limidesc'
+      '  , u.ativo'
+      '  , u.alterar_senha'
+      '  , u.perm_alterar_valor_venda'
+      'from TBUSERS u'
+      ''
+      'where coalesce(u.ativo, 1) = 1'
+      ''
+      'order by'
+      '    u.nome')
     ModifySQL.Strings = (
       'update TBUSERS'
       'set'
@@ -208,32 +222,52 @@ object DMBusiness: TDMBusiness
     Top = 120
     object ibdtstUsersNOME: TIBStringField
       FieldName = 'NOME'
-      Origin = 'TBUSERS.NOME'
+      Origin = '"TBUSERS"."NOME"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
       Size = 12
     end
     object ibdtstUsersSENHA: TIBStringField
       FieldName = 'SENHA'
-      Origin = 'TBUSERS.SENHA'
+      Origin = '"TBUSERS"."SENHA"'
+      ProviderFlags = [pfInUpdate]
       Required = True
       Size = 16
     end
     object ibdtstUsersNOMECOMPLETO: TIBStringField
       FieldName = 'NOMECOMPLETO'
-      Origin = 'TBUSERS.NOMECOMPLETO'
+      Origin = '"TBUSERS"."NOMECOMPLETO"'
+      ProviderFlags = [pfInUpdate]
       Required = True
       Size = 60
     end
     object ibdtstUsersCODFUNCAO: TSmallintField
       FieldName = 'CODFUNCAO'
-      Origin = 'TBUSERS.CODFUNCAO'
+      Origin = '"TBUSERS"."CODFUNCAO"'
+      ProviderFlags = [pfInUpdate]
       Required = True
     end
     object ibdtstUsersLIMIDESC: TIBBCDField
       FieldName = 'LIMIDESC'
-      Origin = 'TBUSERS.LIMIDESC'
+      Origin = '"TBUSERS"."LIMIDESC"'
+      ProviderFlags = [pfInUpdate]
       Precision = 9
       Size = 2
+    end
+    object ibdtstUsersATIVO: TSmallintField
+      FieldName = 'ATIVO'
+      Origin = '"TBUSERS"."ATIVO"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object ibdtstUsersALTERAR_SENHA: TSmallintField
+      FieldName = 'ALTERAR_SENHA'
+      Origin = '"TBUSERS"."ALTERAR_SENHA"'
+      Required = True
+    end
+    object ibdtstUsersPERM_ALTERAR_VALOR_VENDA: TSmallintField
+      FieldName = 'PERM_ALTERAR_VALOR_VENDA'
+      Origin = '"TBUSERS"."PERM_ALTERAR_VALOR_VENDA"'
+      ProviderFlags = [pfInUpdate]
     end
   end
   object EvMsgDialog: TEvMsgDlg

@@ -51,13 +51,8 @@ type
     ibdtstAjustEstoqLookFornec: TStringField;
     qryBusca: TIBQuery;
     ibdtstUsers: TIBDataSet;
-    ibdtstUsersNOME: TIBStringField;
-    ibdtstUsersSENHA: TIBStringField;
-    ibdtstUsersNOMECOMPLETO: TIBStringField;
-    ibdtstUsersCODFUNCAO: TSmallintField;
     EvMsgDialog: TEvMsgDlg;
     dtsrcUsers: TDataSource;
-    ibdtstUsersLIMIDESC: TIBBCDField;
     raveReport: TRvProject;
     IdIPWatch: TIdIPWatch;
     qryCaixaAberto: TIBDataSet;
@@ -82,6 +77,14 @@ type
     ibqryEmpresaCNPJ: TIBStringField;
     ibqryEmpresaNMFANT: TIBStringField;
     qryConfiguracoes: TIBQuery;
+    ibdtstUsersNOME: TIBStringField;
+    ibdtstUsersSENHA: TIBStringField;
+    ibdtstUsersNOMECOMPLETO: TIBStringField;
+    ibdtstUsersCODFUNCAO: TSmallintField;
+    ibdtstUsersLIMIDESC: TIBBCDField;
+    ibdtstUsersATIVO: TSmallintField;
+    ibdtstUsersPERM_ALTERAR_VALOR_VENDA: TSmallintField;
+    ibdtstUsersALTERAR_SENHA: TSmallintField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -189,7 +192,9 @@ var
   function GetTimeDB : TDateTime;
   function GetUserApp : String;
   function GetUserFunctionID : Integer;
+  function GetUserUpdatePassWord : Boolean;
   function GetLimiteDescontoUser : Currency;
+  function GetUserPermitirAlterarValorVenda : Boolean;
   function GetSolicitaDHSaidaNFe(const sCNPJEmitente : String) : Boolean;
   function GetImprimirCodClienteNFe(const sCNPJEmitente : String) : Boolean;
   function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
@@ -1633,10 +1638,22 @@ begin
     Result := ibdtstUsersCODFUNCAO.AsInteger;
 end;
 
+function GetUserUpdatePassWord : Boolean;
+begin
+  with DMBusiness, ibdtstUsers do
+    Result := (ibdtstUsersALTERAR_SENHA.AsInteger = 1);
+end;
+
 function GetLimiteDescontoUser : Currency;
 begin
   with DMBusiness, ibdtstUsers do
     Result := ibdtstUsersLIMIDESC.AsCurrency;
+end;
+
+function GetUserPermitirAlterarValorVenda : Boolean;
+begin
+  with DMBusiness, ibdtstUsers do
+    Result := (ibdtstUsersPERM_ALTERAR_VALOR_VENDA.AsInteger = 1);
 end;
 
 function GetSolicitaDHSaidaNFe(const sCNPJEmitente : String) : Boolean;
