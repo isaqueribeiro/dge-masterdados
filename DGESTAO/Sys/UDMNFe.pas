@@ -452,7 +452,7 @@ type
     { Private declarations }
     frmACBr : TfrmGeConfigurarNFeACBr;
     fr3Designer: TfrxDesigner;
-    
+
     procedure GerarTabela_CST_PIS;
     procedure GerarTabela_CST_COFINS;
 
@@ -481,6 +481,8 @@ type
     procedure AbrirNFeEmitida(AnoVenda, NumeroVenda : Integer);
     procedure AbrirCompra(AnoCompra, NumeroCompra : Integer);
 
+    function ReciboNaoExisteNaVenda(const sRecibo : String) : Boolean;
+    function ReciboNaoExisteNaEntrada(const sRecibo : String) : Boolean;
     function GerarNFeOnLine : Boolean;
     function GetInformacaoFisco : String;
     function GetValidadeCertificado(const Informe : Boolean = FALSE) : Boolean;
@@ -526,7 +528,7 @@ var
 const
   SELDIRHELP   = 1000;
   FILENAME_NFE = 'Report\NotaFiscalEletronica.rav';
-  
+
   DIRECTORY_CANCEL = 'NFe\Canceladas\';
   DIRECTORY_PRINT  = 'NFe\Imprimir\';
   DIRECTORY_CLIENT = 'NFe\Clientes\';
@@ -958,6 +960,42 @@ begin
   MyWebBrowser.Navigate( PathWithDelim(ExtractFileDir(application.ExeName)) + 'temp.xml' );
 end;
 
+function TDMNFe.ReciboNaoExisteNaVenda(const sRecibo : String) : Boolean;
+begin
+  Result := (Trim(sRecibo) = EmptyStr);
+
+  if not Result then
+    with DMBusiness, qryBusca do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('Select lote_nfe_recibo as recibo from TBVENDAS where lote_nfe_recibo = ' + QuotedStr(sRecibo));
+      Open;
+
+      Result := IsEmpty;
+
+      Close;
+    end;
+end;
+
+function TDMNFe.ReciboNaoExisteNaEntrada(const sRecibo : String) : Boolean;
+begin
+  Result := (Trim(sRecibo) = EmptyStr);
+
+  if not Result then
+    with DMBusiness, qryBusca do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('Select lote_nfe_recibo as recibo from TBCOMPRAS where lote_nfe_recibo = ' + QuotedStr(sRecibo));
+      Open;
+
+      Result := IsEmpty;
+
+      Close;
+    end;
+end;
+
 function TDMNFe.GerarNFeOnLine : Boolean;
 begin
   Result := ( ConfigACBr.rgModoGerarNFe.ItemIndex = 1 );
@@ -984,8 +1022,8 @@ begin
 
     Result := ACBrNFe.Enviar( iNumeroLote, Imprimir );
 
-    GuardarLoteNFeVenda(sCNPJEmitente, iAnoVenda, iNumVenda, iNumeroLote, EmptyStr);
-
+//    GuardarLoteNFeVenda(sCNPJEmitente, iAnoVenda, iNumVenda, iNumeroLote, EmptyStr);
+//
     if ( Result ) then
     begin
       ChaveNFE     := ACBrNFe.WebServices.Retorno.ChaveNFe;
@@ -1002,7 +1040,9 @@ begin
       sErrorMsg := E.Message;
 
       // Diretrizes de tomada de decisão quando a NFe enviada não é aceita
-      GuardarLoteNFeVenda(sCNPJEmitente, iAnoVenda, iNumVenda, iNumeroLote, ACBrNFe.WebServices.Retorno.Recibo);
+      if ( Trim(ACBrNFe.WebServices.Retorno.Recibo) <> EmptyStr ) then
+        if ReciboNaoExisteNaVenda(ACBrNFe.WebServices.Retorno.Recibo) then
+          GuardarLoteNFeVenda(sCNPJEmitente, iAnoVenda, iNumVenda, iNumeroLote, ACBrNFe.WebServices.Retorno.Recibo);
 
       if ( ACBrNFe.WebServices.Retorno.NFeRetorno.ProtNFe.Count = 1 ) then
         Case ACBrNFe.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].cStat of
@@ -1011,13 +1051,18 @@ begin
               UpdateNumeroNFe(sCNPJEmitente, qryEmitenteSERIE_NFE.AsInteger, iNumeroNFe);
               UpdateLoteNFe  (sCNPJEmitente, qryEmitenteLOTE_ANO_NFE.AsInteger, iNumeroLote);
 
+              // Remover Lote da Venda
+              GuardarLoteNFeVenda(sCNPJEmitente, iAnoVenda, iNumVenda, 0, EmptyStr);
+
               sErrorMsg := ACBrNFe.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].xMotivo + #13 +
                 'Favor gerar NF-e novamente!';
             end;
         end;
 
-      ShowError('Erro ao tentar gerar NF-e.' + #13 +
-        'Recibo: ' + ACBrNFe.WebServices.Retorno.Recibo + #13#13 + 'GerarNFeOnLineACBr() --> ' + sErrorMsg);
+      ShowError('Erro ao tentar gerar NF-e.' +
+        IfThen(Trim(ACBrNFe.WebServices.Retorno.Recibo) = EmptyStr, EmptyStr, #13 + 'Recibo: ' + ACBrNFe.WebServices.Retorno.Recibo) +
+        #13#13 + 'GerarNFeOnLineACBr() --> ' + sErrorMsg);
+
       Result := False;
     end;
   end;
@@ -2235,8 +2280,8 @@ begin
 
     Result := ACBrNFe.Enviar( iNumeroLote, Imprimir );
 
-    GuardarLoteNFeEntrada(sCNPJEmitente, iAnoCompra, iNumCompra, iNumeroLote, EmptyStr);
-
+//    GuardarLoteNFeEntrada(sCNPJEmitente, iAnoCompra, iNumCompra, iNumeroLote, EmptyStr);
+//
     if ( Result ) then
     begin
       ChaveNFE     := ACBrNFe.WebServices.Retorno.ChaveNFe;
@@ -2253,7 +2298,9 @@ begin
       sErrorMsg := E.Message;
 
       // Diretrizes de tomada de decisão quando a NFe enviada não é aceita
-      GuardarLoteNFeEntrada(sCNPJEmitente, iAnoCompra, iNumCompra, iNumeroLote, ACBrNFe.WebServices.Retorno.Recibo);
+      if ( Trim(ACBrNFe.WebServices.Retorno.Recibo) <> EmptyStr ) then
+        if ReciboNaoExisteNaEntrada(ACBrNFe.WebServices.Retorno.Recibo) then
+          GuardarLoteNFeEntrada(sCNPJEmitente, iAnoCompra, iNumCompra, iNumeroLote, ACBrNFe.WebServices.Retorno.Recibo);
 
       if ( ACBrNFe.WebServices.Retorno.NFeRetorno.ProtNFe.Count = 1 ) then
         Case ACBrNFe.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].cStat of
@@ -2261,13 +2308,19 @@ begin
             begin
               UpdateNumeroNFe(sCNPJEmitente, qryEmitenteSERIE_NFE.AsInteger, iNumeroNFe);
               UpdateLoteNFe  (sCNPJEmitente, qryEmitenteLOTE_ANO_NFE.AsInteger, iNumeroLote);
-              
+
+              // Remover Lote da Venda
+              GuardarLoteNFeEntrada(sCNPJEmitente, iAnoCompra, iNumCompra, 0, EmptyStr);
+
               sErrorMsg := ACBrNFe.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].xMotivo + #13 +
                 'Favor gerar NF-e novamente!';
             end;
         end;
 
-      ShowError('Erro ao tentar gerar NF-e de Entrada.' + #13 + 'Recibo: ' + ACBrNFe.WebServices.Retorno.Recibo + #13#13 + 'GerarNFeEntradaOnLineACBr() --> ' + sErrorMsg);
+      ShowError('Erro ao tentar gerar NF-e de Entrada.' +
+        IfThen(Trim(ACBrNFe.WebServices.Retorno.Recibo) = EmptyStr, EmptyStr, #13 + 'Recibo: ' + ACBrNFe.WebServices.Retorno.Recibo) +
+        #13#13 + 'GerarNFeEntradaOnLineACBr() --> ' + sErrorMsg);
+
       Result := False;
     end;
   end;
@@ -3225,8 +3278,8 @@ begin
     begin
       SQL.Clear;
       SQL.Add('Update TBVENDAS Set');
-      SQL.Add('    LOTE_NFE_ANO    = ' + qryEmitenteLOTE_ANO_NFE.AsString);
-      SQL.Add('  , LOTE_NFE_NUMERO = ' + FormatFloat('#########', NumeroLote));
+      SQL.Add('    LOTE_NFE_ANO    = ' + IfThen(NumeroLote = 0, 'NULL', qryEmitenteLOTE_ANO_NFE.AsString));
+      SQL.Add('  , LOTE_NFE_NUMERO = ' + IfThen(NumeroLote = 0, 'NULL', FormatFloat('#########', NumeroLote)));
       SQL.Add('  , LOTE_NFE_RECIBO = ' + IfThen(Recibo = EmptyStr, 'NULL', QuotedStr(Trim(Recibo))));
       SQL.Add('Where CODEMP     = ' + QuotedStr(sCNPJEmitente));
       SQL.Add('  and ANO        = ' + FormatFloat('#########', Ano));
@@ -3249,8 +3302,8 @@ begin
     begin
       SQL.Clear;
       SQL.Add('Update TBCOMPRAS Set');
-      SQL.Add('    LOTE_NFE_ANO    = ' + qryEmitenteLOTE_ANO_NFE.AsString);
-      SQL.Add('  , LOTE_NFE_NUMERO = ' + FormatFloat('#########', NumeroLote));
+      SQL.Add('    LOTE_NFE_ANO    = ' + IfThen(NumeroLote = 0, 'NULL', qryEmitenteLOTE_ANO_NFE.AsString));
+      SQL.Add('  , LOTE_NFE_NUMERO = ' + IfThen(NumeroLote = 0, 'NULL', FormatFloat('#########', NumeroLote)));
       SQL.Add('  , LOTE_NFE_RECIBO = ' + IfThen(Recibo = EmptyStr, 'NULL', QuotedStr(Trim(Recibo))));
       SQL.Add('Where CODEMP     = ' + QuotedStr(sCNPJEmitente));
       SQL.Add('  and ANO        = ' + FormatFloat('#########', Ano));
