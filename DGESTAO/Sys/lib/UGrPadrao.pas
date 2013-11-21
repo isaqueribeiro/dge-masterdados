@@ -43,7 +43,7 @@ begin
   if (not Assigned(Frm)) or (Key = 0) then
     Exit;
 
-  if (Key = VK_RETURN) and (Shift = []) then
+  if ((Key = VK_RETURN) or (key = VK_TAB)) and (Shift = []) then
   begin
 
     if (
