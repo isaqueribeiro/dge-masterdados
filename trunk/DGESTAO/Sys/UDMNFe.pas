@@ -10,7 +10,7 @@ uses
   frxExportPDF, frxExportMail, UGeConfigurarNFeACBr,
 
   ACBrUtil, pcnConversao, pcnNFeW, pcnNFeRTXT, pcnAuxiliar, ACBrNFeUtil, SHDocVw,
-  IBUpdateSQL, IBSQL, frxDesgn, frxRich;
+  IBUpdateSQL, IBSQL, frxDesgn, frxRich, frxCross, frxChart;
 
 type
   TDMNFe = class(TDataModule)
@@ -443,6 +443,8 @@ type
     FrrECFPoolerRequisicaoCliente: TfrxReport;
     qryRequisicaoCliente: TIBQuery;
     frdRequisicaoCliente: TfrxDBDataset;
+    frxCrossObject: TfrxCrossObject;
+    frxChartObject: TfrxChartObject;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);

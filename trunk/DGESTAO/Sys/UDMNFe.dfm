@@ -9706,4 +9706,12 @@ object DMNFe: TDMNFe
     Left = 344
     Top = 448
   end
+  object frxCrossObject: TfrxCrossObject
+    Left = 24
+    Top = 408
+  end
+  object frxChartObject: TfrxChartObject
+    Left = 24
+    Top = 456
+  end
 end

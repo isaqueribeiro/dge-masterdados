@@ -1,0 +1,1163 @@
+unit MP20MICI;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  StdCtrls, ExtCtrls, ExtDlgs, Buttons, Printers, ComCtrls;
+                                               //Alterado Alcides Magno - Printer para imprimir o Bitmap
+type
+  TForm1 = class(TForm)
+    Edit1: TEdit;
+    Label1: TLabel;
+    ComboBox1: TComboBox;
+    GroupBox1: TGroupBox;
+    RBNormal: TRadioButton;
+    RBElite: TRadioButton;
+    RBCondensado: TRadioButton;
+    GroupBox2: TGroupBox;
+    RBNegrito: TCheckBox;
+    RBItalico: TCheckBox;
+    RBSublinhado: TCheckBox;
+    RBExpandido: TCheckBox;
+    Panel1: TPanel;
+    Button5: TButton;
+    btnCaracterGrafico: TButton;
+    Button9: TButton;
+    GroupBox4: TGroupBox;
+    Label11: TLabel;
+    Edit2: TEdit;
+    btnPrgramarPresenter: TButton;
+    btnHabilitaPresenter: TButton;
+    Button1: TButton;
+    Button2: TButton;
+    btnAguardaImpressaoTexto: TButton;
+    btnCortarPapel: TButton;
+    GroupBox5: TGroupBox;
+    btnStatusPorta: TButton;
+    ListBox1: TMemo;
+    Label12: TLabel;
+    ComboModeloImpressora: TComboBox;
+    btnTesteTextoFormatado: TButton;
+    Seleciona: TOpenPictureDialog;
+    PrintDialog1: TPrintDialog;
+    PrinterSetupDialog1: TPrinterSetupDialog;
+    Button3: TButton;
+    Button4: TButton;
+    GroupBox3: TGroupBox;
+    Label9: TLabel;
+    Edit4: TEdit;
+    btnPrgramarExtrato: TButton;
+    btnHabilitaTamanhoExtrato: TButton;
+    Label13: TLabel;
+    Panel2: TPanel;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    Panel4: TPanel;
+    RichEdit1: TRichEdit;
+    ComboBox2: TComboBox;
+    Edit3: TEdit;
+    BitBtn3: TBitBtn;
+    Panel3: TPanel;
+    imgPrint: TImage;
+    Idioma: TGroupBox;
+    RBIdioma: TRadioButton;
+    RadioButton2: TRadioButton;
+    PROCEDURE Button1Click(Sender: TObject);
+    PROCEDURE Button2Click(Sender: TObject);
+    PROCEDURE ComboBox1Change(Sender: TObject);
+    PROCEDURE Button5Click(Sender: TObject);
+    PROCEDURE btnCaracterGraficoClick(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
+    procedure btnStatusPortaClick(Sender: TObject);
+    procedure btnCortarPapelClick(Sender: TObject);
+    procedure btnAguardaImpressaoTextoClick(Sender: TObject);
+    procedure ComboModeloImpressoraChange(Sender: TObject);
+    procedure Inicializa(Sender: TObject);
+    procedure btnTesteTextoFormatadoClick(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Edit3Exit(Sender: TObject);
+    procedure ComboBox2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure btnPrgramarExtratoClick(Sender: TObject);
+    procedure btnHabilitaTamanhoExtratoClick(Sender: TObject);
+    procedure btnPrgramarPresenterClick(Sender: TObject);
+    procedure btnHabilitaPresenterClick(Sender: TObject);
+    Procedure Traduz_Caption(Portugues: Boolean);
+    procedure RBIdiomaClick(Sender: TObject);
+    procedure RadioButton2Click(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  buffer, cmd: String;
+  comunica: String;
+  retorno,envia, porta, comando, fecha, modo: Integer;
+  negrito, italico, sublinhado, expandido: Integer;
+
+implementation
+
+FUNCTION IniciaPorta(Porta:string):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION FechaPorta:integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION BematechTX(BufTrans:string):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION FormataTX(BufTras:string; TpoLtra:integer; Italic:integer; Sublin:integer; expand:integer; enfat:integer):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION ComandoTX (BufTrans:string;TamBufTrans:integer):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION Status_Porta:integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION AutenticaDoc(BufTras:string;Tempo:Integer):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION Le_Status:integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION Le_Status_Gaveta:integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION DocumentInserted:integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION ConfiguraTamanhoExtrato(NumeroLinhas:Integer):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION HabilitaExtratoLongo(Flag:Integer):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION HabilitaEsperaImpressao(Flag:Integer):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION EsperaImpressao:integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION ConfiguraModeloImpressora(ModeloImpressora:integer):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION AcionaGuilhotina(Modo:integer):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION HabilitaPresenterRetratil(Flag:Integer):integer; stdcall; far; external 'Mp2032.dll';
+FUNCTION ProgramaPresenterRetratil(Tempo:Integer):integer; stdcall; far; external 'Mp2032.dll';
+
+{$R *.DFM}
+
+// Imprime Texto sem Formatação.
+PROCEDURE TForm1.Button1Click(Sender: TObject);
+var Contador   : integer;
+    InputString: string;
+    BEGIN
+        If RBIdioma.Checked then
+          InputString:= inputbox( 'Impressão de Texto', 'Quantas vezes você deseja imprimir?' , '' )
+        else
+          InputString:= inputbox( 'Impression of Text ', ' How many times you desire to print?' , '' );
+
+        if ( InputString <> '' ) then
+        begin
+            for Contador := 1 to strtoint( InputString ) do
+            Begin
+                buffer  := Edit1.Text + Chr(13) + Chr(10);
+                comando := FormataTX(buffer, 3, 0, 0, 0, 0);
+                if comando = 0 then
+                begin
+                    If RBIdioma.Checked then
+                      MessageDlg('Problemas na impressão do texto.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+                    else
+                      MessageDlg('Problems in the impression of the text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper ', mtError, [mbOk], 0 );
+                    exit;
+                end;
+            end;
+        end;
+    END;
+
+
+
+// Imprime Texto com Formatação.
+PROCEDURE TForm1.Button2Click(Sender: TObject);
+var Contador   : integer;
+    InputString: string;
+    BEGIN
+        Negrito    := 0;
+        Italico    := 0;
+        Sublinhado := 0;
+        Expandido  := 0;
+        If RBIdioma.Checked then
+          InputString:= inputbox( 'Impressão de Texto', 'Quantas vezes você deseja imprimir?' , '' )
+        else
+          InputString:= inputbox( ' Impression of Text ', ' How many times you desire to print ' , '' );
+
+        if ( InputString <> '' ) then
+        begin
+            // Verifica modo NORMAL, ELITE ou CONDENSADO.
+            If RBNormal.Checked = True Then
+               modo := 2 // normal
+            else If RBElite.Checked = True Then
+               modo := 3 // elite
+            else
+               modo := 1; // condensado
+
+            // Negrito, Itálico, Sublinhado e Expandido
+            If (RBNegrito.Checked = True) then
+              Negrito := 1;
+            if (RBItalico.Checked = True) then
+              Italico := 1;
+            if (RBSublinhado.Checked = True) then
+              Sublinhado := 1;
+            if (RBExpandido.Checked = True) then
+              Expandido  := 1;
+{            // sem Negrito, sem Italico, sem Sublinhado e sem Expandido
+            Else If (CheckBox1.Checked = False) And (CheckBox2.Checked = False) And
+                    (CheckBox3.Checked = False) And (CheckBox4.Checked = False) Then
+                 begin
+                     Negrito    := 0;
+                     Italico    := 0;
+                     Sublinhado := 0;
+                     Expandido  := 0;
+                 end
+
+           // Negrito, Itálico e Sublinhado
+           Else If (CheckBox1.Checked = True) And (CheckBox2.Checked = True) And
+                   (CheckBox3.Checked = True) Then
+                begin
+                    Negrito    := 1;
+                    Italico    := 1;
+                    Sublinhado := 1;
+                    Expandido  := 0;
+                end
+
+           // Negrito e Itálico
+           Else If (CheckBox1.Checked = True) And (CheckBox2.Checked = True) Then
+                begin
+                    Negrito    := 1;
+                    Italico    := 1;
+                    Sublinhado := 0;
+                    Expandido  := 0;
+                end
+
+           // Negrito e Expandido
+           Else If (CheckBox1.Checked = True) And (CheckBox4.Checked) = True Then
+                begin
+                    Negrito    := 1;
+                    Italico    := 0;
+                    Sublinhado := 0;
+                    Expandido  := 1;
+                end
+
+           // Negrito e Sublinhado
+           Else If (CheckBox1.Checked = True) And (CheckBox3.Checked = True) Then
+                begin
+                    Negrito    := 1;
+                    Italico    := 0;
+                    Sublinhado := 1;
+                    Expandido  := 0;
+                end
+
+            // Italico e Expandido
+            Else If (CheckBox2.Checked = True) And (CheckBox4.Checked = True) Then
+                 begin
+                     Negrito    := 0;
+                     Italico    := 1;
+                     Sublinhado := 0;
+                     Expandido  := 1;
+                 end
+
+            // Italico e Sublinhado
+            Else If (CheckBox2.Checked = True) And (CheckBox3.Checked = True) Then
+                 begin
+                     Negrito    := 0;
+                     Italico    := 1;
+                     Sublinhado := 1;
+                     Expandido  := 0;
+                 end
+
+            // Sublinhado e Expandido
+            Else If (CheckBox3.Checked = True) And (CheckBox4.Checked = True) Then
+                 begin
+                     Negrito    := 0;
+                     Italico    := 0;
+                     Sublinhado := 1;
+                     Expandido  := 1;
+                 end
+
+            // Negrito
+            Else If (CheckBox1.Checked = True) Then
+                 begin
+                     Negrito    := 1;
+                     Italico    := 0;
+                     Sublinhado := 0;
+                     Expandido  := 0;
+                 end
+
+            // Italico
+            Else If (CheckBox2.Checked = True) Then
+                 begin
+                     Negrito    := 0;
+                     Italico    := 1;
+                     Sublinhado := 0;
+                     Expandido  := 0;
+                 end
+
+            // Expandido
+            Else If (CheckBox4.Checked = True) Then
+                 begin
+                     Negrito    := 0;
+                     Italico    := 0;
+                     Sublinhado := 0;
+                     Expandido  := 1;
+                  end
+
+            // Sublinhado
+            Else If (CheckBox3.Checked = True) Then
+                 begin
+                     Negrito    := 0;
+                     Italico    := 0;
+                     Sublinhado := 1;
+                     Expandido  := 0;
+                 end;   }
+
+
+            for Contador := 1 to strtoint( InputString ) do
+            Begin
+                buffer  := Edit1.Text + Chr(13) + Chr(10);
+                comando := FormataTX(buffer, modo, Italico, Sublinhado, Expandido, Negrito);
+                if comando = 0 then
+                begin
+                    If RbIdioma.Checked then
+                      MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+                    else
+                      MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper ', mtError, [mbOk], 0 );
+                    exit;
+                end;
+            end;
+        end;
+    END;
+
+PROCEDURE TForm1.ComboBox1Change(Sender: TObject);
+    BEGIN
+
+        // Fecha a porta que está aberta
+        porta := FechaPorta();
+        If porta <= 0 Then
+          If RbIdioma.Checked then
+            MessageDlg('Problemas ao fechar a porta de Comunicação.', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems when closing the communication door.', mtError, [mbOk], 0 );
+
+         If (ComboBox1.ItemIndex) = 0 Then
+             BEGIN
+                  comunica := 'LPT1';
+             END;
+         If (ComboBox1.ItemIndex) = 1 Then
+             BEGIN
+                  comunica := 'COM1';
+             END;
+         If (ComboBox1.ItemIndex) = 2 Then
+             BEGIN
+                 comunica := 'COM2';
+             END;
+
+        // Abre a porta de comunicacao
+        porta := IniciaPorta(Pchar(comunica));
+        If porta <= 0 Then
+          If RbIdioma.Checked then
+            MessageDlg('Problemas ao abrir a porta de Comunicação.', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems when opening the communication door.', mtError, [mbOk], 0 )
+
+    END;
+
+PROCEDURE TForm1.Button5Click(Sender: TObject);
+BEGIN
+  retorno:=FechaPorta();
+  Application.Terminate;
+  Exit;
+END;
+
+
+// Comando para Imprimir Caracter de Autenticação.
+PROCEDURE TForm1.btnCaracterGraficoClick(Sender: TObject);
+{
+                  DESENHO
+
+             1 2 3 4 5 6 7 8 9
+bit 7 = 128  *               *
+bit 6 = 064  * *             *
+bit 5 = 032  * * *           *
+bit 4 = 016  * * * *         *
+bit 3 = 008  * * * * *       *
+bit 2 = 004  * * * * * *     *
+bit 1 = 002  * * * * * * *   *
+bit 0 = 001  * * * * * * * * *
+}
+    BEGIN
+        // Comando que habilita o modo grafico com 9 pinos (9 colunas)
+        cmd := chr(27) + chr(94) + chr(18) + chr(0);
+        comando := ComandoTX(cmd, Length(cmd));
+        if comando = 0 then
+        begin
+          If RBIdioma.Checked then
+             MessageDlg('Problemas na impressão do caracter gráfico.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+             MessageDlg('Problems in the impression of graphical caracter.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+         exit;
+        end;
+
+        // Sequencia de bytes para a montagem do desenho acima
+        cmd := chr(255) + chr(0) + chr(0) + chr(0) + chr(127) + chr(0)
+         + chr(0) + chr(0) + chr(063) + chr(0) + chr(0) + chr(0)
+         + chr(031) + chr(0) + chr(0) + chr(0) + chr(015) + chr(0) + chr(0)
+         + chr(0) + chr(007) + chr(0) + chr(0) + chr(0) + chr(003) + chr(0)
+         + chr(0) + chr(0) + chr(001) + chr(0) + chr(0) + chr(0) + chr(255)
+         + chr(0) + chr(0) + chr(0);
+        comando := ComandoTX(cmd, Length(cmd));
+        if comando = 0 then
+        begin
+          If RBIdioma.Checked then
+             MessageDlg('Problemas na impressão do caracter gráfico.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          Else
+            MessageDlg('Problems in the impression of graphical caracter.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+             exit;
+        end;
+
+        // Descarrega o buffer na impressora.
+        cmd := chr(13) + chr(10);
+        comando := ComandoTX(cmd, Length(cmd));
+        if comando = 0 then
+        begin
+          If RBIdioma.Checked then
+             MessageDlg('Problemas na impressão do caracter gráfico.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of graphical caracter.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+             exit;
+        end;
+END;
+
+//procedure TForm1.Button8Click(Sender: TObject);
+//begin
+
+//porta := IniciaPorta(Pchar(comunica));
+//If porta <= 0 Then
+//BEGIN
+//  showmessage('Problemas ao abrir a porta de Comunicação. Verifique.');
+//END;
+//retorno:=BematechTX(chr(27)+Comando.text);
+//retorno:=FechaPorta();
+//end;
+
+
+procedure TForm1.Button9Click(Sender: TObject);
+begin
+edit1.text:='âäàáãÃÂÄÁÀ êëèéÊËÉÈ ïíìîÎÍÌÏ öóòôõÖÓÒÔÕ üúùûÜÙÚÛ Çç ÿ Ññ  ' ;
+end;
+
+procedure TForm1.btnStatusPortaClick(Sender: TObject);
+Var Contador : integer;
+begin
+    btnStatusPorta.Caption := 'Aguarde...';
+    btnStatusPorta.Cursor := crHourGlass;
+
+    for Contador := 1 to 30000 do
+    begin
+       ListBox1.Clear;
+       retorno:=Le_Status();
+       If RbIdioma.Checked then
+         case retorno of
+              0 : ListBox1.Lines.Add('Desligada ou cabo desconectado');
+             32 : ListBox1.Lines.Add('Pouco papel e off-line');
+             40 : ListBox1.Lines.Add('Fim de papel');
+             48 : ListBox1.Lines.Add('Pouco papel e on-line');
+             79 : ListBox1.Lines.Add('Off-line');
+            128 : ListBox1.Lines.Add('Head Up');
+            144 : ListBox1.Lines.Add('Impressora ok');
+           //Se não for nenhum dos status acima
+           Else
+             ListBox1.Lines.Add('Status desconhecido')
+         end
+       Else
+         case retorno of
+              0 : ListBox1.Lines.Add('Off or detached handle');
+             32 : ListBox1.Lines.Add('Little paper and off-line');
+             40 : ListBox1.Lines.Add('End of paper');
+             48 : ListBox1.Lines.Add('Little paper and on-line');
+             79 : ListBox1.Lines.Add('Off-line');
+            128 : ListBox1.Lines.Add('Head Up');
+            144 : ListBox1.Lines.Add('Printer ok');
+           //Se não for nenhum dos status acima
+           Else
+             ListBox1.Lines.Add('Unknown status')
+         end
+
+
+    end;
+    If RBIdioma.Checked then
+      btnStatusPorta.Caption := 'Status da Porta'
+    Else
+      btnStatusPorta.Caption := 'Status of the Door';
+    btnStatusPorta.Cursor := crDefault;
+
+end;
+
+
+
+
+procedure TForm1.btnCortarPapelClick(Sender: TObject);
+begin
+   // Acionamento da guilhotina (cortar o papel)
+   comando := AcionaGuilhotina(1);  // modo total (full cut)
+   if comando <> 1 then
+    If RBIdioma.Checked then
+      MessageDlg('Problemas no corte do papel..' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+    else
+      MessageDlg('Problems in the cut of the paper.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+end;
+
+procedure TForm1.btnAguardaImpressaoTextoClick(Sender: TObject);
+var Contador   : integer;
+    InputString: string;
+    Begin
+        If RBIdioma.Checked then
+          InputString:= inputbox( 'Impression of Text with drive of the guillotine ', ' How many times you desire to print?' , '' )
+        Else
+          InputString:= inputbox( 'Impressão de Texto com acionamento da guilhotina', 'Quantas vezes você deseja imprimir?' , '' );
+
+        if ( InputString <> '' ) then
+        begin
+            comando := HabilitaEsperaImpressao(1);  // habilita a espera até que o texto seja todo impresso.
+            //                            1         2         3         4         5         6         7         8         9
+            buffer  :=          '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
+            buffer  := buffer + '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
+            buffer  := buffer + '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
+            buffer  := buffer + '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
+            buffer  := buffer + '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
+            buffer  := buffer + Chr(27) + Chr(119);// comando para cortar o papel
+
+            for Contador := 1 to strtoint( InputString ) do
+            Begin
+                comando := BematechTX(buffer);         // envia o texto para impressão
+                if comando = 0 then
+                begin
+                  If RBIdioma.Checked then
+                    MessageDlg('Problemas na impressão do texto.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+                  Else
+                    MessageDlg('Problems in the impression of the text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+                    exit;
+                end;
+
+                comando := EsperaImpressao();          // Aguarda o final da impressao do texto
+
+                // mostra a mensagem para retirar o extrato.
+                if RBIdioma.Checked then
+                  if MessageDlg('Retire seu extrato.', mtInformation, [mbOk, mbCancel], 0) = mrCancel then
+                  begin
+                    comando := HabilitaEsperaImpressao(0);  // desabilita a espera de impressao de todo o texto
+                    exit;
+                 end
+                else
+                  if MessageDlg('It removes its extract.', mtInformation, [mbOk, mbCancel], 0) = mrCancel then
+                  begin
+                    comando := HabilitaEsperaImpressao(0);  // desabilita a espera de impressao de todo o texto
+                    exit;
+                 end;
+            end; // end for
+
+            comando := HabilitaEsperaImpressao(0);  // desabilita a espera de impressao de todo o texto
+        end; // end do if ( InputString <> '' )
+
+     end;
+
+procedure TForm1.ComboModeloImpressoraChange(Sender: TObject);
+Var ModeloImpressora : integer;
+begin
+
+        If (ComboModeloImpressora.ItemIndex = 0) or
+           (ComboModeloImpressora.ItemIndex = 1) Then
+           ModeloImpressora := 1  // impressora MP20 MI ou CI
+
+        else
+           ModeloImpressora := 0; // impressora MP20 TH, MP2000 TH, MP2000 CI ou bloco térmico
+
+        // Configura o modelo da impressora
+        comando := ConfiguraModeloImpressora(ModeloImpressora);
+        If comando = -2 Then
+          If RBIdioma.Checked then
+             MessageDlg('Parâmetro inválido na função "ConfiguraModeloImpressora."', mtError, [mbOk], 0 )
+          Else
+            MessageDlg('Invalid parameter in the function "ConfiguraModeloImpressora."', mtError, [mbOk], 0 );
+
+end;
+
+procedure TForm1.Inicializa(Sender: TObject);
+begin
+    // inicializa o combo Porta de Comunicação
+     If (ComboBox1.ItemIndex) = -1 Then
+         ComboBox1.ItemIndex := 0;
+
+    // Abre a porta de comunicacao
+    comando := IniciaPorta(Pchar(ComboBox1.Text));
+    If comando <= 0 Then
+      If RBIdioma.Checked then
+        MessageDlg('Problemas ao abrir a porta de Comunicação.', mtError, [mbOk], 0 )
+      Else
+        MessageDlg('Problems when opening the communication door.', mtError, [mbOk], 0 );
+
+    // inicializa o combo ModeloImpressora com MP20 CI
+    If (ComboModeloImpressora.ItemIndex) = -1 Then
+        ComboModeloImpressora.ItemIndex := 0;
+
+    // Configura o modelo da impressora para MP20 CI
+    comando := ConfiguraModeloImpressora(1);
+    If comando = -2 Then
+      If RBIdioma.Checked then
+        MessageDlg('Parâmetro inválido na função "ConfiguraModeloImpressora."', mtError, [mbOk], 0 )
+      Else
+        MessageDlg('Invalid parameter in the function "ConfiguraModeloImpressora."', mtError, [mbOk], 0 )
+
+end;
+procedure TForm1.btnTesteTextoFormatadoClick(Sender: TObject);
+var Fonte : string;
+var Texto : string;
+   begin
+        // acentos a serem impressos
+        Texto := Texto + 'âäàáãÃÂÄÁÀ êëèéÊËÉÈ ïíìîÎÍÌÏ öóòôõÖÓÒÔÕ üúùûÜÙÚÛ' + chr(13) + chr(10) + chr(10);
+
+        // italico
+        Fonte := 'Itálico' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 1, 0, 0, 0) = 0 then
+        begin
+            If RBIdioma.Checked then
+              MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+            Else
+              MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+            exit;
+        end;
+
+        // sublinhado
+        Fonte := 'Sublinhado' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 0, 1, 0, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+         exit;
+        end;
+
+        // expandido
+        Fonte := 'Expandido' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 0, 0, 1, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // negrito
+        Fonte := 'Negrito' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 0, 0, 0, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // condensado
+        Fonte := 'Condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 0, 0, 0, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // italico + sublinhado
+        Fonte := 'Itálico + sublinhado' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 1, 1, 0, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // italico + expandido
+        Fonte := 'Itálico + expandido' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 1, 0, 1, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // italico + negrito
+        Fonte := 'Itálico + negrito' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 1, 0, 0, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // italico + condensado
+        Fonte := 'Itálico + condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 1, 0, 0, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // italico  +  sublinhado + expandido
+        Fonte := 'Itálico  +  sublinhado +expandido' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 1, 1, 1, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // italico + sublinhado + negrito
+        Fonte := 'Itálico + sublinhado + negrito' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 1, 1, 0, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // italico + sublinhado + condensado
+        Fonte := 'Itálico + sublinhado + condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 1, 1, 0, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // italico + sublinhado + expandido + negrito
+        Fonte := 'Itálico  +  sublinhado +expandido + negrito' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 1, 1, 1, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // italico + sublinhado + expandido + condensado
+        Fonte := 'Itálico + sublinhado + expandido+ condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 1, 1, 1, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // italico + sublinhado + expandido + negrito + condensado
+        Fonte := 'Itálico + sublinhado + expandido+ negrito + condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 1, 1, 1, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // sublinhado + expandido
+        Fonte := 'Sublinhado + expandido' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 0, 1, 1, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // sublinhado + negrito
+        Fonte := 'Sublinhado + negrito' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 0, 1, 0, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // sublinhado + condensado
+        Fonte := 'Sublinhado + condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 0, 1, 0, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // sublinhado + expandido + negrito
+        Fonte := 'Sublinhado + expandido +negrito' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 0, 1, 1, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // sublinhado + expandido  + condensado
+        Fonte := 'Sublinhado + expandido  + condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 0, 1, 1, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // sublinhado + expandido + negrito + consensado
+        Fonte := 'Sublinhado + expandido + negrito+ condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 0, 1, 1, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // Expandido + negrito
+        Fonte := 'Expandido + negrito' + chr(10);
+        if FormataTX(Fonte + Texto, 3, 0, 0, 1, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // Expandido + condensado
+        Fonte := 'Expandido + condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 0, 0, 1, 0) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // Expandido + negrito + condensado
+        Fonte := 'Expandido + negrito + condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 0, 0, 1, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+
+        // negrito + condensado
+        Fonte := 'Negrito + condensado' + chr(10);
+        if FormataTX(Fonte + Texto, 1, 0, 0, 0, 1) = 0 then
+        begin
+          If RBIdioma.Checked then
+            MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+          exit;
+        end;
+   end;
+
+procedure TForm1.BitBtn1Click(Sender: TObject);
+begin
+  If RBIdioma.Checked then
+    Seleciona.Title := 'Bematech Impressora Térmica'
+  else
+    Seleciona.Title := 'Thermal Printer Bematech';
+  if Seleciona.Execute then
+     begin
+        imgPrint.Picture.LoadFromFile(Seleciona.FileName);
+     end;
+
+end;
+
+procedure TForm1.BitBtn2Click(Sender: TObject);
+var
+        bmp1 : TBitmap;
+begin
+        if PrintDialog1.Execute then
+        begin
+           bmp1 := TBitmap.Create;
+           try
+              bmp1 := imgPrint.Picture.Bitmap;
+              with printer do
+                begin
+                  begindoc;
+                  Canvas.Draw((PageWidth - Bmp1.Width) div 2,
+                              (PageHeight - Bmp1.Height) div 2,
+                              bmp1);
+                  enddoc;
+                end;
+           except
+
+           end;
+
+           bmp1.Destroy;
+        end;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+ComboBox2.Items := Screen.Fonts;
+end;
+
+procedure TForm1.Edit3Exit(Sender: TObject);
+begin
+RichEdit1.Font.Name := ComboBox2.Items[ComboBox2.ItemIndex];
+RichEdit1.Font.Size := strToInt(Edit3.text);
+end;
+
+procedure TForm1.ComboBox2Click(Sender: TObject);
+begin
+RichEdit1.Font.Name := ComboBox2.Items[ComboBox2.ItemIndex];
+end;
+
+procedure TForm1.BitBtn3Click(Sender: TObject);
+begin
+If PrintDialog1.Execute then
+   RichEdit1.Print('Bematech Test');
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+    // sequencia de comando para ligar o sensor de pouco papel
+    buffer  := Chr(27) + Chr(98) + Chr(0);
+    comando := ComandoTx( buffer, 3);
+    if comando = 0 then
+    begin
+      If RBIdioma.Checked then
+        MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+      Else
+        MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+      exit;
+    end;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+    // sequencia de comando para desligar o sensor de pouco papel
+    buffer  := Chr(27) + Chr(98) + Chr(1);
+    comando := ComandoTx( buffer, 3);
+    if comando = 0 then
+    begin
+      If RBIdioma.Checked then
+        MessageDlg('Problemas na impressão do texto formatado.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+      Else
+        MessageDlg('Problems in the impression of the formatted text.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+      exit;
+    end;
+end;
+
+procedure TForm1.btnPrgramarExtratoClick(Sender: TObject);
+begin
+  // programa o tamanho do extrato longo
+    comando := ConfiguraTamanhoExtrato( StrtoInt(Edit2.Text));
+      if comando = 0 then
+        If rbiDIOMA.Checked THEN
+          MessageDlg('Problemas na programação do tamanho do extrato.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+        else
+          MessageDlg('Problems in the programming of the size of the extract..' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 );
+end;
+
+procedure TForm1.btnHabilitaTamanhoExtratoClick(Sender: TObject);
+begin
+     if btnHabilitaTamanhoExtrato.Caption = '&Habilitar' then
+     begin
+         // Habilita o extrato longo
+         comando := HabilitaExtratoLongo(1);
+         if comando = 0 then
+           IF RBIdioma.Checked then
+             MessageDlg('Problemas na habilitação do extrato longo.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+           Else
+             MessageDlg('Problems in the qualification of the long extract.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+         else
+           IF RBIdioma.Checked then
+             btnHabilitaTamanhoExtrato.Caption := 'D&esabilitar'
+           Else
+             btnHabilitaTamanhoExtrato.Caption := 'Disable';
+     end
+     else
+       begin
+         // Desabilita o extrato longo
+         comando := HabilitaExtratoLongo(0);
+         if comando = 0 then
+             If RBIdioma.Checked then
+               MessageDlg('Problemas na desabilitação do extrato longo.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+             Else
+               MessageDlg('Problems in the disable of the long extract.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 )
+
+         else
+           IF RBIdioma.Checked then
+             btnHabilitaTamanhoExtrato.Caption := 'D&esabilitar'
+           Else
+             btnHabilitaTamanhoExtrato.Caption := 'Disable';
+        end
+end;
+
+procedure TForm1.btnPrgramarPresenterClick(Sender: TObject);
+begin
+  // programa o tempo de espera para retração do
+  // papel caso o mesmo não seja retirado do bocal
+  // do presenter.
+  comando := ProgramaPresenterRetratil( StrtoInt(Edit2.Text));
+  if comando = 0 then
+    If Idioma.Enabled then
+      MessageDlg('Problemas na programação do presenter.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+    else
+      MessageDlg('Problems in the programming of presenter.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 );
+end;
+
+procedure TForm1.btnHabilitaPresenterClick(Sender: TObject);
+begin
+     if btnHabilitaPresenter.Caption = '&Habilitar' then
+     begin
+         // Habilita o presenter retrátil
+         comando := HabilitaPresenterRetratil(1);
+        if comando = 0 then
+          If Idioma.Enabled then
+            MessageDlg('Problemas na programação do presenter.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+          else
+            MessageDlg('Problems in the programming of presenter.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 )
+        else
+           IF RBIdioma.Checked then
+             btnHabilitaPresenter.Caption := 'D&esabilitar'
+           Else
+             btnHabilitaPresenter.Caption := 'Disable';
+     end
+
+     else
+       begin
+         // Desabilita o presenter retrátil
+         comando := HabilitaPresenterRetratil(0);
+         if comando = 0 then
+           If Idioma.Enabled then
+             MessageDlg('Problemas na programação do presenter.' + #10 + 'Possíveis causas: Impressora desligada, off-line ou sem papel', mtError, [mbOk], 0 )
+           else
+             MessageDlg('Problems in the programming of presenter.'  + #10 + ' Possible causes:  Off printer, off-line or without paper', mtError, [mbOk], 0 )
+         else
+           IF RBIdioma.Checked then
+             btnHabilitaPresenter.Caption := 'D&esabilitar'
+           Else
+             btnHabilitaPresenter.Caption := 'Disable';
+        end
+end;
+
+procedure TForm1.Traduz_Caption(Portugues: Boolean);
+begin
+  if Portugues then
+  Begin
+    Edit1.Text := 'Digite o texto aqui.';
+    GroupBox1.Caption := 'Modos de Impressão';
+      RBNormal.Caption := 'Normal';
+      RBCondensado.Caption := 'Condensado';
+      RBElite.Caption := 'Elite';
+    GroupBox2.Caption := 'Modos de Formatação';
+      RBNegrito.Caption := 'Negrito';
+      RBItalico.Caption := 'Itálico';
+      RBSublinhado.Caption := 'Sublinhado';
+      RBExpandido.Caption := 'Expandido';
+    Button1.Caption := 'Imprime te&xto sem formatação';
+    Button2.Caption := 'Imprime texto com &formatação';
+    BtnTesteTextoFormatado.Caption := 'T&este Texto Formatado';
+    GroupBox4.Caption := 'Programação do presenter';
+      Label11.Caption := 'Tempo de espera para retração do papel:';
+      btnPrgramarPresenter.Caption := '&Programar';
+      btnHabilitaPresenter.Caption := '&Habilitar';
+    GroupBox3.Caption := 'Tamanho do extrato';
+      btnPrgramarExtrato.Caption := 'Programar';
+      btnHabilitaTamanhoExtrato.Caption := 'Habilitar';
+    GroupBox5.Caption := 'Status da Impressora';
+      btnStatusPorta.Caption := 'Status da Impressora';
+    Button3.Caption := 'Ligar Sensor de Pouco Papel';
+    btnCaracterGrafico.Caption := 'Imprimir Caracter Gráfico';
+    btnAguardaImpressaoTexto.Caption := 'Aguardar Impressao Texto';
+    Button4.Caption := 'Desligar Sensor de Pouco Papel';
+    BtnCortarPapel.Caption := 'Cortar o papel';
+    Button5.Caption := 'Sair';
+    Label13.Caption := 'Utilizando o driver de Spooler';
+    Bitbtn1.Caption := 'Procurar Imagem';
+    Bitbtn2.Caption := 'Imprimir';
+    RichEdit1.Text := 'Bematech Soluções';
+    Bitbtn3.Caption := 'Imprimir';
+    Label1.Caption := 'Porta de Comunicação:';
+    Label12.Caption := 'Modelo da Impressora:';
+  End
+  Else
+  Begin
+    Edit1.Text := 'The text Types here.';
+    GroupBox1.Caption := 'Ways of Impression';
+      RBNormal.Caption := 'Normal';
+      RBCondensado.Caption := 'Condensed';
+      RBElite.Caption := 'Elite';
+    GroupBox2.Caption := 'Ways of Formatting';
+      RBNegrito.Caption := 'Bold';
+      RBItalico.Caption := 'Italic';
+      RBSublinhado.Caption :=   'Underlined';
+      RBExpandido.Caption := 'Expanded';
+    Button1.Caption := 'te&xto without formatting Prints';
+    Button2.Caption := 'Text with &formatação Prints';
+    BtnTesteTextoFormatado.Caption := 'T&este Formatted Text';
+    GroupBox4.Caption :=  'Programming of presenter';
+      Label11.Caption := 'Open assembly time for retraction of the paper:';
+      btnPrgramarPresenter.Caption := 'To program';
+      btnHabilitaPresenter.Caption := 'To qualify';
+    GroupBox3.Caption := 'So great of the extract';
+      btnPrgramarExtrato.Caption := 'To program';
+      btnHabilitaTamanhoExtrato.Caption := 'To qualify';
+    GroupBox5.Caption := 'Status of the Printer';
+      btnStatusPorta.Caption := 'Status of the Printer';
+    Button3.Caption := 'To bind Sensor of Little Paper';
+    btnCaracterGrafico.Caption := 'To print Graphical Caracter';
+    btnAguardaImpressaoTexto.Caption := 'To wait Impressao Text';
+    Button4.Caption := 'Disconnect Sensor of Little Paper';
+    BtnCortarPapel.Caption := 'To cut the paper';
+    Button5.Caption := 'To leave';
+    Label13.Caption := 'Using driver of Spooler';
+    Bitbtn1.Caption := 'To look Image';
+    Bitbtn2.Caption := 'To print';
+    RichEdit1.Text := 'Bematech Solutions';
+    Bitbtn3.Caption := 'To print';
+    Label1.Caption := 'Communication door:';
+    Label12.Caption := 'Model of the Printer:';
+  End
+end;
+
+procedure TForm1.RBIdiomaClick(Sender: TObject);
+begin
+  Traduz_Caption(true);
+end;
+
+procedure TForm1.RadioButton2Click(Sender: TObject);
+begin
+  Traduz_Caption(false);
+end;
+
+end.  //Fim do programa
+
+
+
+
+
