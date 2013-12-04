@@ -115,6 +115,7 @@ type
     edInicio: TDateEdit;
     edFinal: TDateEdit;
     CdsTitulosSITUACAO: TSmallintField;
+    chkEnviarCancelados: TCheckBox;
     procedure FormShow(Sender: TObject);
     procedure edBancoChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -142,6 +143,7 @@ type
     function GetAgenciaDigito : String;
     function GetContaNumero : String;
     function GetContaDigito : String;
+    function GetNossoNumeroRepetido : Boolean;
 
     function DefinirCedente( Banco, Carteira : Integer; var Objeto : Variant ) : Boolean;
     function DefinirCedenteACBr(iBanco : Integer; sCarteira : String) : Boolean;
@@ -271,6 +273,7 @@ procedure TfrmGeRemessaBoleto.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
 //  CanClose := ( Application.MessageBox('Deseja abandonar processo de geração de remessas?','Fechar', MB_YESNO + MB_ICONQUESTION + MB_DEFBUTTON2) = ID_YES );
+  ;
 end;
 
 procedure TfrmGeRemessaBoleto.btnGerarRemessaClick(Sender: TObject);
@@ -302,6 +305,9 @@ begin
 
     sBanco    := Copy(edBanco.Text, 1, 3);
     sCarteira := IbQryBancosBCO_CARTEIRA.AsString;
+
+    if GetNossoNumeroRepetido then
+      Exit;
 
     {$IFDEF ACBR}
     if DefinirCedenteACBr( IBanco, sCarteira ) then
@@ -742,6 +748,45 @@ begin
   Result := S;
 end;
 
+function TfrmGeRemessaBoleto.GetNossoNumeroRepetido : Boolean;
+var
+  bReturn : Boolean;
+  sNossoNumeroOLD : String;
+begin
+  bReturn := False;
+  try
+    sNossoNumeroOLD := EmptyStr;
+
+    CdsTitulos.IndexFieldNames := 'NOSSONUMERO';
+    CdsTitulos.Close;
+    CdsTitulos.Open;
+
+    CdsTitulos.First;
+    CdsTitulos.DisableControls;
+
+    while not CdsTitulos.Eof do
+    begin
+      if (CdsTitulosNOSSONUMERO.AsString = sNossoNumeroOLD) then
+      begin
+        bReturn := True;
+        Break;
+      end;
+
+      sNossoNumeroOLD := CdsTitulosNOSSONUMERO.AsString;
+      CdsTitulos.Next;
+    end;
+  finally
+    CdsTitulos.First;
+    CdsTitulos.EnableControls;
+
+    Result := bReturn;
+
+    if Result then
+      ShowWarning(Format('O identificador ''%s'' utilizado como NOSSO NÚMERO está repetido!' + #13#13 +
+        'Favor comunicar ao suporte.', [sNossoNumeroOLD]));
+  end;
+end;
+
 function TfrmGeRemessaBoleto.InserirBoletoACBr: Boolean;
 var
   sDocumento ,
@@ -758,12 +803,21 @@ begin
     ACBrBoleto.ListadeBoletos.Clear;
 
     CdsTitulos.First;
+    CdsTitulos.DisableControls;
 
     while not CdsTitulos.Eof do
     begin
 
+      // Não enviar na remessa boletos cancelados
+      if ( not chkEnviarCancelados.Checked ) then
+        if ( CdsTitulosSITUACAO.AsInteger = 0 ) then
+        begin
+          CdsTitulos.Next;
+          Continue;
+        end;
+        
       Boleto := ACBrBoleto.CriarTituloNaLista;
-      
+
       if ( CdsTitulosNFE.AsLargeInt > 0 ) then
       begin
         sMensagem  := Format(MSG_REF_NFE, [FormatFloat('###0000000', CdsTitulosNFE.AsLargeInt), FormatFloat('00', CdsTitulosPARCELA.AsInteger), FormatFloat('00', CdsTitulosPARCELA_MAXIMA.AsInteger)]);
@@ -777,6 +831,7 @@ begin
 
       with Boleto do
       begin
+
         // Dados do Sacado
         if StrIsCPF(CdsTitulosCNPJ.AsString) then
           Sacado.Pessoa   := pFisica
@@ -865,10 +920,14 @@ begin
   except
     On E : Exception do
     begin
+      CdsTitulos.EnableControls;
+      
       Application.MessageBox(PChar('Erro ao tentar gerar boletos (ACBr).' + #13 + E.Message), 'Erro', MB_ICONERROR);
       Result := False;
     end;
   end;
+
+  CdsTitulos.EnableControls;
 end;
 
 initialization
