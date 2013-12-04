@@ -461,6 +461,20 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
       Height = 31
       Shape = bsSpacer
     end
+    object chkEnviarCancelados: TCheckBox
+      Left = 205
+      Top = 2
+      Width = 260
+      Height = 31
+      Caption = 'Enviar na remessa os boletos cancelados.'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 2
+    end
   end
   object IbQryTitulos: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
