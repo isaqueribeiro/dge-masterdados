@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UGrPadraoCadastro, ImgList, IBCustomDataSet, IBUpdateSQL, DB,
   Mask, DBCtrls, StdCtrls, Buttons, ExtCtrls, Grids, DBGrids, ComCtrls,
-  ToolWin, IBTable, rxToolEdit, RXDBCtrl, EUserAcs;
+  ToolWin, IBTable, rxToolEdit, RXDBCtrl, EUserAcs, rxCurrEdit;
 
 type
   TAliquota = (taICMS, taISS);
@@ -232,10 +232,13 @@ type
     IbDtstTabelaPESO_BRUTO: TIBBCDField;
     IbDtstTabelaPESO_LIQUIDO: TIBBCDField;
     IbDtstTabelaCUBAGEM: TIBBCDField;
-    IbDtstTabelaPRECO_FRAC: TFloatField;
     IbDtstTabelaUSUARIO: TIBStringField;
-    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField;
-    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField;
+    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField;
+    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField;
+    IbDtstTabelaPRECO_FRAC: TFMTBCDField;
+    lblNVE: TLabel;
+    dbNVE: TDBEdit;
+    IbDtstTabelaCODIGO_NVE: TIBStringField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);
@@ -255,6 +258,7 @@ type
     procedure btnFiltrarClick(Sender: TObject);
     procedure DtSrcTabelaDataChange(Sender: TObject; Field: TField);
     procedure dbUnidadeFracaoButtonClick(Sender: TObject);
+    procedure btbtnSalvarClick(Sender: TObject);
   private
     { Private declarations }
     fOrdenado : Boolean;
@@ -270,11 +274,14 @@ var
   procedure MostrarTabelaProdutos(const AOwner : TComponent; const TipoAliquota : TAliquota);
 
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var Nome : String) : Boolean; overload;
+  function SelecionarProdutoParaAjuste(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome : String; const TipoAliquota : TAliquota = taICMS) : Boolean;
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome : String; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
     var Estoque, Reserva : Integer; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, CodigoEAN, Nome : String; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, Unidade : String; var ValorVenda, ValorPromocao : Currency; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
+  function SelecionarProdutoParaEntrada(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
+    var Estoque, Reserva : Integer; const TipoAliquota : TAliquota = taICMS) : Boolean;
 
 implementation
 
@@ -296,10 +303,13 @@ begin
   try
     frm.fAliquota := TipoAliquota;
 
-    if frm.chkProdutoComEstoque.Checked then
-      frm.WhereAdditional := 'p.Qtde > 0'
+    if GetEstoqueUnicoEmpresa(GetEmpresaIDDefault) then
+      frm.WhereAdditional := '(p.codemp = ' + QuotedStr(GetEmpresaIDDefault) + ')'
     else
-      frm.WhereAdditional := EmptyStr;  
+      frm.WhereAdditional := '(1 = 1)';
+
+    if frm.chkProdutoComEstoque.Checked then
+      frm.WhereAdditional := frm.WhereAdditional + ' and (p.Qtde > 0)';
 
     frm.ShowModal;
   finally
@@ -314,6 +324,33 @@ begin
   frm := TfrmGeProduto.Create(AOwner);
   try
     Result := frm.SelecionarRegistro(Codigo, Nome);
+  finally
+    frm.Destroy;
+  end;
+end;
+
+function SelecionarProdutoParaAjuste(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome : String; const TipoAliquota : TAliquota = taICMS) : Boolean;
+var
+  frm : TfrmGeProduto;
+  whr : String;
+begin
+  frm := TfrmGeProduto.Create(AOwner);
+  try
+    frm.fAliquota := TipoAliquota;
+
+    frm.chkProdutoComEstoque.Checked := False;
+    frm.lblAliquotaTipo.Enabled      := False;
+    frm.dbAliquotaTipo.Enabled       := False;
+
+    whr := 'p.Aliquota_tipo = ' + IntToStr(Ord(TipoAliquota));
+
+    if frm.chkProdutoComEstoque.Checked then
+      whr := whr + ' and p.Qtde > 0';
+
+    Result := frm.SelecionarRegistro(Codigo, Nome, whr);
+
+    if ( Result ) then
+      CodigoAlfa := frm.IbDtstTabelaCOD.Value;
   finally
     frm.Destroy;
   end;
@@ -355,6 +392,51 @@ begin
   try
     frm.fAliquota := TipoAliquota;
 
+    frm.lblAliquotaTipo.Enabled := False;
+    frm.dbAliquotaTipo.Enabled  := False;
+
+    whr := 'p.Aliquota_tipo = ' + IntToStr(Ord(TipoAliquota));
+
+    if frm.chkProdutoComEstoque.Checked then
+      whr := whr + ' and p.Qtde > 0';
+
+    Result := frm.SelecionarRegistro(Codigo, Nome, whr);
+
+    if ( Result ) then
+    begin
+      CodigoAlfa := frm.IbDtstTabelaCOD.AsString;
+      iUnidade   := frm.IbDtstTabelaCODUNIDADE.AsInteger;
+      sUnidade   := frm.IbDtstTabelaUNP_SIGLA.AsString;
+      CST        := frm.IbDtstTabelaCST.AsString;
+      CFOP       := frm.IbDtstTabelaCODCFOP.AsInteger;
+      Aliquota       := frm.IbDtstTabelaALIQUOTA.AsCurrency;
+      AliquotaPIS    := frm.IbDtstTabelaALIQUOTA_PIS.AsCurrency;
+      AliquotaCOFINS := frm.IbDtstTabelaALIQUOTA_COFINS.AsCurrency;
+      ValorVenda     := frm.IbDtstTabelaPRECO.AsCurrency;
+      ValorPromocao  := frm.IbDtstTabelaPRECO_PROMOCAO.AsCurrency;
+      ValorIPI       := frm.IbDtstTabelaVALOR_IPI.AsCurrency;
+
+      PercentualRedBC := frm.IbDtstTabelaPERCENTUAL_REDUCAO_BC.AsCurrency;
+
+      Estoque := frm.IbDtstTabelaQTDE.AsInteger;
+      Reserva := frm.IbDtstTabelaRESERVA.AsInteger;
+    end;
+  finally
+    frm.Destroy;
+  end;
+end;
+
+function SelecionarProdutoParaEntrada(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
+  var Estoque, Reserva : Integer; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
+var
+  frm : TfrmGeProduto;
+  whr : String;
+begin
+  frm := TfrmGeProduto.Create(AOwner);
+  try
+    frm.fAliquota := TipoAliquota;
+
+    frm.chkProdutoComEstoque.Checked := False;
     frm.lblAliquotaTipo.Enabled := False;
     frm.dbAliquotaTipo.Enabled  := False;
 
@@ -477,6 +559,9 @@ begin
   NomeTabela     := 'TBPRODUTO';
   CampoCodigo    := 'p.Codigo';
   CampoDescricao := 'p.Descri';
+  {$IFNDEF DGE}
+  CampoDescricao := 'p.Descri_apresentacao';
+  {$ENDIF}
 
   UpdateGenerator;
 
@@ -526,7 +611,7 @@ begin
 
   inherited;
 
-  IbDtstTabelaDESCRI_APRESENTACAO.AsString := Trim(IbDtstTabelaDESCRI.AsString + ' ' + IbDtstTabelaAPRESENTACAO.AsString);
+  IbDtstTabelaDESCRI_APRESENTACAO.AsString := AnsiUpperCase(Trim(IbDtstTabelaDESCRI.AsString + ' ' + IbDtstTabelaAPRESENTACAO.AsString));
   IbDtstTabelaUSUARIO.AsString             := GetUserApp;
   
   if ( IbDtstTabelaQTDE.AsInteger < 0 ) then
@@ -581,6 +666,13 @@ begin
       IbDtstTabelaUNIDADE.AsString           := sDescricao;
       IbDtstTabelaDESCRICAO_UNIDADE.AsString := sDescricao;
       IbDtstTabelaUNP_SIGLA.AsString         := sSigla;
+
+      if ( IbDtstTabelaFRACIONADOR.AsInteger = 1 ) then
+      begin
+        IbDtstTabelaCODUNIDADE_FRACIONADA.AsInteger := iCodigo;
+        IbDtstTabelaDESCRICAO_UNIDADE_FRAC.AsString := sDescricao;
+        IbDtstTabelaUNP_SIGLA_FRAC.AsString         := sSigla;
+      end;
     end;
 end;
 
@@ -600,14 +692,21 @@ end;
 procedure TfrmGeProduto.IbDtstTabelaNewRecord(DataSet: TDataSet);
 begin
   inherited;
-  if ( not tblEmpresa.IsEmpty ) then
-    IbDtstTabelaCODEMP.Value := tblEmpresa.FieldByName('CNPJ').AsString;
+  IbDtstTabelaCODEMP.Value := GetEmpresaIDDefault;
+
+  if Trim(IbDtstTabelaCODEMP.AsString) = EmptyStr then
+    if ( not tblEmpresa.IsEmpty ) then
+      IbDtstTabelaCODEMP.Value := tblEmpresa.FieldByName('CNPJ').AsString;
 
   if ( not tblOrigem.IsEmpty ) then
-    IbDtstTabelaCODORIGEM.Value := tblOrigem.FieldByName('ORP_COD').AsString;
+    IbDtstTabelaCODORIGEM.Value := TRIBUTO_ORIGEM_NACIONAL; // tblOrigem.FieldByName('ORP_COD').AsString;
 
   if ( not tblTributacaoNM.IsEmpty ) then
-    IbDtstTabelaCODTRIBUTACAO.Value := tblTributacaoNM.FieldByName('TPT_COD').AsString;
+    IbDtstTabelaCODTRIBUTACAO.Value := TRIBUTO_TRIBUTADA_INTEG; // tblTributacaoNM.FieldByName('TPT_COD').AsString;
+
+  if ( GetRegimeEmpresa(IbDtstTabelaCODEMP.AsString) = trSimplesNacional ) then
+    if ( not tblTributacaoSN.IsEmpty ) then
+      IbDtstTabelaCSOSN.Value := TRIBUTO_NAO_TRIBUTADA_SN; // tblTributacaoSN.FieldByName('TPT_COD').AsString;
 
   IbDtstTabelaCST.Value        := IbDtstTabelaCODORIGEM.AsString + IbDtstTabelaCODTRIBUTACAO.AsString;
   IbDtstTabelaESTOQMIN.Value   := 0;
@@ -824,16 +923,19 @@ end;
 
 procedure TfrmGeProduto.chkProdutoComEstoqueClick(Sender: TObject);
 begin
-  if ( (pgcGuias.ActivePage = tbsTabela) and (edtFiltrar.Visible and edtFiltrar.Enabled) ) then
+  if ( Showing and (pgcGuias.ActivePage = tbsTabela) and (edtFiltrar.Visible and edtFiltrar.Enabled) ) then
     edtFiltrar.SetFocus;
 end;
 
 procedure TfrmGeProduto.btnFiltrarClick(Sender: TObject);
 begin
-  if chkProdutoComEstoque.Checked then
-    WhereAdditional := 'p.Qtde > 0'
+  if GetEstoqueUnicoEmpresa(GetEmpresaIDDefault) then
+    WhereAdditional := '(p.codemp = ' + QuotedStr(GetEmpresaIDDefault) + ')'
   else
-    WhereAdditional := EmptyStr;  
+    WhereAdditional := '(1 = 1)';
+
+  if chkProdutoComEstoque.Checked then
+    WhereAdditional := WhereAdditional + ' and (p.Qtde > 0)';
 
   // inherited;
   FiltarDados(CmbBxFiltrarTipo.ItemIndex);
@@ -945,6 +1047,37 @@ begin
       IbDtstTabelaDESCRICAO_UNIDADE_FRAC.AsString := sDescricao;
       IbDtstTabelaUNP_SIGLA_FRAC.AsString         := sSigla;
     end;
+end;
+
+procedure TfrmGeProduto.btbtnSalvarClick(Sender: TObject);
+begin
+  // Validações de Dados
+  if ( IbDtstTabela.State in [dsEdit, dsInsert] ) then
+    if ( Length(Trim(IbDtstTabelaNCM_SH.AsString)) <> STR_TAMANHO_NCMSH ) then
+    begin
+      ShowWarning('Favor informar um código válido para o campo "NCM/SH"!');
+      Exit;
+    end
+    else
+    if ( IbDtstTabelaFRACIONADOR.AsInteger = 1 ) then
+    begin
+      if ( IbDtstTabelaCODUNIDADE.AsInteger <> IbDtstTabelaCODUNIDADE_FRACIONADA.AsInteger ) then
+      begin
+        ShowWarning('A "Unidade da Fração" selecionada deve ser igual a informada no campo "Unidade"!');
+        Exit;
+      end;
+    end
+    else
+    if ( IbDtstTabelaFRACIONADOR.AsInteger > 1 ) then
+    begin
+      if ( IbDtstTabelaCODUNIDADE.AsInteger = IbDtstTabelaCODUNIDADE_FRACIONADA.AsInteger ) then
+      begin
+        ShowWarning('A "Unidade da Fração" selecionada deve ser diferente na informada no campo "Unidade"!');
+        Exit;
+      end;
+    end;
+      
+  inherited;
 end;
 
 end.
