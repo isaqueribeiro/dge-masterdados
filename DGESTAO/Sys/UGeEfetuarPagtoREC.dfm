@@ -487,7 +487,6 @@ inherited frmGeEfetuarPagtoREC: TfrmGeEfetuarPagtoREC
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     OnNewRecord = cdsPagamentosNewRecord
-    BufferChunks = 1000
     CachedUpdates = True
     RefreshSQL.Strings = (
       '')
@@ -659,8 +658,6 @@ inherited frmGeEfetuarPagtoREC: TfrmGeEfetuarPagtoREC
   object tblBanco: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     TableName = 'TBBANCO_BOLETO'
     Left = 400
     Top = 16
@@ -673,8 +670,6 @@ inherited frmGeEfetuarPagtoREC: TfrmGeEfetuarPagtoREC
   object tblFormaPagto: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     TableName = 'TBFORMPAGTO'
     Left = 400
     Top = 48

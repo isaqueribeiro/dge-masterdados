@@ -167,8 +167,8 @@ begin
         GetUserApp,
         DataPagto + Time,
         FormaPagto,
-        LancAno,
-        LanNumero,
+        LancAno,   // Ano do lançamento do Título
+        LanNumero, // Número do lançamento do Título
         0,
         ValorPago,
         tmcxCredito);
