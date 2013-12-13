@@ -484,7 +484,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
         item
           Expanded = False
           FieldName = 'NossoNumero'
-          Width = 120
+          Width = 100
           Visible = True
         end
         item
@@ -492,7 +492,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
           FieldName = 'NumeroDocumento'
           Title.Alignment = taCenter
           Title.Caption = 'No. Documento'
-          Width = 120
+          Width = 100
           Visible = True
         end
         item
@@ -526,7 +526,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
         item
           Expanded = False
           FieldName = 'APagar'
-          Width = 120
+          Width = 100
           Visible = True
         end
         item
@@ -557,6 +557,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
   end
   object CdsTitulos: TClientDataSet
     Aggregates = <>
+    AggregatesActive = True
     FieldDefs = <
       item
         Name = 'Quitar'
@@ -615,6 +616,14 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
         Name = 'Cnpj'
         DataType = ftString
         Size = 20
+      end
+      item
+        Name = 'AnoVenda'
+        DataType = ftInteger
+      end
+      item
+        Name = 'NumVenda'
+        DataType = ftInteger
       end>
     IndexDefs = <>
     Params = <>
@@ -639,6 +648,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
     object CdsTitulosValorPago: TCurrencyField
       DisplayLabel = 'Valor Pago (R$)'
       FieldName = 'ValorPago'
+      DisplayFormat = ',0.00'
     end
     object CdsTitulosNumeroDocumento: TStringField
       Alignment = taCenter
@@ -672,6 +682,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
     object CdsTitulosAPagar: TCurrencyField
       DisplayLabel = 'A Pagar (R$)'
       FieldName = 'APagar'
+      DisplayFormat = ',0.00'
     end
     object CdsTitulosSacado: TStringField
       DisplayLabel = 'Cliente'
@@ -681,6 +692,18 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
     object CdsTitulosCnpj: TStringField
       DisplayLabel = 'CNPJ/CPF'
       FieldName = 'Cnpj'
+    end
+    object CdsTitulosAnoVenda: TIntegerField
+      FieldName = 'AnoVenda'
+    end
+    object CdsTitulosNumVenda: TIntegerField
+      FieldName = 'NumVenda'
+    end
+    object CdsTitulosTotalAPagar: TAggregateField
+      FieldName = 'TotalAPagar'
+      Active = True
+      currency = True
+      Expression = 'SUM(APagar)'
     end
   end
   object DtsTitulos: TDataSource
@@ -1007,5 +1030,20 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
         ParamType = ptInput
         Value = 0
       end>
+  end
+  object ACBrBoleto: TACBrBoleto
+    Banco.TamanhoMaximoNossoNum = 10
+    Banco.TipoCobranca = cobNenhum
+    Cedente.TipoInscricao = pJuridica
+    NumeroArquivo = 0
+    ACBrBoletoFC = ACBrBoletoFCFR
+    Left = 344
+    Top = 245
+  end
+  object ACBrBoletoFCFR: TACBrBoletoFCFR
+    ACBrBoleto = ACBrBoleto
+    LayOut = lPadraoEntrega
+    Left = 376
+    Top = 245
   end
 end
