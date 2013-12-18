@@ -116,8 +116,8 @@ var
   procedure Desativar_Promocoes;
   procedure GerarSaldoContaCorrente(const ContaCorrente : Integer; const Data : TDateTime);
   procedure BloquearClientes;
-  procedure DesbloquearCliente(CNPJ : String; const Motivo : String = '');
-  procedure BloquearCliente(CNPJ : String; const Motivo : String = '');
+  procedure DesbloquearCliente(iCodigoCliente : Integer; const Motivo : String = '');
+  procedure BloquearCliente(iCodigoCliente : Integer; const Motivo : String = '');
   procedure RegistrarSegmentos(Codigo : Integer; Descricao : String);
   procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
   procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
@@ -130,7 +130,7 @@ var
   function GetCidadeIDDefault : Integer;
   function GetCfopIDDefault : Integer;
   function GetEmpresaIDDefault : String;
-  function GetClienteIDDefault : String;
+  function GetClienteIDDefault : Integer;
   function GetVendedorIDDefault : Integer;
   function GetFormaPagtoIDDefault : Integer;
   function GetCondicaoPagtoIDDefault : Integer;
@@ -181,7 +181,7 @@ var
   function GetCfopNomeDefault : String;
   function GetEmpresaNomeDefault : String;
   function GetClienteNomeDefault : String;
-  function GetClienteEmail(const sCNPJ : String) : String;
+  function GetClienteEmail(const iCodigo : Integer) : String;
   function GetVendedorNomeDefault : String;
   function GetFormaPagtoNomeDefault : String;
   function GetCondicaoPagtoNomeDefault : String;
@@ -512,15 +512,15 @@ begin
     SQL.Add('  Usuario = user, Desbloqueado_data = null, Bloqueado_motivo = ' + QuotedStr(CLIENTE_BLOQUEADO_PORDEBITO));
     SQL.Add('where Bloqueado = 0');
     SQL.Add('  and ((Desbloqueado_data is null) or (Desbloqueado_data <> Current_date))');
-    SQL.Add('  and Cnpj in (');
+    SQL.Add('  and Codigo in (');
     SQL.Add('    Select Distinct');
-    SQL.Add('      r.Cnpj');
+    SQL.Add('      r.Cliente');
     SQL.Add('    from TBCONTREC r');
     SQL.Add('    where r.Parcela > 0');
     SQL.Add('      and r.Situacao = 1');
     SQL.Add('      and r.Dtvenc < Current_date');
     SQL.Add('      and r.Baixado = 0');
-    SQL.Add('      and r.Cnpj <> ' + QuotedStr(CODIGO_CONSUMIDOR_FINAL)); 
+    SQL.Add('      and r.Cliente <> ' + IntToStr(CONSUMIDOR_FINAL_CODIGO));
     SQL.Add('  )');
     ExecSQL;
 
@@ -528,7 +528,7 @@ begin
   end;
 end;
 
-procedure DesbloquearCliente(CNPJ : String; const Motivo : String = '');
+procedure DesbloquearCliente(iCodigoCliente : Integer; const Motivo : String = '');
 begin
   with DMBusiness, qryBusca do
   begin
@@ -542,14 +542,14 @@ begin
     else
       SQL.Add('  Bloqueado_motivo = ' + QuotedStr(Trim(Motivo)));
 
-    SQL.Add('where Cnpj = ' + QuotedStr(CNPJ));
+    SQL.Add('where Codigo = ' + IntToStr(iCodigoCliente));
     ExecSQL;
 
     CommitTransaction;
   end;
 end;
 
-procedure BloquearCliente(CNPJ : String; const Motivo : String = '');
+procedure BloquearCliente(iCodigoCliente : Integer; const Motivo : String = '');
 begin
   with DMBusiness, qryBusca do
   begin
@@ -563,7 +563,7 @@ begin
     else
       SQL.Add('  Bloqueado_motivo = ' + QuotedStr(Trim(Motivo)));
 
-    SQL.Add('where Cnpj = ' + QuotedStr(CNPJ));
+    SQL.Add('where Codigo = ' + IntToStr(iCodigoCliente));
     ExecSQL;
 
     CommitTransaction;
@@ -751,9 +751,9 @@ begin
   Result := FileINI.ReadString('Default', 'EmpresaID', EmptyStr);
 end;
 
-function GetClienteIDDefault : String;
+function GetClienteIDDefault : Integer;
 begin
-  Result := FileINI.ReadString('Default', 'ClienteID', EmptyStr);
+  Result := StrToIntDef( FileINI.ReadString('Default', 'ClienteID', EmptyStr), CONSUMIDOR_FINAL_CODIGO);
 end;
 
 function GetVendedorIDDefault : Integer;
@@ -1490,7 +1490,7 @@ begin
   begin
     Close;
     SQL.Clear;
-    SQL.Add('Select nome from TBCLIENTE where Cnpj = ' + QuotedStr(GetClienteIDDefault));
+    SQL.Add('Select nome from TBCLIENTE where Codigo = ' + IntToStr(GetClienteIDDefault));
     Open;
 
     Result := FieldByName('nome').AsString;
@@ -1499,13 +1499,13 @@ begin
   end;
 end;
 
-function GetClienteEmail(const sCNPJ : String) : String;
+function GetClienteEmail(const iCodigo : Integer) : String;
 begin
   with DMBusiness, qryBusca do
   begin
     Close;
     SQL.Clear;
-    SQL.Add('Select email from TBCLIENTE where Cnpj = ' + QuotedStr(sCNPJ));
+    SQL.Add('Select email from TBCLIENTE where Codigo = ' + IntToStr(iCodigo));
     Open;
 
     Result := AnsiLowerCase(Trim(FieldByName('email').AsString));

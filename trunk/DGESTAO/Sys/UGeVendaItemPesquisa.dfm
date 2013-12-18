@@ -158,7 +158,7 @@ inherited FrmGeVendaItemPesquisa: TFrmGeVendaItemPesquisa
       '  , cl.nome  as Cliente_Nome'
       'from TBVENDAS v'
       '  inner join TBVENDEDOR vd on (vd.cod = v.vendedor_cod)'
-      '  inner join TBCLIENTE cl on (cl.cnpj = v.codcli)'
+      '  inner join TBCLIENTE cl on (cl.codigo = v.codcliente)'
       
         '  inner join TVENDASITENS i on (i.ano = v.ano and i.codcontrol =' +
         ' v.codcontrol)'
@@ -166,6 +166,7 @@ inherited FrmGeVendaItemPesquisa: TFrmGeVendaItemPesquisa
       '  left join TBUNIDADEPROD u on (u.unp_cod = i.unid_cod)'
       '  left join TBGRUPOPROD g on (g.cod = p.codgrupo)'
       '')
+    ParamData = <>
     object QryPesquisaCODPROD: TIBStringField
       FieldName = 'CODPROD'
       Origin = '"TVENDASITENS"."CODPROD"'

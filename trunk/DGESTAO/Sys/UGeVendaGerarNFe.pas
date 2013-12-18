@@ -100,6 +100,7 @@ type
     TmrAlerta: TTimer;
     edDataHoraSaida: TMaskEdit;
     lblDataHoraSaida: TLabel;
+    cdsVendaCODCLIENTE: TIntegerField;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnCalcularClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
@@ -274,11 +275,11 @@ begin
       sDH := EmptyStr;
 
     if ( DMNFe.GerarNFeOnLine ) then
-      bOK := DMNFe.GerarNFeOnLineACBr ( cdsVendaCODEMP.AsString, cdsVendaCODCLI.AsString, sDH,
+      bOK := DMNFe.GerarNFeOnLineACBr ( cdsVendaCODEMP.AsString, cdsVendaCODCLIENTE.AsInteger, sDH,
                cdsVendaANO.AsInteger, cdsVendaCODCONTROL.AsInteger,
                iSerieNFe, iNumeroNFe, sFileNameXML, sChaveNFE, sProtocoloNFE, sReciboNFE, iNumeroLote, False)
     else
-      bOK := DMNFe.GerarNFeOffLineACBr( cdsVendaCODEMP.AsString, cdsVendaCODCLI.AsString, sDH,
+      bOK := DMNFe.GerarNFeOffLineACBr( cdsVendaCODEMP.AsString, cdsVendaCODCLIENTE.AsInteger, sDH,
                cdsVendaANO.AsInteger, cdsVendaCODCONTROL.AsInteger,
                iSerieNFe, iNumeroNFe, sFileNameXML, sChaveNFE, False);
 

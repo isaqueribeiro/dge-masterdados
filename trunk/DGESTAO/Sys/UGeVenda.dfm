@@ -3041,6 +3041,7 @@ inherited frmGeVenda: TfrmGeVenda
       '    v.Ano'
       '  , v.Codcontrol'
       '  , v.Codemp'
+      '  , v.Codcliente'
       '  , v.Codcli'
       '  , v.Dtvenda'
       '  , v.Status'
@@ -3104,7 +3105,7 @@ inherited frmGeVenda: TfrmGeVenda
       '      else 0.0'
       '    end Lucro_Calculado'
       'from TBVENDAS v'
-      '  inner join TBCLIENTE c on (c.Cnpj = v.Codcli)'
+      '  inner join TBCLIENTE c on (c.Codigo = v.Codcliente)'
       '  left join TBFORNECEDOR t on (t.codforn = v.nfe_transportadora)')
     GeneratorField.ApplyEvent = gamOnNewRecord
     Left = 992
@@ -3125,6 +3126,12 @@ inherited frmGeVenda: TfrmGeVenda
       FieldName = 'CODEMP'
       Origin = 'TBVENDAS.CODEMP'
       Size = 18
+    end
+    object IbDtstTabelaCODCLIENTE: TIntegerField
+      DisplayLabel = 'Cliente'
+      FieldName = 'CODCLIENTE'
+      Origin = '"TBVENDAS"."CODCLIENTE"'
+      Required = True
     end
     object IbDtstTabelaCODCLI: TIBStringField
       DisplayLabel = 'Cliente'
@@ -3442,6 +3449,7 @@ inherited frmGeVenda: TfrmGeVenda
       '  ANO,'
       '  CODCONTROL,'
       '  CODEMP,'
+      '  CODCLIENTE,'
       '  CODCLI,'
       '  DTVENDA,'
       '  STATUS,'
@@ -3513,6 +3521,7 @@ inherited frmGeVenda: TfrmGeVenda
       '  CANCEL_DATAHORA = :CANCEL_DATAHORA,'
       '  CANCEL_MOTIVO = :CANCEL_MOTIVO,'
       '  CFOP = :CFOP,'
+      '  CODCLIENTE = :CODCLIENTE,'
       '  CODCLI = :CODCLI,'
       '  CODCONTROL = :CODCONTROL,'
       '  CODEMP = :CODEMP,'
@@ -3564,8 +3573,8 @@ inherited frmGeVenda: TfrmGeVenda
     InsertSQL.Strings = (
       'insert into TBVENDAS'
       
-        '  (ANO, CANCEL_DATAHORA, CANCEL_MOTIVO, CFOP, CODCLI, CODCONTROL' +
-        ', CODEMP, '
+        '  (ANO, CANCEL_DATAHORA, CANCEL_MOTIVO, CFOP, CODCLIENTE, CODCLI' +
+        ', CODCONTROL, CODEMP, '
       
         '   CONDICAOPAGTO_COD, DATAEMISSAO, DESCONTO, DTFINALIZACAO_VENDA' +
         ', DTVENDA, '
@@ -3589,8 +3598,8 @@ inherited frmGeVenda: TfrmGeVenda
         'FILENAME)'
       'values'
       
-        '  (:ANO, :CANCEL_DATAHORA, :CANCEL_MOTIVO, :CFOP, :CODCLI, :CODC' +
-        'ONTROL, '
+        '  (:ANO, :CANCEL_DATAHORA, :CANCEL_MOTIVO, :CFOP, :CODCLIENTE, :' +
+        'CODCLI, :CODCONTROL, '
       
         '   :CODEMP, :CONDICAOPAGTO_COD, :DATAEMISSAO, :DESCONTO, :DTFINA' +
         'LIZACAO_VENDA, '
@@ -4611,15 +4620,15 @@ inherited frmGeVenda: TfrmGeVenda
       '    g.Valor_limite'
       '  , g.Valor_compras_abertas'
       '  , g.Valor_limite_disponivel'
-      'from GET_LIMITE_DISPONIVEL_CLIENTE(:CNPJ) g')
+      'from GET_LIMITE_DISPONIVEL_CLIENTE(:CODIGO) g')
     Left = 1024
     Top = 209
     ParamData = <
       item
-        DataType = ftString
-        Name = 'CNPJ'
+        DataType = ftInteger
+        Name = 'CODIGO'
         ParamType = ptInput
-        Value = ''
+        Value = 0
       end>
     object qryTotalComprasAbertasVALOR_LIMITE: TIBBCDField
       FieldName = 'VALOR_LIMITE'

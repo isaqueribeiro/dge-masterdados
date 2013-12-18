@@ -3,7 +3,7 @@ inherited frmGeCliente: TfrmGeCliente
   Top = 230
   Width = 860
   Height = 536
-  ActiveControl = edFiltrarTipoEstoqueSatelite
+  ActiveControl = dbCodigo
   Caption = 'Cadastro de Clientes'
   OldCreateOrder = True
   OnClose = FormClose
@@ -108,7 +108,7 @@ inherited frmGeCliente: TfrmGeCliente
   inherited pgcGuias: TPageControl
     Width = 844
     Height = 455
-    ActivePage = tbsEstoqueSatelite
+    ActivePage = tbsCadastro
     OnChange = pgcGuiasChange
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
@@ -315,6 +315,15 @@ inherited frmGeCliente: TfrmGeCliente
           Caption = 'Vendedor respons'#225'vel:'
           FocusControl = dbVendedor
         end
+        object lblTipoCNPJ: TLabel [7]
+          Left = 664
+          Top = 64
+          Width = 52
+          Height = 13
+          Caption = 'Tipo CNPJ:'
+          Enabled = False
+          FocusControl = dbTipoCNPJ
+        end
         inherited dbCodigo: TDBEdit
           Color = clMoneyGreen
           DataField = 'CODIGO'
@@ -492,6 +501,26 @@ inherited frmGeCliente: TfrmGeCliente
           ParentFont = False
           TabOrder = 2
           OnButtonClick = dbCNPJButtonClick
+        end
+        object dbTipoCNPJ: TDBLookupComboBox
+          Left = 664
+          Top = 80
+          Width = 153
+          Height = 21
+          DataField = 'TIPO'
+          DataSource = DtSrcTabela
+          DropDownRows = 10
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          KeyField = 'CODIGO'
+          ListField = 'DESCRICAO'
+          ListSource = dtsTipoCnpj
+          ParentFont = False
+          TabOrder = 8
         end
       end
       object GroupBox1: TGroupBox
@@ -2399,6 +2428,7 @@ inherited frmGeCliente: TfrmGeCliente
       '    cl.Codigo'
       '  , cl.Pessoa_fisica'
       '  , cl.Cnpj'
+      '  , cl.Tipo'
       '  , cl.Nome'
       '  , cl.Inscest'
       '  , cl.Inscmun'
@@ -2449,7 +2479,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  left join TBPAIS p on (p.Pais_id = cl.Pais_id)')
     GeneratorField.Field = 'CODIGO'
     GeneratorField.Generator = 'GEN_CLIENTE_ID'
-    Left = 648
+    Left = 584
     object IbDtstTabelaCODIGO: TIntegerField
       DisplayLabel = 'C'#243'digo'
       FieldName = 'CODIGO'
@@ -2467,6 +2497,12 @@ inherited frmGeCliente: TfrmGeCliente
       Origin = 'TBEMPRESA.CNPJ'
       Required = True
       Size = 18
+    end
+    object IbDtstTabelaTIPO: TSmallintField
+      DisplayLabel = 'Tipo'
+      FieldName = 'TIPO'
+      Origin = '"TBCLIENTE"."TIPO"'
+      Required = True
     end
     object IbDtstTabelaNOME: TIBStringField
       DisplayLabel = 'Nome / Raz'#227'o Social'
@@ -2699,7 +2735,7 @@ inherited frmGeCliente: TfrmGeCliente
   end
   inherited DtSrcTabela: TDataSource
     OnDataChange = DtSrcTabelaDataChange
-    Left = 712
+    Left = 648
   end
   inherited IbUpdTabela: TIBUpdateSQL
     RefreshSQL.Strings = (
@@ -2744,7 +2780,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  ENTREGA_FRACIONADA_VENDA'
       'from TBCLIENTE '
       'where'
-      '  CNPJ = :CNPJ')
+      '  CODIGO = :CODIGO')
     ModifySQL.Strings = (
       'update TBCLIENTE'
       'set'
@@ -2787,7 +2823,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  VALOR_LIMITE_COMPRA = :VALOR_LIMITE_COMPRA,'
       '  VENDEDOR_COD = :VENDEDOR_COD'
       'where'
-      '  CNPJ = :OLD_CNPJ')
+      '  CODIGO = :OLD_CODIGO')
     InsertSQL.Strings = (
       'insert into TBCLIENTE'
       
@@ -2831,11 +2867,11 @@ inherited frmGeCliente: TfrmGeCliente
     DeleteSQL.Strings = (
       'delete from TBCLIENTE'
       'where'
-      '  CNPJ = :OLD_CNPJ')
-    Left = 680
+      '  CODIGO = :OLD_CODIGO')
+    Left = 616
   end
   inherited ImgList: TImageList
-    Left = 616
+    Left = 552
   end
   object qryTotalComprasAbertas: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
@@ -2845,15 +2881,14 @@ inherited frmGeCliente: TfrmGeCliente
       '    g.Valor_limite'
       '  , g.Valor_compras_abertas'
       '  , g.Valor_limite_disponivel'
-      'from GET_LIMITE_DISPONIVEL_CLIENTE(:CNPJ) g')
+      'from GET_LIMITE_DISPONIVEL_CLIENTE(:CLIENTE) g')
     Left = 680
-    Top = 41
+    Top = 9
     ParamData = <
       item
-        DataType = ftString
-        Name = 'CNPJ'
-        ParamType = ptInput
-        Value = ''
+        DataType = ftUnknown
+        Name = 'CLIENTE'
+        ParamType = ptUnknown
       end>
     object qryTotalComprasAbertasVALOR_LIMITE: TIBBCDField
       FieldName = 'VALOR_LIMITE'
@@ -2880,7 +2915,7 @@ inherited frmGeCliente: TfrmGeCliente
   object cdsTotalComprasAbertas: TDataSource
     DataSet = qryTotalComprasAbertas
     Left = 712
-    Top = 41
+    Top = 9
   end
   object qryTitulos: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
@@ -2921,9 +2956,9 @@ inherited frmGeCliente: TfrmGeCliente
         ' r.Numvenda)'
       'where r.Baixado = 0'
       '  and r.Parcela > 0'
-      '  and r.Cnpj = :cliente')
+      '  and r.Cliente = :cliente')
     Left = 680
-    Top = 73
+    Top = 41
     ParamData = <
       item
         DataType = ftString
@@ -3041,19 +3076,19 @@ inherited frmGeCliente: TfrmGeCliente
   object dtsTitulos: TDataSource
     DataSet = qryTitulos
     Left = 712
-    Top = 73
+    Top = 41
   end
   object tblVendedor: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     TableName = 'TBVENDEDOR'
-    Left = 680
-    Top = 104
+    Left = 744
+    Top = 8
   end
   object dtsVendedor: TDataSource
     DataSet = tblVendedor
-    Left = 712
-    Top = 104
+    Left = 776
+    Top = 8
   end
   object popProcesso: TPopupMenu
     Images = ImgList
@@ -3123,14 +3158,14 @@ inherited frmGeCliente: TfrmGeCliente
     GeneratorField.Generator = 'GEN_CLIENTE_ID'
     GeneratorField.ApplyEvent = gamOnPost
     UpdateObject = UpdEstoqueSatelite
-    Left = 648
+    Left = 584
     Top = 152
-    object QryEstoqueSateliteCOD_CLIENTE: TIBStringField
+    object QryEstoqueSateliteCOD_CLIENTE: TIntegerField
+      DisplayLabel = 'Cliente'
       FieldName = 'COD_CLIENTE'
       Origin = '"TBCLIENTE_ESTOQUE"."COD_CLIENTE"'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
-      Size = 18
     end
     object QryEstoqueSateliteCOD_PRODUTO: TIBStringField
       FieldName = 'COD_PRODUTO'
@@ -3288,13 +3323,26 @@ inherited frmGeCliente: TfrmGeCliente
       'where'
       '  COD_CLIENTE = :OLD_COD_CLIENTE and'
       '  COD_PRODUTO = :OLD_COD_PRODUTO')
-    Left = 680
+    Left = 616
     Top = 152
   end
   object DtsEstoqueSatelite: TDataSource
     AutoEdit = False
     DataSet = QryEstoqueSatelite
-    Left = 712
+    Left = 648
     Top = 152
+  end
+  object tblTipoCnpj: TIBTable
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    TableName = 'VW_TIPO_CNPJ'
+    TableTypes = [ttView]
+    Left = 744
+    Top = 40
+  end
+  object dtsTipoCnpj: TDataSource
+    DataSet = tblTipoCnpj
+    Left = 776
+    Top = 40
   end
 end

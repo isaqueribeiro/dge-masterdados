@@ -59,6 +59,7 @@ type
     cdsVendaCANCEL_USUARIO: TIBStringField;
     lblInforme: TLabel;
     cdsVendaDESCONTO: TIBBCDField;
+    cdsVendaCODCLIENTE: TIntegerField;
     procedure btFecharClick(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -157,7 +158,7 @@ begin
         lblInforme.Caption := 'Cancelando NF-e junto a SEFA. Aguarde . . . ';
         Application.ProcessMessages;
 
-        Cont := DMNFe.CancelarNFeACBr( cdsVendaCODEMP.AsString, cdsVendaCODCLI.AsString,
+        Cont := DMNFe.CancelarNFeACBr( cdsVendaCODEMP.AsString, cdsVendaCODCLIENTE.AsInteger,
                 cdsVendaANO.AsInteger, cdsVendaCODCONTROL.AsInteger, UpperCase(Trim(dbMotivo.Lines.Text)) );
       end;
 

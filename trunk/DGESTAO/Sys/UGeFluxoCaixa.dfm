@@ -1326,7 +1326,7 @@ inherited frmGeFluxoCaixa: TfrmGeFluxoCaixa
       '  , cm.Data_fech'
       '  , cm.Data_cancel'
       'from TBCAIXA_MOVIMENTO m'
-      '  left join TBCLIENTE c on (c.Cnpj = m.Cliente)'
+      '  left join TBCLIENTE c on (c.Codigo = m.Cliente_cod)'
       '  left join TBFORNECEDOR f on (f.Codforn = m.Fornecedor)'
       '  left join TBFORMPAGTO fp on (fp.Cod = m.Forma_pagto)'
       

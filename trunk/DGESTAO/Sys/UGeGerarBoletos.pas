@@ -144,6 +144,7 @@ type
     IbQryBancosBCO_LAYOUT_REMESSA: TSmallintField;
     IbQryBancosBCO_LAYOUT_RETORNO: TSmallintField;
     CdsTitulosPARCELA_MAXIMA: TSmallintField;
+    IbQryClientesCODIGO: TIntegerField;
     procedure edtFiltrarKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure dbgDadosDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -182,7 +183,7 @@ type
     function GetContaNumero : String;
     function GetContaDigito : String;
 
-    function CarregarTitulos(sCnpj: String; iBanco : Integer) : Boolean;
+    function CarregarTitulos(iCodigoCliente: Integer; iBanco : Integer) : Boolean;
     function DefinirCedente( Banco, Carteira : Integer; var Objeto : Variant ) : Boolean;
     function DefinirCedenteACBr(iBanco : Integer; sCarteira : String) : Boolean;
     function InserirBoleto( var Objeto : Variant) : Boolean;
@@ -213,9 +214,9 @@ const
   scpErro     = $00000003;
 
   procedure GerarBoleto(const AOwer : TComponent); overload;
-  procedure GerarBoleto(const AOwer : TComponent; const NomeCliente, CNPJ : String; iAno, iVenda : Integer); overload;
+  procedure GerarBoleto(const AOwer : TComponent; const NomeCliente : String; const iCodigoCliente : Integer; iAno, iVenda : Integer); overload;
 
-  function ReImprimirBoleto(const AOwer : TComponent; sNomeCliente, sCnpjCliente : String; iAno, iVenda, iBanco : Integer) : Boolean;
+  function ReImprimirBoleto(const AOwer : TComponent; sNomeCliente : String; iCodigoCliente, iAno, iVenda, iBanco : Integer) : Boolean;
 
 implementation
 
@@ -235,7 +236,7 @@ begin
   end;
 end;
 
-procedure GerarBoleto(const AOwer : TComponent; const NomeCliente, CNPJ : String; iAno, iVenda : Integer); overload;
+procedure GerarBoleto(const AOwer : TComponent; const NomeCliente : String; const iCodigoCliente : Integer; iAno, iVenda : Integer); overload;
 var
   f : TfrmGeGerarBoleto;
 begin
@@ -246,12 +247,12 @@ begin
     f.IbQryClientes.ParamByName('nome').AsString := NomeCliente;
     f.IbQryClientes.Open;
 
-    if ( f.IbQryClientes.Locate('CNPJ', CNPJ, []) ) then
+    if ( f.IbQryClientes.Locate('codigo', iCodigoCliente, []) ) then
     begin
       f.dbgDadosDblClick( f.dbgDados );
       f.FFecharAoGerar := True;
 
-      f.CarregarTitulos(CNPJ, 0);
+      f.CarregarTitulos(iCodigoCliente, 0);
 
       f.CdsTitulos.Filter   := 'ANOVENDA = ' + IntToStr(iAno) + ' and NUMVENDA = ' + IntToStr(iVenda);
       f.CdsTitulos.Filtered := True;
@@ -265,7 +266,7 @@ begin
   end;
 end;
 
-function ReImprimirBoleto(const AOwer : TComponent; sNomeCliente, sCnpjCliente : String; iAno, iVenda, iBanco : Integer) : Boolean;
+function ReImprimirBoleto(const AOwer : TComponent; sNomeCliente : String; iCodigoCliente, iAno, iVenda, iBanco : Integer) : Boolean;
 var
   f : TfrmGeGerarBoleto;
   INossoNum ,
@@ -282,14 +283,14 @@ begin
     f.IbQryClientes.ParamByName('nome').AsString := sNomeCliente;
     f.IbQryClientes.Open;
 
-    if ( f.IbQryClientes.Locate('CNPJ', sCnpjCliente, []) ) then
+    if ( f.IbQryClientes.Locate('codigo', iCodigoCliente, []) ) then
       with f do
       begin
         CarregarBancos;
         if ( IbQryBancos.Locate('BCO_COD', iBanco, []) ) then
         begin
           cmbBancoChange( cmbBanco );
-          CarregarTitulos(sCnpjCliente, iBanco);
+          CarregarTitulos(iCodigoCliente, iBanco);
 
           CdsTitulos.Filter   := 'ANOVENDA = ' + IntToStr(iAno) + ' and NUMVENDA = ' + IntToStr(iVenda);
           CdsTitulos.Filtered := True;
@@ -462,15 +463,15 @@ begin
   Close;
 end;
 
-function TfrmGeGerarBoleto.CarregarTitulos(sCnpj: String; iBanco : Integer) : Boolean;
+function TfrmGeGerarBoleto.CarregarTitulos(iCodigoCliente: Integer; iBanco : Integer) : Boolean;
 begin
   with CdsTitulos, Params do
   begin
     Filtered := False;
 
     Close;
-    ParamByName('cnpj').AsString   := sCnpj;
-    ParamByName('banco').AsInteger := iBanco;
+    ParamByName('cliente').AsInteger := iCodigoCliente;
+    ParamByName('banco').AsInteger   := iBanco;
     Open;
 
     Result := not IsEmpty;
@@ -480,7 +481,7 @@ end;
 procedure TfrmGeGerarBoleto.DtsClientesDataChange(Sender: TObject;
   Field: TField);
 begin
-  CarregarTitulos(IbQryClientesCNPJ.AsString, 0);
+  CarregarTitulos(IbQryClientesCODIGO.AsInteger, 0);
 end;
 
 procedure TfrmGeGerarBoleto.pgcGuiasChange(Sender: TObject);

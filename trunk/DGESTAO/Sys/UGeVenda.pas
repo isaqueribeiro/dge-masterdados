@@ -325,6 +325,7 @@ type
     qryNFEEMPRESA: TIBStringField;
     nmGerarImprimirBoletos: TMenuItem;
     IbDtstTabelaGERAR_ESTOQUE_CLIENTE: TSmallintField;
+    IbDtstTabelaCODCLIENTE: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -394,7 +395,7 @@ type
     procedure CarregarDadosProduto( Codigo : Integer );
     procedure CarregarDadosCFOP( iCodigo : Integer );
     procedure HabilitarDesabilitar_Btns;
-    procedure GetComprasAbertas(sCNPJ : String);
+    procedure GetComprasAbertas(iCodigoCliente : Integer);
     procedure ZerarFormaPagto;
     procedure RecarregarRegistro;
 
@@ -531,8 +532,6 @@ begin
   inherited;
   IbDtstTabelaDTVENDA.Value := GetDateTimeDB;
   IbDtstTabelaCODEMP.Value  := GetEmpresaIDDefault;
-  IbDtstTabelaCODCLI.Value  := GetClienteIDDefault;
-  IbDtstTabelaNOME.Value    := GetClienteNomeDefault;
   IbDtstTabelaVENDEDOR_COD.Value      := GetVendedorIDDefault;
   IbDtstTabelaFORMAPAG.Value          := GetFormaPagtoNomeDefault;
   IbDtstTabelaCFOP.Value              := GetCfopIDDefault;
@@ -545,6 +544,17 @@ begin
   IbDtstTabelaNFE_ENVIADA.Value           := 0;
   IbDtstTabelaNFE_MODALIDADE_FRETE.Value  := MODALIDADE_FRETE_SEMFRETE;
   IbDtstTabelaUSUARIO.Value     := GetUserApp;
+
+  IbDtstTabelaCODCLIENTE.Value := CONSUMIDOR_FINAL_CODIGO;
+  IbDtstTabelaCODCLI.Value     := CONSUMIDOR_FINAL_CNPJ;
+  IbDtstTabelaNOME.Value       := GetClienteNomeDefault;
+
+  if (AnsiUpperCase(Trim(IbDtstTabelaNOME.AsString)) <> CONSUMIDOR_FINAL_NOME) then
+  begin
+    IbDtstTabelaCODCLIENTE.Clear;
+    IbDtstTabelaCODCLI.Clear;
+    IbDtstTabelaNOME.Clear;
+  end;
 
   IbDtstTabelaFORMAPAGTO_COD.Clear;
   IbDtstTabelaCONDICAOPAGTO_COD.Clear;
@@ -584,6 +594,7 @@ begin
         IbDtstTabelaBLOQUEADO_MOTIVO.AsString := EmptyStr;
       end;
 
+      IbDtstTabelaCODCLIENTE.AsInteger := iCodigo;
       IbDtstTabelaCODCLI.AsString := sCNPJ;
       IbDtstTabelaNOME.AsString   := sNome;
     end;
@@ -1487,7 +1498,7 @@ begin
   begin
     if ( IbDtstTabelaVENDA_PRAZO.AsInteger = 1 ) then
     begin
-      GetComprasAbertas( IbDtstTabelaCODCLI.AsString );
+      GetComprasAbertas( IbDtstTabelaCODCLIENTE.AsInteger );
       if ( GetTotalValorFormaPagto_APrazo > qryTotalComprasAbertasVALOR_LIMITE_DISPONIVEL.AsCurrency ) then
       begin
         ShowWarning('O Valor Total A Parzo da venda está acima do Valor Limite disponível para o cliente.' + #13#13 + 'Favor comunicar ao setor financeiro.');
@@ -1761,7 +1772,7 @@ begin
     with qryDestinatario do
     begin
       Close;
-      ParamByName('Cnpj').AsString := IbDtstTabelaCODCLI.AsString;
+      ParamByName('codigo').AsInteger := IbDtstTabelaCODCLIENTE.AsInteger;
       Open;
     end;
 
@@ -1804,7 +1815,7 @@ begin
 
   isPDF := ( Sender = nmGerarDANFEXML );
 
-  DMNFe.ImprimirDANFEACBr( IbDtstTabelaCODEMP.AsString, IbDtstTabelaCODCLI.AsString, IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, isPDF);
+  DMNFe.ImprimirDANFEACBr( IbDtstTabelaCODEMP.AsString, IbDtstTabelaCODCLIENTE.AsInteger, IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, isPDF);
 end;
 
 procedure TfrmGeVenda.btnConsultarProdutoClick(Sender: TObject);
@@ -1848,7 +1859,7 @@ begin
 
   if ( not qryTitulos.IsEmpty ) then
   begin
-    GerarBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLI.AsString,
+    GerarBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLIENTE.AsInteger,
       IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger);
     AbrirTabelaTitulos( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
   end;
@@ -1892,12 +1903,12 @@ begin
   end;
 end;
 
-procedure TfrmGeVenda.GetComprasAbertas(sCNPJ: String);
+procedure TfrmGeVenda.GetComprasAbertas(iCodigoCliente : Integer);
 begin
   with qryTotalComprasAbertas do
   begin
     Close;
-    ParamByName('cnpj').AsString := sCNPJ;
+    ParamByName('codigo').AsInteger := iCodigoCliente;
     Open;
   end;
 end;
@@ -2300,7 +2311,7 @@ procedure TfrmGeVenda.nmGerarImprimirBoletosClick(Sender: TObject);
       Close;
       SQL.Clear;
       SQL.Add('Select b.nossonumero from TBCONTREC b');
-      SQL.Add('where b.cnpj = ' + QuotedStr(IbDtstTabelaCODCLI.AsString));
+      SQL.Add('where b.cliente  = ' + IbDtstTabelaCODCLIENTE.AsString);
       SQL.Add('  and b.anovenda = ' + IbDtstTabelaANO.AsString);
       SQL.Add('  and b.numvenda = ' + IbDtstTabelaCODCONTROL.AsString);
       SQL.Add('  and b.codbanco > 0');
@@ -2339,13 +2350,13 @@ begin
     sMensagem  := Format(MSG_REF_DOC, [IbDtstTabelaANO.AsString + '/' + FormatFloat('##00000', IbDtstTabelaCODCONTROL.AsInteger)]);
     sDocumento := 'Venda ' + IbDtstTabelaANO.AsString + '/' + FormatFloat('##00000', IbDtstTabelaCODCONTROL.AsInteger);
   end;
-  sDestinatario := GetClienteEmail(IbDtstTabelaCODCLI.AsString);
+  sDestinatario := GetClienteEmail(IbDtstTabelaCODCLIENTE.AsInteger);
 
   DMNFe.ConfigurarEmail(IbDtstTabelaCODEMP.AsString, sDestinatario, 'Boleta Bancária - ' + sDocumento, sMensagem);
 
   if BoletosGerados then
   begin
-    ReImprimirBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLI.AsString,
+    ReImprimirBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLIENTE.AsInteger,
       IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, qryTitulosCODBANCO.AsInteger);
     Exit;
   end;
@@ -2379,7 +2390,7 @@ begin
     if (not BoletosGerados) then
       ShowWarning('Não existem títulos com boletos gerados para o movimento de venda.')
     else
-      ReImprimirBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLI.AsString,
+      ReImprimirBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLIENTE.AsInteger,
         IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, qryTitulosCODBANCO.AsInteger);
   finally
     qryTitulos.Filter   := EmptyStr;
@@ -2401,7 +2412,7 @@ begin
         SQL.Add('Select');
         SQL.Add('  coalesce(entrega_fracionada_venda, 0) as gerar_estoque');
         SQL.Add('from TBCLIENTE');
-        SQL.Add('where cnpj = ' + QuotedStr(IbDtstTabelaCODCLI.AsString));
+        SQL.Add('where Codigo = ' + IbDtstTabelaCODCLIENTE.AsString);
         Open;
 
         iReturn := FieldByName('gerar_estoque').AsInteger;

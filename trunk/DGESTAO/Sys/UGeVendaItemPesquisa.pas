@@ -124,9 +124,12 @@ begin
             SQL[3]  := '  , cast(null as varchar(30)) as Grupo';
             SQL[9]  := '  , cast(null as varchar(60)) as Vendedor';
 
-            if ( edPesquisar.Text = CODIGO_CONSUMIDOR_FINAL ) then
+            if ( StrToIntDef(edPesquisar.Text, 0) > 0 ) then
+              SQL.Add('  and v.codcliente = ' + edPesquisar.Text)
+            else
+            if ( edPesquisar.Text = CONSUMIDOR_FINAL_CNPJ ) then
               SQL.Add('  and v.codcli = ' + QuotedStr(edPesquisar.Text))
-            else  
+            else
             if FuncoesString.StrIsCPF( StringReplace(StringReplace(edPesquisar.Text, '.', '', [rfReplaceAll]), '-', '', [rfReplaceAll]) ) then
               SQL.Add('  and v.codcli = ' + QuotedStr(StringReplace(StringReplace(edPesquisar.Text, '.', '', [rfReplaceAll]), '-', '', [rfReplaceAll])))
             else

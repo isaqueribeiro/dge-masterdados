@@ -1119,6 +1119,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       '  , r.Numlanc'
       '  , r.Parcela'
       '  , r.Empresa'
+      '  , r.Cliente'
       '  , r.Cnpj'
       '  , r.Forma_pagto'
       '  , r.Tippag'
@@ -1153,7 +1154,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
         '  , right('#39'0000000'#39' || vn.Nfe, 7) || '#39'/'#39' || trim(vn.Serie) as NF' +
         'E_VENDA'
       'from TBCONTREC r'
-      '  inner join TBCLIENTE c on (c.Cnpj = r.Cnpj)'
+      '  inner join TBCLIENTE c on (c.Codigo = r.Cliente)'
       
         '  left join TBVENDAS vn on (vn.Ano = r.Anovenda and vn.Codcontro' +
         'l = r.Numvenda)')
@@ -1183,6 +1184,11 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       Origin = '"TBCONTREC"."EMPRESA"'
       ProviderFlags = [pfInUpdate]
       Size = 18
+    end
+    object IbDtstTabelaCLIENTE: TIntegerField
+      DisplayLabel = 'Cliente'
+      FieldName = 'CLIENTE'
+      Origin = '"TBCONTREC"."CLIENTE"'
     end
     object IbDtstTabelaCNPJ: TIBStringField
       DisplayLabel = 'Cliente'
@@ -1385,6 +1391,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       '  ANOLANC,'
       '  NUMLANC,'
       '  EMPRESA,'
+      '  CLIENTE,'
       '  CNPJ,'
       '  FORMA_PAGTO,'
       '  TIPPAG,'
@@ -1423,6 +1430,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       '  ANOLANC = :ANOLANC,'
       '  ANOVENDA = :ANOVENDA,'
       '  BAIXADO = :BAIXADO,'
+      '  CLIENTE = :CLIENTE,'
       '  CNPJ = :CNPJ,'
       '  CODBANCO = :CODBANCO,'
       '  DATAPROCESSOBOLETO = :DATAPROCESSOBOLETO,'
@@ -1456,22 +1464,22 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
     InsertSQL.Strings = (
       'insert into TBCONTREC'
       
-        '  (ANOLANC, ANOVENDA, BAIXADO, CNPJ, CODBANCO, DATAPROCESSOBOLET' +
-        'O, DOCBAIX, '
+        '  (ANOLANC, ANOVENDA, BAIXADO, CLIENTE, CNPJ, CODBANCO, DATAPROC' +
+        'ESSOBOLETO, '
       
-        '   DTEMISS, DTREC, DTVENC, EMPRESA, ENVIADO, FORMA_PAGTO, HISTOR' +
-        'IC, NOSSONUMERO, '
+        '   DOCBAIX, DTEMISS, DTREC, DTVENC, EMPRESA, ENVIADO, FORMA_PAGT' +
+        'O, HISTORIC, '
       
-        '   NUMCONTRATO, NUMLANC, NUMREC, NUMVENDA, PARCELA, PERCENTDESCO' +
-        'NTO, PERCENTJUROS, '
+        '   NOSSONUMERO, NUMCONTRATO, NUMLANC, NUMREC, NUMVENDA, PARCELA,' +
+        ' PERCENTDESCONTO, '
       
-        '   PERCENTMULTA, REMESSA, SITUACAO, TIPPAG, VALORMULTA, VALORREC' +
-        ', VALORRECTOT, '
-      '   VALORSALDO)'
+        '   PERCENTJUROS, PERCENTMULTA, REMESSA, SITUACAO, TIPPAG, VALORM' +
+        'ULTA, VALORREC, '
+      '   VALORRECTOT, VALORSALDO)'
       'values'
       
-        '  (:ANOLANC, :ANOVENDA, :BAIXADO, :CNPJ, :CODBANCO, :DATAPROCESS' +
-        'OBOLETO, '
+        '  (:ANOLANC, :ANOVENDA, :BAIXADO, :CLIENTE, :CNPJ, :CODBANCO, :D' +
+        'ATAPROCESSOBOLETO, '
       
         '   :DOCBAIX, :DTEMISS, :DTREC, :DTVENC, :EMPRESA, :ENVIADO, :FOR' +
         'MA_PAGTO, '
