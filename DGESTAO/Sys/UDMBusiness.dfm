@@ -384,6 +384,42 @@ object DMBusiness: TDMBusiness
     StoredProcName = 'SET_CAIXA_MOVIMENTO_REC'
     Left = 144
     Top = 216
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'USUARIO'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftDateTime
+        Name = 'DATA_PAGTO'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftSmallint
+        Name = 'FORMA_PAGTO'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftSmallint
+        Name = 'ANOLANC'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'NUMLANC'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftSmallint
+        Name = 'SEQ'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftBCD
+        Name = 'VALOR_BAIXA'
+        ParamType = ptInput
+      end>
   end
   object stpCaixaMovimentoPAG: TIBStoredProc
     Database = ibdtbsBusiness
@@ -405,6 +441,42 @@ object DMBusiness: TDMBusiness
     StoredProcName = 'SET_CAIXA_MOVIMENTO_REC_ESTORNO'
     Left = 176
     Top = 216
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'USUARIO'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftDateTime
+        Name = 'DATA_PAGTO'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftSmallint
+        Name = 'FORMA_PAGTO'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftSmallint
+        Name = 'ANOLANC'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'NUMLANC'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftSmallint
+        Name = 'SEQ'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftBCD
+        Name = 'VALOR_BAIXA'
+        ParamType = ptInput
+      end>
   end
   object stpCaixaMovimentoPAG_ESTORNO: TIBStoredProc
     Database = ibdtbsBusiness

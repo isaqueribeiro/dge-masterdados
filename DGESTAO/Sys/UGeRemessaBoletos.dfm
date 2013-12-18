@@ -521,7 +521,7 @@ object frmGeRemessaBoleto: TfrmGeRemessaBoleto
       '  , c.cep'
       '  , c.email'
       'from TBCONTREC r'
-      '  inner join TBCLIENTE c on ( r.cnpj = c.cnpj )'
+      '  inner join TBCLIENTE c on ( r.cliente = c.codigo )'
       
         '  left join TBVENDAS v on (v.ano = r.anovenda and v.codcontrol =' +
         ' r.numvenda)'

@@ -219,7 +219,6 @@ type
     QryEstoqueSatelite: TIBDataSet;
     UpdEstoqueSatelite: TIBUpdateSQL;
     DtsEstoqueSatelite: TDataSource;
-    QryEstoqueSateliteCOD_CLIENTE: TIBStringField;
     QryEstoqueSateliteCOD_PRODUTO: TIBStringField;
     QryEstoqueSateliteQUANTIDADE: TIntegerField;
     QryEstoqueSateliteUSUARIO: TIBStringField;
@@ -241,6 +240,12 @@ type
     BtnRequisicoes: TBitBtn;
     CmbBxFiltrarTipo: TComboBox;
     QryEstoqueSateliteVALOR_MEDIO: TIBBCDField;
+    tblTipoCnpj: TIBTable;
+    dtsTipoCnpj: TDataSource;
+    IbDtstTabelaTIPO: TSmallintField;
+    lblTipoCNPJ: TLabel;
+    dbTipoCNPJ: TDBLookupComboBox;
+    QryEstoqueSateliteCOD_CLIENTE: TIntegerField;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -282,7 +287,7 @@ type
     { Private declarations }
     bApenasPossuiEstoque : Boolean;
     FSQLEstoqueSatelite  : TStringList;
-    procedure GetComprasAbertas(sCNPJ : String);
+    procedure GetComprasAbertas(iCodigoCliente : Integer);
     procedure HabilitarAbaEstoque;
     procedure EstoqueSateliteFiltarDados(const iTipoPesquisa : Integer);
 
@@ -304,7 +309,7 @@ var
   function SelecionarCliente(const AOwner : TComponent; var Codigo : Integer; var CNPJ, Nome : String) : Boolean; overload;
   function SelecionarCliente(const AOwner : TComponent; var Codigo : Integer; var CNPJ, Nome : String; var Bloqueado : Boolean; var MotivoBloqueio : String) : Boolean; overload;
 
-  function SelecionarProdutoCliente(const AOwner : TComponent; sCNPJ : String; var sCodigo, sDescricao : String; var iEstoque : Integer;
+  function SelecionarProdutoCliente(const AOwner : TComponent; iCodigo : Integer; var sCodigo, sDescricao : String; var iEstoque : Integer;
     var cValorMedio : Currency) : Boolean;
 
 implementation
@@ -392,7 +397,7 @@ begin
   end;
 end;
 
-function SelecionarProdutoCliente(const AOwner : TComponent; sCNPJ : String; var sCodigo, sDescricao : String; var iEstoque : Integer;
+function SelecionarProdutoCliente(const AOwner : TComponent; iCodigo : Integer; var sCodigo, sDescricao : String; var iEstoque : Integer;
   var cValorMedio : Currency) : Boolean;
 var
   frm : TfrmGeCliente;
@@ -424,12 +429,10 @@ begin
 
       AbrirTabelaAuto := True;
 
-      IbDtstTabela.SelectSQL.Add('where cl.cnpj = ' + QuotedStr(sCNPJ));
+      IbDtstTabela.SelectSQL.Add('where cl.codigo = ' + IntToStr(iCodigo));
       IbDtstTabela.Open;
 
-      Caption := 'Cliente : ' +
-        IbDtstTabelaNOME.AsString + ' - ' +
-        IfThen(StrIsCPF(sCNPJ), 'CPF: ' + StrFormatarCpf(sCNPJ), 'CNPJ: ' + StrFormatarCnpj(sCNPJ));
+      Caption := 'Cliente : ' + FormatFloat('00000', iCodigo) + ' - ' + IbDtstTabelaNOME.AsString;
 
       pgcMaisDados.ActivePage := tbsEstoqueSatelite;
       tbsTabela.TabVisible    := False;
@@ -458,6 +461,7 @@ begin
   inherited;
 
   tblVendedor.Open;
+  tblTipoCnpj.Open;
 
   BloquearClientes;
 
@@ -479,7 +483,7 @@ begin
 
   tbsEstoqueSatelite.TabVisible := False;
   GrpBxCustosOper.Enabled       := GetCalcularCustoOperEmpresa(GetEmpresaIDDefault);
-  dbEntregaFracionada.Enabled   := GetEstoqueSateliteEmpresa(GetEmpresaIDDefault);
+  dbEntregaFracionada.ReadOnly  := not GetEstoqueSateliteEmpresa(GetEmpresaIDDefault);
 end;
 
 procedure TfrmGeCliente.ProximoCampoKeyPress(Sender: TObject;
@@ -578,6 +582,7 @@ procedure TfrmGeCliente.IbDtstTabelaNewRecord(DataSet: TDataSet);
 begin
   inherited;
   IbDtstTabelaPESSOA_FISICA.AsInteger    := 1;
+  IbDtstTabelaTIPO.AsInteger             := 0;
   IbDtstTabelaVALOR_LIMITE_COMPRA.Value  := 0;
   IbDtstTabelaPAIS_ID.AsString           := GetPaisIDDefault;
   IbDtstTabelaPAIS_NOME.AsString         := GetPaisNomeDefault;
@@ -633,14 +638,19 @@ begin
   mpClienteDesbloquear.Enabled := IbDtstTabela.Active and
     (not (IbDtstTabela.State in [dsEdit, dsInsert])) and (IbDtstTabelaBLOQUEADO.AsInteger = 1);
 
-  if ( Field = IbDtstTabela.FieldByName('CNPJ') ) then
-    GetComprasAbertas( IbDtstTabela.FieldByName('CNPJ').AsString );
+  if ( Field = IbDtstTabela.FieldByName('CODIGO') ) then
+    GetComprasAbertas( IbDtstTabela.FieldByName('CODIGO').AsInteger );
 
   if ( Field = IbDtstTabela.FieldByName('PESSOA_FISICA') ) then
+  begin
+    lblTipoCNPJ.Enabled := (IbDtstTabelaPESSOA_FISICA.AsInteger = 0);
+    dbTipoCNPJ.Enabled  := (IbDtstTabelaPESSOA_FISICA.AsInteger = 0);
+
     if ( IbDtstTabelaPESSOA_FISICA.AsInteger = 1 ) then
       IbDtstTabelaCNPJ.EditMask := '999.999.999-99;0; '
     else
       IbDtstTabelaCNPJ.EditMask := '99.999.999/9999-99;0; ';
+  end;
 
   if ( Field = IbDtstTabelaCUSTO_OPER_PERCENTUAL ) then
     if ( IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger = 1 ) then
@@ -711,24 +721,27 @@ begin
   if IbDtstTabelaENTREGA_FRACIONADA_VENDA.IsNull then
     IbDtstTabelaENTREGA_FRACIONADA_VENDA.Value := 0;
 
+  if (IbDtstTabelaPESSOA_FISICA.AsInteger = 1) then
+    IbDtstTabelaTIPO.AsInteger := 0;
+
   inherited;
 
   HabilitarAbaEstoque;
 end;
 
-procedure TfrmGeCliente.GetComprasAbertas(sCNPJ: String);
+procedure TfrmGeCliente.GetComprasAbertas(iCodigoCliente : Integer);
 begin
   with qryTotalComprasAbertas do
   begin
     Close;
-    ParamByName('cnpj').AsString := sCNPJ;
+    ParamByName('cliente').AsInteger := iCodigoCliente;
     Open;
   end;
 
   with qryTitulos do
   begin
     Close;
-    ParamByName('cliente').AsString := sCNPJ;
+    ParamByName('cliente').AsInteger := iCodigoCliente;
     Open;
   end;
 end;
@@ -736,7 +749,7 @@ end;
 procedure TfrmGeCliente.pgcGuiasChange(Sender: TObject);
 begin
   inherited;
-  GetComprasAbertas( IbDtstTabela.FieldByName('CNPJ').AsString );
+  GetComprasAbertas( IbDtstTabela.FieldByName('codigo').AsInteger );
 end;
 
 procedure TfrmGeCliente.qryTitulosSITUACAOGetText(Sender: TField;
@@ -819,7 +832,7 @@ end;
 
 procedure TfrmGeCliente.mpClienteDesbloquearClick(Sender: TObject);
 var
-  sCNPJ ,
+  iCodigo : Integer;
   sMotivo : String;
 begin
   if not (GetUserFunctionID in [FUNCTION_USER_ID_DIRETORIA, FUNCTION_USER_ID_GERENTE_FIN, FUNCTION_USER_ID_AUX_FINANC1]) then
@@ -832,18 +845,18 @@ begin
     if InputQuery('Desbloquear cliente:', 'Informe o motivo do desbloqueio:', sMotivo) then
       if Trim(sMotivo) <> EmptyStr then
       begin
-        sCNPJ := IbDtstTabelaCNPJ.AsString;
-        DesbloquearCliente(sCNPJ, GetUserApp + ' -> ' + AnsiUpperCase(sMotivo));
+        iCodigo := IbDtstTabelaCODIGO.AsInteger;
+        DesbloquearCliente(iCodigo, GetUserApp + ' -> ' + AnsiUpperCase(sMotivo));
 
         IbDtstTabela.Close;
         IbDtstTabela.Open;
-        IbDtstTabela.Locate('CNPJ', sCNPJ, []);
+        IbDtstTabela.Locate('CODIGO', iCodigo, []);
       end;
 end;
 
 procedure TfrmGeCliente.mpClienteBloquearClick(Sender: TObject);
 var
-  sCNPJ ,
+  iCodigo : Integer;
   sMotivo : String;
 begin
   if not (GetUserFunctionID in [FUNCTION_USER_ID_DIRETORIA, FUNCTION_USER_ID_GERENTE_FIN, FUNCTION_USER_ID_AUX_FINANC1]) then
@@ -856,12 +869,12 @@ begin
     if InputQuery('Bloquear cliente:', 'Informe o motivo do bloqueio:', sMotivo) then
       if Trim(sMotivo) <> EmptyStr then
       begin
-        sCNPJ := IbDtstTabelaCNPJ.AsString;
-        BloquearCliente(sCNPJ, GetUserApp + ' -> ' + AnsiUpperCase(sMotivo));
+        iCodigo := IbDtstTabelaCODIGO.AsInteger;
+        BloquearCliente(iCodigo, GetUserApp + ' -> ' + AnsiUpperCase(sMotivo));
 
         IbDtstTabela.Close;
         IbDtstTabela.Open;
-        IbDtstTabela.Locate('CNPJ', sCNPJ, []);
+        IbDtstTabela.Locate('CODIGO', iCodigo, []);
       end;
 end;
 
@@ -1186,9 +1199,9 @@ begin
       end;
 
       if ( Pos('where', SelectSQL.Text) > 0 ) then
-        Add( '  and (e.cod_cliente = ' + QuotedStr(IbDtstTabelaCNPJ.AsString) + ')' )
+        Add( '  and (e.cod_cliente = ' + IbDtstTabelaCNPJ.AsString + ')' )
       else
-        Add( 'where (e.cod_cliente = ' + QuotedStr(IbDtstTabelaCNPJ.AsString) + ')' );
+        Add( 'where (e.cod_cliente = ' + IbDtstTabelaCNPJ.AsString + ')' );
 
       if chkProdutoComEstoque.Checked then
         Add('  and (e.quantidade > 0)');

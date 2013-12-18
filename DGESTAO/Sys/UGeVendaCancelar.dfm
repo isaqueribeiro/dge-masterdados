@@ -499,6 +499,7 @@ inherited frmGeVendaCancelar: TfrmGeVendaCancelar
       '    v.Ano'
       '  , v.Codcontrol'
       '  , v.Codemp'
+      '  , v.Codcliente'
       '  , v.Codcli'
       '  , v.Dtvenda'
       '  , v.Status'
@@ -545,6 +546,10 @@ inherited frmGeVendaCancelar: TfrmGeVendaCancelar
       FieldName = 'CODEMP'
       Origin = 'TBVENDAS.CODEMP'
       Size = 18
+    end
+    object cdsVendaCODCLIENTE: TIntegerField
+      FieldName = 'CODCLIENTE'
+      Origin = '"TBVENDAS"."CODCLIENTE"'
     end
     object cdsVendaCODCLI: TIBStringField
       FieldName = 'CODCLI'

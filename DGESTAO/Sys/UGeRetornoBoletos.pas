@@ -633,7 +633,7 @@ begin
       sSQL.Add('   , r.anovenda ');
       sSQL.Add('   , r.numvenda ');
       sSQL.Add(' from TBCONTREC r ');
-      sSQL.Add('   inner join TBCLIENTE c on ( r.cnpj = c.cnpj ) ');
+      sSQL.Add('   inner join TBCLIENTE c on ( r.cliente = c.codigo ) ');
 //      sSQL.Add(' where r.baixado  = 0');
 //      sSQL.Add('   and r.codbanco = ' + IntToStr(Banco) );
       sSQL.Add(' where r.codbanco = ' + IntToStr(Banco) );
@@ -694,7 +694,7 @@ begin
         sSQL.Add('   , r.anovenda ');
         sSQL.Add('   , r.numvenda ');
         sSQL.Add(' from TBCONTREC r ');
-        sSQL.Add('   inner join TBCLIENTE c on ( r.cnpj = c.cnpj ) ');
+        sSQL.Add('   inner join TBCLIENTE c on ( r.cliente = c.codigo ) ');
         sSQL.Add('   left join TBVENDAS v on (v.ano = r.anovenda and v.codcontrol = r.numvenda) ');
 //        sSQL.Add(' where r.baixado  = 0');
 //        sSQL.Add('   and r.codbanco = ' + IntToStr(Banco) );

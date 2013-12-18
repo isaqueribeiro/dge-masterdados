@@ -95,15 +95,14 @@ object DMNFe: TDMNFe
       '  left join TBLOGRADOURO lg on (lg.Log_cod = c.Log_cod)'
       '  left join TBTIPO_LoGRADOURO tl on (tl.Tlg_cod = c.Tlg_tipo)'
       '  left Join TBPAIS pa on (pa.Pais_id = c.Pais_id)'
-      'where c.Cnpj = :Cnpj')
+      'where c.Codigo = :Codigo')
     Left = 144
     Top = 72
     ParamData = <
       item
-        DataType = ftString
-        Name = 'Cnpj'
-        ParamType = ptInput
-        Value = ''
+        DataType = ftUnknown
+        Name = 'Codigo'
+        ParamType = ptUnknown
       end>
     object qryDestinatarioCODIGO: TIntegerField
       FieldName = 'CODIGO'

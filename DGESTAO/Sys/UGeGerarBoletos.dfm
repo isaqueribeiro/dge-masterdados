@@ -95,6 +95,12 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
           Columns = <
             item
               Expanded = False
+              FieldName = 'CODIGO'
+              Width = 65
+              Visible = True
+            end
+            item
+              Expanded = False
               FieldName = 'CNPJ'
               Title.Caption = 'CNPJ/CPF'
               Width = 100
@@ -2093,6 +2099,7 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
     SQL.Strings = (
       'Select'
       '    c.cnpj'
+      '  , c.codigo'
       '  , c.inscest'
       '  , c.nome'
       '  , c.fone'
@@ -2117,6 +2124,14 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
         ParamType = ptInput
         Value = 'CL'
       end>
+    object IbQryClientesCODIGO: TIntegerField
+      DisplayLabel = 'C'#243'digo'
+      FieldName = 'CODIGO'
+      Origin = '"TBCLIENTE"."CODIGO"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+      DisplayFormat = '00000'
+    end
     object IbQryClientesCNPJ: TIBStringField
       FieldName = 'CNPJ'
       Origin = 'TBCLIENTE.CNPJ'
@@ -2226,7 +2241,7 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
         '  left join TBVENDAS v on (v.ano = r.anovenda and v.codcontrol =' +
         ' r.numvenda)'
       'where r.baixado = 0'
-      '  and r.cnpj = :cnpj'
+      '  and r.cliente = :cliente'
       '  and coalesce(r.codbanco, 0) = :banco'
       '  and r.valorrec > 0'
       'order by'
@@ -2238,10 +2253,10 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
     Top = 264
     ParamData = <
       item
-        DataType = ftString
-        Name = 'cnpj'
+        DataType = ftInteger
+        Name = 'cliente'
         ParamType = ptInput
-        Value = '75840758272'
+        Value = 0
       end
       item
         DataType = ftSmallint
@@ -2266,10 +2281,10 @@ object frmGeGerarBoleto: TfrmGeGerarBoleto
     Aggregates = <>
     Params = <
       item
-        DataType = ftString
-        Name = 'cnpj'
+        DataType = ftInteger
+        Name = 'cliente'
         ParamType = ptInput
-        Value = '75840758272'
+        Value = 0
       end
       item
         DataType = ftSmallint

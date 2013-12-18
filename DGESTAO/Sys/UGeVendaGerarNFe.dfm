@@ -905,6 +905,7 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       '    v.Ano'
       '  , v.Codcontrol'
       '  , v.Codemp'
+      '  , v.Codcliente'
       '  , v.Codcli'
       '  , v.Dtvenda'
       '  , v.Dtfinalizacao_venda'
@@ -986,6 +987,7 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       '    v.Ano'
       '  , v.Codcontrol'
       '  , v.Codemp'
+      '  , v.Codcliente'
       '  , v.Codcli'
       '  , v.Dtvenda'
       '  , v.Dtfinalizacao_venda'
@@ -1038,6 +1040,10 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       Origin = 'TBVENDAS.CODEMP'
       ProviderFlags = [pfInUpdate]
       Size = 18
+    end
+    object cdsVendaCODCLIENTE: TIntegerField
+      FieldName = 'CODCLIENTE'
+      Origin = '"TBVENDAS"."CODCLIENTE"'
     end
     object cdsVendaCODCLI: TIBStringField
       FieldName = 'CODCLI'

@@ -121,6 +121,7 @@ type
     lblNFe: TLabel;
     dbNFe: TDBEdit;
     IbDtstTabelaEMPRESA: TIBStringField;
+    IbDtstTabelaCLIENTE: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure dbClienteButtonClick(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
@@ -228,6 +229,7 @@ begin
   if ( IbDtstTabela.State in [dsEdit, dsInsert] ) then
     if ( SelecionarCliente(Self, iCodigo, sCNPJ, sNome) ) then
     begin
+      IbDtstTabelaCLIENTE.AsInteger    := iCodigo;
       IbDtstTabelaCNPJ.AsString        := sCNPJ;
       IbDtstTabelaNOMECLIENTE.AsString := sNome;
     end;
@@ -311,7 +313,7 @@ begin
     if ( CxContaCorrente > 0 ) then
       GerarSaldoContaCorrente(CxContaCorrente, DataPagto);
 
-    DesbloquearCliente(IbDtstTabelaCNPJ.AsString, EmptyStr);
+    DesbloquearCliente(IbDtstTabelaCLIENTE.AsInteger, EmptyStr);
   end;
 end;
 
@@ -517,7 +519,7 @@ procedure TfrmGeContasAReceber.IbDtstTabelaBeforePost(DataSet: TDataSet);
 begin
   if ( IbDtstTabela.State = dsEdit ) then
     if ( VarToStr(IbDtstTabelaDTVENC.OldValue) <> VarToStr(IbDtstTabelaDTVENC.NewValue) ) then
-      DesbloquearCliente(IbDtstTabelaCNPJ.AsString, EmptyStr)
+      DesbloquearCliente(IbDtstTabelaCLIENTE.AsInteger, EmptyStr)
 end;
 
 initialization
