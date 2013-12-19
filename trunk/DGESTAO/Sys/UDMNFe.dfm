@@ -3,8 +3,8 @@ object DMNFe: TDMNFe
   OnCreate = DataModuleCreate
   Left = 435
   Top = 192
-  Height = 575
-  Width = 444
+  Height = 704
+  Width = 931
   object ACBrNFe: TACBrNFe
     Configuracoes.Geral.PathSalvar = '..\Bin\'
     Configuracoes.Geral.ExibirErroSchema = True
@@ -5078,7 +5078,7 @@ object DMNFe: TDMNFe
       ''
       'order by 5')
     Left = 144
-    Top = 408
+    Top = 456
     ParamData = <
       item
         DataType = ftUnknown
@@ -9712,5 +9712,197 @@ object DMNFe: TDMNFe
   object frxChartObject: TfrxChartObject
     Left = 24
     Top = 456
+  end
+  object cdsLOG: TIBDataSet
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    ForcedRefresh = True
+    CachedUpdates = True
+    RefreshSQL.Strings = (
+      '')
+    SelectSQL.Strings = (
+      'Select'
+      '    t.usuario'
+      '  , t.data_hora'
+      '  , t.tipo'
+      '  , t.descricao'
+      '  , t.especificacao'
+      'from TBLOG_TRANSACAO t'
+      'where 1=0')
+    ModifySQL.Strings = (
+      '')
+    GeneratorField.Field = 'CODCONTROL'
+    UpdateObject = updLOG
+    Left = 336
+    Top = 24
+    object cdsLOGUSUARIO: TIBStringField
+      FieldName = 'USUARIO'
+      Origin = '"TBLOG_TRANSACAO"."USUARIO"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+      Size = 50
+    end
+    object cdsLOGDATA_HORA: TDateTimeField
+      FieldName = 'DATA_HORA'
+      Origin = '"TBLOG_TRANSACAO"."DATA_HORA"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object cdsLOGTIPO: TSmallintField
+      FieldName = 'TIPO'
+      Origin = '"TBLOG_TRANSACAO"."TIPO"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object cdsLOGDESCRICAO: TIBStringField
+      FieldName = 'DESCRICAO'
+      Origin = '"TBLOG_TRANSACAO"."DESCRICAO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 100
+    end
+    object cdsLOGESPECIFICACAO: TMemoField
+      FieldName = 'ESPECIFICACAO'
+      Origin = '"TBLOG_TRANSACAO"."ESPECIFICACAO"'
+      ProviderFlags = [pfInUpdate]
+      BlobType = ftMemo
+      Size = 8
+    end
+  end
+  object updLOG: TIBUpdateSQL
+    RefreshSQL.Strings = (
+      'Select '
+      '  USUARIO,'
+      '  DATA_HORA,'
+      '  TIPO,'
+      '  DESCRICAO,'
+      '  ESPECIFICACAO'
+      'from TBLOG_TRANSACAO '
+      'where'
+      '  DATA_HORA = :DATA_HORA and'
+      '  USUARIO = :USUARIO')
+    ModifySQL.Strings = (
+      'update TBLOG_TRANSACAO'
+      'set'
+      '  DATA_HORA = :DATA_HORA,'
+      '  DESCRICAO = :DESCRICAO,'
+      '  ESPECIFICACAO = :ESPECIFICACAO,'
+      '  TIPO = :TIPO,'
+      '  USUARIO = :USUARIO'
+      'where'
+      '  DATA_HORA = :OLD_DATA_HORA and'
+      '  USUARIO = :OLD_USUARIO')
+    InsertSQL.Strings = (
+      'insert into TBLOG_TRANSACAO'
+      '  (DATA_HORA, DESCRICAO, ESPECIFICACAO, TIPO, USUARIO)'
+      'values'
+      '  (:DATA_HORA, :DESCRICAO, :ESPECIFICACAO, :TIPO, :USUARIO)')
+    DeleteSQL.Strings = (
+      'delete from TBLOG_TRANSACAO'
+      'where'
+      '  DATA_HORA = :OLD_DATA_HORA and'
+      '  USUARIO = :OLD_USUARIO')
+    Left = 368
+    Top = 24
+  end
+  object qryNFeEmitidaEntrada: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'Select'
+      '    n.ANOCOMPRA'
+      '  , n.NUMCOMPRA'
+      '  , n.DATAEMISSAO'
+      '  , n.HORAEMISSAO'
+      '  , n.SERIE'
+      '  , n.NUMERO'
+      '  , n.CHAVE'
+      '  , n.PROTOCOLO'
+      '  , n.RECIBO'
+      '  , n.XML_FILENAME'
+      '  , n.XML_FILE'
+      '  , n.LOTE_ANO'
+      '  , n.LOTE_NUM'
+      'from TBNFE_ENVIADA n'
+      'where n.ANOCOMPRA = :anocompra'
+      '  and n.NUMCOMPRA = :numcompra')
+    Left = 144
+    Top = 408
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'anocompra'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftInteger
+        Name = 'numcompra'
+        ParamType = ptInput
+        Value = 0
+      end>
+    object qryNFeEmitidaEntradaANOCOMPRA: TSmallintField
+      FieldName = 'ANOCOMPRA'
+      Origin = '"TBNFE_ENVIADA"."ANOCOMPRA"'
+    end
+    object qryNFeEmitidaEntradaNUMCOMPRA: TIntegerField
+      FieldName = 'NUMCOMPRA'
+      Origin = '"TBNFE_ENVIADA"."NUMCOMPRA"'
+    end
+    object qryNFeEmitidaEntradaDATAEMISSAO: TDateField
+      FieldName = 'DATAEMISSAO'
+      Origin = '"TBNFE_ENVIADA"."DATAEMISSAO"'
+    end
+    object qryNFeEmitidaEntradaHORAEMISSAO: TTimeField
+      FieldName = 'HORAEMISSAO'
+      Origin = '"TBNFE_ENVIADA"."HORAEMISSAO"'
+    end
+    object qryNFeEmitidaEntradaSERIE: TIBStringField
+      FieldName = 'SERIE'
+      Origin = '"TBNFE_ENVIADA"."SERIE"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+      Size = 4
+    end
+    object qryNFeEmitidaEntradaNUMERO: TIntegerField
+      FieldName = 'NUMERO'
+      Origin = '"TBNFE_ENVIADA"."NUMERO"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object qryNFeEmitidaEntradaCHAVE: TIBStringField
+      FieldName = 'CHAVE'
+      Origin = '"TBNFE_ENVIADA"."CHAVE"'
+      Size = 250
+    end
+    object qryNFeEmitidaEntradaPROTOCOLO: TIBStringField
+      FieldName = 'PROTOCOLO'
+      Origin = '"TBNFE_ENVIADA"."PROTOCOLO"'
+      Size = 250
+    end
+    object qryNFeEmitidaEntradaRECIBO: TIBStringField
+      FieldName = 'RECIBO'
+      Origin = '"TBNFE_ENVIADA"."RECIBO"'
+      Size = 250
+    end
+    object qryNFeEmitidaEntradaXML_FILENAME: TIBStringField
+      FieldName = 'XML_FILENAME'
+      Origin = '"TBNFE_ENVIADA"."XML_FILENAME"'
+      Size = 250
+    end
+    object qryNFeEmitidaEntradaXML_FILE: TMemoField
+      FieldName = 'XML_FILE'
+      Origin = '"TBNFE_ENVIADA"."XML_FILE"'
+      ProviderFlags = [pfInUpdate]
+      BlobType = ftMemo
+      Size = 8
+    end
+    object qryNFeEmitidaEntradaLOTE_ANO: TSmallintField
+      FieldName = 'LOTE_ANO'
+      Origin = '"TBNFE_ENVIADA"."LOTE_ANO"'
+    end
+    object qryNFeEmitidaEntradaLOTE_NUM: TIntegerField
+      FieldName = 'LOTE_NUM'
+      Origin = '"TBNFE_ENVIADA"."LOTE_NUM"'
+      Required = True
+    end
   end
 end
