@@ -1,6 +1,7 @@
 inherited frmGeTipoDespesa: TfrmGeTipoDespesa
   Width = 757
   Height = 447
+  ActiveControl = dbCodigo
   Caption = 'Cadastro de Tipos de Despesas'
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -20,6 +21,7 @@ inherited frmGeTipoDespesa: TfrmGeTipoDespesa
   inherited pgcGuias: TPageControl
     Width = 741
     Height = 366
+    ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
         Top = 271
