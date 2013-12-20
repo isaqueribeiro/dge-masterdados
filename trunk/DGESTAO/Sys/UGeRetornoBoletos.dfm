@@ -158,19 +158,30 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
         Width = 613
         Height = 97
         Anchors = [akLeft, akTop, akRight]
-        Columns = 2
+        Columns = 4
         ItemHeight = 13
         Items.Strings = (
-          '1'
-          '2'
-          '3'
-          '4'
-          '5'
-          '6'
-          '7'
-          '8'
-          '9'
-          '10')
+          '01'
+          '02'
+          '03'
+          '04'
+          '05'
+          '06'
+          '07'
+          '08'
+          '09'
+          '10'
+          '11'
+          '12'
+          '13'
+          '14'
+          '15'
+          '16'
+          '17'
+          '18'
+          '19'
+          '20'
+          '21')
         TabOrder = 3
       end
       object edFormaPagto: TComboBox
@@ -585,7 +596,7 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
       item
         Name = 'Arquivo'
         DataType = ftString
-        Size = 50
+        Size = 250
       end
       item
         Name = 'Ano'
@@ -655,10 +666,6 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
       DisplayLabel = 'Documento'
       FieldName = 'NumeroDocumento'
     end
-    object CdsTitulosArquivo: TStringField
-      FieldName = 'Arquivo'
-      Size = 50
-    end
     object CdsTitulosAno: TSmallintField
       FieldName = 'Ano'
     end
@@ -698,6 +705,10 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
     end
     object CdsTitulosNumVenda: TIntegerField
       FieldName = 'NumVenda'
+    end
+    object CdsTitulosArquivo: TStringField
+      FieldName = 'Arquivo'
+      Size = 250
     end
     object CdsTitulosTotalAPagar: TAggregateField
       FieldName = 'TotalAPagar'

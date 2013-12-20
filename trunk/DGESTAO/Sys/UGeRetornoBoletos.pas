@@ -40,7 +40,6 @@ type
     CdsTitulosDataPagamento: TDateField;
     CdsTitulosValorPago: TCurrencyField;
     CdsTitulosNumeroDocumento: TStringField;
-    CdsTitulosArquivo: TStringField;
     CdsTitulosLancamento: TLargeintField;
     CdsTitulosParcela: TIntegerField;
     CdsTitulosBanco: TIntegerField;
@@ -94,6 +93,7 @@ type
     CdsTitulosTotalAPagar: TAggregateField;
     CdsTitulosAnoVenda: TIntegerField;
     CdsTitulosNumVenda: TIntegerField;
+    CdsTitulosArquivo: TStringField;
     procedure edBancoChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
@@ -634,9 +634,7 @@ begin
       sSQL.Add('   , r.numvenda ');
       sSQL.Add(' from TBCONTREC r ');
       sSQL.Add('   inner join TBCLIENTE c on ( r.cliente = c.codigo ) ');
-//      sSQL.Add(' where r.baixado  = 0');
-//      sSQL.Add('   and r.codbanco = ' + IntToStr(Banco) );
-      sSQL.Add(' where r.codbanco = ' + IntToStr(Banco) );
+      sSQL.Add(' where r.codbanco    = ' + IntToStr(Banco) );
       sSQL.Add('   and r.nossonumero = ' + QuotedStr(sNossoNumero) );
       sSQL.EndUpdate;
 
@@ -696,9 +694,64 @@ begin
         sSQL.Add(' from TBCONTREC r ');
         sSQL.Add('   inner join TBCLIENTE c on ( r.cliente = c.codigo ) ');
         sSQL.Add('   left join TBVENDAS v on (v.ano = r.anovenda and v.codcontrol = r.numvenda) ');
-//        sSQL.Add(' where r.baixado  = 0');
-//        sSQL.Add('   and r.codbanco = ' + IntToStr(Banco) );
         sSQL.Add(' where r.codbanco = ' + IntToStr(Banco) );
+        sSQL.Add('   and ' + sWHRDoc );
+        sSQL.EndUpdate;
+
+        with gFind do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.AddStrings( sSQL );
+          Open;
+
+          bReturn := ( not IsEmpty );
+
+          if ( bReturn ) then
+          begin
+            Ano        := FieldByName('anolanc').AsInteger;
+            Lancamento := FieldByName('numlanc').AsInteger;
+            Parcela    := FieldByName('parcela').AsInteger;
+            APagar     := FieldByName('apagar').AsCurrency;
+            Sacado     := FieldByName('nome').AsString;
+            Cnpj       := FieldByName('cnpj').AsString;
+            Quidado    := (FieldByName('baixado').AsInteger = 1);
+            AnoVenda   := FieldByName('anovenda').AsInteger;
+            NumVenda   := FieldByName('numvenda').AsInteger;
+          end
+        end;
+
+      end;
+
+      if ( (not bReturn) and (Trim(sDocumento) <> EmptyStr) ) then
+      begin
+        // Buscar pela NFE + PARCELA (DOCUMENTO LIVRE) registros não baixados
+
+        // Documento => NF-e + Nro. Parcela
+        if (Length(sDocumento) = 5) and (StrToInt(Copy(sDocumento, 4, 1)) = 0) and (StrToInt(Copy(sDocumento, 5, 1)) > 0) then
+          sWHRDoc := '(v.nfe = ' + Copy(sDocumento, 1, 3) +
+             ' and r.parcela = ' + Copy(sDocumento, 5, 1) + ')'
+        else
+          sWHRDoc := '(1 = 0)';
+
+        sSQL.Clear;
+        sSQL.BeginUpdate;
+        sSQL.Add(' Select ');
+        sSQL.Add('     r.anolanc ');
+        sSQL.Add('   , r.numlanc ');
+        sSQL.Add('   , r.parcela ');
+        sSQL.Add('   , coalesce(r.valorsaldo, r.valorrec) as apagar ');
+        sSQL.Add('   , c.nome ');
+        sSQL.Add('   , r.cnpj ');
+        sSQL.Add('   , r.nossonumero ');
+        sSQL.Add('   , r.baixado ');
+        sSQL.Add('   , r.anovenda ');
+        sSQL.Add('   , r.numvenda ');
+        sSQL.Add(' from TBCONTREC r ');
+        sSQL.Add('   inner join TBCLIENTE c on ( r.cliente = c.codigo ) ');
+        sSQL.Add('   left join TBVENDAS v on (v.ano = r.anovenda and v.codcontrol = r.numvenda) ');
+        sSQL.Add(' where r.codbanco is null');
+        sSQL.Add('   and r.nossonumero is null');
         sSQL.Add('   and ' + sWHRDoc );
         sSQL.EndUpdate;
 
