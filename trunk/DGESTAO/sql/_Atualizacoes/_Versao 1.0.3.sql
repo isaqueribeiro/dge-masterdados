@@ -827,7 +827,7 @@ begin
       cliente_codi;
 
     Update TBVENDAS v Set
-      v.codcli = :cliente_codi
+      v.codcliente = :cliente_codi
     where v.codcli = :cliente_cnpj;
 
     Update TVENDASITENS vi Set
