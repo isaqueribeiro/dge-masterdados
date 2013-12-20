@@ -2805,3 +2805,142 @@ Select 2 as Codigo , 'FILIAL'        as Descricao from RDB$DATABASE
 
 GRANT SELECT, UPDATE, DELETE, INSERT, REFERENCES ON VW_TIPO_CNPJ TO "PUBLIC";
 
+
+
+
+/*------ SYSDBA 20/12/2013 11:43:41 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_estoque_cliente for tbvendas
+active after update position 2
+AS
+  declare variable produto varchar(10);
+  declare variable quantidade integer;
+  declare variable estoque integer;
+  declare variable valor_medio numeric(15,4);
+  declare variable valor_venda numeric(15,2);
+begin
+
+  /* Gerar Estoque para o Cliente na Finalizacao da Venda */
+
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+    if ( new.gerar_estoque_cliente = 1 ) then
+    begin
+
+      for
+        Select
+            i.Codprod
+          , i.Qtde                    -- Quantidade vendida
+          , coalesce(c.quantidade, 0) -- Estoque
+          , (coalesce(c.valor_medio, 0) * coalesce(c.quantidade, 0))
+          , i.total_liquido
+        from TVENDASITENS i
+          left join TBCLIENTE_ESTOQUE c on (c.cod_cliente = new.codcliente and c.cod_produto = i.codprod)
+        where i.Ano        = new.Ano
+          and i.Codcontrol = new.Codcontrol
+        into
+            produto
+          , quantidade
+          , estoque
+          , valor_medio
+          , valor_venda
+      do
+      begin
+
+        -- Recalcular valor medio ja existente
+        if ( :estoque <= 0 ) then
+          valor_medio = 0.0;
+
+        -- Gerar novo valor medio
+        valor_medio = (:valor_medio + :valor_venda) / (:quantidade + :estoque);
+
+        if (not exists(
+          Select
+            ec.cod_cliente
+          from TBCLIENTE_ESTOQUE ec
+          where ec.cod_cliente = new.codcliente
+            and ec.cod_produto = :produto
+        )) then
+        begin
+
+          -- Gerar Estoque
+          Insert Into TBCLIENTE_ESTOQUE (
+              cod_cliente
+            , cod_produto
+            , quantidade
+            , valor_medio
+            , usuario
+            , ano_venda_ult
+            , cod_venda_ult
+          ) values (
+              new.codcliente
+            , :produto
+            , :quantidade
+            , :valor_medio
+            , new.usuario
+            , new.ano
+            , new.codcontrol
+          );
+
+        end
+        else
+        begin
+
+          -- Atualizar estoque cliente
+          Update TBCLIENTE_ESTOQUE ec Set
+              ec.quantidade  = coalesce(:quantidade, 0) + coalesce(:estoque, 0)
+            , ec.valor_medio = :valor_medio
+          where ec.cod_cliente = new.codcliente
+            and ec.cod_produto = :produto;
+
+        end 
+
+      end 
+
+    end
+  end
+
+  else
+
+  /* Atualizar Estoque do Cliente no Cancelamento da Venda */
+
+  if ( (coalesce(old.Status, 0) in (3, 4)) and (new.Status = 5)) then /* 5. Cancelada */
+  begin
+
+    if ( new.gerar_estoque_cliente = 1 ) then
+    begin
+
+      for
+        Select
+            i.Codprod
+          , i.Qtde                    -- Quantidade vendida cancelada
+          , coalesce(c.quantidade, 0) -- Estoque
+        from TVENDASITENS i
+          left join TBCLIENTE_ESTOQUE c on (c.cod_cliente = new.codcliente and c.cod_produto = i.codprod)
+        where i.Ano        = new.Ano
+          and i.Codcontrol = new.Codcontrol
+        into
+            produto
+          , quantidade
+          , estoque
+      do
+      begin
+
+          -- Atualizar estoque cliente
+          Update TBCLIENTE_ESTOQUE ec Set
+            ec.quantidade = coalesce(:estoque, 0) - coalesce(:quantidade, 0)
+          where ec.cod_cliente = new.codcliente
+            and ec.cod_produto = :produto;
+
+      end
+
+    end
+
+  end
+
+end^
+
+SET TERM ; ^
+
