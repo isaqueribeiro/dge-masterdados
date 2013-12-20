@@ -248,6 +248,9 @@ const
 
 implementation
 
+uses
+  UFuncoes;
+
 {$R *.dfm}
 
 function IfThen(AValue: Boolean; const ATrue: string;
@@ -427,8 +430,26 @@ begin
 end;
 
 procedure ShowError(sMsg : String);
+var
+  sLOG_Error : TStringList;
 begin
-  Application.MessageBox(PChar(sMsg), 'Erro', MB_ICONERROR);
+  sLOG_Error := TStringList.Create;
+  try
+    sLOG_Error.BeginUpdate;
+    sLOG_Error.Add('Aplicativo: ' + Application.Title);
+    sLOG_Error.Add('Versão    : ' + GetVersion);
+    sLOG_Error.Add('-');
+    sLOG_Error.Add('ERRO:');
+    sLOG_Error.Add(sMsg);
+    sLOG_Error.EndUpdate;
+
+    ForceDirectories(ExtractFilePath(Application.ExeName) + '_logError\');
+    sLOG_Error.SaveToFile(ExtractFilePath(Application.ExeName) + '_logError\' + FormatDateTime('yyyy-mm-dd.hhmmss".log"', Now));
+
+    Application.MessageBox(PChar(sMsg), 'Erro', MB_ICONERROR);
+  finally
+    sLOG_Error.Free;
+  end;
 end;
 
 procedure UpdateSequence(GeneratorName, NomeTabela, CampoChave : String; const sWhr : String = '');
