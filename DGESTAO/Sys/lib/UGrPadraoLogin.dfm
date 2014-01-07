@@ -4,69 +4,69 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   ActiveControl = edNome
   BorderStyle = bsNone
   Caption = ' Efetuar Login!'
-  ClientHeight = 324
+  ClientHeight = 285
   ClientWidth = 475
   Font.Charset = ANSI_CHARSET
   Font.Height = -16
   Font.Name = 'Calibri'
   DesignSize = (
     475
-    324)
+    285)
   PixelsPerInch = 96
   TextHeight = 19
   object ShpLogo: TShape
     Left = 8
     Top = 8
-    Width = 105
-    Height = 105
+    Width = 89
+    Height = 89
     Pen.Width = 6
     Shape = stRoundSquare
   end
   object ImgLogo: TImage
     Left = 16
     Top = 16
-    Width = 89
-    Height = 89
+    Width = 73
+    Height = 73
     Stretch = True
     Transparent = True
   end
   object lblSystemName: TLabel
-    Left = 120
+    Left = 104
     Top = 8
-    Width = 265
+    Width = 272
     Height = 59
     Caption = 'System Name'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -48
     Font.Name = 'Calibri'
-    Font.Style = []
+    Font.Style = [fsBold]
     ParentFont = False
     Transparent = True
   end
   object lblSystemDescription: TLabel
-    Left = 120
-    Top = 64
-    Width = 164
-    Height = 26
+    Left = 104
+    Top = 56
+    Width = 124
+    Height = 19
     Caption = 'System Description'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -21
+    Font.Height = -16
     Font.Name = 'Calibri'
     Font.Style = []
     ParentFont = False
     Transparent = True
   end
   object lblSystemVersion: TLabel
-    Left = 120
-    Top = 96
-    Width = 82
-    Height = 15
+    Left = 104
+    Top = 80
+    Width = 71
+    Height = 13
     Caption = 'System Version'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
+    Font.Height = -11
     Font.Name = 'Calibri'
     Font.Style = []
     ParentFont = False
@@ -74,7 +74,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object BvlSystemBanner: TBevel
     Left = 8
-    Top = 120
+    Top = 104
     Width = 457
     Height = 17
     Anchors = [akLeft, akTop, akRight]
@@ -82,7 +82,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object lblNome: TLabel
     Left = 71
-    Top = 143
+    Top = 119
     Width = 54
     Height = 19
     Alignment = taRightJustify
@@ -97,7 +97,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object lblSenha: TLabel
     Left = 82
-    Top = 177
+    Top = 153
     Width = 43
     Height = 19
     Alignment = taRightJustify
@@ -112,7 +112,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object lblEmpresa: TLabel
     Left = 65
-    Top = 207
+    Top = 183
     Width = 60
     Height = 19
     Alignment = taRightJustify
@@ -127,7 +127,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object pnlMensagem: TLabel
     Left = 8
-    Top = 296
+    Top = 257
     Width = 457
     Height = 19
     Anchors = [akLeft, akRight, akBottom]
@@ -179,7 +179,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object edNome: TEdit
     Left = 136
-    Top = 139
+    Top = 115
     Width = 257
     Height = 27
     CharCase = ecUpperCase
@@ -195,7 +195,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object edSenha: TEdit
     Left = 136
-    Top = 173
+    Top = 149
     Width = 257
     Height = 27
     CharCase = ecUpperCase
@@ -211,7 +211,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object BtnEntrar: TBitBtn
     Left = 280
-    Top = 240
+    Top = 216
     Width = 112
     Height = 41
     Caption = 'Entrar'
@@ -303,7 +303,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object edEmpresa: TComboBox
     Left = 136
-    Top = 205
+    Top = 181
     Width = 257
     Height = 23
     Style = csDropDownList
