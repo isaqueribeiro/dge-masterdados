@@ -48,9 +48,9 @@ type
     property Usuario : String read GetUsuario write SetUsuario;
     property Senha   : String read GetSenha write SetSenha;
     property Empresa : String read GetEmpresa write SetEmpresa;
-    property Contador : Integer read fContador;
+    property Contador : Integer read fContador write fContador;
 
-    function EfetuarLogin : Boolean; virtual; abstract;
+    function EfetuarLogin : Boolean; //virtual; abstract;
   end;
 
 var
@@ -156,6 +156,11 @@ end;
 procedure TfrmGrPadraoLogin.edNomeChange(Sender: TObject);
 begin
   pnlMensagem.Caption := EmptyStr;
+end;
+
+function TfrmGrPadraoLogin.EfetuarLogin: Boolean;
+begin
+  Result := False;
 end;
 
 end.
