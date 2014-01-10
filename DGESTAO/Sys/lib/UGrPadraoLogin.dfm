@@ -46,7 +46,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object lblSystemDescription: TLabel
     Left = 104
-    Top = 56
+    Top = 59
     Width = 124
     Height = 19
     Caption = 'System Description'
@@ -60,7 +60,7 @@ inherited frmGrPadraoLogin: TfrmGrPadraoLogin
   end
   object lblSystemVersion: TLabel
     Left = 104
-    Top = 80
+    Top = 83
     Width = 71
     Height = 13
     Caption = 'System Version'
