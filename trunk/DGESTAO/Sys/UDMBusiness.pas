@@ -9,6 +9,11 @@ uses
   FuncoesFormulario, UConstantesDGE, IBUpdateSQL, EUserAcs;
 
 type
+  TSistema = record
+    Codigo : Integer;
+    Nome   : String;
+  end;
+
   TUsuarioLogado = record
     Codigo : Integer;
     Nome   : String;
@@ -98,6 +103,7 @@ var
   FileINI : TIniFile;
   FormFunction : TFormularios;
 
+  gSistema    : TSistema;
   gContaEmail : TContaEmail;
 
 
@@ -1846,6 +1852,9 @@ end;
 
 procedure TDMBusiness.DataModuleCreate(Sender: TObject);
 begin
+  gSistema.Codigo := SISTEMA_GESTAO;
+  gSistema.Nome   := Application.Title;
+
   try
 
     with ibdtbsBusiness, FileINI do
