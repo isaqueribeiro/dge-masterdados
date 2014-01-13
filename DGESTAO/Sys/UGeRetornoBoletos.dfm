@@ -553,6 +553,16 @@ object frmGeRetornoBoleto: TfrmGeRetornoBoleto
           Visible = True
         end>
     end
+    object FileListBox: TFileListBox
+      Left = 608
+      Top = 72
+      Width = 281
+      Height = 129
+      ItemHeight = 13
+      Mask = '*.RET'
+      TabOrder = 1
+      Visible = False
+    end
   end
   object UpdateLanc: TIBSQL
     Database = DMBusiness.ibdtbsBusiness
