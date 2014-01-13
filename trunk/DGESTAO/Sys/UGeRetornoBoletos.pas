@@ -6,7 +6,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, DB, IBCustomDataSet, IBTable, CheckLst,
   Buttons, ToolWin, ComCtrls, Grids, DBGrids, ComObj, IBSQL, DBClient,
-  IBQuery, UGrPadrao, IBUpdateSQL, ACBrBoleto, ACBrBoletoFCFR, ACBrBase;
+  IBQuery, UGrPadrao, IBUpdateSQL, ACBrBoleto, ACBrBoletoFCFR, ACBrBase,
+  FileCtrl;
 
 type
   TfrmGeRetornoBoleto = class(TfrmGrPadrao)
@@ -94,6 +95,7 @@ type
     CdsTitulosAnoVenda: TIntegerField;
     CdsTitulosNumVenda: TIntegerField;
     CdsTitulosArquivo: TStringField;
+    FileListBox: TFileListBox;
     procedure edBancoChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
@@ -224,7 +226,17 @@ end;
 procedure TfrmGeRetornoBoleto.ListarArquivosRetorno(sDiretorio, sMascara : String; Lista : TStrings);
 var
   Rec : TSearchRec;
+  I : Integer;
 begin
+  // Teste
+
+  FileListBox.Directory := sDiretorio;
+  FileListBox.Mask      := sMascara;
+
+  Lista.Clear;
+  for I := 0 to FileListBox.Items.Count - 1 do
+    Lista.Add( FileListBox.Items.Strings[I] );
+(*
   Lista.Clear;
   if ( SysUtils.FindFirst(sDiretorio + sMascara, faAnyFile, Rec) = 0 ) then
     try
@@ -233,13 +245,14 @@ begin
       until SysUtils.FindNext(Rec) <> 0;
     finally
       SysUtils.FindClose(Rec);
-      
+
       // deleta o diretorio ..
       Lista.Delete(1);
 
       // deleta o diretorio .
       Lista.Delete(0);
     end;
+*)
 end;
 
 procedure TfrmGeRetornoBoleto.edBancoChange(Sender: TObject);
@@ -438,6 +451,7 @@ begin
 
     ACBrBoleto.NomeArqRetorno := ExtractFileName(sArquivo);
     ACBrBoleto.DirArqRetorno  := ExtractFilePath(sArquivo);
+    //ACBrBoleto.DirArqRetorno  := Copy(ExtractFilePath(sArquivo), 1, Length(ExtractFilePath(sArquivo)) - 1);
 
     ACBrBoleto.LeCedenteRetorno := True;
     ACBrBoleto.LerRetorno;
