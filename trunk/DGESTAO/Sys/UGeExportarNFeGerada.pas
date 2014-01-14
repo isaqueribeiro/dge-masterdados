@@ -38,6 +38,7 @@ type
     cdsNFeSAIDA: TIntegerField;
     cdsNFeENTRADA: TIntegerField;
     edDiretorioExportacao: TDirectoryEdit;
+    chkNFeCancelada: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
     procedure btnExportarClick(Sender: TObject);

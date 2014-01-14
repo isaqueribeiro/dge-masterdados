@@ -131,6 +131,15 @@ inherited frmGeExportarNFeGerada: TfrmGeExportarNFeGerada
       TabOrder = 1
       Text = '01/01/2012'
     end
+    object chkNFeCancelada: TCheckBox
+      Left = 240
+      Top = 42
+      Width = 209
+      Height = 17
+      Caption = 'Apenas Notas Fiscais Canceladas'
+      TabOrder = 2
+      Visible = False
+    end
   end
   object GrpBxTipoNFe: TRadioGroup
     Left = 0
@@ -396,20 +405,29 @@ inherited frmGeExportarNFeGerada: TfrmGeExportarNFeGerada
         '  , case when nfe.anocompra is not null then 1 else 0 end Entrad' +
         'a'
       'from TBNFE_ENVIADA nfe'
+      
+        '  left join TBVENDAS vnd on (vnd.ano = nfe.anovenda and vnd.codc' +
+        'ontrol = nfe.numvenda)'
+      
+        '  left join TBCOMPRAS cmp on (cmp.ano = nfe.anocompra and cmp.co' +
+        'dcontrol = nfe.numcompra)'
+      ''
       'where nfe.dataemissao between :data_inicial and :data_final'
       '  and (:todas = 1 or ('
       
         '    (:entradas = 1 and nfe.anocompra is not null) or (:saidas = ' +
         '1 and nfe.anovenda is not null)'
       '  ))'
+      '  and (1 = 1)'
+      ''
       'order by'
       '    nfe.serie'
       '  , nfe.numero')
     ModifySQL.Strings = (
       '')
     GeneratorField.Field = 'CODCONTROL'
-    Left = 272
-    Top = 24
+    Left = 168
+    Top = 8
     object cdsNFeSERIE: TIBStringField
       FieldName = 'SERIE'
       Origin = '"TBNFE_ENVIADA"."SERIE"'
