@@ -2992,3 +2992,206 @@ ON TBCONTREC (CNPJ);
 CREATE INDEX IDX_TBCAIXA_MOVIMENTO_CNPJ
 ON TBCAIXA_MOVIMENTO (CLIENTE);
 
+
+
+
+/*------ SYSDBA 16/01/2014 20:13:32 --------*/
+
+CREATE TABLE TBFUNCAO_PERMISSAO (
+    SISTEMA DMN_SMALLINT_NN NOT NULL,
+    FUNCAO DMN_SMALLINT_NN NOT NULL,
+    ROTINA DMN_VCHAR_10_KEY NOT NULL,
+    ACESSO DMN_LOGICO DEFAULT 1);
+
+ALTER TABLE TBFUNCAO_PERMISSAO
+ADD CONSTRAINT PK_TBFUNCAO_PERMISSAO
+PRIMARY KEY (SISTEMA,FUNCAO,ROTINA);
+
+
+
+
+/*------ SYSDBA 16/01/2014 20:13:42 --------*/
+
+COMMENT ON COLUMN TBFUNCAO_PERMISSAO.SISTEMA IS
+'Sistema';
+
+
+
+
+/*------ SYSDBA 16/01/2014 20:13:51 --------*/
+
+COMMENT ON COLUMN TBFUNCAO_PERMISSAO.FUNCAO IS
+'Funcao/Perfil';
+
+
+
+
+/*------ SYSDBA 16/01/2014 20:13:55 --------*/
+
+COMMENT ON COLUMN TBFUNCAO_PERMISSAO.ROTINA IS
+'Rotina';
+
+
+
+
+/*------ SYSDBA 16/01/2014 20:14:07 --------*/
+
+COMMENT ON COLUMN TBFUNCAO_PERMISSAO.ACESSO IS
+'Acesso permitido:
+0 - Nao
+1 - Sim';
+
+GRANT ALL ON TBFUNCAO_PERMISSAO TO "PUBLIC";
+
+
+
+/*------ SYSDBA 16/01/2014 20:20:13 --------*/
+
+SET TERM ^ ;
+
+create or alter procedure SET_FUNCAO_PERMISSAO (
+    SIS_CODIGO DMN_SMALLINT_NN,
+    FUN_CODIGO DMN_SMALLINT_NN,
+    ROT_CODIGO DMN_VCHAR_10_KEY,
+    ACESSO DMN_LOGICO)
+as
+begin
+  if (not exists(
+    Select
+      fp.sistema
+    from TBFUNCAO_PERMISSAO fp
+    where fp.sistema = :sis_codigo
+      and fp.funcao  = :fun_codigo
+      and fp.rotina  = :rot_codigo
+  )) then
+    Insert Into TBFUNCAO_PERMISSAO values (:sis_codigo, :fun_codigo, :rot_codigo, :acesso);
+  else
+    Update TBFUNCAO_PERMISSAO fp Set
+      fp.acesso = :acesso
+    where fp.sistema = :sis_codigo
+      and fp.funcao  = :fun_codigo
+      and fp.rotina  = :rot_codigo;
+end^
+
+SET TERM ; ^
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.SIS_CODIGO IS
+'Sistema';
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.FUN_CODIGO IS
+'Funcao';
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.ROT_CODIGO IS
+'Rotina';
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.ACESSO IS
+'Acesso';
+
+
+
+
+/*------ SYSDBA 16/01/2014 20:20:20 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER procedure SET_FUNCAO_PERMISSAO (
+    SIS_CODIGO DMN_SMALLINT_NN,
+    FUN_CODIGO DMN_SMALLINT_NN,
+    ROT_CODIGO DMN_VCHAR_10_KEY,
+    ACESSO DMN_LOGICO)
+as
+begin
+  if (not exists(
+    Select
+      fp.sistema
+    from TBFUNCAO_PERMISSAO fp
+    where fp.sistema = :sis_codigo
+      and fp.funcao  = :fun_codigo
+      and fp.rotina  = :rot_codigo
+  )) then
+    Insert Into TBFUNCAO_PERMISSAO values (:sis_codigo, :fun_codigo, :rot_codigo, :acesso);
+  else
+    Update TBFUNCAO_PERMISSAO fp Set
+      fp.acesso = :acesso
+    where fp.sistema = :sis_codigo
+      and fp.funcao  = :fun_codigo
+      and fp.rotina  = :rot_codigo;
+end^
+
+SET TERM ; ^
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.SIS_CODIGO IS
+'Sistema';
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.FUN_CODIGO IS
+'Funcao';
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.ROT_CODIGO IS
+'Rotina';
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.ACESSO IS
+'Acesso';
+
+
+
+
+/*------ SYSDBA 16/01/2014 20:21:59 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER procedure SET_FUNCAO_PERMISSAO (
+    SIS_CODIGO DMN_SMALLINT_NN,
+    FUN_CODIGO DMN_SMALLINT_NN,
+    ROT_CODIGO DMN_VCHAR_10_KEY,
+    ACESSO DMN_LOGICO)
+as
+begin
+  if (not exists(
+    Select
+      fp.sistema
+    from TBFUNCAO_PERMISSAO fp
+    where fp.sistema = :sis_codigo
+      and fp.funcao  = :fun_codigo
+      and fp.rotina  = :rot_codigo
+  )) then
+    Insert Into TBFUNCAO_PERMISSAO values (:sis_codigo, :fun_codigo, :rot_codigo, :acesso);
+  else
+    Update TBFUNCAO_PERMISSAO fp Set
+      fp.acesso = :acesso
+    where fp.sistema = :sis_codigo
+      and fp.funcao  = :fun_codigo
+      and fp.rotina  = :rot_codigo;
+end^
+
+SET TERM ; ^
+
+COMMENT ON PROCEDURE SET_FUNCAO_PERMISSAO IS 'Autor   :   Isaque Marinho Ribeiro
+Data    :   16/01/2014
+
+Store procedure responsavel pela insercao e/ou atualizacao de permissoes de acesso a rotinas dos sistemas
+por funcao/perfil de acesso.';
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.SIS_CODIGO IS
+'Sistema';
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.FUN_CODIGO IS
+'Funcao';
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.ROT_CODIGO IS
+'Rotina';
+
+COMMENT ON PARAMETER SET_FUNCAO_PERMISSAO.ACESSO IS
+'Acesso';
+
+
+
+
+/*------ SYSDBA 16/01/2014 20:22:58 --------*/
+
+ALTER TABLE TBFUNCAO_PERMISSAO
+ADD CONSTRAINT FK_TBFUNCAO_PERMISSAO_FUN
+FOREIGN KEY (FUNCAO)
+REFERENCES TBFUNCAO(COD)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+

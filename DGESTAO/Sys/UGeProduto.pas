@@ -183,7 +183,7 @@ type
     ShpLucroZerado: TShape;
     lblLucroZerado: TLabel;
     ShpLucroNegativo: TShape;
-    lblLucroPrejuizo: TLabel;
+    lblLucroNegativo: TLabel;
     IbDtstTabelaLUCRO_VALOR: TIBBCDField;
     IbDtstTabelaPERCENTUAL_MARGEM: TIBBCDField;
     IbDtstTabelaFRACIONADOR: TIBBCDField;
@@ -575,6 +575,17 @@ begin
   lblPrecoVendaSugestao.Visible := True;
   dbPrecoVendaSugestao.Visible  := True;
   {$ENDIF}
+
+  btbtnIncluir.Visible  := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnAlterar.Visible  := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnExcluir.Visible  := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnCancelar.Visible := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnSalvar.Visible   := (gSistema.Codigo = SISTEMA_GESTAO);
+
+  ShpLucroZerado.Visible   := (gSistema.Codigo = SISTEMA_GESTAO);
+  lblLucroZerado.Visible   := (gSistema.Codigo = SISTEMA_GESTAO);
+  ShpLucroNegativo.Visible := (gSistema.Codigo = SISTEMA_GESTAO);
+  lblLucroNegativo.Visible := (gSistema.Codigo = SISTEMA_GESTAO);
 end;
 
 procedure TfrmGeProduto.dbGrupoButtonClick(Sender: TObject);
@@ -847,7 +858,8 @@ begin
   end;
 
   dbgDados.Columns[COLUMN_LUCRO].Visible := ( DMBusiness.ibdtstUsersCODFUNCAO.AsInteger in [FUNCTION_USER_ID_DIRETORIA..FUNCTION_USER_ID_GERENTE_FIN,
-    FUNCTION_USER_ID_AUX_FINANC1, FUNCTION_USER_ID_AUX_FINANC2, FUNCTION_USER_ID_SUPORTE_TI, FUNCTION_USER_ID_SYSTEM_ADM] );
+    FUNCTION_USER_ID_AUX_FINANC1, FUNCTION_USER_ID_AUX_FINANC2, FUNCTION_USER_ID_SUPORTE_TI, FUNCTION_USER_ID_SYSTEM_ADM] )
+    and (gSistema.Codigo = SISTEMA_GESTAO);
 end;
 
 procedure TfrmGeProduto.dbgDadosDrawColumnCell(Sender: TObject;

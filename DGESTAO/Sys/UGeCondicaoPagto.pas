@@ -76,7 +76,7 @@ const
 
 implementation
 
-uses UDMBusiness;
+uses UDMBusiness, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -138,6 +138,12 @@ begin
   CampoDescricao := 'Cond_descricao';
 
   UpdateGenerator;
+
+  btbtnIncluir.Visible  := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnAlterar.Visible  := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnExcluir.Visible  := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnCancelar.Visible := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnSalvar.Visible   := (gSistema.Codigo = SISTEMA_GESTAO);
 end;
 
 procedure TfrmGeCondicaoPagto.DtSrcTabelaDataChange(Sender: TObject;

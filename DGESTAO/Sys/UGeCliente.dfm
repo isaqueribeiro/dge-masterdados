@@ -1020,7 +1020,7 @@ inherited frmGeCliente: TfrmGeCliente
         Top = 237
         Width = 836
         Height = 189
-        ActivePage = tbsDadosAdcionais
+        ActivePage = tbsContato
         Align = alClient
         TabOrder = 2
         TabStop = False

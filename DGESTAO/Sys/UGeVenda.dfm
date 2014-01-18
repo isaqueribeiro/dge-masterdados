@@ -22,9 +22,7 @@ inherited frmGeVenda: TfrmGeVenda
     Width = 1116
     inherited btbtnLista: TBitBtn
       Caption = 'Im&primir'
-      PopupMenu = ppImprimir
       Visible = True
-      OnClick = btbtnListaClick
     end
     inherited bvlToolExpandir: TBevel
       Width = 12
@@ -432,7 +430,7 @@ inherited frmGeVenda: TfrmGeVenda
           Height = 15
           Brush.Color = clYellow
         end
-        object Label3: TLabel [3]
+        object lblLucroZerado: TLabel [3]
           Left = 22
           Top = 50
           Width = 73
@@ -453,7 +451,7 @@ inherited frmGeVenda: TfrmGeVenda
           Height = 15
           Brush.Color = 7434751
         end
-        object Label4: TLabel [5]
+        object lblLucroNegativo: TLabel [5]
           Left = 119
           Top = 50
           Width = 46
@@ -4426,7 +4424,7 @@ inherited frmGeVenda: TfrmGeVenda
     Top = 312
     object nmImprimirVenda: TMenuItem
       Caption = 'Or'#231'amento / Venda'
-      OnClick = nmImprimirVendaClick
+      OnClick = ImprimirOrcamentoClick
     end
     object nmGerarImprimirBoletos: TMenuItem
       Caption = 'Gerar / Imprimir Boletos'

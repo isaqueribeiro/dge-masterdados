@@ -314,8 +314,9 @@ var
 
 implementation
 
-uses UDMBusiness, UGeBairro, UGeCidade, UGeDistrito, UGeEstado,
-  UGeLogradouro, UGrPadrao, ChkDgVer, FuncoesFormulario;
+uses
+  UDMBusiness, UGeBairro, UGeCidade, UGeDistrito, UGeEstado,
+  UGeLogradouro, UGrPadrao, ChkDgVer, FuncoesFormulario, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -484,6 +485,10 @@ begin
   tbsEstoqueSatelite.TabVisible := False;
   GrpBxCustosOper.Enabled       := GetCalcularCustoOperEmpresa(GetEmpresaIDDefault);
   dbEntregaFracionada.ReadOnly  := not GetEstoqueSateliteEmpresa(GetEmpresaIDDefault);
+
+  tbsDadosAdcionais.TabVisible := (gSistema.Codigo = SISTEMA_GESTAO);
+  tbsFinanceiro.TabVisible     := (gSistema.Codigo = SISTEMA_GESTAO);
+  BtBtnProcesso.Visible        := (gSistema.Codigo = SISTEMA_GESTAO);
 end;
 
 procedure TfrmGeCliente.ProximoCampoKeyPress(Sender: TObject;
