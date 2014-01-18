@@ -147,6 +147,11 @@ begin
   begin
     SetEmpresaIDDefault( Empresa );
 
+    gUsuarioLogado.Login   := GetUserApp;
+    gUsuarioLogado.Nome    := GetUserFullName;
+    gUsuarioLogado.Funcao  := GetUserFunctionID;
+    gUsuarioLogado.Empresa := Empresa;
+
     ModalResult := mrOk;
   end
   else

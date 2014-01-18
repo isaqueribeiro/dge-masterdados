@@ -212,7 +212,7 @@ inherited frmGeProduto: TfrmGeProduto
           Height = 15
           Brush.Color = 7434751
         end
-        object lblLucroPrejuizo: TLabel [6]
+        object lblLucroNegativo: TLabel [6]
           Left = 308
           Top = 28
           Width = 46
@@ -754,7 +754,7 @@ inherited frmGeProduto: TfrmGeProduto
         Top = 197
         Width = 953
         Height = 341
-        ActivePage = tbsTributacao
+        ActivePage = tbsValores
         Align = alClient
         TabOrder = 2
         object tbsValores: TTabSheet

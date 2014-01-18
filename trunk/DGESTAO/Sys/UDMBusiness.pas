@@ -15,7 +15,7 @@ type
   end;
 
   TUsuarioLogado = record
-    Codigo : Integer;
+    Login  : String;
     Nome   : String;
     Funcao : Integer;
     Empresa: String;
@@ -93,6 +93,21 @@ type
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
+
+    _PermissaoPerfilDiretoria   ,
+    _PermissaoPerfil_DIRETORIA  ,
+    _PermissaoPerfil_GERENTE_VND,
+    _PermissaoPerfil_GERENTE_FIN,
+    _PermissaoPerfil_VENDEDOR   ,
+    _PermissaoPerfil_GERENTE_ADM,
+    _PermissaoPerfil_CAIXA      ,
+    _PermissaoPerfil_AUX_FINANC1,
+    _PermissaoPerfil_AUX_FINANC2,
+    _PermissaoPerfil_SUPERV_CX  ,
+    _PermissaoPerfil_ESTOQUISTA ,
+    _PermissaoPerfil_SUPORTE_TI ,
+    _PermissaoPerfil_SYSTEM_ADM : TStringList;
+    procedure MontarPermissao;
   public
     { Public declarations }
   end;
@@ -104,6 +119,7 @@ var
   FormFunction : TFormularios;
 
   gSistema    : TSistema;
+  gUsuarioLogado : TUsuarioLogado;
   gContaEmail : TContaEmail;
 
 
@@ -197,7 +213,9 @@ var
   function GetProximoDiaUtil(const Data : TDateTime) : TDateTime;
   function GetTimeDB : TDateTime;
   function GetUserApp : String;
+  function GetUserFullName : String;
   function GetUserFunctionID : Integer;
+  function GetUserPermissao(sRotina : String; const Alertar : Boolean = FALSE) : Boolean;
   function GetUserUpdatePassWord : Boolean;
   function GetLimiteDescontoUser : Currency;
   function GetUserPermitirAlterarValorVenda : Boolean;
@@ -255,7 +273,7 @@ const
 implementation
 
 uses
-  UFuncoes;
+  UFuncoes, UGrMessage;
 
 {$R *.dfm}
 
@@ -416,23 +434,67 @@ begin
 end;
 
 procedure ShowInformation(sTitle, sMsg : String);
+var
+  fMsg : TfrmGeMessage;
 begin
-  Application.MessageBox(PChar(sMsg), PChar(sTitle), MB_ICONINFORMATION);
+  if (gSistema.Codigo = SISTEMA_PDV) then
+    try
+      fMsg := TfrmGeMessage.Create(Application);
+      fMsg.Informe(sTitle, sMsg);
+      fMsg.ShowModal;
+    finally
+      fMsg.Free;
+    end
+  else
+    Application.MessageBox(PChar(sMsg), PChar(sTitle), MB_ICONINFORMATION);
 end;
 
 procedure ShowInformation(sMsg : String);
+var
+  fMsg : TfrmGeMessage;
 begin
-  Application.MessageBox(PChar(sMsg), 'Informação', MB_ICONINFORMATION);
+  if (gSistema.Codigo = SISTEMA_PDV) then
+    try
+      fMsg := TfrmGeMessage.Create(Application);
+      fMsg.Informe('Informação', sMsg);
+      fMsg.ShowModal;
+    finally
+      fMsg.Free;
+    end
+  else
+    Application.MessageBox(PChar(sMsg), 'Informação', MB_ICONINFORMATION);
 end;
 
 procedure ShowWarning(sMsg : String);
+var
+  fMsg : TfrmGeMessage;
 begin
-  Application.MessageBox(PChar(sMsg), 'Alerta', MB_ICONWARNING);
+  if (gSistema.Codigo = SISTEMA_PDV) then
+    try
+      fMsg := TfrmGeMessage.Create(Application);
+      fMsg.Alerta('Alerta', sMsg);
+      fMsg.ShowModal;
+    finally
+      fMsg.Free;
+    end
+  else
+    Application.MessageBox(PChar(sMsg), 'Alerta', MB_ICONWARNING);
 end;
 
 procedure ShowStop(sMsg : String);
+var
+  fMsg : TfrmGeMessage;
 begin
-  Application.MessageBox(PChar(sMsg), 'Pare!', MB_ICONSTOP);
+  if (gSistema.Codigo = SISTEMA_PDV) then
+    try
+      fMsg := TfrmGeMessage.Create(Application);
+      fMsg.Parar('Pare!', sMsg);
+      fMsg.ShowModal;
+    finally
+      fMsg.Free;
+    end
+  else
+    Application.MessageBox(PChar(sMsg), 'Pare!', MB_ICONSTOP);
 end;
 
 procedure ShowError(sMsg : String);
@@ -1656,13 +1718,28 @@ end;
 function GetUserApp : String;
 begin
   with DMBusiness, ibdtstUsers do
-    Result := UpperCase( Trim(ibdtstUsersNOME.AsString) );
+    Result := AnsiUpperCase( Trim(ibdtstUsersNOME.AsString) );
+end;
+
+function GetUserFullName : String;
+begin
+  with DMBusiness, ibdtstUsers do
+    Result := AnsiUpperCase( Trim(ibdtstUsersNOMECOMPLETO.AsString) );
 end;
 
 function GetUserFunctionID : Integer;
 begin
   with DMBusiness, ibdtstUsers do
     Result := ibdtstUsersCODFUNCAO.AsInteger;
+end;
+
+function GetUserPermissao(sRotina : String; const Alertar : Boolean = FALSE) : Boolean;
+begin
+  Result := True;
+
+  if not Result then
+    if Alertar then
+      ShowWarning(sRotina + ' - Usuário sem permissão de acesso para esta rotina.' + #13 + 'Favor entrar em contato com suporte.');
 end;
 
 function GetUserUpdatePassWord : Boolean;
@@ -1874,10 +1951,29 @@ begin
       end;
     end;
 
+    MontarPermissao;
+
   except
     On E : Exception do
       ShowError('Erro ao tentar conectar no Servidor/Base.' + #13#13 + E.Message);
   end;
+end;
+
+procedure TDMBusiness.MontarPermissao;
+begin
+  _PermissaoPerfilDiretoria    := TStringList.Create;
+  _PermissaoPerfil_DIRETORIA   := TStringList.Create;
+  _PermissaoPerfil_GERENTE_VND := TStringList.Create;
+  _PermissaoPerfil_GERENTE_FIN := TStringList.Create;
+  _PermissaoPerfil_VENDEDOR    := TStringList.Create;
+  _PermissaoPerfil_GERENTE_ADM := TStringList.Create;
+  _PermissaoPerfil_CAIXA       := TStringList.Create;
+  _PermissaoPerfil_AUX_FINANC1 := TStringList.Create;
+  _PermissaoPerfil_AUX_FINANC2 := TStringList.Create;
+  _PermissaoPerfil_SUPERV_CX   := TStringList.Create;
+  _PermissaoPerfil_ESTOQUISTA  := TStringList.Create;
+  _PermissaoPerfil_SUPORTE_TI  := TStringList.Create;
+  _PermissaoPerfil_SYSTEM_ADM  := TStringList.Create;
 end;
 
 initialization

@@ -318,14 +318,16 @@ type
     RdgStatusVenda: TRadioGroup;
     IbDtstTabelaLUCRO_CALCULADO: TIBBCDField;
     ShpLucroZerado: TShape;
-    Label3: TLabel;
+    lblLucroZerado: TLabel;
     ShpLucroNegativo: TShape;
-    Label4: TLabel;
+    lblLucroNegativo: TLabel;
     IbDtstTabelaLOTE_NFE_RECIBO: TIBStringField;
     qryNFEEMPRESA: TIBStringField;
     nmGerarImprimirBoletos: TMenuItem;
     IbDtstTabelaGERAR_ESTOQUE_CLIENTE: TSmallintField;
     IbDtstTabelaCODCLIENTE: TIntegerField;
+    procedure ImprimirOpcoesClick(Sender: TObject);
+    procedure ImprimirOrcamentoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -355,10 +357,8 @@ type
     procedure qryTitulosCalcFields(DataSet: TDataSet);
     procedure btnRegerarTituloClick(Sender: TObject);
     procedure dbCFOPVendaButtonClick(Sender: TObject);
-    procedure btbtnListaClick(Sender: TObject);
     procedure btbtnCancelarVNDClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
-    procedure nmImprimirVendaClick(Sender: TObject);
     procedure nmImprimirDANFEClick(Sender: TObject);
     procedure btnConsultarProdutoClick(Sender: TObject);
     procedure dbTotalDescontoButtonClick(Sender: TObject);
@@ -506,7 +506,7 @@ begin
   btnConsultarProduto.Hint    := 'Consultar ' + StrDescricaoProduto;
 
   RdgStatusVenda.Controls[2].Enabled := False;
-  btbtnGerarNFe.Visible              := GetEstacaoEmitiNFe;
+  btbtnGerarNFe.Visible              := GetEstacaoEmitiNFe and (gSistema.Codigo = SISTEMA_GESTAO);
 
   if GetUserPermitirAlterarValorVenda then
   begin
@@ -514,6 +514,25 @@ begin
     dbValorUnit.TabStop  := True;
     dbValorUnit.Color    := dbProduto.Color;
   end;
+
+  btbtnFinalizar.Visible   := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnCancelarVND.Visible := (gSistema.Codigo = SISTEMA_GESTAO);
+
+  ShpLucroZerado.Visible   := (gSistema.Codigo = SISTEMA_GESTAO);
+  lblLucroZerado.Visible   := (gSistema.Codigo = SISTEMA_GESTAO);
+  ShpLucroNegativo.Visible := (gSistema.Codigo = SISTEMA_GESTAO);
+  lblLucroNegativo.Visible := (gSistema.Codigo = SISTEMA_GESTAO);
+
+  if (gSistema.Codigo = SISTEMA_PDV) then
+  begin
+    Self.Caption       := 'Controle de Orçamentos';
+    btbtnLista.OnClick := ImprimirOrcamentoClick;
+  end
+  else
+  begin
+    Self.Caption       := 'Controle de Vendas';
+    btbtnLista.OnClick := ImprimirOpcoesClick;
+  end;  
 end;
 
 procedure TfrmGeVenda.btnFiltrarClick(Sender: TObject);
@@ -1699,12 +1718,6 @@ begin
       IbDtstTabelaCFOP.AsInteger := iCodigo;
 end;
 
-procedure TfrmGeVenda.btbtnListaClick(Sender: TObject);
-begin
-  inherited;
-  ppImprimir.Popup(btbtnLista.ClientOrigin.X, btbtnLista.ClientOrigin.Y + btbtnLista.Height);
-end;
-
 procedure TfrmGeVenda.btbtnCancelarVNDClick(Sender: TObject);
 var
  iNumero : Integer;
@@ -1752,58 +1765,6 @@ begin
 
   dbgDados.Columns[COLUMN_LUCRO].Visible := ( DMBusiness.ibdtstUsersCODFUNCAO.AsInteger in [FUNCTION_USER_ID_DIRETORIA..FUNCTION_USER_ID_GERENTE_FIN,
     FUNCTION_USER_ID_AUX_FINANC1, FUNCTION_USER_ID_AUX_FINANC2, FUNCTION_USER_ID_SUPORTE_TI, FUNCTION_USER_ID_SYSTEM_ADM] );
-end;
-
-procedure TfrmGeVenda.nmImprimirVendaClick(Sender: TObject);
-begin
-  if ( IbDtstTabela.IsEmpty ) then
-    Exit;
-
-  with DMNFe do
-  begin
-
-    with qryEmitente do
-    begin
-      Close;
-      ParamByName('Cnpj').AsString := IbDtstTabelaCODEMP.AsString;
-      Open;
-    end;
-
-    with qryDestinatario do
-    begin
-      Close;
-      ParamByName('codigo').AsInteger := IbDtstTabelaCODCLIENTE.AsInteger;
-      Open;
-    end;
-
-    with qryCalculoImporto do
-    begin
-      Close;
-      ParamByName('anovenda').AsInteger := IbDtstTabelaANO.AsInteger;
-      ParamByName('numvenda').AsInteger := IbDtstTabelaCODCONTROL.AsInteger;
-      Open;
-    end;
-
-    with qryDadosProduto do
-    begin
-      Close;
-      ParamByName('anovenda').AsInteger := IbDtstTabelaANO.AsInteger;
-      ParamByName('numvenda').AsInteger := IbDtstTabelaCODCONTROL.AsInteger;
-      Open;
-    end;
-
-    if ( ShowConfirm('Deseja imprimir em formato CUPOM?', 'Impressão', MB_DEFBUTTON1) ) then
-    begin
-      if ( GetModeloEmissaoCupom = MODELO_CUPOM_POOLER ) then
-      begin
-        FrECFPooler.PrepareReport;
-        FrECFPooler.Print;
-      end;
-    end
-    else
-      frrVenda.ShowReport;
-
-  end;
 end;
 
 procedure TfrmGeVenda.nmImprimirDANFEClick(Sender: TObject);
@@ -2228,6 +2189,9 @@ begin
       1: dbgTitulosKeyDown(Sender, Key, Shift);
     end
   else
+  if ( Key = VK_F6 ) then
+    btnConsultarProduto.Click
+  else
     inherited;
 (*
   if Key = VK_F10 then
@@ -2426,6 +2390,63 @@ begin
       end;
   finally
     Result := iReturn;
+  end;
+end;
+
+procedure TfrmGeVenda.ImprimirOpcoesClick(Sender: TObject);
+begin
+  ppImprimir.Popup(btbtnLista.ClientOrigin.X, btbtnLista.ClientOrigin.Y + btbtnLista.Height);
+end;
+
+procedure TfrmGeVenda.ImprimirOrcamentoClick(Sender: TObject);
+begin
+  if ( IbDtstTabela.IsEmpty ) then
+    Exit;
+
+  with DMNFe do
+  begin
+
+    with qryEmitente do
+    begin
+      Close;
+      ParamByName('Cnpj').AsString := IbDtstTabelaCODEMP.AsString;
+      Open;
+    end;
+
+    with qryDestinatario do
+    begin
+      Close;
+      ParamByName('codigo').AsInteger := IbDtstTabelaCODCLIENTE.AsInteger;
+      Open;
+    end;
+
+    with qryCalculoImporto do
+    begin
+      Close;
+      ParamByName('anovenda').AsInteger := IbDtstTabelaANO.AsInteger;
+      ParamByName('numvenda').AsInteger := IbDtstTabelaCODCONTROL.AsInteger;
+      Open;
+    end;
+
+    with qryDadosProduto do
+    begin
+      Close;
+      ParamByName('anovenda').AsInteger := IbDtstTabelaANO.AsInteger;
+      ParamByName('numvenda').AsInteger := IbDtstTabelaCODCONTROL.AsInteger;
+      Open;
+    end;
+
+    if ( ShowConfirm('Deseja imprimir em formato CUPOM?', 'Impressão', MB_DEFBUTTON1) ) then
+    begin
+      if ( GetModeloEmissaoCupom = MODELO_CUPOM_POOLER ) then
+      begin
+        FrECFPooler.PrepareReport;
+        FrECFPooler.Print;
+      end;
+    end
+    else
+      frrVenda.ShowReport;
+
   end;
 end;
 

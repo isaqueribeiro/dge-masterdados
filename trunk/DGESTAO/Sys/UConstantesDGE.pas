@@ -61,6 +61,71 @@ const
 
   STR_TAMANHO_NCMSH = 8;
 
+  // Identificacores de rotinas no sistema
+
+  MENU_CADASTRO        = '01';
+  MENU_ESTOQUE         = '02';
+  MENU_MOVIMENTACAO    = '03';
+  MENU_NOTA_FISCAL     = '04';
+  MENU_CONSULTA        = '05';
+  MENU_FINANCEIRO_CAIX = '06';
+  MENU_RELATORIO       = '07';
+  MENU_TABELA_AUX      = '08';
+  MENU_REL_ESTOQUE     = '09';
+  MENU_REL_FATURAMENTO = '10';
+  MENU_REL_FINANCEIRO  = '11';
+
+  // Menu Cadastro
+  
+  CAD_EMPRESA    = '0100100';
+  CAD_CLIENTE    = '0100200';
+  CAD_FORNECEDOR = '0100300';
+  CAD_VENDEDOR   = '0100400';
+  CAD_BANCO      = '0100500';
+  CAD_GRUPO_PROD = '0100600';
+  CAD_SECAO_PROD = '0100700';
+  CAD_FABRICANTE = '0100800';
+  CAD_UNIDADE    = '0100900';
+  CAD_PRODUTO    = '0101000';
+  CAD_PROMOCAO   = '0101100';
+  CONFIG_EMPRESA = '0101200';
+  CONFIG_NFE     = '0101300';
+  GERAR_SENHA    = '0101400';
+  CAD_USUARIO    = '0101500';
+
+  // Menu Cadastro -> Tabelas Auxiliares
+
+  TAB_ESTADO     = '0800100';
+  TAB_CIDADE     = '0800200';
+  TAB_DISTRITO   = '0800300';
+  TAB_BAIRRO     = '0800400';
+  TAB_TIPO_LOG   = '0800500';
+  TAB_LOGRADOURO = '0800600';
+  TAB_CFOP       = '0800700';
+  TAB_TRIBUTACAO = '0800800';
+  TAB_CONTA_CORR = '0800900';
+  TAB_FORMA_PGTO = '0801000';
+  TAB_COND_PGTO  = '0801100';
+
+  // Menu Estoque
+
+  EST_ENTRADA      = '0200100';
+  EST_AJUSTE_ESTOQ = '0200200';
+  EST_KARDEX       = '0200300';
+
+  // Menu Movimentações
+
+  MOV_VENDA      = '0300100';
+  MOV_ORCAMENTO  = '0300200';
+  MOV_ORDEM_SERV = '0300300';
+  MOV_REQUISICAO = '0300400';
+
+  // Menu Nota Fiscal
+
+  NFE_INUTILIZAR_NUM_NFE = '0400100';
+  NFE_CONSULTAR_NFE      = '0400200';
+  NFE_EXPORTAR_NFE_GERAD = '0400300';
+
 implementation
 
 end.

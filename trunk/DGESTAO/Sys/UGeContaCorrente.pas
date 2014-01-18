@@ -77,6 +77,12 @@ begin
   NomeTabela     := 'TBCONTA_CORRENTE';
   CampoCodigo    := 'Codigo';
   CampoDescricao := 'Descricao';
+
+  btbtnIncluir.Visible  := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnAlterar.Visible  := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnExcluir.Visible  := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnCancelar.Visible := (gSistema.Codigo = SISTEMA_GESTAO);
+  btbtnSalvar.Visible   := (gSistema.Codigo = SISTEMA_GESTAO);
 end;
 
 procedure TfrmGeContaCorrente.IbDtstTabelaNewRecord(DataSet: TDataSet);
