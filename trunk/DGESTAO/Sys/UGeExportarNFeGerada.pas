@@ -54,7 +54,8 @@ var
 
 implementation
 
-uses UDMBusiness, DateUtils, IniFiles;
+uses
+  UDMBusiness, DateUtils, IniFiles;
 
 {$R *.dfm}
 
