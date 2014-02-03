@@ -166,6 +166,7 @@ var
   function GetEmailEmpresa(const sCNPJEmpresa : String) : String;
   function GetCalcularCustoOperEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetPermitirVendaEstoqueInsEmpresa(const sCNPJEmpresa : String) : Boolean;
+  function GetSimplesNacionalInsEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetEstoqueUnicoEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetEstoqueSateliteEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetRegimeEmpresa(const sCNPJEmpresa : String) : TTipoRegime;
@@ -959,6 +960,21 @@ begin
     Open;
 
     Result := (FieldByName('permitir').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
+function GetSimplesNacionalInsEmpresa(const sCNPJEmpresa : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select TIPO_REGIME_NFE as sn from TBEMPRESA where cnpj = ' + QuotedStr(sCNPJEmpresa));
+    Open;
+
+    Result := (FieldByName('sn').AsInteger = 0); // 0. Simples Nacional (1); 1. Simples Excesso Receita (2); 2. Regime Normal (3)
 
     Close;
   end;

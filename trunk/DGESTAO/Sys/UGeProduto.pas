@@ -586,6 +586,13 @@ begin
   lblLucroZerado.Visible   := (gSistema.Codigo = SISTEMA_GESTAO);
   ShpLucroNegativo.Visible := (gSistema.Codigo = SISTEMA_GESTAO);
   lblLucroNegativo.Visible := (gSistema.Codigo = SISTEMA_GESTAO);
+
+(*
+  lblTipoTributacaoSN.Enabled := GetSimplesNacionalInsEmpresa(GetEmpresaIDDefault);
+  dbTipoTributacaoSN.Enabled  := GetSimplesNacionalInsEmpresa(GetEmpresaIDDefault);
+  lblAliquotaSN.Enabled := GetSimplesNacionalInsEmpresa(GetEmpresaIDDefault);
+  dbAliquotaSN.Enabled  := GetSimplesNacionalInsEmpresa(GetEmpresaIDDefault);
+*)  
 end;
 
 procedure TfrmGeProduto.dbGrupoButtonClick(Sender: TObject);
