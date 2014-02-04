@@ -1772,7 +1772,8 @@ begin
               else
               begin
 
-                Case qryDadosProdutoCODTRIBUTACAO.AsInteger of
+//                Case qryDadosProdutoCODTRIBUTACAO.AsInteger of
+                Case StrToInt(Copy(qryDadosProdutoCST.AsString, 2, 2)) of
                    0 : CST := cst00;
                   10 : CST := cst10;
                   20 : CST := cst20;
@@ -1789,7 +1790,7 @@ begin
 
                 ICMS.modBC   := dbiValorOperacao;
                 ICMS.pRedBC  := qryDadosProdutoPERCENTUAL_REDUCAO_BC.AsCurrency;
-                
+
                 if ( ICMS.pRedBC > 0 ) then
                   ICMS.vBC   := qryDadosProdutoVALOR_REDUCAO_BC.AsCurrency
                 else
@@ -1800,7 +1801,8 @@ begin
 
               end;
 
-              ICMS.orig    := TpcnOrigemMercadoria( qryDadosProdutoCODORIGEM.AsInteger );
+//              ICMS.orig    := TpcnOrigemMercadoria( qryDadosProdutoCODORIGEM.AsInteger );
+              ICMS.orig    := TpcnOrigemMercadoria( StrToInt(Copy(qryDadosProdutoCST.AsString, 1, 1)) );
               ICMS.modBCST := dbisMargemValorAgregado;
               ICMS.pMVAST  := 0;
               ICMS.pRedBCST:= 0;
@@ -2118,6 +2120,10 @@ begin
 
       ACBrNFe.NotasFiscais.GerarNFe;
       ACBrNFe.NotasFiscais.Assinar;
+
+      if not ACBrNFe.NotasFiscais.ValidaRegrasdeNegocios then
+        raise Exception.Create( ACBrNFe.NotasFiscais.Items[0].RegrasdeNegocios );
+
       ACBrNFe.NotasFiscais.Valida;
 
       ACBrNFe.NotasFiscais.Items[0].SaveToFile( EmptyStr );
@@ -2812,7 +2818,8 @@ begin
               else
               begin
 
-                Case qryEntradaDadosProdutoCODTRIBUTACAO.AsInteger of
+//                Case qryEntradaDadosProdutoCODTRIBUTACAO.AsInteger of
+                Case StrToInt(Copy(qryEntradaDadosProdutoCST.AsString, 2, 2)) of
                    0 : CST := cst00;
                   10 : CST := cst10;
                   20 : CST := cst20;
@@ -2840,7 +2847,8 @@ begin
 
               end;
 
-              ICMS.orig    := TpcnOrigemMercadoria( qryEntradaDadosProdutoCODORIGEM.AsInteger );
+//              ICMS.orig    := TpcnOrigemMercadoria( qryEntradaDadosProdutoCODORIGEM.AsInteger );
+              ICMS.orig    := TpcnOrigemMercadoria( StrToInt(Copy(qryEntradaDadosProdutoCST.AsString, 1, 1)) );
               ICMS.modBCST := dbisMargemValorAgregado;
               ICMS.pMVAST  := 0;
               ICMS.pRedBCST:= 0;
@@ -3140,6 +3148,10 @@ begin
 
       ACBrNFe.NotasFiscais.GerarNFe;
       ACBrNFe.NotasFiscais.Assinar;
+
+      if not ACBrNFe.NotasFiscais.ValidaRegrasdeNegocios then
+        raise Exception.Create( ACBrNFe.NotasFiscais.Items[0].RegrasdeNegocios );
+
       ACBrNFe.NotasFiscais.Valida;
 
       ACBrNFe.NotasFiscais.Items[0].SaveToFile( EmptyStr );
