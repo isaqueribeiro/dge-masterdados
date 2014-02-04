@@ -2,7 +2,7 @@ inherited frmGeExportarChaveNFeGerada: TfrmGeExportarChaveNFeGerada
   ActiveControl = edDataInicial
   BorderStyle = bsDialog
   BorderWidth = 4
-  Caption = 'frmGeExportarChaveNFeGerada'
+  Caption = 'Exportar Chaves de NF-e Geradas'
   ClientHeight = 367
   ClientWidth = 531
   PixelsPerInch = 96
