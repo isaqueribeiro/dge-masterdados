@@ -3645,16 +3645,28 @@ begin
 
     with ACBrNFe do
     begin
+                       
       DownloadNFe.Download.Chaves.Clear;
       DownloadNFe.Download.Chaves.Add.chNFe := sChaveNFe;
       DownloadNFe.Download.CNPJ             := sCNPJDestinatario;
-                       
+
       if ( WebServices.DownloadNFe.Executar ) then
         FileNameXML := WebServices.DownloadNFe.PathArqResp
       else
         raise Exception.Create('Erro ao tentar fazer download do arquivo XML do servidor da SEFA.');
-
-      if not FileExists(FileNameXML) then
+(*
+      EventoNFe.Evento.Clear;
+      with EventoNFe.Evento.Add do
+      begin
+        infEvento.chNFe := sChaveNFe;
+        infEvento.CNPJ  := IfThen(Trim(sCNPJDestinatario) = EmptyStr, sCNPJEmitente, sCNPJDestinatario);
+        infEvento.dhEvento := Now;
+        infEvento.tpEvento := teManifDestConfirmacao;
+        infEvento.cOrgao   := 91;
+      end;
+      EnviarEventoNFe(1);
+*)
+        if not FileExists(FileNameXML) then
         raise Exception.Create(Format('Arquivo %s não encontrado.', [QuotedStr(FileNameXML)]))
       else
         Result := True;  
