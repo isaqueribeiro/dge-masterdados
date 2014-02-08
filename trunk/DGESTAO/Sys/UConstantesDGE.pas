@@ -3,11 +3,11 @@ unit UConstantesDGE;
 interface
 
 const
-  VERSION_NUMBER = '1.0.3.5';
+  VERSION_NUMBER = '1.0.4.0';
 
   SISTEMA_GESTAO = 0;
   SISTEMA_PDV    = 1;
-  
+
   MODELO_NFE  = 55; // NF-e  (Nota Fiscal Eletrônica de Venda)
   MODELO_NFCE = 65; // NFC-e (Nota Fiscal Eletrônica de Venda ao Consumidor Final)
 
@@ -76,7 +76,7 @@ const
   MENU_REL_FINANCEIRO  = '11';
 
   // Menu Cadastro
-  
+
   CAD_EMPRESA    = '0100100';
   CAD_CLIENTE    = '0100200';
   CAD_FORNECEDOR = '0100300';

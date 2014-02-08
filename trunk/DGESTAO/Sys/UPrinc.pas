@@ -406,7 +406,21 @@ begin
 
   Case GetUserFunctionID of
     FUNCTION_USER_ID_DIRETORIA :
-      EvAcessUserPrincipal.UserID := FUNCTION_USER_ID_DIRETORIA;
+      begin
+        EvAcessUserPrincipal.UserID := FUNCTION_USER_ID_DIRETORIA;
+
+        mnRelatorioFinanceiro.Enabled := true;
+        nmRelatorioProduto.Enabled    := true;
+        mnRelatorioEstoque.Enabled := True;
+
+        btnEmpresa.Enabled       := True;
+        btnProduto.Enabled       := True;
+        btnFornecedor.Enabled    := True;
+        btnEstoque.Enabled       := True;
+        btnTesouraria.Enabled    := True;
+        btnContaAReceber.Enabled := True;
+        btnContaAPagar.Enabled   := True;
+      end;
 
     FUNCTION_USER_ID_GERENTE_VND :
       begin
@@ -473,7 +487,7 @@ var
 begin
   Self.Caption           := 'DGE - Sistema Integrado de Gestão Empresarial ' + VERSION_NUMBER;
   Self.Version.Caption   := 'Versão ' + VERSION_NUMBER;
-  Self.Copyright.Caption := '© 2012 | 2013 - Masterdados Tecnologia da Informação' + #13 + 'Todos os direitos reservados.';
+  Self.Copyright.Caption := '© 2012 | 2014 - Masterdados Tecnologia da Informação' + #13 + 'Todos os direitos reservados.';
 
   // Carregar Imagem de Fundo da Tele Principal
 
