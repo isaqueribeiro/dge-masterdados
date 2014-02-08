@@ -127,6 +127,7 @@ type
     nmConsultarLoteNFe: TMenuItem;
     VeculoMovimentao1: TMenuItem;
     Minimo1: TMenuItem;
+    EAP: TEvAppProtect;
     procedure btnEmpresaClick(Sender: TObject);
     procedure btnClienteClick(Sender: TObject);
     procedure btnContaAReceberClick(Sender: TObject);
@@ -522,9 +523,9 @@ begin
       nmConultarVendaItem.Visible := true;
      end;
 
- // ap.Active := False;
- // ap.IdApplication := 99832505;
- //  ap.Active := true;
+  eap.Active := False;
+  eap.IdApplication := 99832505;
+  eap.Active := True;
 
 end;
 

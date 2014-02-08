@@ -7814,4 +7814,10 @@ object frmPrinc: TfrmPrinc
     Left = 112
     Top = 96
   end
+  object EAP: TEvAppProtect
+    Active = False
+    RegKey = '\SOFTWARE\TCF Software\AppProtect\'
+    Left = 208
+    Top = 96
+  end
 end
