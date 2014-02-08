@@ -1,9 +1,8 @@
 inherited frmGeProduto: TfrmGeProduto
-  Left = 396
-  Top = 213
+  Left = 219
+  Top = 114
   Width = 977
   Height = 648
-  ActiveControl = dbCodigo
   Caption = 'Cadastro de Produtos/Servi'#231'os'
   OldCreateOrder = True
   OnActivate = FormActivate
@@ -24,7 +23,6 @@ inherited frmGeProduto: TfrmGeProduto
   inherited pgcGuias: TPageControl
     Width = 961
     Height = 567
-    ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
         Top = 472
@@ -42,7 +40,7 @@ inherited frmGeProduto: TfrmGeProduto
           end
           item
             Expanded = False
-            FieldName = 'DESCRI_APRESENTACAO'
+            FieldName = 'DESCRI'
             Width = 280
             Visible = True
           end
@@ -2721,32 +2719,20 @@ inherited frmGeProduto: TfrmGeProduto
       ProviderFlags = []
       Size = 5
     end
-    object IbDtstTabelaPRECO_FRAC: TFMTBCDField
-      FieldName = 'PRECO_FRAC'
-      ProviderFlags = []
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 5
-    end
-    object IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField
-      FieldName = 'PRECO_PROMOCAO_FRAC'
-      ProviderFlags = []
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 5
-    end
-    object IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField
-      FieldName = 'PRECO_SUGERIDO_FRAC'
-      ProviderFlags = []
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 5
-    end
     object IbDtstTabelaUSUARIO: TIBStringField
       FieldName = 'USUARIO'
       Origin = '"TBPRODUTO"."USUARIO"'
       ProviderFlags = [pfInUpdate]
       Size = 50
+    end
+    object IbDtstTabelaPRECO_FRAC: TFloatField
+      FieldName = 'PRECO_FRAC'
+    end
+    object IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField
+      FieldName = 'PRECO_PROMOCAO_FRAC'
+    end
+    object IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField
+      FieldName = 'PRECO_SUGERIDO_FRAC'
     end
   end
   inherited DtSrcTabela: TDataSource
@@ -2959,6 +2945,8 @@ inherited frmGeProduto: TfrmGeProduto
   object tblEmpresa: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     TableName = 'TBEMPRESA'
     Left = 296
   end
@@ -2969,6 +2957,8 @@ inherited frmGeProduto: TfrmGeProduto
   object tblOrigem: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'ORP_COD'
@@ -3005,6 +2995,8 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTributacaoNM: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'TPT_COD'
@@ -3045,6 +3037,8 @@ inherited frmGeProduto: TfrmGeProduto
   object tblAliquota: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3086,6 +3080,8 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTributacaoSN: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'TPT_COD'
@@ -3124,6 +3120,8 @@ inherited frmGeProduto: TfrmGeProduto
   object tblCor: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3146,6 +3144,8 @@ inherited frmGeProduto: TfrmGeProduto
   object tblCombustivel: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3170,6 +3170,8 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTipoVeiculo: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3203,6 +3205,8 @@ inherited frmGeProduto: TfrmGeProduto
   object qryAliquotaPIS: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (
@@ -3219,6 +3223,8 @@ inherited frmGeProduto: TfrmGeProduto
   object qryAliquotaCOFINS: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (

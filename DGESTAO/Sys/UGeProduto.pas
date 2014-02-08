@@ -233,12 +233,12 @@ type
     IbDtstTabelaPESO_LIQUIDO: TIBBCDField;
     IbDtstTabelaCUBAGEM: TIBBCDField;
     IbDtstTabelaUSUARIO: TIBStringField;
-    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField;
-    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField;
-    IbDtstTabelaPRECO_FRAC: TFMTBCDField;
     lblNVE: TLabel;
     dbNVE: TDBEdit;
     IbDtstTabelaCODIGO_NVE: TIBStringField;
+    IbDtstTabelaPRECO_FRAC: TFloatField;
+    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField;
+    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);
