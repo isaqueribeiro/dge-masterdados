@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=0
 Release=2
-Build=7
+Build=9
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=Masterdados Tecnologia da Informação
 FileDescription=Sistema Integrado de Gestão Empresarial
-FileVersion=1.0.2.7
+FileVersion=1.0.2.9
 InternalName=DGE
 LegalCopyright=Copyright 2012 © Dorivaldo M. Vieira Jr, Inc.
 LegalTrademarks=
