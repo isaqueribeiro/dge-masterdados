@@ -69,7 +69,7 @@ begin
   Version.Caption      := 'Versão ' + GetExeVersion;
   Copyright.Caption    := GetCopyright;
   {$ENDIF}
-  Comments.Caption    := 'Licenciado a empresa ' + GetEmpresaNomeDefault + ' CPF/CNPJ.: ' + sCNPJ + ' em 01/02/2014.';
+  Comments.Caption    := 'Licenciado a empresa ' + GetEmpresaNomeDefault + ' CPF/CNPJ.: ' + sCNPJ ;
 end;
 
 end.

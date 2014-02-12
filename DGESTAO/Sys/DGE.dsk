@@ -11,12 +11,30 @@ File_8=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uGerRelCR.pas',0,1,188,
 File_9=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uRelCR.pas',0,1,1,1,1,1,0
 
 [Modules]
-Module0=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMNFe.pas
-Module1=C:\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
-Module2=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas
-Module3=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr
-Count=4
+Module0=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UConstantesDGE.pas
+Module1=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\USobre.pas
+Module2=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas
+Module3=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMNFe.pas
+Module4=C:\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
+Module5=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas
+Module6=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr
+Count=7
 EditWindowCount=1
+
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UConstantesDGE.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\USobre.pas]
+ModuleType=SourceModule
+FormState=1
+FormOnTop=0
+
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas]
+ModuleType=SourceModule
+FormState=1
+FormOnTop=0
 
 [C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMNFe.pas]
 ModuleType=SourceModule
@@ -43,12 +61,15 @@ FormState=0
 FormOnTop=0
 
 [EditWindow0]
-ViewCount=4
-CurrentView=2
+ViewCount=7
+CurrentView=4
 View0=0
 View1=1
 View2=2
 View3=3
+View4=4
+View5=5
+View6=6
 CodeExplorer=CodeExplorer@EditWindow0
 MessageView=MessageView@EditWindow0
 Create=1
@@ -64,7 +85,7 @@ ClientWidth=1064
 ClientHeight=517
 LeftPanelSize=0
 LeftPanelClients=CodeExplorer@EditWindow0
-LeftPanelData=00000400010000000C000000436F64654578706C6F72657200000000000000000000000000000000000100000000000000000C000000436F64654578706C6F726572FFFFFFFF
+LeftPanelData=00000400010000000C000000436F64654578706C6F726572000000000000000000000000000000000001000000000000000000000000FFFFFFFF
 RightPanelSize=0
 BottomPanelSize=85
 BottomPanelClients=MessageView@EditWindow0
@@ -92,6 +113,27 @@ TopLine=1427
 LeftCol=1
 
 [View3]
+Module=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas
+CursorX=87
+CursorY=489
+TopLine=479
+LeftCol=1
+
+[View4]
+Module=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UConstantesDGE.pas
+CursorX=1
+CursorY=6
+TopLine=1
+LeftCol=1
+
+[View5]
+Module=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\USobre.pas
+CursorX=42
+CursorY=66
+TopLine=56
+LeftCol=1
+
+[View6]
 Module=C:\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
 CursorX=80
 CursorY=41
@@ -155,8 +197,8 @@ ClientHeight=60
 Create=1
 Visible=1
 State=0
-Left=0
-Top=490
+Left=3
+Top=114
 Width=190
 Height=551
 MaxLeft=-1
@@ -174,7 +216,7 @@ HiddenCategories=
 
 [ObjectTree]
 Create=1
-Visible=1
+Visible=0
 State=0
 Left=0
 Top=122
