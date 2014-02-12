@@ -10,7 +10,8 @@ uses
   frxExportPDF, frxExportMail, UGeConfigurarNFeACBr,
 
   ACBrUtil, pcnConversao, pcnNFeW, pcnNFeRTXT, pcnAuxiliar, ACBrNFeUtil, SHDocVw,
-  IBUpdateSQL, IBSQL, frxDesgn, frxRich, frxCross, frxChart;
+  IBUpdateSQL, IBSQL, frxDesgn, frxRich, frxCross, frxChart, ACBrBase,
+  ACBrBoleto, ACBrBoletoFCFR;
 
 type
   TDMNFe = class(TDataModule)
@@ -1433,11 +1434,15 @@ begin
       Ide.cMunFG    := qryEmitenteCID_IBGE.AsInteger ;
       Ide.finNFe    := fnNormal;
 
+      {$IFDEF DGE}
+        ;
+      {$ELSE}
       if (Trim(sDataHoraSaida) <> EmptyStr) then
       begin
         Ide.dSaiEnt := StrToDateTime( FormatDateTime('dd/mm/yyyy', StrToDateTime(sDataHoraSaida)) );
         Ide.hSaiEnt := StrToDateTime( FormatDateTime('hh:mm:ss', StrToDateTime(sDataHoraSaida)) );
       end;
+      {$ENDIF}
 
   //     Ide.dhCont := date;
   //     Ide.xJust  := 'Justificativa Contingencia';
