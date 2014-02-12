@@ -1057,6 +1057,12 @@ begin
       dbProduto.SetFocus;
     end
     else
+    if ( Trim(cdsTabelaItensCST.AsString) = EmptyStr ) then
+    begin
+      ShowWarning('Favor informar o Código de Situação Fiscal (CST) do produto.');
+      dbCST.SetFocus;
+    end
+    else
     if ( cdsTabelaItensQTDE.Value < 0 ) then
     begin
       ShowWarning('Quantidade inválida.');
@@ -1726,6 +1732,14 @@ begin
     Exit;
 
   RecarregarRegistro;
+
+  if ( (IbDtstTabelaLOTE_NFE_NUMERO.AsInteger > 0) and (IbDtstTabelaNFE.AsLargeInt = 0) ) then
+  begin
+    ShowWarning('O processo de geração de NF-e para esta venda já foi solicitado, mas não fora concluído.' + #13 +
+      'Desta forma não seré perdida o cancelamento da venda.' + #13#13 + 'Favor consultar junto a SEFA e processar o Recibo de número ' +
+        IbDtstTabelaLOTE_NFE_RECIBO.AsString + ' e comunicar ao suporte.');
+    Exit;
+  end;
 
   if ( PossuiTitulosPagos(IbDtstTabelaANO.Value, IbDtstTabelaCODCONTROL.Value) ) then
   begin
