@@ -1434,15 +1434,12 @@ begin
       Ide.cMunFG    := qryEmitenteCID_IBGE.AsInteger ;
       Ide.finNFe    := fnNormal;
 
-      {$IFDEF DGE}
-        ;
-      {$ELSE}
-      if (Trim(sDataHoraSaida) <> EmptyStr) then
-      begin
-        Ide.dSaiEnt := StrToDateTime( FormatDateTime('dd/mm/yyyy', StrToDateTime(sDataHoraSaida)) );
-        Ide.hSaiEnt := StrToDateTime( FormatDateTime('hh:mm:ss', StrToDateTime(sDataHoraSaida)) );
-      end;
-      {$ENDIF}
+      if GetSolicitaDHSaidaNFe(sCNPJEmitente) then
+        if (Trim(sDataHoraSaida) <> EmptyStr) then
+        begin
+          Ide.dSaiEnt := StrToDateTime( FormatDateTime('dd/mm/yyyy', StrToDateTime(sDataHoraSaida)) );
+          Ide.hSaiEnt := StrToDateTime( FormatDateTime('hh:mm:ss', StrToDateTime(sDataHoraSaida)) );
+        end;
 
   //     Ide.dhCont := date;
   //     Ide.xJust  := 'Justificativa Contingencia';
@@ -2138,8 +2135,9 @@ begin
       ACBrNFe.NotasFiscais.GerarNFe;
       ACBrNFe.NotasFiscais.Assinar;
 
-      if not ACBrNFe.NotasFiscais.ValidaRegrasdeNegocios then
-        raise Exception.Create( ACBrNFe.NotasFiscais.Items[0].RegrasdeNegocios );
+      if GetSolicitaDHSaidaNFe(sCNPJEmitente) and (Trim(sDataHoraSaida) <> EmptyStr) then
+        if not ACBrNFe.NotasFiscais.ValidaRegrasdeNegocios then
+          raise Exception.Create( ACBrNFe.NotasFiscais.Items[0].RegrasdeNegocios );
 
       ACBrNFe.NotasFiscais.Valida;
 
