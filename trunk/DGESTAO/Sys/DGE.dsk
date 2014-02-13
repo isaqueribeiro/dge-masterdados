@@ -11,32 +11,22 @@ File_8=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uGerRelCR.pas',0,1,188,
 File_9=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uRelCR.pas',0,1,1,1,1,1,0
 
 [Modules]
-Module0=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UConstantesDGE.pas
-Module1=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\USobre.pas
-Module2=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas
-Module3=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMNFe.pas
-Module4=C:\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
-Module5=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas
+Module0=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMNFe.pas
+Module1=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas
+Module2=C:\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
+Module3=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas
+Module4=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\USobre.pas
+Module5=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UConstantesDGE.pas
 Module6=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr
 Count=7
 EditWindowCount=1
 
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UConstantesDGE.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\USobre.pas]
-ModuleType=SourceModule
-FormState=1
-FormOnTop=0
-
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas]
-ModuleType=SourceModule
-FormState=1
-FormOnTop=0
-
 [C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMNFe.pas]
+ModuleType=SourceModule
+FormState=1
+FormOnTop=0
+
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas]
 ModuleType=SourceModule
 FormState=1
 FormOnTop=0
@@ -46,9 +36,19 @@ ModuleType=SourceModule
 FormState=1
 FormOnTop=0
 
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas]
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas]
 ModuleType=SourceModule
 FormState=1
+FormOnTop=0
+
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\USobre.pas]
+ModuleType=SourceModule
+FormState=1
+FormOnTop=0
+
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UConstantesDGE.pas]
+ModuleType=SourceModule
+FormState=0
 FormOnTop=0
 
 [C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr]
@@ -62,7 +62,7 @@ FormOnTop=0
 
 [EditWindow0]
 ViewCount=7
-CurrentView=4
+CurrentView=2
 View0=0
 View1=1
 View2=2
@@ -79,8 +79,8 @@ Left=191
 Top=136
 Width=1080
 Height=555
-MaxLeft=-1
-MaxTop=-1
+MaxLeft=-8
+MaxTop=106
 ClientWidth=1064
 ClientHeight=517
 LeftPanelSize=0
@@ -102,13 +102,13 @@ LeftCol=1
 Module=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas
 CursorX=1
 CursorY=1
-TopLine=1
+TopLine=70
 LeftCol=1
 
 [View2]
 Module=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMNFe.pas
-CursorX=11
-CursorY=1442
+CursorX=14
+CursorY=1439
 TopLine=1427
 LeftCol=1
 
