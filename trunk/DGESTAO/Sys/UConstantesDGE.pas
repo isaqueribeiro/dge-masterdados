@@ -8,6 +8,12 @@ const
   SISTEMA_GESTAO = 0;
   SISTEMA_PDV    = 1;
 
+  ROTINA_LENGTH_ID     = 10;
+  ROTINA_TIPO_MENU     = 0;
+  ROTINA_TIPO_TELA     = 1;
+  ROTINA_TIPO_FUNCAO   = 2;
+  ROTINA_TIPO_PROCESSO = 3;
+
   MODELO_NFE  = 55; // NF-e  (Nota Fiscal Eletrônica de Venda)
   MODELO_NFCE = 65; // NFC-e (Nota Fiscal Eletrônica de Venda ao Consumidor Final)
 
