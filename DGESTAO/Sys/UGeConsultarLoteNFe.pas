@@ -96,6 +96,7 @@ type
     function PesquisarLote(const iAno, iNumero : Integer; const sRecibo : String; var Ano, Controle : Integer; var Destinaratio : String) : Boolean;
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -429,6 +430,11 @@ begin
   end
   else
     ShowInformation('Lote/Recibo não encontrado no sistema !');  
+end;
+
+procedure TfrmGeConsultarLoteNFe.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 initialization

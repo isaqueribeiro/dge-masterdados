@@ -119,6 +119,7 @@ type
     procedure RecalcularTotalNota;
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -314,6 +315,11 @@ begin
   inherited;
   if ( edDataHoraSaida.Visible and edDataHoraSaida.Enabled ) then
     edDataHoraSaida.SetFocus;
+end;
+
+procedure TfrmGeVendaGerarNFe.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

@@ -55,6 +55,7 @@ object frmGrPadraoCadastro: TfrmGrPadraoCadastro
       Shape = bsSpacer
     end
     object btbtnIncluir: TBitBtn
+      Tag = 1
       Left = 4
       Top = 2
       Width = 75
@@ -81,6 +82,7 @@ object frmGrPadraoCadastro: TfrmGrPadraoCadastro
       NumGlyphs = 2
     end
     object btbtnAlterar: TBitBtn
+      Tag = 2
       Left = 79
       Top = 2
       Width = 75
@@ -107,6 +109,7 @@ object frmGrPadraoCadastro: TfrmGrPadraoCadastro
       NumGlyphs = 2
     end
     object btbtnExcluir: TBitBtn
+      Tag = 3
       Left = 154
       Top = 2
       Width = 75
@@ -199,6 +202,7 @@ object frmGrPadraoCadastro: TfrmGrPadraoCadastro
       Shape = bsSpacer
     end
     object btbtnLista: TBitBtn
+      Tag = 4
       Left = 387
       Top = 2
       Width = 75
@@ -418,6 +422,7 @@ object frmGrPadraoCadastro: TfrmGrPadraoCadastro
             FocusControl = edtFiltrar
           end
           object btnFiltrar: TSpeedButton
+            Tag = 5
             Left = 207
             Top = 16
             Width = 29

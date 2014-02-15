@@ -88,6 +88,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -199,6 +200,11 @@ begin
         ModalResult := mrOk;
       end;
   end;
+end;
+
+procedure TfrmGeEntradaEstoqueCancelar.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

@@ -6,6 +6,7 @@ object DMBusiness: TDMBusiness
   Height = 426
   Width = 706
   object ibdtbsBusiness: TIBDatabase
+    Connected = True
     DatabaseName = 'localhost:BUSINESS'
     Params.Strings = (
       'user_name=SYSDBA'
@@ -617,6 +618,57 @@ object DMBusiness: TDMBusiness
         DataType = ftUnknown
         Name = 'empresa'
         ParamType = ptUnknown
+      end>
+  end
+  object setSistema: TIBStoredProc
+    Database = ibdtbsBusiness
+    Transaction = ibtrnsctnBusiness
+    StoredProcName = 'SET_SISTEMA'
+    Left = 376
+    Top = 264
+    ParamData = <
+      item
+        DataType = ftSmallint
+        Name = 'CODIGO'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'NOME'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'VERSAO'
+        ParamType = ptInput
+      end>
+  end
+  object setRotina: TIBStoredProc
+    Database = ibdtbsBusiness
+    Transaction = ibtrnsctnBusiness
+    StoredProcName = 'SET_ROTINA'
+    Left = 376
+    Top = 312
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'CODIGO'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftSmallint
+        Name = 'TIPO'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'DESCRICAO'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'ROTINA_PAI'
+        ParamType = ptInput
       end>
   end
 end

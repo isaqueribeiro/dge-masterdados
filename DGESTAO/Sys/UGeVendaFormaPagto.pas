@@ -70,6 +70,8 @@ type
     { Public declarations }
     property ValorTotalVenda : Currency read GetValorTotalVenda;
     property TotalAPagar : Currency read FTotalAPagar;
+
+    procedure RegistrarRotinaSistema; override;
   end;
 
   function InserirFormaPagto(const AOnwer : TComponent; APagar : Currency) : Boolean;
@@ -174,6 +176,11 @@ begin
       On E : Exception do
         ShowError('Erro ao tentar inserir e/ou edição Forma/Condição de Pagamento!' + #13#13 + E.Message);
     end;
+end;
+
+procedure TfrmGeVendaFormaPagto.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

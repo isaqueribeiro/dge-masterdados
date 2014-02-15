@@ -90,6 +90,8 @@ type
     ibdtstUsersATIVO: TSmallintField;
     ibdtstUsersPERM_ALTERAR_VALOR_VENDA: TSmallintField;
     ibdtstUsersALTERAR_SENHA: TSmallintField;
+    setSistema: TIBStoredProc;
+    setRotina: TIBStoredProc;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -144,6 +146,8 @@ var
   procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
   procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
   procedure SetEmpresaIDDefault(CNPJ : String);
+  procedure SetSistema(iCodigo : Smallint; sNome, sVersao : String);
+  procedure SetRotinaSistema(iTipo : Smallint; sCodigo, sDescricao, sRotinaPai : String);
 
   function DelphiIsRunning : Boolean;
   function ShowConfirm(sMsg : String; const sTitle : String = ''; const DefaultButton : Integer = MB_DEFBUTTON2) : Boolean;
@@ -803,6 +807,45 @@ procedure SetEmpresaIDDefault(CNPJ : String);
 begin
   FileINI.WriteString('Default', 'EmpresaID', CNPJ);
   FileINI.UpdateFile;
+end;
+
+procedure SetSistema(iCodigo : Smallint; sNome, sVersao : String);
+begin
+  try
+    with DMBusiness, setSistema do
+    begin
+      Close;
+      ParamByName('Codigo').AsInteger := iCodigo;
+      ParamByName('Nome').AsString    := sNome;
+      ParamByName('Versao').AsString  := sVersao;
+      ExecProc;
+
+      CommitTransaction;
+    end;
+  except
+    On E : Exception do
+      ShowError('SetSistema() - ' + E.Message);
+  end;
+end;
+
+procedure SetRotinaSistema(iTipo : Smallint; sCodigo, sDescricao, sRotinaPai : String);
+begin
+  try
+    with DMBusiness, setRotina do
+    begin
+      Close;
+      ParamByName('Codigo').AsString     := Trim(sCodigo);
+      ParamByName('Tipo').AsInteger      := iTipo;
+      ParamByName('Descricao').AsString  := Trim(sDescricao);
+      ParamByName('Rotina_Pai').AsString := Trim(sRotinaPai);
+      ExecProc;
+
+      CommitTransaction;
+    end;
+  except
+    On E : Exception do
+      ShowError('SetRotinaSistema() - ' + E.Message);
+  end;
 end;
 
 function DelphiIsRunning : Boolean;

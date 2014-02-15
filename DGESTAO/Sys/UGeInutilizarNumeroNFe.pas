@@ -71,6 +71,7 @@ type
     function IntervaloValido(iSerie, iInicio, iFinal : Integer; var sRetorno : String) : Boolean;
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -247,6 +248,11 @@ begin
     end;
   end;
 
+end;
+
+procedure TfrmGeInutilizarNumeroNFe.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 initialization

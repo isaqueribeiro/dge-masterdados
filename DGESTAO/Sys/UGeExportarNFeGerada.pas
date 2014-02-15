@@ -47,6 +47,7 @@ type
     function ExportarNFe : Boolean;
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -184,6 +185,11 @@ begin
     btnExportar.Enabled := True;
     btnCancelar.Enabled := True;
   end;
+end;
+
+procedure TfrmGeExportarNFeGerada.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 initialization

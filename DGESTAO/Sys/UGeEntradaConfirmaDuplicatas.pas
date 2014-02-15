@@ -77,6 +77,8 @@ type
     property AnoCompra : Integer read fAnoCompra write fAnoCompra;
     property ControleCompra : Integer read fControleCompra write fControleCompra;
     property TotalEntrada   : Currency read fTotalEntrada write fTotalEntrada;
+
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -276,6 +278,11 @@ begin
     6 : Text := 'SEX';
     7 : Text := 'SAB';
   end;
+end;
+
+procedure TfrmGeEntradaConfirmaDuplicatas.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

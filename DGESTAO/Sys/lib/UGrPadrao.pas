@@ -15,12 +15,21 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
+    fRotinaID : String;
+    procedure SetRotinaID(Value : String);
     procedure SetOnEnterExit( const Win : TWinControl );
+
+    function GetRotinaPaiID : String;
   public
     { Public declarations }
     FuncoesString : THopeString;
+    property RotinaID    : String read fRotinaID write SetRotinaID;
+    property RotinaPaiID : String read GetRotinaPaiID;
+
+    procedure RegistrarRotinaSistema; virtual; abstract;
   end;
 
 var
@@ -34,6 +43,9 @@ var
   function gSetFloatProp(Instance: TObject; PropName: String; Value: Extended) : Boolean; overload;
 
 implementation
+
+uses
+  UConstantesDGE;
 
 {$R *.dfm}
 
@@ -292,6 +304,8 @@ end;
 procedure TfrmGrPadrao.FormCreate(Sender: TObject);
 begin
   FuncoesString := THopeString.Create;
+  fRotinaID     := EmptyStr;
+  
   SetOnEnterExit(Self);
 end;
 
@@ -468,6 +482,35 @@ begin
     end;
 
   end;
+end;
+
+procedure TfrmGrPadrao.FormShow(Sender: TObject);
+begin
+  RegistrarRotinaSistema;
+end;
+
+procedure TfrmGrPadrao.SetRotinaID(Value: String);
+var
+  sComplemento : String;
+begin
+  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
+
+  if ( Trim(Value) = EmptyStr ) then
+    fRotinaID := EmptyStr
+  else
+    fRotinaID := Copy(Trim(Value) + sComplemento, 1, ROTINA_LENGTH_ID);
+end;
+
+function TfrmGrPadrao.GetRotinaPaiID: String;
+var
+  sComplemento : String;
+begin
+  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
+
+  if ( Trim(fRotinaID) = EmptyStr ) then
+    Result := EmptyStr
+  else
+    Result := Copy(Copy(RotinaID, 1, 3) + sComplemento, 1, ROTINA_LENGTH_ID);
 end;
 
 end.

@@ -76,6 +76,8 @@ type
     property AnoVenda      : Integer read fAnoVenda write fAnoVenda;
     property ControleVenda : Integer read fControleVenda write fControleVenda;
     property TotalVenda    : Currency read fTotalVenda write fTotalVenda;
+
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -276,6 +278,11 @@ begin
     6 : Text := 'SEX';
     7 : Text := 'SAB';
   end;
+end;
+
+procedure TfrmGeVendaConfirmaTitulos.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

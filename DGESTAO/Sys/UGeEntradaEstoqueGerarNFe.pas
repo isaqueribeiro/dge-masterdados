@@ -113,6 +113,7 @@ type
     procedure RecalcularTotalNota;
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -264,6 +265,11 @@ end;
 procedure TfrmGeEntradaEstoqueGerarNFe.TmrAlertaTimer(Sender: TObject);
 begin
   lblInforme.Visible := not lblInforme.Visible;
+end;
+
+procedure TfrmGeEntradaEstoqueGerarNFe.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

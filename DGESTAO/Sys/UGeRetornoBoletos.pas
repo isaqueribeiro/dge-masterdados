@@ -133,6 +133,7 @@ type
     function QuitarLancamento(Ano, Lancamento : Integer; Parcela : Integer; ValorPago : Currency; DataPagamento : TDateTime; NossoNumero : String) : Boolean;
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -1184,6 +1185,11 @@ begin
     S := Copy(S, 1, Pos('-', S) - 1);
 
   Result := S;
+end;
+
+procedure TfrmGeRetornoBoleto.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 initialization

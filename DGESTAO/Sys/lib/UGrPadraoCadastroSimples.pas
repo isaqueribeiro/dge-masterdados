@@ -26,6 +26,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -34,5 +35,12 @@ var
 implementation
 
 {$R *.dfm}
+
+{ TfrmGrPadraoCadastroSimples }
+
+procedure TfrmGrPadraoCadastroSimples.RegistrarRotinaSistema;
+begin
+  ;
+end;
 
 end.

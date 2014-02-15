@@ -190,6 +190,7 @@ type
     function InserirBoletoACBr(var iProximoNossoNumero : Integer; const NovosBoletos : Boolean = TRUE) : Boolean;
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -1087,7 +1088,7 @@ const
   MSG_REF_DOC = 'Referente ao título %s, parcela %s/%s';
 begin
   // Esta função deverá ser replicada em: TfrmGeRemessaBoleto.InserirBoletoACBr()
-  
+
   try
 
     ACBrBoleto.ListadeBoletos.Clear;
@@ -1099,7 +1100,7 @@ begin
     begin
 
       Boleto := ACBrBoleto.CriarTituloNaLista;
-      
+
       if ( CdsTitulosNFE.AsLargeInt > 0 ) then
       begin
         sMensagem  := Format(MSG_REF_NFE, [FormatFloat('###0000000', CdsTitulosNFE.AsLargeInt), FormatFloat('00', CdsTitulosPARCELA.AsInteger), FormatFloat('00', CdsTitulosPARCELA_MAXIMA.AsInteger)]);
@@ -1209,6 +1210,11 @@ begin
       Result := False;
     end;
   end;
+end;
+
+procedure TfrmGeGerarBoleto.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 initialization

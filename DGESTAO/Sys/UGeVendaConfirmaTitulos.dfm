@@ -6,7 +6,6 @@ inherited frmGeVendaConfirmaTitulos: TfrmGeVendaConfirmaTitulos
   ClientHeight = 403
   ClientWidth = 534
   OldCreateOrder = True
-  OnShow = FormShow
   DesignSize = (
     534
     403)

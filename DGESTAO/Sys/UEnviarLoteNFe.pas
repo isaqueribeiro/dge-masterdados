@@ -14,6 +14,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -24,5 +25,12 @@ implementation
 uses UDMBusiness, UDMNFe;
 
 {$R *.dfm}
+
+{ TfrmEnviarLoteNFe }
+
+procedure TfrmEnviarLoteNFe.RegistrarRotinaSistema;
+begin
+  ;
+end;
 
 end.
