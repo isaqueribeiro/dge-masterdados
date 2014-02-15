@@ -94,6 +94,12 @@ type
     procedure SetWhereAdditional(Value : String);
     procedure ClearFieldEmptyStr;
     procedure CarregarControleAcesso;
+
+    function GetRotinaInserirID   : String;
+    function GetRotinaEditarID    : String;
+    function GetRotinaExcluirID   : String;
+    function GetRotinaImprimirID  : String;
+    function GetRotinaPesquisarID : String;
   public
     { Public declarations }
     property ver : TInfoVersao read _ver;
@@ -109,12 +115,20 @@ type
     property ControlFirstEdit : TWinControl read fControlFirst write fControlFirst;
     property frReport : TfrxReport read _frReport write _frReport;
 
+    property RotinaInserirID   : String read GetRotinaInserirID;
+    property RotinaEditarID    : String read GetRotinaEditarID;
+    property RotinaExcluirID   : String read GetRotinaExcluirID;
+    property RotinaImprimirID  : String read GetRotinaImprimirID;
+    property RotinaPesquisarID : String read GetRotinaPesquisarID;
+
     procedure UpdateGenerator(const sWhr : String = '');
     procedure RedimencionarBevel(const ToolBar : TToolBar; const bvl : TBevel);
+    procedure RegistrarRotinaSistema; override;
   protected
     procedure SetVariablesDefault(const pFastReport : TfrxReport);
     procedure FiltarDados; overload;
     procedure FecharAbrirTabela(const Tabela : TIBDataSet; const Vazia : Boolean = FALSE); overload;
+
     function SelecionarRegistro(var Codigo : Integer; var Descricao : String; const FiltroAdicional : String = '') : Boolean; overload;
   end;
 
@@ -137,7 +151,7 @@ const
 implementation
 
 uses
-  UDMBusiness, UGrCampoRequisitado;
+  UDMBusiness, UGrCampoRequisitado, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -794,6 +808,89 @@ begin
     edtFiltrar.SetFocus;
     edtFiltrar.SelStart := Length(edtFiltrar.Text);
   end;
+end;
+
+procedure TfrmGrPadraoCadastro.RegistrarRotinaSistema;
+begin
+  if ( Trim(RotinaID) <> EmptyStr ) then
+  begin
+    SetRotinaSistema(ROTINA_TIPO_TELA, RotinaID, Trim(Self.Caption), RotinaPaiID);
+
+    if btbtnIncluir.Visible then
+      SetRotinaSistema(ROTINA_TIPO_FUNCAO, RotinaInserirID, 'Inserir', RotinaID);
+
+    if btbtnAlterar.Visible then
+      SetRotinaSistema(ROTINA_TIPO_FUNCAO, RotinaEditarID,  'Alterar', RotinaID);
+
+    if btbtnExcluir.Visible then
+      SetRotinaSistema(ROTINA_TIPO_FUNCAO, RotinaExcluirID, 'Excluir', RotinaID);
+
+    if btbtnLista.Visible then
+      SetRotinaSistema(ROTINA_TIPO_FUNCAO, RotinaImprimirID,  'Listar/Imprimir', RotinaID);
+
+    if btnFiltrar.Visible then
+      SetRotinaSistema(ROTINA_TIPO_FUNCAO, RotinaPesquisarID, 'Pesquisar/Selecionar', RotinaID);
+  end;
+end;
+
+function TfrmGrPadraoCadastro.GetRotinaEditarID: String;
+var
+  sComplemento : String;
+begin
+  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
+
+  if ( Trim(RotinaID) = EmptyStr ) then
+    Result := EmptyStr
+  else
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('000', btbtnAlterar.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+end;
+
+function TfrmGrPadraoCadastro.GetRotinaExcluirID: String;
+var
+  sComplemento : String;
+begin
+  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
+
+  if ( Trim(RotinaID) = EmptyStr ) then
+    Result := EmptyStr
+  else
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('000', btbtnExcluir.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+end;
+
+function TfrmGrPadraoCadastro.GetRotinaImprimirID: String;
+var
+  sComplemento : String;
+begin
+  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
+
+  if ( Trim(RotinaID) = EmptyStr ) then
+    Result := EmptyStr
+  else
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('000', btbtnLista.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+end;
+
+function TfrmGrPadraoCadastro.GetRotinaInserirID: String;
+var
+  sComplemento : String;
+begin
+  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
+
+  if ( Trim(RotinaID) = EmptyStr ) then
+    Result := EmptyStr
+  else
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('000', btbtnIncluir.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+end;
+
+function TfrmGrPadraoCadastro.GetRotinaPesquisarID: String;
+var
+  sComplemento : String;
+begin
+  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
+
+  if ( Trim(RotinaID) = EmptyStr ) then
+    Result := EmptyStr
+  else
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('000', btnFiltrar.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
 end;
 
 end.

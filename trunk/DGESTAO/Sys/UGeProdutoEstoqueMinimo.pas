@@ -190,6 +190,7 @@ type
     procedure CalcularPercentuais( cdsTabela : TClientDataSet );
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -665,6 +666,11 @@ begin
     if smtpEmail.Connected then
       smtpEmail.Disconnect;
   end;
+end;
+
+procedure TFrmGeProdutoEstoqueMinimo.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 initialization

@@ -110,6 +110,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -187,6 +188,11 @@ procedure TfrmGeConfigurarNFeACBr.btnValidadeCertificadoClick(
   Sender: TObject);
 begin
   DMNFe.GetValidadeCertificado(True);
+end;
+
+procedure TfrmGeConfigurarNFeACBr.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

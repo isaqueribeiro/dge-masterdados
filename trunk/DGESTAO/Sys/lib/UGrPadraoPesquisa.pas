@@ -35,7 +35,9 @@ type
   public
     { Public declarations }
     property SQLSelect : TStringList read sSQL;
-    
+
+    procedure RegistrarRotinaSistema; override;
+
     function ExecutarPesquisa : Boolean; virtual; abstract;
   end;
 
@@ -119,6 +121,11 @@ procedure TfrmGrPadraoPesquisa.FormClose(Sender: TObject;
 begin
   inherited;
   Action := caFree;
+end;
+
+procedure TfrmGrPadraoPesquisa.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

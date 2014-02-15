@@ -151,6 +151,7 @@ type
     function InserirBoletoACBr : Boolean;
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -928,6 +929,11 @@ begin
   end;
 
   CdsTitulos.EnableControls;
+end;
+
+procedure TfrmGeRemessaBoleto.RegistrarRotinaSistema; 
+begin
+  ;
 end;
 
 initialization

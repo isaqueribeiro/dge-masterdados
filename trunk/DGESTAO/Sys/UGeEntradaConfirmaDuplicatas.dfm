@@ -6,7 +6,6 @@ inherited frmGeEntradaConfirmaDuplicatas: TfrmGeEntradaConfirmaDuplicatas
   ClientHeight = 403
   ClientWidth = 534
   OldCreateOrder = True
-  OnShow = FormShow
   DesignSize = (
     534
     403)

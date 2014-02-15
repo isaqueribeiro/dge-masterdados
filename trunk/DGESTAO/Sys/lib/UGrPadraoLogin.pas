@@ -50,6 +50,8 @@ type
     property Empresa : String read GetEmpresa write SetEmpresa;
     property Contador : Integer read fContador write fContador;
 
+    procedure RegistrarRotinaSistema; override;
+
     function EfetuarLogin : Boolean; //virtual; abstract;
   end;
 
@@ -166,6 +168,11 @@ end;
 function TfrmGrPadraoLogin.EfetuarLogin: Boolean;
 begin
   Result := False;
+end;
+
+procedure TfrmGrPadraoLogin.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

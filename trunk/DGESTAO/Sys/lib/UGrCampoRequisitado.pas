@@ -32,6 +32,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -141,6 +142,11 @@ begin
   inherited;
   if ( Key = #27 ) then
     Self.Close;
+end;
+
+procedure TfrmCampoRequisitado.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

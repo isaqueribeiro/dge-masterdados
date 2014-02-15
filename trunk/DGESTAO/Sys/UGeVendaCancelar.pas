@@ -68,6 +68,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -196,6 +197,11 @@ begin
     Key := #0;
     Abort;
   end;
+end;
+
+procedure TfrmGeVendaCancelar.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

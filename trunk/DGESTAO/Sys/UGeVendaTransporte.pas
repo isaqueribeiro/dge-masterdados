@@ -79,6 +79,7 @@ type
     procedure CarregarValorPadrao;
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
   function EditarDadosTransportadora(const AOnwer : TComponent) : Boolean;
@@ -276,6 +277,11 @@ begin
     ParamByName('num_venda').AsInteger := dtsVendaVolume.DataSet.FieldByName('CONTROLE_VENDA').AsInteger;
     Open;
   end;
+end;
+
+procedure TfrmGeVendaTransporte.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

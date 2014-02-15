@@ -24,6 +24,8 @@ type
     procedure Alerta(sTitulo, sMensagem : String);
     procedure Erro(sTitulo, sMensagem : String);
     procedure Parar(sTitulo, sMensagem : String);
+
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -92,6 +94,11 @@ begin
   btnNao.Visible := False;
 
   MessageBeep(MB_ICONSTOP);
+end;
+
+procedure TfrmGeMessage.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

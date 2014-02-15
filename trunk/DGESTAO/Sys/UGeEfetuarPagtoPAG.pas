@@ -65,6 +65,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -201,6 +202,11 @@ begin
   inherited;
   if ( dtsPagamentos.AutoEdit ) then
     dbDataPagto.SetFocus;
+end;
+
+procedure TfrmGeEfetuarPagtoPAG.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 end.

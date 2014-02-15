@@ -67,6 +67,7 @@ type
     function ExportarChaveNFe(const NomeArquivo : String) : Boolean;
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -193,6 +194,11 @@ var
 begin
   if TryStrToDate(TDateEdit(Sender).Text, D) then
     CarregarChaveNFe;
+end;
+
+procedure TfrmGeExportarChaveNFeGerada.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 initialization

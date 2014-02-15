@@ -2135,7 +2135,7 @@ begin
       ACBrNFe.NotasFiscais.GerarNFe;
       ACBrNFe.NotasFiscais.Assinar;
 
-      if GetSolicitaDHSaidaNFe(sCNPJEmitente) and (Trim(sDataHoraSaida) <> EmptyStr) then
+      if GetSolicitaDHSaidaNFe( sCNPJEmitente ) then
         if not ACBrNFe.NotasFiscais.ValidaRegrasdeNegocios then
           raise Exception.Create( ACBrNFe.NotasFiscais.Items[0].RegrasdeNegocios );
 

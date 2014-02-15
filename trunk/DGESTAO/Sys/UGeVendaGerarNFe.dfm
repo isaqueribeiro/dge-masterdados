@@ -10,7 +10,6 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
   Font.Charset = ANSI_CHARSET
   Font.Name = 'Tahoma'
   OldCreateOrder = True
-  OnShow = FormShow
   DesignSize = (
     596
     410)
@@ -897,7 +896,6 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     ForcedRefresh = True
-    BufferChunks = 1000
     CachedUpdates = True
     RefreshSQL.Strings = (
       '')
