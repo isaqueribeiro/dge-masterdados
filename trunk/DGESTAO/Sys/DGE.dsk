@@ -12,13 +12,13 @@ File_9=SourceModule,'E:\Projetos\MasterDados\DGESTAO\Sys\uGerRelCR.pas',0,1,188,
 
 [Modules]
 Module0=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMNFe.pas
-Module1=C:\ACBr\Fontes\ACBrNFe2\ACBrNFeNotasFiscais.pas
-Module2=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UGeVendaGerarNFe.pas
-Module3=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UGeVenda.pas
-Module4=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas
-Module5=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UConstantesDGE.pas
-Module6=C:\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
-Module7=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas
+Module1=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas
+Module2=C:\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
+Module3=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas
+Module4=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UGeVendaGerarNFe.pas
+Module5=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UGeVenda.pas
+Module6=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UConstantesDGE.pas
+Module7=C:\ACBr\Fontes\ACBrNFe2\ACBrNFeNotasFiscais.pas
 Module8=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr
 Count=9
 EditWindowCount=1
@@ -28,9 +28,19 @@ ModuleType=SourceModule
 FormState=1
 FormOnTop=0
 
-[C:\ACBr\Fontes\ACBrNFe2\ACBrNFeNotasFiscais.pas]
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas]
 ModuleType=SourceModule
-FormState=0
+FormState=1
+FormOnTop=0
+
+[C:\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas]
+ModuleType=SourceModule
+FormState=1
+FormOnTop=0
+
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas]
+ModuleType=SourceModule
+FormState=1
 FormOnTop=0
 
 [C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UGeVendaGerarNFe.pas]
@@ -43,24 +53,14 @@ ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UPrinc.pas]
-ModuleType=SourceModule
-FormState=1
-FormOnTop=0
-
 [C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UConstantesDGE.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[C:\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas]
+[C:\ACBr\Fontes\ACBrNFe2\ACBrNFeNotasFiscais.pas]
 ModuleType=SourceModule
-FormState=1
-FormOnTop=0
-
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas]
-ModuleType=SourceModule
-FormState=1
+FormState=0
 FormOnTop=0
 
 [C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr]
@@ -72,11 +72,11 @@ FormOnTop=0
 FormState=0
 FormOnTop=0
 
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\lib\UGrPadraoCadastro.pas]
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\lib\UGrPadrao.pas]
 FormState=0
 FormOnTop=0
 
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\lib\UGrPadrao.pas]
+[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\lib\UGrPadraoCadastro.pas]
 FormState=0
 FormOnTop=0
 
@@ -111,7 +111,7 @@ LeftPanelData=00000400010000000C000000436F64654578706C6F726572000000000000000000
 RightPanelSize=0
 BottomPanelSize=0
 BottomPanelClients=MessageView@EditWindow0
-BottomPanelData=00000400010000000B0000004D6573736167655669657700000000000000000000000000000000000100000000000000000B0000004D65737361676556696577FFFFFFFF
+BottomPanelData=00000400010000000B0000004D65737361676556696577000000000000000000000000000000000001000000000000000000000000FFFFFFFF
 
 [View0]
 Module=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr
@@ -129,9 +129,9 @@ LeftCol=1
 
 [View2]
 Module=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMNFe.pas
-CursorX=14
-CursorY=3593
-TopLine=3578
+CursorX=107
+CursorY=1446
+TopLine=1432
 LeftCol=1
 
 [View3]
@@ -246,7 +246,7 @@ LRDockWidth=190
 Dockable=1
 SplitPos=85
 ArrangeBy=Name
-SelectedItem=Action
+SelectedItem=OnCreate
 ExpandedItems=
 HiddenCategories=
 
