@@ -37,7 +37,8 @@ var
 
 implementation
 
-uses UDMBusiness;
+uses
+  UDMBusiness, UGrPadrao, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -80,6 +81,7 @@ end;
 procedure TfrmGeEstado.FormCreate(Sender: TObject);
 begin
   inherited;
+  RotinaID         := ROTINA_CAD_ESTADO_ID;
   ControlFirstEdit := dbCodigo;
 
   DisplayFormatCodigo := '00';

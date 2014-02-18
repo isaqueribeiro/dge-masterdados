@@ -1,11 +1,13 @@
 inherited frmGeEstado: TfrmGeEstado
   Left = 547
   Top = 262
+  ActiveControl = dbCodigo
   Caption = 'Tabela de Estados (UF)'
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   inherited pgcGuias: TPageControl
+    ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited dbgDados: TDBGrid
         Columns = <
@@ -37,8 +39,10 @@ inherited frmGeEstado: TfrmGeEstado
     inherited tbsCadastro: TTabSheet
       inherited Bevel8: TBevel
         Top = 81
+        Width = 727
       end
       inherited GrpBxDadosNominais: TGroupBox
+        Width = 727
         Height = 81
         object lblNome: TLabel [1]
           Left = 88
