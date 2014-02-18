@@ -821,3 +821,52 @@ end^
 
 SET TERM ; ^
 
+
+
+
+/*------ SYSDBA 17/02/2014 11:29:36 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER procedure SET_ROTINA (
+    CODIGO DMN_VCHAR_10,
+    TIPO DMN_SMALLINT_N,
+    DESCRICAO DMN_VCHAR_250,
+    ROTINA_PAI DMN_VCHAR_10)
+as
+begin
+  if (not exists(
+    Select
+      r.rot_cod
+    from SYS_ROTINA r
+    where r.rot_cod = trim(:rotina_pai)
+  )) then
+    rotina_pai = '';
+
+  if (not exists(
+    Select
+      r.rot_cod
+    from SYS_ROTINA r
+    where r.rot_cod = trim(:codigo)
+  )) then
+    Insert Into SYS_ROTINA (
+        rot_cod
+      , rot_tipo
+      , rot_descricao
+      , rot_cod_pai
+    ) values (
+        trim(:codigo)
+      , coalesce(:tipo, 0)
+      , trim(:descricao)
+      , case when trim(:rotina_pai) <> '' then trim(:rotina_pai) else null end
+    );
+  else
+    Update SYS_ROTINA r Set
+        r.rot_tipo      = coalesce(:tipo, 0)
+      , r.rot_descricao = trim(:descricao)
+      , r.rot_cod_pai   = case when trim(:rotina_pai) <> '' then trim(:rotina_pai) else null end
+    where r.rot_cod = trim(:codigo);
+end^
+
+SET TERM ; ^
+

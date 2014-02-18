@@ -66,7 +66,8 @@ var
 
 implementation
 
-uses UDMBusiness, UGeEstado;
+uses
+  UDMBusiness, UGeEstado, UGrPadrao, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -119,6 +120,7 @@ end;
 procedure TfrmGeCidade.FormCreate(Sender: TObject);
 begin
   inherited;
+  RotinaID         := ROTINA_CAD_CIDADE_ID;
   ControlFirstEdit := dbNome;
 
   NomeTabela     := 'TBCIDADE';

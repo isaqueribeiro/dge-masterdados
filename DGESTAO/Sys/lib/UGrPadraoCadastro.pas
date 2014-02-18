@@ -842,7 +842,7 @@ begin
   if ( Trim(RotinaID) = EmptyStr ) then
     Result := EmptyStr
   else
-    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('000', btbtnAlterar.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', btbtnAlterar.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
 end;
 
 function TfrmGrPadraoCadastro.GetRotinaExcluirID: String;
@@ -854,7 +854,7 @@ begin
   if ( Trim(RotinaID) = EmptyStr ) then
     Result := EmptyStr
   else
-    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('000', btbtnExcluir.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', btbtnExcluir.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
 end;
 
 function TfrmGrPadraoCadastro.GetRotinaImprimirID: String;
@@ -866,7 +866,7 @@ begin
   if ( Trim(RotinaID) = EmptyStr ) then
     Result := EmptyStr
   else
-    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('000', btbtnLista.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', btbtnLista.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
 end;
 
 function TfrmGrPadraoCadastro.GetRotinaInserirID: String;
@@ -878,7 +878,7 @@ begin
   if ( Trim(RotinaID) = EmptyStr ) then
     Result := EmptyStr
   else
-    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('000', btbtnIncluir.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', btbtnIncluir.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
 end;
 
 function TfrmGrPadraoCadastro.GetRotinaPesquisarID: String;
@@ -890,7 +890,7 @@ begin
   if ( Trim(RotinaID) = EmptyStr ) then
     Result := EmptyStr
   else
-    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('000', btnFiltrar.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', btnFiltrar.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
 end;
 
 end.
