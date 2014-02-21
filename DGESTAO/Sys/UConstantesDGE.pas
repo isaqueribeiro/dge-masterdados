@@ -29,6 +29,9 @@ const
   ROTINA_CAD_ESTADO_ID = '0080010000';
   ROTINA_CAD_CIDADE_ID = '0080020000';
 
+  NFE_TAG_PROTNFE_ERROR = '</protNFe></protNFe>';
+  NFE_TAG_PROTNFE_FEET  = '</protNFe>';
+
   MODELO_NFE  = 55; // NF-e  (Nota Fiscal Eletrônica de Venda)
   MODELO_NFCE = 65; // NFC-e (Nota Fiscal Eletrônica de Venda ao Consumidor Final)
 

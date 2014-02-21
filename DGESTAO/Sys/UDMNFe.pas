@@ -550,6 +550,8 @@ type
 var
   DMNFe: TDMNFe;
 
+  procedure CorrigirXML_NFe(sFileNameXML : String);
+
 const
   SELDIRHELP   = 1000;
   FILENAME_NFE = 'Report\NotaFiscalEletronica.rav';
@@ -577,6 +579,22 @@ uses UDMBusiness, Forms, FileCtrl, ACBrNFeConfiguracoes,
   UConstantesDGE, DateUtils, pcnRetConsReciNFe, pcnDownloadNFe;
 
 {$R *.dfm}
+
+procedure CorrigirXML_NFe (sFileNameXML : String);
+var
+  ArquivoXML : TStringList;
+begin
+  if ( FileExists(sFileNameXML) ) then
+  begin
+    ArquivoXML := TStringList.Create;
+    ArquivoXML.LoadFromFile( sFileNameXML );
+
+    ArquivoXML.Text := StringReplace(ArquivoXML.Text, NFE_TAG_PROTNFE_ERROR, NFE_TAG_PROTNFE_FEET, [rfReplaceAll]);
+
+    ArquivoXML.SaveToFile(sFileNameXML);
+    ArquivoXML.Free;
+  end;
+end;
 
 procedure ConfigurarNFeACBr(const sCNPJEmitente : String = '');
 var
@@ -1315,6 +1333,8 @@ begin
     ForceDirectories( ExtractFilePath(FileNameXML) );
 
     qryCalculoImportoXML_NFE.SaveToFile( FileNameXML );
+
+    CorrigirXML_NFe( FileNameXML );
 
     if not FilesExists(FileNameXML) then
       raise Exception.Create(Format('Arquivo %s não encontrado.', [QuotedStr(FileNameXML)]));

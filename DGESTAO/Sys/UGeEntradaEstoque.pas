@@ -330,7 +330,7 @@ var
 implementation
 
 uses DateUtils, UDMBusiness, UGeCondicaoPagto, UGeProduto, UGeTabelaCFOP,
-  UGeFornecedor, UGeEntradaEstoqueCancelar, UGeEntradaConfirmaDuplicatas, UGeEntradaEstoqueGerarNFe, UDMNFe;
+  UGeFornecedor, UGeEntradaEstoqueCancelar, UGeEntradaConfirmaDuplicatas, UGeEntradaEstoqueGerarNFe, UDMNFe, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -1106,6 +1106,8 @@ begin
 
         if ( FileExists(sFileNameXML) ) then
         begin
+          CorrigirXML_NFe(sFileNameXML);
+
           qryNFEXML_FILENAME.Value := ExtractFileName( sFileNameXML );
           qryNFEXML_FILE.LoadFromFile( sFileNameXML );
         end;
