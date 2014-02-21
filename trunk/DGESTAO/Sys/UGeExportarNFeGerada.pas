@@ -44,6 +44,7 @@ type
     procedure btnExportarClick(Sender: TObject);
   private
     { Private declarations }
+
     function ExportarNFe : Boolean;
   public
     { Public declarations }
@@ -56,7 +57,7 @@ var
 implementation
 
 uses
-  UDMBusiness, DateUtils, IniFiles;
+  UDMBusiness, DateUtils, IniFiles, xmldom, XMLIntf, msxmldom, XMLDoc, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -122,6 +123,25 @@ begin
 end;
 
 function TfrmGeExportarNFeGerada.ExportarNFe: Boolean;
+
+  procedure SaveFileXML(const Value : String);
+  var
+    XML : TXMLDocument;
+  begin
+
+    try
+      XML := TXMLDocument.Create(Application);
+
+      XML.XML.Add( StringReplace(cdsNFeXML_FILE.AsString, NFE_TAG_PROTNFE_ERROR, NFE_TAG_PROTNFE_FEET, [rfReplaceAll]) );
+      XML.Active := True;
+      XML.SaveToFile(Value);
+      XML.Active := False;
+    finally
+      FreeAndNil(XML);
+    end;
+
+  end;
+
 var
   sPastaEntradas,
   sPastaSaidas  ,
@@ -162,7 +182,8 @@ begin
         else
         if ( cdsNFeSAIDA.AsInteger = 1 ) then
           sFileNameNFe := sPastaSaidas + Trim(cdsNFeXML_FILENAME.AsString);
-        cdsNFeXML_FILE.SaveToFile( sFileNameNFe );
+
+        SaveFileXML( sFileNameNFe );
   
         lblInforme.Caption := Trim(cdsNFeXML_FILENAME.AsString) + ' . . .' + #13 +
           FormatFloat('0.###"%"', (cdsNFe.RecNo / lblInforme.Tag * 100));
