@@ -27,7 +27,7 @@ inherited frmGeTipoLogradouro: TfrmGeTipoLogradouro
       end
       inherited pnlFiltros: TPanel
         inherited grpBxFiltro: TGroupBox
-          Left = 416
+          Left = 425
           Width = 298
           inherited lbltFiltrar: TLabel
             Width = 95

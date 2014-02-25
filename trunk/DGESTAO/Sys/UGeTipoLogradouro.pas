@@ -31,7 +31,8 @@ var
 
 implementation
 
-uses UDMBusiness;
+uses
+  UDMBusiness, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -50,6 +51,7 @@ end;
 procedure TfrmGeTipoLogradouro.FormCreate(Sender: TObject);
 begin
   inherited;
+  RotinaID         := ROTINA_CAD_TIPO_LOG_ID;
   ControlFirstEdit := dbNome;
 
   DisplayFormatCodigo := '00';

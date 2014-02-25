@@ -42,7 +42,8 @@ var
 
 implementation
 
-uses UDMBusiness, UGeCidade, UGeDistrito;
+uses
+  UDMBusiness, UGeCidade, UGeDistrito, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -99,6 +100,7 @@ begin
   inherited;
   fCidade := 0;
 
+  RotinaID         := ROTINA_CAD_BAIRRO_ID;
   ControlFirstEdit := dbNome;
 
   DisplayFormatCodigo := '0000';

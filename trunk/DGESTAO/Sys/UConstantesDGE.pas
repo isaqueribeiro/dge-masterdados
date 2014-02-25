@@ -14,6 +14,8 @@ const
   ROTINA_TIPO_FUNCAO   = 2;
   ROTINA_TIPO_PROCESSO = 3;
 
+  // Identificacores de rotinas no sistema
+
   ROTINA_MENU_CADASTRO_ID     = '0010000000';
   ROTINA_MENU_ESTOQUE_ID      = '0020000000';
   ROTINA_MENU_MOVIMENTO_ID    = '0030000000';
@@ -26,8 +28,16 @@ const
   ROTINA_MENU_REL_FATURAMENTO_ID = '0100000000';
   ROTINA_MENU_REL_FINANCEIRO_ID  = '0110000000';
 
-  ROTINA_CAD_ESTADO_ID = '0080010000';
-  ROTINA_CAD_CIDADE_ID = '0080020000';
+  // Menu Cadastro -> Tabelas Auxiliares
+
+  ROTINA_CAD_ESTADO_ID     = '0080010000';
+  ROTINA_CAD_CIDADE_ID     = '0080020000';
+  ROTINA_CAD_DISTRITO_ID   = '0080030000';
+  ROTINA_CAD_BAIRRO_ID     = '0080040000';
+  ROTINA_CAD_TIPO_LOG_ID   = '0080050000';
+  ROTINA_CAD_LOGRADOURO_ID = '0080060000';
+
+  // Relação de TAG'S FEET
 
   NFE_TAG_PROTNFE_ERROR = '</protNFe></protNFe>';
   NFE_TAG_PROTNFE_FEET  = '</protNFe>';
@@ -84,7 +94,7 @@ const
   PORTA_SMTP_PADRAO = 587;
 
   STR_TAMANHO_NCMSH = 8;
-
+(*
   // Identificacores de rotinas no sistema
 
   MENU_CADASTRO        = '01';
@@ -150,7 +160,7 @@ const
   NFE_CONSULTAR_NFE      = '0400200';
   NFE_EXPORTAR_NFE_GERAD = '0400300';
   NFE_EXPORTAR_CHV_NFE   = '0400400';
-
+*)
 implementation
 
 end.

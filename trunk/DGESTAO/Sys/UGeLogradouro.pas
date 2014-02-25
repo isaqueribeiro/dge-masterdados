@@ -44,7 +44,8 @@ var
 
 implementation
 
-uses UDMBusiness, UGeCidade, UGeTipoLogradouro;
+uses
+  UDMBusiness, UGeCidade, UGeTipoLogradouro, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -110,6 +111,7 @@ begin
   inherited;
   fCidade := 0;
 
+  RotinaID         := ROTINA_CAD_LOGRADOURO_ID;
   ControlFirstEdit := dbTipo;
 
   tblTipo.Open;
