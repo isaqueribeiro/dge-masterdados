@@ -539,7 +539,7 @@ type
       const Imprimir : Boolean = TRUE) : Boolean;
 
     function InutilizaNumeroNFeACBr(const sCNPJEmitente : String; iAno, iModelo, iSerie, iNumeroInicial, iNumeroFinal : Integer; const sJustificativa : String; var sRetorno : String) : Boolean;
-    function ConsultarNumeroLoteNFeACBr(const sCNPJEmitente : String; sNumeroRecibo : String; var sChaveNFe, sRetorno : String) : Boolean;
+    function ConsultarNumeroLoteNFeACBr(const sCNPJEmitente : String; sNumeroRecibo : String; var sChaveNFe, sProtocolo, sRetorno : String) : Boolean;
     function ConsultarChaveNFeACBr(const sCNPJEmitente, sChave : String;
       var iSerieNFe, iNumeroNFe, iTipoNFe : Integer; var DestinatarioNFE, FileNameXML, ChaveNFE, ProtocoloNFE : String;
       var DataEmissao : TDateTime; const Imprimir : Boolean = TRUE) : Boolean;
@@ -551,6 +551,8 @@ var
   DMNFe: TDMNFe;
 
   procedure CorrigirXML_NFe(sFileNameXML : String);
+
+  function GetDiretorioNFe : String;
 
 const
   SELDIRHELP   = 1000;
@@ -594,6 +596,11 @@ begin
     ArquivoXML.SaveToFile(sFileNameXML);
     ArquivoXML.Free;
   end;
+end;
+
+function GetDiretorioNFe : String;
+begin
+  Result := StringReplace(DMNFe.ACBrNFe.Configuracoes.Geral.PathSalvar + '\', '\\', '\', [rfReplaceAll]);
 end;
 
 procedure ConfigurarNFeACBr(const sCNPJEmitente : String = '');
@@ -3554,7 +3561,7 @@ begin
 end;
 
 function TDMNFe.ConsultarNumeroLoteNFeACBr(const sCNPJEmitente: String;
-  sNumeroRecibo: String; var sChaveNFe, sRetorno: String): Boolean;
+  sNumeroRecibo: String; var sChaveNFe, sProtocolo, sRetorno: String): Boolean;
 var
   bReturn : Boolean;
 begin
@@ -3579,7 +3586,10 @@ begin
           bReturn := (WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].cStat = PROCESSO_NFE_AUTORIZADA);
 
         if bReturn then
-          sChaveNFe := WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].chNFe;
+        begin
+          sChaveNFe  := WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].chNFe;
+          sProtocolo := WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].nProt;
+        end;
 
         if ( WebServices.Recibo.NFeRetorno.ProtNFe.Count = 1 ) then
         begin
@@ -3593,7 +3603,7 @@ begin
             'Motivo:      ' + WebServices.Recibo.NFeRetorno.xMotivo + #13 +
             '             ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].xMotivo + #13 +
             'Mensagem:    ' + WebServices.Recibo.NFeRetorno.xMsg    + #13 +
-            '---'     + #13 +                              
+            '---'     + #13 +
             'Data Recibo: ' + FormatDateTime('dd/mm/yyyy', WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].dhRecbto) + #13 +
             'Protocolo:   ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].nProt;
         end;
@@ -3688,7 +3698,7 @@ begin
       if ( WebServices.DownloadNFe.Executar ) then
         FileNameXML := WebServices.DownloadNFe.PathArqResp
       else
-        raise Exception.Create('Erro ao tentar fazer download do arquivo XML do servidor da SEFA.');
+        raise Exception.Create('Erro ao tentar fazer download do arquivo XML do servidor da SEFA.' + #13 + WebServices.DownloadNFe.RetornoWS);
 (*
       EventoNFe.Evento.Clear;
       with EventoNFe.Evento.Add do
@@ -3701,7 +3711,8 @@ begin
       end;
       EnviarEventoNFe(1);
 *)
-        if not FileExists(FileNameXML) then
+
+      if not FileExists(FileNameXML) then
         raise Exception.Create(Format('Arquivo %s não encontrado.', [QuotedStr(FileNameXML)]))
       else
         Result := True;  
