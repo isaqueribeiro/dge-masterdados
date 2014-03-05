@@ -36,11 +36,15 @@ const
   ROTINA_CAD_BAIRRO_ID     = '0080040000';
   ROTINA_CAD_TIPO_LOG_ID   = '0080050000';
   ROTINA_CAD_LOGRADOURO_ID = '0080060000';
+  ROTINA_CAD_CFOP_ID       = '0080070000';
 
   // Relação de TAG'S FEET
 
   NFE_TAG_PROTNFE_ERROR = '</protNFe></protNFe>';
   NFE_TAG_PROTNFE_FEET  = '</protNFe>';
+
+  NFE_TAMANHO_NUMERO_RECIBO = 15;
+  NFE_TAMANHO_NUMERO_CHAVE  = 44;
 
   MODELO_NFE  = 55; // NF-e  (Nota Fiscal Eletrônica de Venda)
   MODELO_NFCE = 65; // NFC-e (Nota Fiscal Eletrônica de Venda ao Consumidor Final)

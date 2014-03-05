@@ -7,7 +7,7 @@ uses
   Dialogs, UGrPadraoCadastro, ImgList, IBCustomDataSet, IBUpdateSQL, DB,
   Mask, DBCtrls, StdCtrls, Buttons, ExtCtrls, Grids, DBGrids, ComCtrls,
   ToolWin, IBTable, rxToolEdit, RXDBCtrl, DBClient, Provider, IBStoredProc,
-  frxClass, frxDBSet, Menus, IBQuery;
+  frxClass, frxDBSet, Menus, IBQuery, ClipBrd;
 
 type
   TfrmGeVenda = class(TfrmGrPadraoCadastro)
@@ -326,6 +326,12 @@ type
     nmGerarImprimirBoletos: TMenuItem;
     IbDtstTabelaGERAR_ESTOQUE_CLIENTE: TSmallintField;
     IbDtstTabelaCODCLIENTE: TIntegerField;
+    popupAuditoria: TPopupMenu;
+    nmPpReciboNFe: TMenuItem;
+    nmPpChaveNFe: TMenuItem;
+    nmPpArquivoNFe: TMenuItem;
+    N2: TMenuItem;
+    nmPpLimparDadosNFe: TMenuItem;
     procedure ImprimirOpcoesClick(Sender: TObject);
     procedure ImprimirOrcamentoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -379,6 +385,10 @@ type
     procedure BtnTransporteInformeClick(Sender: TObject);
     procedure cdsVendaVolumeNewRecord(DataSet: TDataSet);
     procedure nmGerarImprimirBoletosClick(Sender: TObject);
+    procedure nmPpReciboNFeClick(Sender: TObject);
+    procedure nmPpChaveNFeClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure nmPpArquivoNFeClick(Sender: TObject);
   private
     { Private declarations }
     sGeneratorName : String;
@@ -2463,6 +2473,51 @@ begin
     else
       frrVenda.ShowReport;
 
+  end;
+end;
+
+procedure TfrmGeVenda.FormShow(Sender: TObject);
+begin
+  inherited;
+  if ( gUsuarioLogado.Funcao = FUNCTION_USER_ID_SYSTEM_ADM ) then
+    dbgDados.PopupMenu := popupAuditoria
+  else
+    dbgDados.PopupMenu := nil;
+end;
+
+procedure TfrmGeVenda.nmPpReciboNFeClick(Sender: TObject);
+begin
+  if not IbDtstTabela.IsEmpty then
+  begin
+    if ( Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) = EmptyStr ) then
+      Exit;
+
+    Clipboard.AsText := Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString);
+    ShowInformation('Dados NF-e', 'Número de Recibo de Envio da NF-e:' + #13 + Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString));
+  end;
+end;
+
+procedure TfrmGeVenda.nmPpChaveNFeClick(Sender: TObject);
+begin
+  if not IbDtstTabela.IsEmpty then
+  begin
+    if ( Trim(IbDtstTabelaVERIFICADOR_NFE.AsString) = EmptyStr ) then
+      Exit;
+
+    Clipboard.AsText := Trim(IbDtstTabelaVERIFICADOR_NFE.AsString);
+    ShowInformation('Dados NF-e', 'Chave da NF-e:' + #13 + Trim(IbDtstTabelaVERIFICADOR_NFE.AsString));
+  end;
+end;
+
+procedure TfrmGeVenda.nmPpArquivoNFeClick(Sender: TObject);
+begin
+  if not IbDtstTabela.IsEmpty then
+  begin
+    if ( Trim(IbDtstTabelaXML_NFE_FILENAME.AsString) = EmptyStr ) then
+      Exit;
+
+    Clipboard.AsText := Trim(IbDtstTabelaXML_NFE_FILENAME.AsString);
+    ShowInformation('Dados NF-e', 'Nome do Arquivo XML NF-e:' + #13 + Trim(IbDtstTabelaXML_NFE_FILENAME.AsString));
   end;
 end;
 

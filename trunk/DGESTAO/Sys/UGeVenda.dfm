@@ -5038,4 +5038,27 @@ inherited frmGeVenda: TfrmGeVenda
     Left = 1056
     Top = 272
   end
+  object popupAuditoria: TPopupMenu
+    Left = 60
+    Top = 313
+    object nmPpLimparDadosNFe: TMenuItem
+      Caption = 'Limpar LOG de Envio de NF-e'
+      Enabled = False
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object nmPpReciboNFe: TMenuItem
+      Caption = '&1. Visualizar Recibo da NF-e'
+      OnClick = nmPpReciboNFeClick
+    end
+    object nmPpChaveNFe: TMenuItem
+      Caption = '&2. Visualizar Chave da NF-e'
+      OnClick = nmPpChaveNFeClick
+    end
+    object nmPpArquivoNFe: TMenuItem
+      Caption = '&3. Visualizar Nome do Arquivo NF-e'
+      OnClick = nmPpArquivoNFeClick
+    end
+  end
 end

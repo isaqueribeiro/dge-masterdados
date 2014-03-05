@@ -870,3 +870,125 @@ end^
 
 SET TERM ; ^
 
+
+
+
+/*------ SYSDBA 05/03/2014 19:05:20 --------*/
+
+ALTER TABLE TBCFOP
+    ADD CFOP_CST_PADRAO_ENTRADA DMN_VCHAR_03,
+    ADD CFOP_CST_PADRAO_SAIDA DMN_VCHAR_03;
+
+COMMENT ON COLUMN TBCFOP.CFOP_CST_PADRAO_ENTRADA IS
+'CST Padrao para Entrada de Produtos';
+
+COMMENT ON COLUMN TBCFOP.CFOP_CST_PADRAO_SAIDA IS
+'CST Padrao para Saida de Produtos';
+
+
+
+
+/*------ SYSDBA 05/03/2014 19:24:11 --------*/
+
+SET TERM ^ ;
+
+create or alter procedure GET_CST_NORMAL
+returns (
+    CODIGO varchar(3),
+    DESCRICAO varchar(250),
+    DESCRICAO_FULL varchar(250))
+as
+declare variable CODIGO_TMP varchar(1);
+declare variable DESCRI_TMP varchar(50);
+begin
+  for
+    Select
+        o.orp_cod
+      , o.orp_descricao
+    from TBORIGEMPROD o
+    Into
+        codigo_tmp
+      , descri_tmp
+  do
+  begin
+
+    for
+      Select
+          t.tpt_cod
+        , t.tpt_descricao
+      from TBTRIBUTACAO_TIPO t
+      where t.crt = 0
+      Into
+          Codigo
+        , Descricao
+    do
+    begin
+
+      Codigo    = Trim(:codigo_tmp)    || Trim(:Codigo);
+      Descricao = Trim(:Descricao) || ' (' || Trim(:descri_tmp) || ')';
+
+      Descricao_Full = :Codigo || ' - ' || :Descricao;
+
+      suspend;
+
+    end 
+
+  end 
+end ^
+
+SET TERM ; ^
+
+GRANT EXECUTE ON PROCEDURE GET_CST_NORMAL TO "PUBLIC";
+
+
+
+/*------ SYSDBA 05/03/2014 19:26:41 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER procedure GET_CST_NORMAL
+returns (
+    CODIGO varchar(3),
+    DESCRICAO varchar(250),
+    DESCRICAO_FULL varchar(250))
+as
+declare variable CODIGO_TMP varchar(1);
+declare variable DESCRI_TMP varchar(50);
+begin
+  for
+    Select
+        o.orp_cod
+      , o.orp_descricao
+    from TBORIGEMPROD o
+    Into
+        codigo_tmp
+      , descri_tmp
+  do
+  begin
+
+    for
+      Select
+          t.tpt_cod
+        , t.tpt_descricao
+      from TBTRIBUTACAO_TIPO t
+      where t.crt = 0
+      Into
+          Codigo
+        , Descricao
+    do
+    begin
+
+      Codigo    = Trim(:codigo_tmp) || Trim(:Codigo);
+      Descricao = Trim(:Descricao) || ' (' || Trim(:descri_tmp) || ')';
+
+      Descricao_Full = :Codigo || ' - ' || :Descricao;
+
+      suspend;
+
+    end 
+
+  end 
+end^
+
+SET TERM ; ^
+
