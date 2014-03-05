@@ -3625,6 +3625,11 @@ end;
 function TDMNFe.ConsultarChaveNFeACBr(const sCNPJEmitente, sChave: String;
   var iSerieNFe, iNumeroNFe, iTipoNFe : Integer; var DestinatarioNFE, FileNameXML, ChaveNFE,
   ProtocoloNFE : String; var DataEmissao : TDateTime; const Imprimir: Boolean): Boolean;
+var
+  NomeArq : String;
+const
+  TERMINATE_FILENAME     = '-nfe.xml';
+  TERMINATE_FILENAME_NEW = '-procNfe.xml';
 begin
   try
 
@@ -3633,15 +3638,46 @@ begin
     with ACBrNFe do
     begin
 
-      WebServices.Consulta.NFeChave := sChave;
-      Result := WebServices.Consulta.Executar;
+      if FileExists(FileNameXML) then
+      begin
+
+        // Consultar pelo Arquivo NF-e
+
+        NotasFiscais.Clear;
+        NotasFiscais.LoadFromFile(FileNameXML);
+        Result := ACBrNFe.Consultar;
+
+        // (INICIO) Adicionando TAG de Protocolo no Arquivo
+        if Result then
+        begin
+          NomeArq := FileNameXML;
+
+          if ( Pos(AnsiUpperCase('-nfe.xml'),UpperCase(NomeArq)) > 0 ) then
+             NomeArq := StringReplace(NomeArq, TERMINATE_FILENAME, TERMINATE_FILENAME_NEW, [rfIgnoreCase]);
+
+          NotasFiscais.Items[0].SaveToFile(NomeArq);
+
+          FileNameXML := NomeArq;
+        end;
+        // (FINAL) Adicionando TAG de Protocolo no Arquivo
+
+      end
+      else
+      begin
+
+        // Consultar pela Chave NF-e
+
+        WebServices.Consulta.NFeChave := sChave;
+        Result := WebServices.Consulta.Executar;
+
+      end;
 
       if Result then
       begin
 
         ChaveNFE     := WebServices.Consulta.NFeChave;
         ProtocoloNFE := WebServices.Consulta.Protocolo;
-
+(*
         if DownloadNFeACBr(sCNPJEmitente, DestinatarioNFE, ChaveNFE, FileNameXML) then
         begin
           NotasFiscais.Clear;
@@ -3667,7 +3703,7 @@ begin
           NotasFiscais.ImprimirPDF
 
         end;
-
+*)
       end;
 
     end;
