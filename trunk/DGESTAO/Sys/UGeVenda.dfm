@@ -4423,25 +4423,33 @@ inherited frmGeVenda: TfrmGeVenda
     Left = 24
     Top = 312
     object nmImprimirVenda: TMenuItem
-      Caption = 'Or'#231'amento / Venda'
+      Caption = '&Or'#231'amento / Venda'
       OnClick = ImprimirOrcamentoClick
     end
     object nmGerarImprimirBoletos: TMenuItem
-      Caption = 'Gerar / Imprimir Boletos'
+      Caption = 'Gerar / Imprimir &Boletos'
       OnClick = nmGerarImprimirBoletosClick
     end
     object N1: TMenuItem
       Caption = '-'
     end
     object nmImprimirDANFE: TMenuItem
-      Caption = 'Imprimir DANFE'
+      Caption = 'Imprimir &DANFE'
       Enabled = False
       OnClick = nmImprimirDANFEClick
     end
     object nmGerarDANFEXML: TMenuItem
-      Caption = 'Gerar/Salvar XML da NF-e'
+      Caption = '&Gerar/Salvar XML da NF-e'
       Enabled = False
       OnClick = nmImprimirDANFEClick
+    end
+    object N3: TMenuItem
+      Caption = '-'
+    end
+    object nmEnviarEmailCliente: TMenuItem
+      Caption = '&Enviar E-mail para o Cliente'
+      Enabled = False
+      OnClick = nmEnviarEmailClienteClick
     end
   end
   object qryNFE: TIBDataSet

@@ -538,6 +538,9 @@ type
       var iSerieNFe, iNumeroNFe  : Integer; var FileNameXML, ChaveNFE : String;
       const Imprimir : Boolean = TRUE) : Boolean;
 
+    function EnviarEmailDANFEACBr(const sCNPJEmitente : String; iCodigoCliente : Integer; const iAnoVenda, iNumVenda : Integer;
+      const EnviarPDF : Boolean = True; const sArquivoBoleto : String = '') : Boolean;
+
     function InutilizaNumeroNFeACBr(const sCNPJEmitente : String; iAno, iModelo, iSerie, iNumeroInicial, iNumeroFinal : Integer; const sJustificativa : String; var sRetorno : String) : Boolean;
     function ConsultarNumeroLoteNFeACBr(const sCNPJEmitente : String; sNumeroRecibo : String; var sChaveNFe, sProtocolo, sRetorno : String) : Boolean;
     function ConsultarChaveNFeACBr(const sCNPJEmitente, sChave : String;
@@ -2479,6 +2482,127 @@ begin
 
 end;
 
+function TDMNFe.EnviarEmailDANFEACBr(const sCNPJEmitente : String; iCodigoCliente : Integer; const iAnoVenda, iNumVenda : Integer;
+  const EnviarPDF : Boolean = True; const sArquivoBoleto : String = '') : Boolean;
+var
+  sFileNameXML      ,
+  sEmailAssunto     ,
+  sEmailEmpresa     ,
+  sEmailDestinatario,
+  sMensagem  ,
+  sDocumento : String;
+  sAssinaturaHtml ,
+  sAssinaturaTxt  : String;
+  sANX,
+  sMSG,
+  sCC : TStringList;
+const
+  MSG_REF_NFE = 'Referente a NF-e %s';
+  MSG_REF_DOC = 'Referente a venda No. %s';
+begin
+
+  try
+
+    sANX := TStringList.Create;
+    sMSG := TStringList.Create;
+    sCC  := TStringList.Create;
+
+    try
+
+      LerConfiguracao( sCNPJEmitente );
+
+      AbrirEmitente( sCNPJEmitente );
+      AbrirDestinatario( iCodigoCliente );
+      AbrirVenda( iAnoVenda, iNumVenda );
+
+      if ( EnviarPDF ) then
+        sFileNameXML := ExtractFilePath( ParamStr(0) ) + DIRECTORY_CLIENT + qryCalculoImportoXML_NFE_FILENAME.AsString
+      else
+        sFileNameXML := ExtractFilePath( ParamStr(0) ) + DIRECTORY_PRINT  + qryCalculoImportoXML_NFE_FILENAME.AsString;
+
+      ForceDirectories( ExtractFilePath(sFileNameXML) );
+
+      qryCalculoImportoXML_NFE.SaveToFile( sFileNameXML );
+
+      CorrigirXML_NFe( sFileNameXML );
+
+      if not FilesExists(sFileNameXML) then
+        raise Exception.Create(Format('Arquivo %s não encontrado.', [QuotedStr(sFileNameXML)]));
+
+      with ACBrNFe do
+      begin
+        NotasFiscais.Clear;
+        NotasFiscais.LoadFromFile( sFileNameXML );
+
+        // Montar identificação do documento para título de e-mail
+
+        if ( qryCalculoImportoNFE.AsLargeInt > 0 ) then
+        begin
+          sMensagem  := Format(MSG_REF_NFE, [FormatFloat('###0000000', qryCalculoImportoNFE.AsLargeInt)]);
+          sDocumento := 'NFe ' + FormatFloat('###0000000', qryCalculoImportoNFE.AsLargeInt) + '-' + qryCalculoImportoSERIE.AsString;
+        end
+        else
+        begin
+          sMensagem  := Format(MSG_REF_DOC, [qryCalculoImportoANO.AsString + '/' + FormatFloat('##00000', qryCalculoImportoCODCONTROL.AsInteger)]);
+          sDocumento := 'Venda ' + qryCalculoImportoANO.AsString + '/' + FormatFloat('##00000', qryCalculoImportoCODCONTROL.AsInteger);
+        end;
+
+        CarregarConfiguracoesEmpresa(sCNPJEmitente, sEmailAssunto, sAssinaturaHtml, sAssinaturaTxt);
+
+        sEmailEmpresa      := GetEmailEmpresa( sCNPJEmitente );
+        sEmailDestinatario := GetClienteEmail( iCodigoCliente );
+        sEmailAssunto      := GetNomeFantasiaEmpresa( sCNPJEmitente ) + ' - ' + sDocumento;
+
+        sCC.Add( sEmailEmpresa );
+
+        sMSG.Add( sMensagem );
+        sMSG.Add('');
+        sMSG.Add( sAssinaturaTxt );
+        sMSG.Add('--');
+        sMSG.Add('FAVOR NÃO RESPONDER ESTE E-MAIL.');
+        sMSG.Add('Composição automática de e-mail executada pelo sistema ' + GetProductName + ' (Versão ' + GetVersion +
+          '), desenvolvido pela empresa ' + GetCompanyName + '.' + #13#13 + GetCopyright);
+
+        if FileExists( sArquivoBoleto ) then
+          sANX.Add( sArquivoBoleto );
+
+        NotasFiscais.Items[0].EnviarEmail(
+            gContaEmail.Servidor_SMTP
+          , IntToStr(gContaEmail.Porta_SMTP)
+          , gContaEmail.Conta
+          , gContaEmail.Senha
+          , gContaEmail.Conta
+          , sEmailDestinatario
+          , sEmailAssunto
+          , sMSG
+          , gContaEmail.ConexaoSeguraSSL // SSL - Conexão Segura
+          , EnviarPDF                    // Enviar PDF junto
+          , sCC                          // Lista com emails que serão enviado cópias - TStrings
+          , sANX                         // Lista de anexos - TStrings
+          , False                        // Pede confirmação de leitura do email
+          , False                        // Aguarda Envio do Email(não usa thread)
+          , GetNomeFantasiaEmpresa( sCNPJEmitente ) // Nome do Rementente
+          , gContaEmail.ConexaoSeguraSSL );         // Auto TLS
+
+        Result := True;
+      end;
+
+    except
+      On E : Exception do
+      begin
+        ShowError('Erro ao tentar enviar para o cliente por e-mail o DANFE de Saída.' + #13#13 + 'EnviarEmailDANFEACBr() --> ' + e.Message);
+        Result := False;
+      end;
+    end;
+
+  finally
+    sANX.Free;
+    sMSG.Free;
+    sCC.Free;
+  end;
+
+end;
+
 procedure TDMNFe.GerarNFEEntradaACBr(const sCNPJEmitente : String; const iCodFornecedor : Integer; const iAnoCompra, iNumCompra : Integer;
   var DtHoraEmiss : TDateTime; var iSerieNFe, iNumeroNFe : Integer; var FileNameXML : String);
 begin
@@ -3771,6 +3895,7 @@ begin
   CarregarConfiguracoesEmpresa(sCNPJEmitente, sAssunto, sAssinaturaHtml, sAssinaturaTxt);
 
   // Configurar conta de e-mail no Fast Report
+  
   with frxMailExport do
   begin
     SmtpHost := gContaEmail.Servidor_SMTP;
@@ -3779,7 +3904,7 @@ begin
     Password := gContaEmail.Senha;
 
     FromCompany := GetRazaoSocialEmpresa( sCNPJEmitente );
-    FromMail    := gContaEmail.Conta; // GetEmailEmpresa( sCNPJEmitente );
+    FromMail    := gContaEmail.Conta;
     FromName    := GetNomeFantasiaEmpresa( sCNPJEmitente );
     Subject     := Trim(sAssunto);
     Address     := AnsiLowerCase(Trim(sDestinatario));
