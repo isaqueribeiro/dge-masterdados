@@ -150,6 +150,8 @@ var
   procedure SetRotinaSistema(iTipo : Smallint; sCodigo, sDescricao, sRotinaPai : String);
 
   function DelphiIsRunning : Boolean;
+  function GetDirectoryTempApp : String;
+
   function ShowConfirm(sMsg : String; const sTitle : String = ''; const DefaultButton : Integer = MB_DEFBUTTON2) : Boolean;
   function GetPaisIDDefault : String;
   function GetEstadoIDDefault : Integer;
@@ -852,6 +854,14 @@ function DelphiIsRunning : Boolean;
 begin
   // Verifica se o programa rodou a partir do IDE do Delphi7:
   Result := DebugHook <> 0;
+end;
+
+function GetDirectoryTempApp : String;
+begin
+  Result := ExtractFilePath(ParamStr(0)) + 'Temp\';
+
+  if not DirectoryExists(Result) then
+    ForceDirectories(Result);
 end;
 
 function ShowConfirm(sMsg : String; const sTitle : String = ''; const DefaultButton : Integer = MB_DEFBUTTON2) : Boolean;

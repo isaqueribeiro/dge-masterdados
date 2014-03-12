@@ -217,7 +217,8 @@ const
   procedure GerarBoleto(const AOwer : TComponent); overload;
   procedure GerarBoleto(const AOwer : TComponent; const NomeCliente : String; const iCodigoCliente : Integer; iAno, iVenda : Integer); overload;
 
-  function ReImprimirBoleto(const AOwer : TComponent; sNomeCliente : String; iCodigoCliente, iAno, iVenda, iBanco : Integer) : Boolean;
+  function ReImprimirBoleto(const AOwer : TComponent; sNomeCliente : String; iCodigoCliente, iAno, iVenda, iBanco : Integer;
+    var sFileNamePDF : String; const SomenteGerarPDF : Boolean = FALSE) : Boolean;
 
 implementation
 
@@ -267,7 +268,8 @@ begin
   end;
 end;
 
-function ReImprimirBoleto(const AOwer : TComponent; sNomeCliente : String; iCodigoCliente, iAno, iVenda, iBanco : Integer) : Boolean;
+function ReImprimirBoleto(const AOwer : TComponent; sNomeCliente : String; iCodigoCliente, iAno, iVenda, iBanco : Integer;
+  var sFileNamePDF : String; const SomenteGerarPDF : Boolean = FALSE) : Boolean;
 var
   f : TfrmGeGerarBoleto;
   INossoNum ,
@@ -276,7 +278,9 @@ var
   sCarteira : String;
   bReturn   : Boolean;
 begin
-  bReturn := False;
+  bReturn      := False;
+  sFileNamePDF := GetDirectoryTempApp + FormatFloat('0000"."', iAno) + FormatFloat('##000000".pdf"', iVenda);
+
   try
     f := TfrmGeGerarBoleto.Create(AOwer);
 
@@ -316,7 +320,13 @@ begin
 
             {$IFDEF ACBR}
             if ( InserirBoletoACBr(INossoNum, False) ) then
-              ACBrBoleto.Imprimir;
+              if SomenteGerarPDF then
+              begin
+                ACBrBoleto.ACBrBoletoFC.NomeArquivo := sFileNamePDF;
+                ACBrBoleto.ACBrBoletoFC.GerarPDF;
+              end
+              else
+                ACBrBoleto.Imprimir;
             {$ELSE}
             if ( InserirBoleto( CobreBemX ) ) then
               CobreBemX.ImprimeBoletos;

@@ -332,6 +332,8 @@ type
     nmPpArquivoNFe: TMenuItem;
     N2: TMenuItem;
     nmPpLimparDadosNFe: TMenuItem;
+    N3: TMenuItem;
+    nmEnviarEmailCliente: TMenuItem;
     procedure ImprimirOpcoesClick(Sender: TObject);
     procedure ImprimirOrcamentoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -389,6 +391,7 @@ type
     procedure nmPpChaveNFeClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure nmPpArquivoNFeClick(Sender: TObject);
+    procedure nmEnviarEmailClienteClick(Sender: TObject);
   private
     { Private declarations }
     sGeneratorName : String;
@@ -408,12 +411,14 @@ type
     procedure GetComprasAbertas(iCodigoCliente : Integer);
     procedure ZerarFormaPagto;
     procedure RecarregarRegistro;
+    procedure GravarEmailCliente(iCliente : Integer; sEmail : String);
 
     function ValidarQuantidade(Codigo : Integer; Quantidade : Integer) : Boolean;
     function PossuiTitulosPagos(AnoVenda : Smallint; NumVenda : Integer) : Boolean;
     function GetTotalValorFormaPagto : Currency;
     function GetTotalValorFormaPagto_APrazo : Currency;
     function GetGerarEstoqueCliente : Integer;
+    function BoletosGerados : Boolean;
   public
     { Public declarations }
   end;
@@ -429,7 +434,7 @@ const
 implementation
 
 uses
-  UDMBusiness, UGeCliente, UGeCondicaoPagto, UGeProduto, UGeTabelaCFOP,
+  UDMBusiness, UFuncoes, UGeCliente, UGeCondicaoPagto, UGeProduto, UGeTabelaCFOP,
   DateUtils, UDMNFe, UGeVendaGerarNFe, SysConst, UGeVendaCancelar,
   UGeGerarBoletos, UGeEfetuarPagtoREC, UGeVendaFormaPagto, UConstantesDGE, UGeVendaTransporte, UGeVendaConfirmaTitulos;
 
@@ -855,8 +860,9 @@ begin
 
     nmGerarImprimirBoletos.Enabled := (not qryTitulos.IsEmpty) and (IbDtstTabelaSTATUS.AsInteger < STATUS_VND_CAN);
 
-    nmImprimirDANFE.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
-    nmGerarDANFEXML.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
+    nmImprimirDANFE.Enabled      := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
+    nmGerarDANFEXML.Enabled      := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
+    nmEnviarEmailCliente.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
   end
   else
   begin
@@ -868,8 +874,9 @@ begin
 
     nmGerarImprimirBoletos.Enabled := (not qryTitulos.IsEmpty) and (IbDtstTabelaSTATUS.AsInteger < STATUS_VND_CAN);
 
-    nmImprimirDANFE.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
-    nmGerarDANFEXML.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
+    nmImprimirDANFE.Enabled      := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
+    nmGerarDANFEXML.Enabled      := (IbDtstTabelaSTATUS.AsInteger = STATUS_VND_NFE);
+    nmEnviarEmailCliente.Enabled := False;
   end;
 end;
 
@@ -2293,7 +2300,7 @@ begin
 end;
 
 procedure TfrmGeVenda.nmGerarImprimirBoletosClick(Sender: TObject);
-
+(*
   function BoletosGerados : Boolean;
   begin
     with DMBusiness, qryBusca do
@@ -2312,13 +2319,14 @@ procedure TfrmGeVenda.nmGerarImprimirBoletosClick(Sender: TObject);
       Close;
     end;
   end;
-
+*)
 var
   bExisteTitulo,
   bProsseguir  : Boolean;
   sDestinatario,
   sMensagem    ,
-  sDocumento   : String;
+  sDocumento   ,
+  sFileNamePDF : String;
 const
   MSG_REF_NFE = 'Referente a NF-e %s';
   MSG_REF_DOC = 'Referente a venda No. %s';
@@ -2330,6 +2338,7 @@ begin
     Exit;
 
   // Montar identificação do documento para título de e-mail
+
   if ( IbDtstTabelaNFE.AsLargeInt > 0 ) then
   begin
     sMensagem  := Format(MSG_REF_NFE, [FormatFloat('###0000000', IbDtstTabelaNFE.AsLargeInt)]);
@@ -2340,6 +2349,7 @@ begin
     sMensagem  := Format(MSG_REF_DOC, [IbDtstTabelaANO.AsString + '/' + FormatFloat('##00000', IbDtstTabelaCODCONTROL.AsInteger)]);
     sDocumento := 'Venda ' + IbDtstTabelaANO.AsString + '/' + FormatFloat('##00000', IbDtstTabelaCODCONTROL.AsInteger);
   end;
+
   sDestinatario := GetClienteEmail(IbDtstTabelaCODCLIENTE.AsInteger);
 
   DMNFe.ConfigurarEmail(IbDtstTabelaCODEMP.AsString, sDestinatario, 'Boleta Bancária - ' + sDocumento, sMensagem);
@@ -2347,7 +2357,7 @@ begin
   if BoletosGerados then
   begin
     ReImprimirBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLIENTE.AsInteger,
-      IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, qryTitulosCODBANCO.AsInteger);
+      IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, qryTitulosCODBANCO.AsInteger, sFileNamePDF);
     Exit;
   end;
 
@@ -2381,7 +2391,7 @@ begin
       ShowWarning('Não existem títulos com boletos gerados para o movimento de venda.')
     else
       ReImprimirBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLIENTE.AsInteger,
-        IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, qryTitulosCODBANCO.AsInteger);
+        IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, qryTitulosCODBANCO.AsInteger, sFileNamePDF);
   finally
     qryTitulos.Filter   := EmptyStr;
     qryTitulos.Filtered := False;
@@ -2518,6 +2528,99 @@ begin
 
     Clipboard.AsText := Trim(IbDtstTabelaXML_NFE_FILENAME.AsString);
     ShowInformation('Dados NF-e', 'Nome do Arquivo XML NF-e:' + #13 + Trim(IbDtstTabelaXML_NFE_FILENAME.AsString));
+  end;
+end;
+
+procedure TfrmGeVenda.nmEnviarEmailClienteClick(Sender: TObject);
+var
+  bExisteTitulo,
+  bProsseguir  : Boolean;
+  sDestinatario,
+  sMensagem    ,
+  sDocumento   ,
+  sFileNamePDF : String;
+const
+  MSG_REF_NFE = 'Referente a NF-e %s';
+  MSG_REF_DOC = 'Referente a venda No. %s';
+begin
+  if IbDtstTabela.IsEmpty then
+    Exit;
+
+  if (IbDtstTabela.State in [dsEdit, dsInsert]) then
+    Exit;
+
+  // Montar identificação do documento para título de e-mail
+
+  if ( IbDtstTabelaNFE.AsLargeInt > 0 ) then
+  begin
+    sMensagem  := Format(MSG_REF_NFE, [FormatFloat('###0000000', IbDtstTabelaNFE.AsLargeInt)]);
+    sDocumento := 'NFe ' + FormatFloat('###0000000', IbDtstTabelaNFE.AsLargeInt) + '-' + IbDtstTabelaSERIE.AsString;
+  end
+  else
+  begin
+    sMensagem  := Format(MSG_REF_DOC, [IbDtstTabelaANO.AsString + '/' + FormatFloat('##00000', IbDtstTabelaCODCONTROL.AsInteger)]);
+    sDocumento := 'Venda ' + IbDtstTabelaANO.AsString + '/' + FormatFloat('##00000', IbDtstTabelaCODCONTROL.AsInteger);
+  end;
+
+  sDestinatario := GetClienteEmail(IbDtstTabelaCODCLIENTE.AsInteger);
+
+  if not InputQuery('E-mail do Cliente:', 'Favor informar/confirmar e-mail do cliente para onde os arquivos (Boleto(s) e NF-e) serão enviados:', sDestinatario) then
+    Exit
+  else
+    GravarEmailCliente( IbDtstTabelaCODCLIENTE.AsInteger, sDestinatario );
+
+  DMNFe.ConfigurarEmail(IbDtstTabelaCODEMP.AsString, sDestinatario, 'Boleta Bancária - ' + sDocumento, sMensagem);
+
+  // 1. Gerar PDF dos Boletos existentes da venda
+
+  if BoletosGerados then
+    ReImprimirBoleto(Self, dbCliente.Text, IbDtstTabelaCODCLIENTE.AsInteger,
+      IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, qryTitulosCODBANCO.AsInteger, sFileNamePDF, True);
+
+
+  // 2. Gerar XML/PDF da NF-e e enviar por e-mail
+
+  if DMNFe.EnviarEmailDANFEACBr( IbDtstTabelaCODEMP.AsString, IbDtstTabelaCODCLIENTE.AsInteger, IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, True, sFileNamePDF) then
+    ShowInformation('Envio', 'Arquivos referentes a NF-e da venda enviados com sucesso.');
+end;
+
+procedure TfrmGeVenda.GravarEmailCliente(iCliente: Integer;
+  sEmail: String);
+begin
+  sEmail := AnsiLowerCase( Trim(sEmail) );
+
+  if (iCliente = 0) or (sEmail = EmptyStr) then
+    Exit;
+
+  if GetEmailValido(sEmail, False) then
+    with DMBusiness, qryBusca do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('Update TBCLIENTE Set email = ' + QuotedStr(sEmail));
+      SQL.Add('where codigo = ' + IntToStr(iCliente));
+      ExecSQL;
+
+      CommitTransaction;
+    end;
+end;
+
+function TfrmGeVenda.BoletosGerados: Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select b.nossonumero from TBCONTREC b');
+    SQL.Add('where b.cliente  = ' + IbDtstTabelaCODCLIENTE.AsString);
+    SQL.Add('  and b.anovenda = ' + IbDtstTabelaANO.AsString);
+    SQL.Add('  and b.numvenda = ' + IbDtstTabelaCODCONTROL.AsString);
+    SQL.Add('  and b.codbanco > 0');
+    Open;
+
+    Result := (Trim(FieldByName('nossonumero').AsString) <> EmptyStr);
+
+    Close;
   end;
 end;
 
