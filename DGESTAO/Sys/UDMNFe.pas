@@ -542,7 +542,8 @@ type
       const EnviarPDF : Boolean = True; const sArquivoBoleto : String = '') : Boolean;
 
     function InutilizaNumeroNFeACBr(const sCNPJEmitente : String; iAno, iModelo, iSerie, iNumeroInicial, iNumeroFinal : Integer; const sJustificativa : String; var sRetorno : String) : Boolean;
-    function ConsultarNumeroLoteNFeACBr(const sCNPJEmitente : String; sNumeroRecibo : String; var sChaveNFe, sProtocolo, sRetorno : String) : Boolean;
+    function ConsultarNumeroLoteNFeACBr(const sCNPJEmitente : String; sNumeroRecibo : String;
+      var sChaveNFe, sProtocolo, sRetorno : String; var dDHEnvio : TDateTime) : Boolean;
     function ConsultarChaveNFeACBr(const sCNPJEmitente, sChave : String;
       var iSerieNFe, iNumeroNFe, iTipoNFe : Integer; var DestinatarioNFE, FileNameXML, ChaveNFE, ProtocoloNFE : String;
       var DataEmissao : TDateTime; const Imprimir : Boolean = TRUE) : Boolean;
@@ -3685,10 +3686,13 @@ begin
 end;
 
 function TDMNFe.ConsultarNumeroLoteNFeACBr(const sCNPJEmitente: String;
-  sNumeroRecibo: String; var sChaveNFe, sProtocolo, sRetorno: String): Boolean;
+  sNumeroRecibo: String; var sChaveNFe, sProtocolo, sRetorno: String; var dDHEnvio : TDateTime): Boolean;
 var
+  sTextoRetorno : TStringList;
   bReturn : Boolean;
 begin
+  sTextoRetorno := TStringList.Create;
+
   try
 
     try
@@ -3713,23 +3717,25 @@ begin
         begin
           sChaveNFe  := WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].chNFe;
           sProtocolo := WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].nProt;
+          dDHEnvio   := WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].dhRecbto;
         end;
 
         if ( WebServices.Recibo.NFeRetorno.ProtNFe.Count = 1 ) then
         begin
-          sRetorno :=
-            'Ambiente:    ' + IntToStr( Ord(WebServices.Recibo.NFeRetorno.tpAmb) ) + #13 +
-            'Versão App.: ' + WebServices.Recibo.NFeRetorno.verAplic               + #13 +
-            'Status Trn.: ' + IntToStr(WebServices.Recibo.NFeRetorno.cStat)        + #13 +
-            '---'     + #13 +
-            'Emitente:    ' + sCNPJEmitente + #13 +
-            'Chave NF-e:  ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].chNFe   + #13 +
-            'Motivo:      ' + WebServices.Recibo.NFeRetorno.xMotivo + #13 +
-            '             ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].xMotivo + #13 +
-            'Mensagem:    ' + WebServices.Recibo.NFeRetorno.xMsg    + #13 +
-            '---'     + #13 +
-            'Data Recibo: ' + FormatDateTime('dd/mm/yyyy', WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].dhRecbto) + #13 +
-            'Protocolo:   ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].nProt;
+          sTextoRetorno.Add( 'Ambiente    : ' + IntToStr( Ord(WebServices.Recibo.NFeRetorno.tpAmb) ) );
+          sTextoRetorno.Add( 'Versão App. : ' + WebServices.Recibo.NFeRetorno.verAplic );
+          sTextoRetorno.Add( 'Status Trn. : ' + IntToStr(WebServices.Recibo.NFeRetorno.cStat) + ' - ' + WebServices.Recibo.NFeRetorno.xMotivo );
+          sTextoRetorno.Add( '---' );
+          sTextoRetorno.Add( 'Emitente    : ' + sCNPJEmitente );
+          sTextoRetorno.Add( 'Chave NF-e  : ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].chNFe );
+          sTextoRetorno.Add( 'Motivo      : ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].xMotivo );
+          sTextoRetorno.Add( 'Mensagem    : ' + WebServices.Recibo.NFeRetorno.xMsg );
+          sTextoRetorno.Add( '---' );
+          sTextoRetorno.Add( 'Nro. Recibo : ' + WebServices.Recibo.NFeRetorno.nRec );
+          sTextoRetorno.Add( 'Data Recibo : ' + FormatDateTime('dd/mm/yyyy', WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].dhRecbto) );
+          sTextoRetorno.Add( 'Protocolo   : ' + WebServices.Recibo.NFeRetorno.ProtNFe.Items[0].nProt );
+
+          sRetorno := sTextoRetorno.Text;
         end;
       end;
 
@@ -3742,6 +3748,7 @@ begin
     end;
 
   finally
+    sTextoRetorno.Free;
     Result := bReturn;
   end;
 end;
@@ -3776,7 +3783,7 @@ begin
         begin
           NomeArq := FileNameXML;
 
-          if ( Pos(AnsiUpperCase('-nfe.xml'),UpperCase(NomeArq)) > 0 ) then
+          if ( Pos(AnsiUpperCase(TERMINATE_FILENAME),UpperCase(NomeArq)) > 0 ) then
              NomeArq := StringReplace(NomeArq, TERMINATE_FILENAME, TERMINATE_FILENAME_NEW, [rfIgnoreCase]);
 
           NotasFiscais.Items[0].SaveToFile(NomeArq);
@@ -3800,7 +3807,7 @@ begin
       begin
 
         ChaveNFE     := WebServices.Consulta.NFeChave;
-        ProtocoloNFE := WebServices.Consulta.Protocolo;
+        ProtocoloNFE := WebServices.Consulta.Protocolo; 
 (*
         if DownloadNFeACBr(sCNPJEmitente, DestinatarioNFE, ChaveNFE, FileNameXML) then
         begin
