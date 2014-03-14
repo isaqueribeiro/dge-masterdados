@@ -127,6 +127,7 @@ type
     nmConsultarLoteNFe: TMenuItem;
     VeculoMovimentao1: TMenuItem;
     Minimo1: TMenuItem;
+    nmGerarArquivoNFC: TMenuItem;
     EAP: TEvAppProtect;
     procedure btnEmpresaClick(Sender: TObject);
     procedure btnClienteClick(Sender: TObject);
@@ -187,6 +188,7 @@ type
     procedure nmConsultarLoteNFeClick(Sender: TObject);
     procedure VeculoMovimentao1Click(Sender: TObject);
     procedure Minimo1Click(Sender: TObject);
+    procedure nmGerarArquivoNFCClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -652,6 +654,11 @@ begin
   Application.CreateForm(TfrmRelEstoqMinimo, frmRelEstoqMinimo);
   frmRelEstoqMinimo.ShowModal;
   frmRelEstoqMinimo.Destroy;
+end;
+
+procedure TfrmPrinc.nmGerarArquivoNFCClick(Sender: TObject);
+begin
+  FormFunction.ShowModalForm(Self, 'frmGeExportarNFC');
 end;
 
 end.
