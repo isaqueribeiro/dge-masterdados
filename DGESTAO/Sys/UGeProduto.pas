@@ -236,9 +236,9 @@ type
     lblNVE: TLabel;
     dbNVE: TDBEdit;
     IbDtstTabelaCODIGO_NVE: TIBStringField;
-    IbDtstTabelaPRECO_FRAC: TFloatField;
-    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField;
-    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField;
+    IbDtstTabelaPRECO_FRAC: TFMTBCDField;
+    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField;
+    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);

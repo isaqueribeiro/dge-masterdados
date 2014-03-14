@@ -2794,6 +2794,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
     end
   end
   inherited IbDtstTabela: TIBDataSet
+    AfterScroll = IbDtstTabelaAfterScroll
     BeforeCancel = IbDtstTabelaBeforeCancel
     OnNewRecord = IbDtstTabelaNewRecord
     SelectSQL.Strings = (
@@ -3341,6 +3342,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       'Select'
       '    c.Cfop_cod'
       '  , c.Cfop_descricao'
+      '  , c.Cfop_cst_padrao_entrada'
+      '  , c.Cfop_cst_padrao_saida'
       'from TBCFOP c'
       'where c.Cfop_cod = :Cfop_cod')
     ModifySQL.Strings = (

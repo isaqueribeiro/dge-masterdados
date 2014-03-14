@@ -308,6 +308,7 @@ type
     procedure btbtnListaClick(Sender: TObject);
     procedure nmImprimirDANFEClick(Sender: TObject);
     procedure nmGerarDANFEXMLClick(Sender: TObject);
+    procedure IbDtstTabelaAfterScroll(DataSet: TDataSet);
   private
     { Private declarations }
     SQL_Itens   ,
@@ -411,8 +412,8 @@ begin
   IbDtstTabelaCODEMP.Value  := GetEmpresaIDDefault;
   IbDtstTabelaFORMAPAGTO_COD.Value    := GetFormaPagtoIDDefault;
   IbDtstTabelaCONDICAOPAGTO_COD.Value := GetCondicaoPagtoIDDefault;
-  IbDtstTabelaNFCFOP.Value            := GetCfopIDDefault;
-  IbDtstTabelaCFOP_DESCRICAO.Value    := GetCfopNomeDefault;
+  IbDtstTabelaNFCFOP.Value            := GetCfopEntradaIDDefault;
+  IbDtstTabelaCFOP_DESCRICAO.Value    := GetCfopEntradaNomeDefault;
   IbDtstTabelaNATUREZA.Value          := IntToStr( GetCfopIDDefault );
   IbDtstTabelaSTATUS.Value       := STATUS_CMP_ABR;
   IbDtstTabelaCOMPRA_PRAZO.Value := 0;
@@ -824,6 +825,9 @@ begin
       cdsTabelaItensALIQUOTA_COFINS.AsCurrency       := cAliquotaCOFINS;
       cdsTabelaItensPERCENTUAL_REDUCAO_BC.AsCurrency := cPercRedBC;
 
+      if ( (qryCFOP.FieldByName('Cfop_cst_padrao_entrada').AsString) <> EmptyStr ) then
+        cdsTabelaItensCST.AsString := Trim(qryCFOP.FieldByName('Cfop_cst_padrao_entrada').AsString);
+
       if ( iUnidade > 0 ) then
         cdsTabelaItensUNID_COD.AsInteger := iUnidade;
     end;
@@ -1158,6 +1162,16 @@ begin
   isPDF := ( Sender = nmGerarDANFEXML );
 
   DMNFe.ImprimirDANFEEntradaACBr( IbDtstTabelaCODEMP.AsString, IbDtstTabelaCODFORN.AsInteger, IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger, isPDF);
+end;
+
+procedure TfrmGeEntradaEstoque.IbDtstTabelaAfterScroll(DataSet: TDataSet);
+begin
+  if ( not (IbDtstTabela.State in [dsEdit, dsInsert]) ) then
+  begin
+    qryCFOP.Close;
+    qryCFOP.ParamByName('Cfop_cod').AsInteger := IbDtstTabelaNFCFOP.AsInteger;
+    qryCFOP.Open;
+  end;
 end;
 
 initialization
