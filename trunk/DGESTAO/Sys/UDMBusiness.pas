@@ -157,6 +157,7 @@ var
   function GetEstadoIDDefault : Integer;
   function GetCidadeIDDefault : Integer;
   function GetCfopIDDefault : Integer;
+  function GetCfopEntradaIDDefault : Integer;
   function GetEmpresaIDDefault : String;
   function GetClienteIDDefault : Integer;
   function GetVendedorIDDefault : Integer;
@@ -208,6 +209,7 @@ var
   function GetLogradouroNome(const iLogradouro : Integer) : String;
   function GetLogradouroTipo(const iLogradouro : Integer) : String;
   function GetCfopNomeDefault : String;
+  function GetCfopEntradaNomeDefault : String;
   function GetEmpresaNomeDefault : String;
   function GetClienteNomeDefault : String;
   function GetClienteEmail(const iCodigo : Integer) : String;
@@ -887,6 +889,11 @@ end;
 function GetCfopIDDefault : Integer;
 begin
   Result := FileINI.ReadInteger('Default', 'CfopID', 5102);
+end;
+
+function GetCfopEntradaIDDefault : Integer;
+begin
+  Result := FileINI.ReadInteger('Default', 'CfopEntradaID', GetCfopIDDefault);
 end;
 
 function GetEmpresaIDDefault : String;
@@ -1619,6 +1626,21 @@ begin
     Close;
     SQL.Clear;
     SQL.Add('Select cfop_descricao from TBCFOP where cfop_cod = ' + IntToStr(GetCfopIDDefault));
+    Open;
+
+    Result := FieldByName('cfop_descricao').AsString;
+
+    Close;
+  end;
+end;
+
+function GetCfopEntradaNomeDefault : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select cfop_descricao from TBCFOP where cfop_cod = ' + IntToStr(GetCfopEntradaIDDefault));
     Open;
 
     Result := FieldByName('cfop_descricao').AsString;

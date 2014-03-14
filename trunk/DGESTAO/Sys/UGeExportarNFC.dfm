@@ -205,6 +205,7 @@ inherited frmGeExportarNFC: TfrmGeExportarNFC
       Anchors = [akRight, akBottom]
       Caption = '&Exportar'
       TabOrder = 0
+      OnClick = btnExportarClick
       Glyph.Data = {
         36060000424D3606000000000000360000002800000020000000100000000100
         180000000000000600000000000000000000000000000000000000FF0000FF00
@@ -436,6 +437,36 @@ inherited frmGeExportarNFC: TfrmGeExportarNFC
       FieldName = 'CMP_DESC'
       Origin = '"TBCOMPETENCIA"."CMP_DESC"'
       Size = 50
+    end
+  end
+  object cdsNFC: TIBDataSet
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    ForcedRefresh = True
+    CachedUpdates = True
+    RefreshSQL.Strings = (
+      '')
+    SelectSQL.Strings = (
+      'Select'
+      '    a.tipo'
+      '  , a.linha'
+      
+        'from GET_ARQUIVO_NFC(:data_inicial, :data_final, :tipo_arquivo, ' +
+        ':empresa, :status_venda) a')
+    ModifySQL.Strings = (
+      '')
+    GeneratorField.Field = 'CODCONTROL'
+    Left = 424
+    Top = 80
+    object cdsNFCTIPO: TIBStringField
+      FieldName = 'TIPO'
+      Origin = '"GET_ARQUIVO_NFC"."TIPO"'
+      Size = 2
+    end
+    object cdsNFCLINHA: TIBStringField
+      FieldName = 'LINHA'
+      Origin = '"GET_ARQUIVO_NFC"."LINHA"'
+      Size = 250
     end
   end
 end

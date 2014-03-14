@@ -31,9 +31,13 @@ type
     lblDiretorioExportacao: TLabel;
     Bevel2: TBevel;
     edDiretorioExportacao: TDirectoryEdit;
+    cdsNFC: TIBDataSet;
+    cdsNFCTIPO: TIBStringField;
+    cdsNFCLINHA: TIBStringField;
     procedure FormCreate(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
     procedure MontarPeriodoClick(Sender: TObject);
+    procedure btnExportarClick(Sender: TObject);
   private
     { Private declarations }
     procedure CarregarCompetencias;
@@ -100,8 +104,69 @@ begin
 end;
 
 function TfrmGeExportarNFC.ExportarNFC: Boolean;
+var
+  sArquivo : String;
+  Arquivo  : TStringList;
 begin
-  ;
+  edDiretorioExportacao.Text := Trim(edDiretorioExportacao.Text);
+
+  if Copy(edDiretorioExportacao.Text, Length(edDiretorioExportacao.Text), 1) <> '\' then
+    edDiretorioExportacao.Text := edDiretorioExportacao.Text + '\';
+
+  ForceDirectories(edDiretorioExportacao.Text);
+
+  btnExportar.Enabled := False;
+  btnCancelar.Enabled := False;
+
+  Arquivo  := TStringList.Create;
+  sArquivo := edDiretorioExportacao.Text +
+    GetEmpresaIDDefault + '_' +
+    StringReplace(StringReplace(edCompetencia.Text, '/', '-', [rfReplaceAll]), '\', '-', [rfReplaceAll]) +
+    '.txt';
+
+  try
+
+    try
+      FileINI.WriteString('Exportacao', 'NFC', edDiretorioExportacao.Text);
+      FileINI.UpdateFile;
+
+      lblInforme.Visible := True;
+
+      if cdsNFC.IsEmpty then
+        Exit;
+
+      Arquivo.BeginUpdate;
+
+      cdsNFC.First;
+
+      while not cdsNFC.Eof do
+      begin
+        Application.ProcessMessages;
+        Arquivo.Add( Trim(cdsNFCLINHA.AsString) );
+
+        lblInforme.Caption := Trim(cdsNFCLINHA.AsString) + ' . . .' + #13 +
+          FormatFloat('0.###"%"', (cdsNFC.RecNo / lblInforme.Tag * 100));
+        lblInforme.Update;
+
+        cdsNFC.Next;
+      end;
+
+      Arquivo.SaveToFile(sArquivo);
+
+      Result := FileExists(sArquivo);
+    except
+      On E : Exception do
+      begin
+        lblInforme.Visible := False;
+        Result := False;
+        ShowError('Erro ao tentar gerar arquivos de exportação das Noas Fiscais!' + #13#13 + E.Message);
+      end;
+    end;
+
+  finally
+    btnExportar.Enabled := True;
+    btnCancelar.Enabled := True;
+  end;
 end;
 
 procedure TfrmGeExportarNFC.btnCancelarClick(Sender: TObject);
@@ -126,6 +191,45 @@ end;
 function TfrmGeExportarNFC.GetTipoArquivo: Integer;
 begin
   Result := (GrpBxTipoArquivo.ItemIndex + 1);
+end;
+
+procedure TfrmGeExportarNFC.btnExportarClick(Sender: TObject);
+begin
+  if ( edCompetencia.ItemIndex < 0 ) then
+    ShowWarning('Favor informar a competência!')
+  else
+  if ( Trim(edDiretorioExportacao.Text) = EmptyStr ) then
+    ShowWarning('Favor informa o diretório para a exportação dos arquivos de NFe!')
+  else
+  if ( not DirectoryExists(Trim(edDiretorioExportacao.Text)) ) then
+    ShowWarning('Diretório informado não existe!')
+  else
+    with cdsNFC do
+    begin
+
+      Close;
+
+      ParamByName('data_inicial').AsDate    := edDataInicial.Date;
+      ParamByName('data_final').AsDate      := edDataFinal.Date;
+      ParamByName('tipo_arquivo').AsInteger := TipoArquivo;
+      ParamByName('empresa').AsString       := GetEmpresaIDDefault;
+      ParamByName('status_venda').AsInteger := STATUS_VND_NFE;
+
+      Open;
+
+      Last;
+      lblInforme.Tag := RecordCount;
+
+      if IsEmpty then
+        ShowWarning('Não existem Notas Fiscais Eletrônicas emitidas na competência informada!')
+      else
+      if ShowConfirm('Confirma a exportação das notas encontradas na competência informada?', 'Exportar NFC') then
+        if ExportarNFC then
+        begin
+          ShowInformation('Dados exportados com sucesso!');
+          ModalResult := mrOk;
+        end;
+    end;
 end;
 
 initialization
