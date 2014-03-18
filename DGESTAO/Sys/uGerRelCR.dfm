@@ -2165,7 +2165,6 @@ object frmGerRelCR: TfrmGerRelCR
   object ibqryEmp: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    Active = True
     SQL.Strings = (
       'select CNPJ, NMFANT from TBEMPRESA')
     Left = 128
