@@ -11,7 +11,7 @@ uses
 
   ACBrUtil, pcnConversao, pcnNFeW, pcnNFeRTXT, pcnAuxiliar, ACBrNFeUtil, SHDocVw,
   IBUpdateSQL, IBSQL, frxDesgn, frxRich, frxCross, frxChart, ACBrBase,
-  ACBrBoleto, ACBrBoletoFCFR;
+  ACBrBoleto, ACBrBoletoFCFR, frxExportImage;
 
 type
   TDMNFe = class(TDataModule)
@@ -467,6 +467,7 @@ type
     qryNFeEmitidaEntradaXML_FILE: TMemoField;
     qryNFeEmitidaEntradaLOTE_ANO: TSmallintField;
     qryNFeEmitidaEntradaLOTE_NUM: TIntegerField;
+    frxJPEG: TfrxJPEGExport;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);

@@ -2096,7 +2096,7 @@ object DMNFe: TDMNFe
     TimeOut = 60
     ConfurmReading = False
     Left = 24
-    Top = 312
+    Top = 360
   end
   object qryEmitente: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
@@ -2768,7 +2768,7 @@ object DMNFe: TDMNFe
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     Left = 56
-    Top = 312
+    Top = 360
   end
   object FrECFPooler: TfrxReport
     Version = '4.9.72'
@@ -7994,7 +7994,7 @@ object DMNFe: TDMNFe
   end
   object frxRichObject: TfrxRichObject
     Left = 24
-    Top = 360
+    Top = 408
   end
   object frrRequisicaoCliente: TfrxReport
     Version = '4.9.72'
@@ -9707,11 +9707,11 @@ object DMNFe: TDMNFe
   end
   object frxCrossObject: TfrxCrossObject
     Left = 24
-    Top = 408
+    Top = 456
   end
   object frxChartObject: TfrxChartObject
     Left = 24
-    Top = 456
+    Top = 504
   end
   object cdsLOG: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
@@ -9904,5 +9904,12 @@ object DMNFe: TDMNFe
       Origin = '"TBNFE_ENVIADA"."LOTE_NUM"'
       Required = True
     end
+  end
+  object frxJPEG: TfrxJPEGExport
+    UseFileCache = True
+    ShowProgress = True
+    OverwritePrompt = False
+    Left = 24
+    Top = 312
   end
 end
