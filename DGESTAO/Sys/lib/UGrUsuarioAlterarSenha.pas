@@ -44,6 +44,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -126,6 +127,11 @@ procedure TfrmGrUsuarioAlterarSenha.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   Action := caFree;
+end;
+
+procedure TfrmGrUsuarioAlterarSenha.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 initialization
