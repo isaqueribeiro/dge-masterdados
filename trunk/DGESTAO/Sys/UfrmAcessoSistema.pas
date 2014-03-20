@@ -26,6 +26,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure RegistrarRotinaSistema; override;
   end;
 
 var
@@ -110,6 +111,11 @@ begin
 
     btbtnEntrar.Click;
   end;
+end;
+
+procedure TfrmAcessoSistema.RegistrarRotinaSistema;
+begin
+  ;
 end;
 
 initialization
