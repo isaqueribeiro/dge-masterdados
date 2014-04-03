@@ -45,9 +45,6 @@ type
     ibdtstFornec: TIBDataSet;
     ibdtstAjustEstoqCODPROD: TIBStringField;
     ibdtstAjustEstoqCODFORN: TIntegerField;
-    ibdtstAjustEstoqQTDEATUAL: TIntegerField;
-    ibdtstAjustEstoqQTDENOVA: TIntegerField;
-    ibdtstAjustEstoqQTDEFINAL: TIntegerField;
     ibdtstAjustEstoqMOTIVO: TIBStringField;
     ibdtstAjustEstoqDOC: TIBStringField;
     ibdtstAjustEstoqDTAJUST: TDateTimeField;
@@ -92,6 +89,12 @@ type
     ibdtstUsersALTERAR_SENHA: TSmallintField;
     setSistema: TIBStoredProc;
     setRotina: TIBStoredProc;
+    ibdtstAjustEstoqCONTROLE: TIntegerField;
+    ibdtstAjustEstoqCODEMPRESA: TIBStringField;
+    ibdtstAjustEstoqQTDEATUAL: TIBBCDField;
+    ibdtstAjustEstoqQTDENOVA: TIBBCDField;
+    ibdtstAjustEstoqQTDEFINAL: TIBBCDField;
+    ibdtstAjustEstoqUSUARIO: TIBStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }

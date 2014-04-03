@@ -189,8 +189,6 @@ type
     cdsTabelaItensCODPROD: TIBStringField;
     cdsTabelaItensCODFORN: TIntegerField;
     cdsTabelaItensDTENT: TDateField;
-    cdsTabelaItensQTDEANTES: TIntegerField;
-    cdsTabelaItensQTDEFINAL: TIntegerField;
     cdsTabelaItensPRECOUNIT: TIBBCDField;
     cdsTabelaItensCUSTOMEDIO: TIBBCDField;
     cdsTabelaItensNF: TIntegerField;
@@ -200,10 +198,7 @@ type
     cdsTabelaItensVALOR_OUTROS: TIBBCDField;
     cdsTabelaItensUNID_COD: TSmallintField;
     cdsTabelaItensDESCRI: TIBStringField;
-    cdsTabelaItensESTOQUE: TIntegerField;
     cdsTabelaItensUNP_SIGLA: TIBStringField;
-    cdsTabelaItensTOTAL_BRUTO: TIBBCDField;
-    cdsTabelaItensTOTAL_LIQUIDO: TIBBCDField;
     cdsTabelaItensVALOR_IPI: TIBBCDField;
     IbDtstTabelaDTFINALIZACAO_COMPRA: TDateTimeField;
     qryDuplicatasANOLANC: TSmallintField;
@@ -274,7 +269,12 @@ type
     IbDtstTabelaLOTE_NFE_NUMERO: TIntegerField;
     IbDtstTabelaLOTE_NFE_RECIBO: TIBStringField;
     qryNFEEMPRESA: TIBStringField;
-    cdsTabelaItensQTDE: TIntegerField;
+    cdsTabelaItensQTDE: TIBBCDField;
+    cdsTabelaItensQTDEANTES: TIBBCDField;
+    cdsTabelaItensQTDEFINAL: TIBBCDField;
+    cdsTabelaItensESTOQUE: TIBBCDField;
+    cdsTabelaItensTOTAL_BRUTO: TFMTBCDField;
+    cdsTabelaItensTOTAL_LIQUIDO: TFMTBCDField;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -540,7 +540,7 @@ begin
         cdsTabelaItensCODPROD.AsString     := FieldByName('Cod').AsString;
         cdsTabelaItensDESCRI.AsString      := FieldByName('Descri').AsString;
         cdsTabelaItensUNP_SIGLA.AsString   := FieldByName('Unp_sigla').AsString;
-        cdsTabelaItensQTDEANTES.AsInteger  := FieldByName('Qtde').AsInteger;
+        cdsTabelaItensQTDEANTES.AsCurrency := FieldByName('Qtde').AsCurrency;
 
         cdsTabelaItensALIQUOTA.AsCurrency              := FieldByName('Aliquota').AsCurrency;
         cdsTabelaItensALIQUOTA_CSOSN.AsCurrency        := FieldByName('Aliquota_csosn').AsCurrency;
@@ -661,7 +661,7 @@ procedure TfrmGeEntradaEstoque.btnProdutoSalvarClick(Sender: TObject);
 begin
   if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
   begin
-    if ( cdsTabelaItensQTDE.AsInteger <= 0 ) then
+    if ( cdsTabelaItensQTDE.AsCurrency <= 0 ) then
     begin
       ShowWarning('Quantidade inválida.');
       dbQuantidade.SetFocus;
@@ -730,17 +730,17 @@ begin
   begin
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
     begin
-      cdsTabelaItensCUSTOMEDIO.Value  := cdsTabelaItensPRECOUNIT.Value + cdsTabelaItensVALOR_IPI.Value;
-      cdsTabelaItensTOTAL_BRUTO.Value := cdsTabelaItensPRECOUNIT.Value * cdsTabelaItensQTDE.Value;
+      cdsTabelaItensCUSTOMEDIO.AsCurrency  := cdsTabelaItensPRECOUNIT.AsCurrency + cdsTabelaItensVALOR_IPI.AsCurrency;
+      cdsTabelaItensTOTAL_BRUTO.AsCurrency := cdsTabelaItensPRECOUNIT.AsCurrency * cdsTabelaItensQTDE.AsCurrency;
 
       if ( IbDtstTabelaTOTALPROD.AsCurrency > 0 ) then
       begin
-        cdsTabelaItensPERC_PARTICIPACAO.Value := cdsTabelaItensTOTAL_BRUTO.Value / IbDtstTabelaTOTALPROD.Value * 100;
-        cdsTabelaItensVALOR_FRETE.Value       := cdsTabelaItensPERC_PARTICIPACAO.Value * IbDtstTabelaFRETE.Value / 100;
-        cdsTabelaItensVALOR_DESCONTO.Value    := cdsTabelaItensPERC_PARTICIPACAO.Value * IbDtstTabelaDESCONTO.Value / 100;
-        cdsTabelaItensVALOR_OUTROS.Value      := cdsTabelaItensPERC_PARTICIPACAO.Value * IbDtstTabelaOUTROSCUSTOS.Value / 100;
+        cdsTabelaItensPERC_PARTICIPACAO.AsCurrency := cdsTabelaItensTOTAL_BRUTO.AsCurrency / IbDtstTabelaTOTALPROD.AsCurrency * 100;
+        cdsTabelaItensVALOR_FRETE.Value        := cdsTabelaItensPERC_PARTICIPACAO.Value * IbDtstTabelaFRETE.Value / 100;
+        cdsTabelaItensVALOR_DESCONTO.Value     := cdsTabelaItensPERC_PARTICIPACAO.Value * IbDtstTabelaDESCONTO.Value / 100;
+        cdsTabelaItensVALOR_OUTROS.Value       := cdsTabelaItensPERC_PARTICIPACAO.Value * IbDtstTabelaOUTROSCUSTOS.Value / 100;
 
-        cdsTabelaItensTOTAL_LIQUIDO.Value := cdsTabelaItensCUSTOMEDIO.AsCurrency * cdsTabelaItensQTDE.AsInteger;
+        cdsTabelaItensTOTAL_LIQUIDO.AsCurrency := cdsTabelaItensCUSTOMEDIO.AsCurrency * cdsTabelaItensQTDE.AsCurrency;
       end;
     end;
   end;
@@ -797,9 +797,9 @@ procedure TfrmGeEntradaEstoque.dbProdutoButtonClick(Sender: TObject);
 var
   iCodigo  ,
   iCFOP    ,
-  iUnidade ,
+  iUnidade : Integer;
   iEstoque ,
-  iReserva : Integer;
+  iReserva : Currency;
   sCodigoAlfa,
   sDescricao ,
   sUnidade   ,
@@ -843,6 +843,10 @@ begin
   cdsTabelaItensNF.Value         := IbDtstTabelaNF.Value;
   cdsTabelaItensCFOP.Value       := GetCfopIDDefault;
   cdsTabelaItensSEQ.Value        := cdsTabelaItens.RecordCount + 1;
+
+  cdsTabelaItensQTDE.Value      := 0;
+  cdsTabelaItensQTDEANTES.Value := 0;
+  cdsTabelaItensQTDEFINAL.Value := 0;
 
   cdsTabelaItensALIQUOTA.Value              := 0.0;
   cdsTabelaItensALIQUOTA_CSOSN.Value        := 0.0;

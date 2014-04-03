@@ -2330,10 +2330,25 @@ inherited frmGeProduto: TfrmGeProduto
       FieldName = 'SECAO'
       Origin = 'TBPRODUTO.SECAO'
     end
-    object IbDtstTabelaQTDE: TIntegerField
+    object IbDtstTabelaQTDE: TIBBCDField
       DisplayLabel = 'Quantidade'
       FieldName = 'QTDE'
-      Origin = 'TBPRODUTO.QTDE'
+      Origin = '"TBPRODUTO"."QTDE"'
+      ProviderFlags = [pfInUpdate]
+      Required = True
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
+    end
+    object IbDtstTabelaRESERVA: TIBBCDField
+      DisplayLabel = 'Reserva'
+      FieldName = 'RESERVA'
+      Origin = '"TBPRODUTO"."RESERVA"'
+      ProviderFlags = [pfInUpdate]
+      Required = True
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object IbDtstTabelaFRACIONADOR: TIBBCDField
       DisplayLabel = 'Fracionador'
@@ -2524,11 +2539,6 @@ inherited frmGeProduto: TfrmGeProduto
       Precision = 18
       Size = 2
     end
-    object IbDtstTabelaRESERVA: TIntegerField
-      DisplayLabel = 'Reserva'
-      FieldName = 'RESERVA'
-      Origin = 'TBPRODUTO.RESERVA'
-    end
     object IbDtstTabelaPRODUTO_NOVO: TSmallintField
       Alignment = taLeftJustify
       DisplayLabel = 'Produto Novo'
@@ -2600,10 +2610,6 @@ inherited frmGeProduto: TfrmGeProduto
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
-    end
-    object IbDtstTabelaDISPONIVEL: TLargeintField
-      DisplayLabel = 'Dispon'#237'vel'
-      FieldName = 'DISPONIVEL'
     end
     object IbDtstTabelaPESO_BRUTO: TIBBCDField
       DisplayLabel = 'Peso Bruto (Kg)'
@@ -2747,6 +2753,14 @@ inherited frmGeProduto: TfrmGeProduto
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 5
+    end
+    object IbDtstTabelaDISPONIVEL: TIBBCDField
+      DisplayLabel = 'Dispon'#237'vel'
+      FieldName = 'DISPONIVEL'
+      ProviderFlags = []
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
   end
   inherited DtSrcTabela: TDataSource

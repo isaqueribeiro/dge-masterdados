@@ -238,12 +238,10 @@ type
     qryEntradaDadosProdutoCODFORN: TIntegerField;
     qryEntradaDadosProdutoCODFORN_CNPJ: TIBStringField;
     qryEntradaDadosProdutoDTENT: TDateField;
-    qryEntradaDadosProdutoQTDE: TSmallintField;
     qryEntradaDadosProdutoPUNIT: TIBBCDField;
     qryEntradaDadosProdutoDESCONTO: TIBBCDField;
     qryEntradaDadosProdutoDESCONTO_VALOR: TIBBCDField;
     qryEntradaDadosProdutoPFINAL: TIBBCDField;
-    qryEntradaDadosProdutoQTDEFINAL: TIntegerField;
     qryEntradaDadosProdutoUNID_COD: TSmallintField;
     qryEntradaDadosProdutoUNP_DESCRICAO: TIBStringField;
     qryEntradaDadosProdutoUNP_SIGLA: TIBStringField;
@@ -256,8 +254,6 @@ type
     qryEntradaDadosProdutoPERCENTUAL_REDUCAO_BC: TIBBCDField;
     qryEntradaDadosProdutoVALOR_REDUCAO_BC: TIBBCDField;
     qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField;
-    qryEntradaDadosProdutoESTOQUE: TIntegerField;
-    qryEntradaDadosProdutoRESERVA: TIntegerField;
     qryEntradaDadosProdutoPRODUTO_NOVO: TSmallintField;
     qryEntradaDadosProdutoCOR_VEICULO: TIBStringField;
     qryEntradaDadosProdutoCOR_VEICULO_DESCRICAO: TIBStringField;
@@ -271,7 +267,6 @@ type
     qryEntradaDadosProdutoRENAVAM_VEICULO: TIBStringField;
     qryEntradaDadosProdutoCHASSI_VEICULO: TIBStringField;
     qryEntradaDadosProdutoKILOMETRAGEM_VEICULO: TIntegerField;
-    qryEntradaDadosProdutoDISPONIVEL: TLargeintField;
     qryEntradaDuplicatas: TIBQuery;
     frdEntradaDuplicata: TfrxDBDataset;
     qryEntradaDuplicatasANOLANC: TSmallintField;
@@ -354,13 +349,11 @@ type
     qryDadosProdutoCODEMP: TIBStringField;
     qryDadosProdutoCODCLI: TIBStringField;
     qryDadosProdutoDTVENDA: TDateTimeField;
-    qryDadosProdutoQTDE: TIntegerField;
     qryDadosProdutoPUNIT: TIBBCDField;
     qryDadosProdutoPUNIT_PROMOCAO: TIBBCDField;
     qryDadosProdutoDESCONTO: TIBBCDField;
     qryDadosProdutoDESCONTO_VALOR: TIBBCDField;
     qryDadosProdutoPFINAL: TIBBCDField;
-    qryDadosProdutoQTDEFINAL: TIntegerField;
     qryDadosProdutoUNID_COD: TSmallintField;
     qryDadosProdutoUNP_DESCRICAO: TIBStringField;
     qryDadosProdutoUNP_SIGLA: TIBStringField;
@@ -375,8 +368,6 @@ type
     qryDadosProdutoTOTAL_BRUTO: TIBBCDField;
     qryDadosProdutoTOTAL_DESCONTO: TIBBCDField;
     qryDadosProdutoTOTAL_LIQUIDO: TIBBCDField;
-    qryDadosProdutoESTOQUE: TIntegerField;
-    qryDadosProdutoRESERVA: TIntegerField;
     qryDadosProdutoPRODUTO_NOVO: TSmallintField;
     qryDadosProdutoCOR_VEICULO: TIBStringField;
     qryDadosProdutoCOR_VEICULO_DESCRICAO: TIBStringField;
@@ -390,7 +381,6 @@ type
     qryDadosProdutoRENAVAM_VEICULO: TIBStringField;
     qryDadosProdutoCHASSI_VEICULO: TIBStringField;
     qryDadosProdutoKILOMETRAGEM_VEICULO: TIntegerField;
-    qryDadosProdutoDISPONIVEL: TLargeintField;
     qryNFeEmitida: TIBQuery;
     qryNFeEmitidaANOVENDA: TSmallintField;
     qryNFeEmitidaNUMVENDA: TIntegerField;
@@ -468,6 +458,16 @@ type
     qryNFeEmitidaEntradaLOTE_ANO: TSmallintField;
     qryNFeEmitidaEntradaLOTE_NUM: TIntegerField;
     frxJPEG: TfrxJPEGExport;
+    qryDadosProdutoQTDE: TIBBCDField;
+    qryDadosProdutoESTOQUE: TIBBCDField;
+    qryDadosProdutoRESERVA: TIBBCDField;
+    qryDadosProdutoDISPONIVEL: TIBBCDField;
+    qryEntradaDadosProdutoQTDE: TIBBCDField;
+    qryEntradaDadosProdutoESTOQUE: TIBBCDField;
+    qryEntradaDadosProdutoRESERVA: TIBBCDField;
+    qryEntradaDadosProdutoDISPONIVEL: TIBBCDField;
+    qryDadosProdutoQTDEFINAL: TIBBCDField;
+    qryEntradaDadosProdutoQTDEFINAL: TIBBCDField;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);

@@ -1087,11 +1087,12 @@ inherited FrmGeProdutoEstoqueMinimo: TFrmGeProdutoEstoqueMinimo
       Origin = '"TBFABRICANTE"."NOME"'
       Size = 50
     end
-    object CdsProdutoQTDE: TIntegerField
+    object CdsProdutoQTDE: TBCDField
       DisplayLabel = 'Atual'
       FieldName = 'QTDE'
-      Origin = '"TBPRODUTO"."QTDE"'
       DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object CdsProdutoESTOQMIN: TSmallintField
       DisplayLabel = 'M'#237'nimo'
@@ -1213,10 +1214,12 @@ inherited FrmGeProdutoEstoqueMinimo: TFrmGeProdutoEstoqueMinimo
       FieldName = 'DESCRICAO'
       Size = 30
     end
-    object CdsGrupoESTOQUE: TLargeintField
+    object CdsGrupoESTOQUE: TBCDField
       DisplayLabel = 'Atual'
       FieldName = 'ESTOQUE'
-      DisplayFormat = ',0'
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object CdsGrupoESTOQUE_MINIMO: TLargeintField
       DisplayLabel = 'M'#237'nimo'
@@ -1350,10 +1353,12 @@ inherited FrmGeProdutoEstoqueMinimo: TFrmGeProdutoEstoqueMinimo
       FieldName = 'DESCRICAO'
       Size = 50
     end
-    object CdsFabricanteESTOQUE: TLargeintField
+    object CdsFabricanteESTOQUE: TBCDField
       DisplayLabel = 'Atual'
       FieldName = 'ESTOQUE'
-      DisplayFormat = ',0'
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object CdsFabricanteESTOQUE_MINIMO: TLargeintField
       DisplayLabel = 'M'#237'nimo'

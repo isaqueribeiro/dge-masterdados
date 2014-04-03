@@ -2786,7 +2786,6 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           item
             Expanded = False
             FieldName = 'TOTAL_LIQUIDO'
-            Title.Caption = 'Total L'#237'quido (R$)'
             Width = 110
             Visible = True
           end>
@@ -3464,18 +3463,28 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       FieldName = 'DTENT'
       Origin = 'TBCOMPRASITENS.DTENT'
     end
-    object cdsTabelaItensQTDE: TIntegerField
+    object cdsTabelaItensQTDE: TIBBCDField
       DisplayLabel = 'Quantidade'
       FieldName = 'QTDE'
       Origin = '"TBCOMPRASITENS"."QTDE"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
-    object cdsTabelaItensQTDEANTES: TIntegerField
+    object cdsTabelaItensQTDEANTES: TIBBCDField
       FieldName = 'QTDEANTES'
-      Origin = 'TBCOMPRASITENS.QTDEANTES'
+      Origin = '"TBCOMPRASITENS"."QTDEANTES"'
+      ProviderFlags = [pfInUpdate]
+      Precision = 18
+      Size = 3
     end
-    object cdsTabelaItensQTDEFINAL: TIntegerField
+    object cdsTabelaItensQTDEFINAL: TIBBCDField
       FieldName = 'QTDEFINAL'
-      Origin = 'TBCOMPRASITENS.QTDEFINAL'
+      Origin = '"TBCOMPRASITENS"."QTDEFINAL"'
+      ProviderFlags = [pfInUpdate]
+      Precision = 18
+      Size = 3
     end
     object cdsTabelaItensPRECOUNIT: TIBBCDField
       DisplayLabel = 'Valor Unit'#225'rio'
@@ -3591,30 +3600,36 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       Origin = 'TBPRODUTO.DESCRI'
       Size = 50
     end
-    object cdsTabelaItensESTOQUE: TIntegerField
-      DisplayLabel = 'Estoque'
-      FieldName = 'ESTOQUE'
-      Origin = 'TBPRODUTO.QTDE'
-    end
     object cdsTabelaItensUNP_SIGLA: TIBStringField
       DisplayLabel = 'Und.'
       FieldName = 'UNP_SIGLA'
       Origin = 'TBUNIDADEPROD.UNP_SIGLA'
       Size = 5
     end
-    object cdsTabelaItensTOTAL_BRUTO: TIBBCDField
+    object cdsTabelaItensESTOQUE: TIBBCDField
+      DisplayLabel = 'Estoque'
+      FieldName = 'ESTOQUE'
+      Origin = '"TBPRODUTO"."QTDE"'
+      ProviderFlags = []
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
+    end
+    object cdsTabelaItensTOTAL_BRUTO: TFMTBCDField
       DisplayLabel = 'Total Bruto (R$)'
       FieldName = 'TOTAL_BRUTO'
+      ProviderFlags = []
       DisplayFormat = ',0.00'
       Precision = 18
-      Size = 2
+      Size = 5
     end
-    object cdsTabelaItensTOTAL_LIQUIDO: TIBBCDField
-      DisplayLabel = 'Total L'#237'quido'
+    object cdsTabelaItensTOTAL_LIQUIDO: TFMTBCDField
+      DisplayLabel = 'Total L'#237'quido (R$)'
       FieldName = 'TOTAL_LIQUIDO'
+      ProviderFlags = []
       DisplayFormat = ',0.00'
       Precision = 18
-      Size = 2
+      Size = 5
     end
   end
   object IbUpdTabelaItens: TIBUpdateSQL

@@ -89,18 +89,6 @@ object DMBusiness: TDMBusiness
       FieldName = 'CODFORN'
       Origin = 'TBAJUSTESTOQ.CODFORN'
     end
-    object ibdtstAjustEstoqQTDEATUAL: TIntegerField
-      FieldName = 'QTDEATUAL'
-      Origin = 'TBAJUSTESTOQ.QTDEATUAL'
-    end
-    object ibdtstAjustEstoqQTDENOVA: TIntegerField
-      FieldName = 'QTDENOVA'
-      Origin = 'TBAJUSTESTOQ.QTDENOVA'
-    end
-    object ibdtstAjustEstoqQTDEFINAL: TIntegerField
-      FieldName = 'QTDEFINAL'
-      Origin = 'TBAJUSTESTOQ.QTDEFINAL'
-    end
     object ibdtstAjustEstoqMOTIVO: TIBStringField
       FieldName = 'MOTIVO'
       Origin = 'TBAJUSTESTOQ.MOTIVO'
@@ -141,6 +129,40 @@ object DMBusiness: TDMBusiness
       LookupResultField = 'NOMEFORN'
       KeyFields = 'CODFORN'
       Lookup = True
+    end
+    object ibdtstAjustEstoqCONTROLE: TIntegerField
+      FieldName = 'CONTROLE'
+      Origin = '"TBAJUSTESTOQ"."CONTROLE"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object ibdtstAjustEstoqCODEMPRESA: TIBStringField
+      FieldName = 'CODEMPRESA'
+      Origin = '"TBAJUSTESTOQ"."CODEMPRESA"'
+      Size = 18
+    end
+    object ibdtstAjustEstoqQTDEATUAL: TIBBCDField
+      FieldName = 'QTDEATUAL'
+      Origin = '"TBAJUSTESTOQ"."QTDEATUAL"'
+      Precision = 18
+      Size = 3
+    end
+    object ibdtstAjustEstoqQTDENOVA: TIBBCDField
+      FieldName = 'QTDENOVA'
+      Origin = '"TBAJUSTESTOQ"."QTDENOVA"'
+      Precision = 18
+      Size = 3
+    end
+    object ibdtstAjustEstoqQTDEFINAL: TIBBCDField
+      FieldName = 'QTDEFINAL'
+      Origin = '"TBAJUSTESTOQ"."QTDEFINAL"'
+      Precision = 18
+      Size = 3
+    end
+    object ibdtstAjustEstoqUSUARIO: TIBStringField
+      FieldName = 'USUARIO'
+      Origin = '"TBAJUSTESTOQ"."USUARIO"'
+      Size = 50
     end
   end
   object ibdtstProduto: TIBDataSet

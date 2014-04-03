@@ -132,15 +132,12 @@ type
     cdsTabelaItensCODEMP: TIBStringField;
     cdsTabelaItensCODCLI: TIBStringField;
     cdsTabelaItensDTVENDA: TDateTimeField;
-    cdsTabelaItensQTDE: TIntegerField;
     cdsTabelaItensPUNIT: TIBBCDField;
-    cdsTabelaItensQTDEFINAL: TIntegerField;
     cdsTabelaItensUNID_COD: TSmallintField;
     cdsTabelaItensCFOP_COD: TIntegerField;
     cdsTabelaItensALIQUOTA: TIBBCDField;
     cdsTabelaItensVALOR_IPI: TIBBCDField;
     cdsTabelaItensDESCRI: TIBStringField;
-    cdsTabelaItensESTOQUE: TIntegerField;
     cdsTabelaItensUNP_SIGLA: TIBStringField;
     cdsTabelaItensCFOP_DESCRICAO: TIBStringField;
     cdsTabelaItensCST: TIBStringField;
@@ -172,7 +169,6 @@ type
     lblCFOPVenda: TLabel;
     dbCFOPVenda: TRxDBComboEdit;
     IbDtstTabelaCFOP: TIntegerField;
-    cdsTabelaItensRESERVA: TIntegerField;
     IbDtstTabelaLOTE_NFE_ANO: TSmallintField;
     IbDtstTabelaLOTE_NFE_NUMERO: TIntegerField;
     IbDtstTabelaNFE_ENVIADA: TSmallintField;
@@ -334,6 +330,10 @@ type
     nmPpLimparDadosNFe: TMenuItem;
     N3: TMenuItem;
     nmEnviarEmailCliente: TMenuItem;
+    cdsTabelaItensQTDE: TIBBCDField;
+    cdsTabelaItensESTOQUE: TIBBCDField;
+    cdsTabelaItensRESERVA: TIBBCDField;
+    cdsTabelaItensQTDEFINAL: TIBBCDField;
     procedure ImprimirOpcoesClick(Sender: TObject);
     procedure ImprimirOrcamentoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -798,8 +798,8 @@ begin
         cdsTabelaItensPUNIT_PROMOCAO.AsCurrency := FieldByName('Preco_Promocao').AsCurrency;
         cdsTabelaItensVALOR_IPI.AsCurrency      := FieldByName('Valor_ipi').AsCurrency;
         
-        cdsTabelaItensESTOQUE.AsInteger    := FieldByName('Qtde').AsInteger;
-        cdsTabelaItensRESERVA.AsInteger    := FieldByName('Reserva').AsInteger;
+        cdsTabelaItensESTOQUE.AsCurrency := FieldByName('Qtde').AsCurrency;
+        cdsTabelaItensRESERVA.AsCurrency := FieldByName('Reserva').AsCurrency;
 
         if ( cdsTabelaItensPUNIT_PROMOCAO.AsCurrency > 0 ) then
         begin
@@ -887,7 +887,7 @@ end;
 function TfrmGeVenda.ValidarQuantidade(Codigo : Integer; Quantidade : Integer) : Boolean;
 var
   iEstoque ,
-  iReserva : Integer;
+  iReserva : Currency;
 begin
   with qryProduto do
   begin
@@ -895,8 +895,8 @@ begin
     ParamByName('Codigo').AsInt64 := Codigo;
     Open;
 
-    iEstoque := FieldByName('Qtde').AsInteger;
-    iReserva := FieldByName('Reserva').AsInteger;
+    iEstoque := FieldByName('Qtde').AsCurrency;
+    iReserva := FieldByName('Reserva').AsCurrency;
 
     Result := ( (iEstoque - iReserva) >= Quantidade );
   end;
@@ -1267,10 +1267,10 @@ begin
 
       cdsTabelaItensDESCONTO_VALOR.AsCurrency := cPrecoVND * cdsTabelaItensDESCONTO.AsCurrency / 100;
       cdsTabelaItensPFINAL.AsCurrency         := cPrecoVND - cdsTabelaItensDESCONTO_VALOR.AsCurrency;
-      cdsTabelaItensTOTAL_BRUTO.AsCurrency    := cdsTabelaItensQTDE.AsInteger * cPrecoVND;
-      cdsTabelaItensTOTAL_DESCONTO.AsCurrency := cdsTabelaItensQTDE.AsInteger * cdsTabelaItensDESCONTO_VALOR.AsCurrency;
+      cdsTabelaItensTOTAL_BRUTO.AsCurrency    := cdsTabelaItensQTDE.AsCurrency * cPrecoVND;
+      cdsTabelaItensTOTAL_DESCONTO.AsCurrency := cdsTabelaItensQTDE.AsCurrency * cdsTabelaItensDESCONTO_VALOR.AsCurrency;
       cdsTabelaItensTOTAL_LIQUIDO.AsCurrency  := cdsTabelaItensTOTAL_BRUTO.AsCurrency - cdsTabelaItensTOTAL_DESCONTO.AsCurrency;;
-//      cdsTabelaItensTOTAL_LIQUIDO.AsCurrency  := cdsTabelaItensQTDE.AsInteger * StrToCurr( FormatFloat('##########0.00', cdsTabelaItensPFINAL.AsCurrency) );
+//      cdsTabelaItensTOTAL_LIQUIDO.AsCurrency  := cdsTabelaItensQTDE.AsCurrency * StrToCurr( FormatFloat('##########0.00', cdsTabelaItensPFINAL.AsCurrency) );
     end;
 
   if ( Sender = dbValorLiq ) then
@@ -1350,9 +1350,9 @@ procedure TfrmGeVenda.dbProdutoButtonClick(Sender: TObject);
 var
   iCodigo  ,
   iCFOP    ,
-  iUnidade ,
+  iUnidade : Integer;
   iEstoque ,
-  iReserva : Integer;
+  iReserva : Currency;
   sCodigoAlfa,
   sDescricao ,
   sUnidade   ,
@@ -1386,8 +1386,8 @@ begin
 
       cdsTabelaItensPERCENTUAL_REDUCAO_BC.AsCurrency := cPercRedBC;
 
-      cdsTabelaItensESTOQUE.AsInteger := iEstoque;
-      cdsTabelaItensRESERVA.AsInteger := iReserva;
+      cdsTabelaItensESTOQUE.AsCurrency := iEstoque;
+      cdsTabelaItensRESERVA.AsCurrency := iReserva;
 
       if ( cValorPromocao > 0 ) then
       begin
@@ -1447,7 +1447,7 @@ procedure TfrmGeVenda.btbtnFinalizarClick(Sender: TObject);
       cdsTabelaItens.First;
       while not cdsTabelaItens.Eof do
       begin
-        Return := ( (cdsTabelaItensQTDE.AsInteger > (cdsTabelaItensESTOQUE.AsInteger - cdsTabelaItensRESERVA.AsInteger)) or (cdsTabelaItensESTOQUE.AsInteger <= 0) );
+        Return := ( (cdsTabelaItensQTDE.AsCurrency > (cdsTabelaItensESTOQUE.AsCurrency - cdsTabelaItensRESERVA.AsCurrency)) or (cdsTabelaItensESTOQUE.AsCurrency <= 0) );
         if ( Return ) then
           Break;
         cdsTabelaItens.Next;
@@ -1836,13 +1836,13 @@ begin
     cValor := StrToCurrDef(sValor, 0);
     if ( cValor > 0 ) then
     begin
-      cdsTabelaItensDESCONTO_VALOR.AsCurrency := cValor / cdsTabelaItensQTDE.AsInteger;
+      cdsTabelaItensDESCONTO_VALOR.AsCurrency := cValor / cdsTabelaItensQTDE.AsCurrency;
       cdsTabelaItensDESCONTO.AsCurrency  := cdsTabelaItensDESCONTO_VALOR.Value / cdsTabelaItensPUNIT.AsCurrency * 100;
       cdsTabelaItensPFINAL.Value         := cdsTabelaItensPUNIT.AsCurrency - cdsTabelaItensDESCONTO_VALOR.Value;
-      cdsTabelaItensTOTAL_BRUTO.Value    := cdsTabelaItensQTDE.AsInteger * cdsTabelaItensPUNIT.AsCurrency;
-      cdsTabelaItensTOTAL_DESCONTO.Value := cValor; // cdsTabelaItensQTDE.AsInteger * cdsTabelaItensDESCONTO_VALOR.AsCurrency;
+      cdsTabelaItensTOTAL_BRUTO.Value    := cdsTabelaItensQTDE.AsCurrency * cdsTabelaItensPUNIT.AsCurrency;
+      cdsTabelaItensTOTAL_DESCONTO.Value := cValor; // cdsTabelaItensQTDE.AsCurrency * cdsTabelaItensDESCONTO_VALOR.AsCurrency;
       cdsTabelaItensTOTAL_LIQUIDO.Value  := cdsTabelaItensTOTAL_BRUTO.AsCurrency - cdsTabelaItensTOTAL_DESCONTO.AsCurrency;
-      //cdsTabelaItensTOTAL_LIQUIDO.Value  := cdsTabelaItensQTDE.AsInteger * StrToCurr( FormatFloat('##########0.00', cdsTabelaItensPFINAL.AsCurrency) );
+      //cdsTabelaItensTOTAL_LIQUIDO.Value  := cdsTabelaItensQTDE.AsCurrency * StrToCurr( FormatFloat('##########0.00', cdsTabelaItensPFINAL.AsCurrency) );
     end;
   end;
 end;

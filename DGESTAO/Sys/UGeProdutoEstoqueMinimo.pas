@@ -97,7 +97,6 @@ type
     CdsProdutoGRUPO: TStringField;
     CdsProdutoCODFABRICANTE: TIntegerField;
     CdsProdutoFABRICANTE: TStringField;
-    CdsProdutoQTDE: TIntegerField;
     CdsProdutoESTOQMIN: TSmallintField;
     CdsProdutoCODUNIDADE: TSmallintField;
     CdsProdutoUNIDADE: TStringField;
@@ -121,8 +120,6 @@ type
     dsTotal: TDataSource;
     CdsGrupoCODIGO: TSmallintField;
     CdsGrupoDESCRICAO: TStringField;
-    CdsGrupoESTOQUE: TLargeintField;
-    CdsGrupoESTOQUE_MINIMO: TLargeintField;
     CdsGrupoITENS: TIntegerField;
     CdsGrupoCOMPRA_QTDE_01: TBCDField;
     CdsGrupoCOMPRA_VALOR_01: TBCDField;
@@ -156,7 +153,6 @@ type
     dbgFabLvl: TcxGridLevel;
     CdsFabricanteCODIGO: TIntegerField;
     CdsFabricanteDESCRICAO: TStringField;
-    CdsFabricanteESTOQUE: TLargeintField;
     CdsFabricanteESTOQUE_MINIMO: TLargeintField;
     CdsFabricanteITENS: TIntegerField;
     CdsFabricanteCOMPRA_QTDE_01: TBCDField;
@@ -169,6 +165,10 @@ type
     CdsFabricantePERCENT_CV01: TBCDField;
     CdsFabricantePERCENT_VQ01: TBCDField;
     CdsFabricantePERCENT_VV01: TBCDField;
+    CdsGrupoESTOQUE: TBCDField;
+    CdsGrupoESTOQUE_MINIMO: TLargeintField;
+    CdsFabricanteESTOQUE: TBCDField;
+    CdsProdutoQTDE: TBCDField;
     procedure NovaPesquisaKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
