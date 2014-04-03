@@ -123,7 +123,6 @@ type
     dbgProdutoTblColumn26: TcxGridDBBandedColumn;
     dbgProdutoTblColumn27: TcxGridDBBandedColumn;
     dbgProdutoTblColumn28: TcxGridDBBandedColumn;
-    CdsProdutoQTDE: TIntegerField;
     CdsProdutoUNP_DESCRICAO: TStringField;
     CdsProdutoUNP_SIGLA: TStringField;
     dbgProdutoTblColumn29: TcxGridDBBandedColumn;
@@ -134,7 +133,6 @@ type
     dsGrupo: TDataSource;
     CdsGrupoCODIGO: TSmallintField;
     CdsGrupoDESCRICAO: TStringField;
-    CdsGrupoQTDE: TLargeintField;
     CdsGrupoITENS: TIntegerField;
     CdsGrupoDATA_ULTIMA_COMPRA: TDateField;
     CdsGrupoDATA_ULTIMA_VENDA: TDateField;
@@ -170,7 +168,6 @@ type
     DspTotal: TDataSetProvider;
     CdsTotal: TClientDataSet;
     dsTotal: TDataSource;
-    CdsTotalQTDE: TLargeintField;
     CdsTotalITENS: TIntegerField;
     CdsTotalDATA_ULTIMA_COMPRA: TDateField;
     CdsTotalDATA_ULTIMA_VENDA: TDateField;
@@ -321,7 +318,6 @@ type
     QryFabricante: TIBQuery;
     DspFabricante: TDataSetProvider;
     CdsFabricante: TClientDataSet;
-    LargeintField1: TLargeintField;
     IntegerField1: TIntegerField;
     DateField1: TDateField;
     DateField2: TDateField;
@@ -437,6 +433,10 @@ type
     smtpEmail: TIdSMTP;
     msgEmail: TIdMessage;
     IdSSLIOHandlerSocket: TIdSSLIOHandlerSocket;
+    CdsProdutoQTDE: TBCDField;
+    CdsGrupoQTDE: TBCDField;
+    CdsFabricanteQTDE: TBCDField;
+    CdsTotalQTDE: TBCDField;
     procedure NovaPesquisaKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure edTipoProcessoChange(Sender: TObject);

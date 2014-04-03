@@ -531,9 +531,12 @@ object DMNFe: TDMNFe
       FieldName = 'DTVENDA'
       Origin = '"TVENDASITENS"."DTVENDA"'
     end
-    object qryDadosProdutoQTDE: TIntegerField
+    object qryDadosProdutoQTDE: TIBBCDField
       FieldName = 'QTDE'
       Origin = '"TVENDASITENS"."QTDE"'
+      ProviderFlags = [pfInUpdate]
+      Precision = 18
+      Size = 3
     end
     object qryDadosProdutoPUNIT: TIBBCDField
       FieldName = 'PUNIT'
@@ -565,9 +568,11 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 2
     end
-    object qryDadosProdutoQTDEFINAL: TIntegerField
+    object qryDadosProdutoQTDEFINAL: TIBBCDField
       FieldName = 'QTDEFINAL'
       Origin = '"TVENDASITENS"."QTDEFINAL"'
+      Precision = 18
+      Size = 3
     end
     object qryDadosProdutoUNID_COD: TSmallintField
       FieldName = 'UNID_COD'
@@ -647,14 +652,6 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 2
     end
-    object qryDadosProdutoESTOQUE: TIntegerField
-      FieldName = 'ESTOQUE'
-      Origin = '"TBPRODUTO"."QTDE"'
-    end
-    object qryDadosProdutoRESERVA: TIntegerField
-      FieldName = 'RESERVA'
-      Origin = '"TBPRODUTO"."RESERVA"'
-    end
     object qryDadosProdutoPRODUTO_NOVO: TSmallintField
       FieldName = 'PRODUTO_NOVO'
       Origin = '"TBPRODUTO"."PRODUTO_NOVO"'
@@ -716,9 +713,25 @@ object DMNFe: TDMNFe
       FieldName = 'KILOMETRAGEM_VEICULO'
       Origin = '"TBPRODUTO"."KILOMETRAGEM_VEICULO"'
     end
-    object qryDadosProdutoDISPONIVEL: TLargeintField
+    object qryDadosProdutoESTOQUE: TIBBCDField
+      FieldName = 'ESTOQUE'
+      Origin = '"TBPRODUTO"."QTDE"'
+      ProviderFlags = []
+      Precision = 18
+      Size = 3
+    end
+    object qryDadosProdutoRESERVA: TIBBCDField
+      FieldName = 'RESERVA'
+      Origin = '"TBPRODUTO"."RESERVA"'
+      ProviderFlags = []
+      Precision = 18
+      Size = 3
+    end
+    object qryDadosProdutoDISPONIVEL: TIBBCDField
       FieldName = 'DISPONIVEL'
       ProviderFlags = []
+      Precision = 18
+      Size = 3
     end
   end
   object frdEmpresa: TfrxDBDataset
@@ -4533,9 +4546,12 @@ object DMNFe: TDMNFe
       FieldName = 'DTENT'
       Origin = '"TBCOMPRASITENS"."DTENT"'
     end
-    object qryEntradaDadosProdutoQTDE: TSmallintField
+    object qryEntradaDadosProdutoQTDE: TIBBCDField
       FieldName = 'QTDE'
       Origin = '"TBCOMPRASITENS"."QTDE"'
+      ProviderFlags = [pfInUpdate]
+      Precision = 18
+      Size = 3
     end
     object qryEntradaDadosProdutoPUNIT: TIBBCDField
       FieldName = 'PUNIT'
@@ -4561,9 +4577,11 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 2
     end
-    object qryEntradaDadosProdutoQTDEFINAL: TIntegerField
+    object qryEntradaDadosProdutoQTDEFINAL: TIBBCDField
       FieldName = 'QTDEFINAL'
       Origin = '"TBCOMPRASITENS"."QTDEFINAL"'
+      Precision = 18
+      Size = 3
     end
     object qryEntradaDadosProdutoUNID_COD: TSmallintField
       FieldName = 'UNID_COD'
@@ -4643,14 +4661,6 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 2
     end
-    object qryEntradaDadosProdutoESTOQUE: TIntegerField
-      FieldName = 'ESTOQUE'
-      Origin = '"TBPRODUTO"."QTDE"'
-    end
-    object qryEntradaDadosProdutoRESERVA: TIntegerField
-      FieldName = 'RESERVA'
-      Origin = '"TBPRODUTO"."RESERVA"'
-    end
     object qryEntradaDadosProdutoPRODUTO_NOVO: TSmallintField
       FieldName = 'PRODUTO_NOVO'
       Origin = '"TBPRODUTO"."PRODUTO_NOVO"'
@@ -4712,9 +4722,25 @@ object DMNFe: TDMNFe
       FieldName = 'KILOMETRAGEM_VEICULO'
       Origin = '"TBPRODUTO"."KILOMETRAGEM_VEICULO"'
     end
-    object qryEntradaDadosProdutoDISPONIVEL: TLargeintField
+    object qryEntradaDadosProdutoESTOQUE: TIBBCDField
+      FieldName = 'ESTOQUE'
+      Origin = '"TBPRODUTO"."QTDE"'
+      ProviderFlags = []
+      Precision = 18
+      Size = 3
+    end
+    object qryEntradaDadosProdutoRESERVA: TIBBCDField
+      FieldName = 'RESERVA'
+      Origin = '"TBPRODUTO"."RESERVA"'
+      ProviderFlags = []
+      Precision = 18
+      Size = 3
+    end
+    object qryEntradaDadosProdutoDISPONIVEL: TIBBCDField
       FieldName = 'DISPONIVEL'
       ProviderFlags = []
+      Precision = 18
+      Size = 3
     end
   end
   object frdEntradaItens: TfrxDBDataset

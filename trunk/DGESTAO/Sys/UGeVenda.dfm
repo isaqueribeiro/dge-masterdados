@@ -3806,11 +3806,14 @@ inherited frmGeVenda: TfrmGeVenda
       FieldName = 'DTVENDA'
       Origin = 'TVENDASITENS.DTVENDA'
     end
-    object cdsTabelaItensQTDE: TIntegerField
+    object cdsTabelaItensQTDE: TIBBCDField
       DisplayLabel = 'Quantidade'
       FieldName = 'QTDE'
-      Origin = 'TVENDASITENS.QTDE'
-      DisplayFormat = ',0'
+      Origin = '"TVENDASITENS"."QTDE"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object cdsTabelaItensPUNIT: TIBBCDField
       DisplayLabel = 'Valor Unit'#225'rio'
@@ -3850,9 +3853,12 @@ inherited frmGeVenda: TfrmGeVenda
       Precision = 18
       Size = 2
     end
-    object cdsTabelaItensQTDEFINAL: TIntegerField
+    object cdsTabelaItensQTDEFINAL: TIBBCDField
       FieldName = 'QTDEFINAL'
-      Origin = 'TVENDASITENS.QTDEFINAL'
+      Origin = '"TVENDASITENS"."QTDEFINAL"'
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object cdsTabelaItensUNID_COD: TSmallintField
       FieldName = 'UNID_COD'
@@ -3946,14 +3952,6 @@ inherited frmGeVenda: TfrmGeVenda
       Origin = 'TBPRODUTO.DESCRI'
       Size = 50
     end
-    object cdsTabelaItensESTOQUE: TIntegerField
-      FieldName = 'ESTOQUE'
-      Origin = 'TBPRODUTO.QTDE'
-    end
-    object cdsTabelaItensRESERVA: TIntegerField
-      FieldName = 'RESERVA'
-      Origin = 'TBPRODUTO.RESERVA'
-    end
     object cdsTabelaItensUNP_SIGLA: TIBStringField
       DisplayLabel = 'Und.'
       FieldName = 'UNP_SIGLA'
@@ -3969,6 +3967,20 @@ inherited frmGeVenda: TfrmGeVenda
       Alignment = taCenter
       FieldName = 'CSOSN'
       Origin = 'TBPRODUTO.CSOSN'
+      Size = 3
+    end
+    object cdsTabelaItensESTOQUE: TIBBCDField
+      FieldName = 'ESTOQUE'
+      Origin = '"TBPRODUTO"."QTDE"'
+      ProviderFlags = []
+      Precision = 18
+      Size = 3
+    end
+    object cdsTabelaItensRESERVA: TIBBCDField
+      FieldName = 'RESERVA'
+      Origin = '"TBPRODUTO"."RESERVA"'
+      ProviderFlags = []
+      Precision = 18
       Size = 3
     end
   end

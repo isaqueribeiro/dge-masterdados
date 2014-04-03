@@ -249,7 +249,7 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
       Top = 0
       Width = 1011
       Height = 466
-      ActivePage = TbsFabricante
+      ActivePage = TbsGrupo
       Align = alClient
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -3300,10 +3300,12 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
       FieldName = 'FABRICANTE'
       Size = 50
     end
-    object CdsProdutoQTDE: TIntegerField
+    object CdsProdutoQTDE: TBCDField
       DisplayLabel = 'Estoque'
       FieldName = 'QTDE'
-      DisplayFormat = ',0'
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object CdsProdutoUNP_DESCRICAO: TStringField
       FieldName = 'UNP_DESCRICAO'
@@ -3602,10 +3604,12 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
       FieldName = 'DESCRICAO'
       Size = 30
     end
-    object CdsGrupoQTDE: TLargeintField
+    object CdsGrupoQTDE: TBCDField
       DisplayLabel = 'Estoque'
       FieldName = 'QTDE'
-      DisplayFormat = ',0'
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object CdsGrupoITENS: TIntegerField
       DisplayLabel = 'Itens'
@@ -4004,10 +4008,12 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
     ProviderName = 'DspTotal'
     Left = 88
     Top = 352
-    object CdsTotalQTDE: TLargeintField
+    object CdsTotalQTDE: TBCDField
       DisplayLabel = 'Estoque'
       FieldName = 'QTDE'
-      DisplayFormat = ',0'
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object CdsTotalITENS: TIntegerField
       DisplayLabel = 'Itens'
@@ -4275,10 +4281,12 @@ inherited FrmGeProdutoRotatividadePRC: TFrmGeProdutoRotatividadePRC
       FieldName = 'DESCRICAO'
       Size = 50
     end
-    object LargeintField1: TLargeintField
+    object CdsFabricanteQTDE: TBCDField
       DisplayLabel = 'Estoque'
       FieldName = 'QTDE'
-      DisplayFormat = ',0'
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object IntegerField1: TIntegerField
       DisplayLabel = 'Itens'

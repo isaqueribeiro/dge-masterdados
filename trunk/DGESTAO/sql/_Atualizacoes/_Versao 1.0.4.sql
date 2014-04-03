@@ -1222,3 +1222,808 @@ end ^
 
 SET TERM ; ^
 
+
+
+
+/*------ SYSDBA 03/04/2014 16:55:08 --------*/
+
+CREATE DOMAIN DMN_QUANTIDADE_FRACAO AS
+NUMERIC(18,3);COMMENT ON DOMAIN DMN_QUANTIDADE_FRACAO IS 'Quantidade (Com 3 casas decimais de fracao).';
+
+
+
+
+/*------ SYSDBA 03/04/2014 16:55:26 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDE') and
+(RDB$RELATION_NAME = 'TVENDASITENS')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 16:56:49 --------*/
+
+DROP DOMAIN DMN_QUANTIDADE_FRACAO;
+
+
+
+
+/*------ SYSDBA 03/04/2014 16:57:44 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDE') and
+(RDB$RELATION_NAME = 'TBPRODUTO')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 16:57:59 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'RESERVA') and
+(RDB$RELATION_NAME = 'TBPRODUTO')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 16:58:15 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_estoque_atualizar for tbvendas
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable reserva    DMN_QUANTIDADE_D3;
+  declare variable valor_produto numeric(15,2);
+  declare variable estoque_unico Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Baixar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Reserva, 0)
+        , coalesce(p.Preco, 0)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , reserva
+        , valor_produto
+    do
+    begin
+      reserva = 0; -- :reserva - :Quantidade;  -- Descontinuada RESERVA
+      estoque = :Estoque - :Quantidade;
+
+      -- Baixar estoque
+      Update TBPRODUTO p Set
+          p.Qtde    = :Estoque
+        --, p.Reserva = :Reserva               -- Descontinuada RESERVA
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TVENDASITENS i Set
+        i.Qtdefinal = :Estoque
+      where i.Ano        = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'SAIDA - VENDA'
+        , Current_time
+        , :Estoque + :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Usuario
+        , 'Venda no valor de R$ ' || :Valor_produto
+      );
+    end
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/04/2014 16:58:59 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QUANTIDADE') and
+(RDB$RELATION_NAME = 'TBCLIENTE_ESTOQUE')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 16:59:17 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_cliente_requisicao_estoque for tbcliente_requisicao
+active before update position 1
+AS
+  declare variable item       Smallint;
+  declare variable produto    Varchar(10);
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable estoque    DMN_QUANTIDADE_D3;
+begin
+  /* 2. AUTORIZADA - Decrementar estoque satelite do cliente quando a requisicao for autorizada  */
+
+  if ( (old.situacao <> new.situacao) and (new.situacao = 2) ) then
+  begin
+    for
+      Select
+          i.numero
+        , i.codproduto
+        , i.quantidade
+        , e.quantidade as estoque
+      from TBCLIENTE_REQUISICAO_ITEM i
+        left join TBCLIENTE_ESTOQUE e on (e.cod_cliente = new.codcliente and e.cod_produto = i.codproduto)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+      Into
+          item
+        , produto
+        , quantidade
+        , estoque
+    do
+    begin
+
+      -- Baixar estoque
+      Update TBCLIENTE_ESTOQUE e Set
+        e.quantidade = coalesce(:estoque, 0) - coalesce(:quantidade, 0) -- Retirar estoque
+      where e.cod_cliente = new.codcliente
+        and e.cod_produto = :produto;
+
+      -- Guardar historico estoque satelite
+      Update TBCLIENTE_REQUISICAO_ITEM i Set
+        i.quantidade_final = coalesce(:estoque, 0) - coalesce(:quantidade, 0)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+        and i.item   = :item;
+
+    end 
+  end 
+
+  else
+
+  /* 4. CANCELADA - Incfementar estoque satelite do cliente quando a requisicao for cancelada  */
+
+  if ( (old.situacao <> new.situacao) and (new.situacao = 4) ) then
+  begin
+    for
+      Select
+          i.codproduto
+        , i.quantidade
+        , e.quantidade as estoque
+      from TBCLIENTE_REQUISICAO_ITEM i
+        left join TBCLIENTE_ESTOQUE e on (e.cod_cliente = new.codcliente and e.cod_produto = i.codproduto)
+      where i.ano    = new.ano
+        and i.numero = new.numero
+      Into
+          produto
+        , quantidade
+        , estoque
+    do
+    begin
+
+      Update TBCLIENTE_ESTOQUE e Set
+        e.quantidade = coalesce(:estoque, 0) + coalesce(:quantidade, 0) -- Devolver estoque
+      where e.cod_cliente = new.codcliente
+        and e.cod_produto = :produto;
+
+    end 
+  end
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/04/2014 16:59:38 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_estoque_cliente for tbvendas
+active after update position 2
+AS
+  declare variable produto varchar(10);
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable valor_medio numeric(15,4);
+  declare variable valor_venda numeric(15,2);
+begin
+
+  /* Gerar Estoque para o Cliente na Finalizacao da Venda */
+
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+    if ( new.gerar_estoque_cliente = 1 ) then
+    begin
+
+      for
+        Select
+            i.Codprod
+          , i.Qtde                    -- Quantidade vendida
+          , coalesce(c.quantidade, 0) -- Estoque
+          , (coalesce(c.valor_medio, 0) * coalesce(c.quantidade, 0))
+          , i.total_liquido
+        from TVENDASITENS i
+          left join TBCLIENTE_ESTOQUE c on (c.cod_cliente = new.codcliente and c.cod_produto = i.codprod)
+        where i.Ano        = new.Ano
+          and i.Codcontrol = new.Codcontrol
+        into
+            produto
+          , quantidade
+          , estoque
+          , valor_medio
+          , valor_venda
+      do
+      begin
+
+        -- Recalcular valor medio ja existente
+        if ( :estoque <= 0 ) then
+          valor_medio = 0.0;
+
+        -- Gerar novo valor medio
+        valor_medio = (:valor_medio + :valor_venda) / (:quantidade + :estoque);
+
+        if (not exists(
+          Select
+            ec.cod_cliente
+          from TBCLIENTE_ESTOQUE ec
+          where ec.cod_cliente = new.codcliente
+            and ec.cod_produto = :produto
+        )) then
+        begin
+
+          -- Gerar Estoque
+          Insert Into TBCLIENTE_ESTOQUE (
+              cod_cliente
+            , cod_produto
+            , quantidade
+            , valor_medio
+            , usuario
+            , ano_venda_ult
+            , cod_venda_ult
+          ) values (
+              new.codcliente
+            , :produto
+            , :quantidade
+            , :valor_medio
+            , new.usuario
+            , new.ano
+            , new.codcontrol
+          );
+
+        end
+        else
+        begin
+
+          -- Atualizar estoque cliente
+          Update TBCLIENTE_ESTOQUE ec Set
+              ec.quantidade  = coalesce(:quantidade, 0) + coalesce(:estoque, 0)
+            , ec.valor_medio = :valor_medio
+          where ec.cod_cliente = new.codcliente
+            and ec.cod_produto = :produto;
+
+        end 
+
+      end 
+
+    end
+  end
+
+  else
+
+  /* Atualizar Estoque do Cliente no Cancelamento da Venda */
+
+  if ( (coalesce(old.Status, 0) in (3, 4)) and (new.Status = 5)) then /* 5. Cancelada */
+  begin
+
+    if ( new.gerar_estoque_cliente = 1 ) then
+    begin
+
+      for
+        Select
+            i.Codprod
+          , i.Qtde                    -- Quantidade vendida cancelada
+          , coalesce(c.quantidade, 0) -- Estoque
+        from TVENDASITENS i
+          left join TBCLIENTE_ESTOQUE c on (c.cod_cliente = new.codcliente and c.cod_produto = i.codprod)
+        where i.Ano        = new.Ano
+          and i.Codcontrol = new.Codcontrol
+        into
+            produto
+          , quantidade
+          , estoque
+      do
+      begin
+
+          -- Atualizar estoque cliente
+          Update TBCLIENTE_ESTOQUE ec Set
+            ec.quantidade = coalesce(:estoque, 0) - coalesce(:quantidade, 0)
+          where ec.cod_cliente = new.codcliente
+            and ec.cod_produto = :produto;
+
+      end
+
+    end
+
+  end
+
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:00:15 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDEATUAL') and
+(RDB$RELATION_NAME = 'TBPRODHIST')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:00:22 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDENOVA') and
+(RDB$RELATION_NAME = 'TBPRODHIST')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:00:28 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDEFINAL') and
+(RDB$RELATION_NAME = 'TBPRODHIST')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:01:03 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDEANTES') and
+(RDB$RELATION_NAME = 'TBCOMPRASITENS')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:01:10 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDEFINAL') and
+(RDB$RELATION_NAME = 'TBCOMPRASITENS')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:01:51 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+    do
+    begin
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = :Estoque + :Quantidade
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = :Estoque + :Quantidade
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'ENTRADA - COMPRA'
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque + :Quantidade
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:02:07 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_cancelar for tbcompras
+active after update position 2
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_compra numeric(15,2);
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then
+  begin
+
+    -- Decrementar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+    do
+    begin
+      -- Decrementar estoque
+      Update TBPRODUTO p Set
+        p.Qtde       = :Estoque - :Quantidade
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'SAIDA - COMPRA CANCELADA'
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque - :Quantidade
+        , new.Cancel_usuario
+        , 'Custo Final no valor de R$ ' || :Custo_compra
+      );
+    end
+     
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Fornecedor = new.Codforn
+      and m.Compra_ano = new.Ano
+      and m.Compra_num = new.Codcontrol;
+
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:02:22 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_cancelar for tbvendas
+active after update position 3
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable valor_produto numeric(15,2);
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 5)) then /* 5. Cancelada */
+  begin
+
+    -- Retornar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Preco, 0)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , valor_produto
+    do
+    begin
+      estoque = :Estoque + :Quantidade;
+
+      -- Retornar estoque
+      Update TBPRODUTO p Set
+        p.Qtde = :Estoque
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'ENTRADA - VENDA CANCELADA'
+        , Current_time
+        , :Estoque - :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Cancel_usuario
+        , 'Venda no valor de R$ ' || :Valor_produto
+      );
+
+    end
+
+    -- Cancelar Contas A Receber (Apenas parcelas nao pagas)
+    Update TBCONTREC r Set
+        r.status   = 'CANCELADA'
+      , r.Situacao = 0 -- Cancelado
+      , r.enviado  = 0 -- Enviar boleto novamente para o banco
+    where r.anovenda = new.ano
+      and r.numvenda = new.codcontrol
+      and coalesce(r.Valorrectot, 0) = 0;
+
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Cliente = new.Codcli
+      and m.Venda_ano = new.Ano
+      and m.Venda_num = new.Codcontrol;
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:03:02 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDE') and
+(RDB$RELATION_NAME = 'TBCOMPRASITENS')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:35:46 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDEATUAL') and
+(RDB$RELATION_NAME = 'TBAJUSTESTOQ')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:35:52 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDENOVA') and
+(RDB$RELATION_NAME = 'TBAJUSTESTOQ')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:35:57 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDEFINAL') and
+(RDB$RELATION_NAME = 'TBAJUSTESTOQ')
+;
+
+
+
+
+/*------ SYSDBA 03/04/2014 17:42:59 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_QUANTIDADE_D3'
+where (RDB$FIELD_NAME = 'QTDEFINAL') and
+(RDB$RELATION_NAME = 'TVENDASITENS')
+;
+

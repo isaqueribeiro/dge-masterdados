@@ -18,7 +18,6 @@ type
     IbDtstTabelaPRECO: TIBBCDField;
     IbDtstTabelaREFERENCIA: TIBStringField;
     IbDtstTabelaSECAO: TIBStringField;
-    IbDtstTabelaQTDE: TIntegerField;
     IbDtstTabelaUNIDADE: TIBStringField;
     IbDtstTabelaESTOQMIN: TSmallintField;
     IbDtstTabelaCODGRUPO: TSmallintField;
@@ -79,8 +78,6 @@ type
     IbDtstTabelaVALOR_IPI: TIBBCDField;
     lblReserva: TLabel;
     dbReserva: TDBEdit;
-    IbDtstTabelaRESERVA: TIntegerField;
-    IbDtstTabelaDISPONIVEL: TLargeintField;
     IbDtstTabelaNCM_SH: TIBStringField;
     EvUA: TEvUserAccess;
     tblTributacaoSN: TIBTable;
@@ -239,6 +236,9 @@ type
     IbDtstTabelaPRECO_FRAC: TFMTBCDField;
     IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField;
     IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField;
+    IbDtstTabelaQTDE: TIBBCDField;
+    IbDtstTabelaDISPONIVEL: TIBBCDField;
+    IbDtstTabelaRESERVA: TIBBCDField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);
@@ -277,11 +277,11 @@ var
   function SelecionarProdutoParaAjuste(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome : String; const TipoAliquota : TAliquota = taICMS) : Boolean;
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome : String; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
-    var Estoque, Reserva : Integer; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
+    var Estoque, Reserva : Currency; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, CodigoEAN, Nome : String; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, Unidade : String; var ValorVenda, ValorPromocao : Currency; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
   function SelecionarProdutoParaEntrada(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
-    var Estoque, Reserva : Integer; const TipoAliquota : TAliquota = taICMS) : Boolean;
+    var Estoque, Reserva : Currency; const TipoAliquota : TAliquota = taICMS) : Boolean;
 
 implementation
 
@@ -383,7 +383,7 @@ begin
 end;
 
 function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
-  var Estoque, Reserva : Integer; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
+  var Estoque, Reserva : Currency; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
 var
   frm : TfrmGeProduto;
   whr : String;
@@ -418,8 +418,8 @@ begin
 
       PercentualRedBC := frm.IbDtstTabelaPERCENTUAL_REDUCAO_BC.AsCurrency;
 
-      Estoque := frm.IbDtstTabelaQTDE.AsInteger;
-      Reserva := frm.IbDtstTabelaRESERVA.AsInteger;
+      Estoque := frm.IbDtstTabelaQTDE.AsCurrency;
+      Reserva := frm.IbDtstTabelaRESERVA.AsCurrency;
     end;
   finally
     frm.Destroy;
@@ -427,7 +427,7 @@ begin
 end;
 
 function SelecionarProdutoParaEntrada(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
-  var Estoque, Reserva : Integer; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
+  var Estoque, Reserva : Currency; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
 var
   frm : TfrmGeProduto;
   whr : String;
@@ -463,8 +463,8 @@ begin
 
       PercentualRedBC := frm.IbDtstTabelaPERCENTUAL_REDUCAO_BC.AsCurrency;
 
-      Estoque := frm.IbDtstTabelaQTDE.AsInteger;
-      Reserva := frm.IbDtstTabelaRESERVA.AsInteger;
+      Estoque := frm.IbDtstTabelaQTDE.AsCurrency;
+      Reserva := frm.IbDtstTabelaRESERVA.AsCurrency;
     end;
   finally
     frm.Destroy;
@@ -632,10 +632,10 @@ begin
   IbDtstTabelaDESCRI_APRESENTACAO.AsString := AnsiUpperCase(Trim(IbDtstTabelaDESCRI.AsString + ' ' + IbDtstTabelaAPRESENTACAO.AsString));
   IbDtstTabelaUSUARIO.AsString             := GetUserApp;
   
-  if ( IbDtstTabelaQTDE.AsInteger < 0 ) then
+  if ( IbDtstTabelaQTDE.AsCurrency < 0 ) then
     IbDtstTabelaQTDE.Value := 0;
 
-  if ( (IbDtstTabelaRESERVA.AsInteger < 0) or (IbDtstTabelaRESERVA.AsInteger > IbDtstTabelaQTDE.AsInteger) ) then
+  if ( (IbDtstTabelaRESERVA.AsCurrency < 0) or (IbDtstTabelaRESERVA.AsCurrency > IbDtstTabelaQTDE.AsCurrency) ) then
     IbDtstTabelaRESERVA.Value := 0;
 
   if ( IbDtstTabelaPRODUTO_NOVO.IsNull ) then
@@ -729,6 +729,7 @@ begin
   IbDtstTabelaCST.Value        := IbDtstTabelaCODORIGEM.AsString + IbDtstTabelaCODTRIBUTACAO.AsString;
   IbDtstTabelaESTOQMIN.Value   := 0;
   IbDtstTabelaQTDE.Value       := 0;
+  IbDtstTabelaRESERVA.Value    := 0;
   IbDtstTabelaCUSTOMEDIO.Value := 0;
   IbDtstTabelaPRECO.Value      := 0;
   IbDtstTabelaCODCFOP.Value        := GetCfopIDDefault;
@@ -875,7 +876,7 @@ procedure TfrmGeProduto.dbgDadosDrawColumnCell(Sender: TObject;
 begin
   inherited;
   // Destacar produtos em Promocao
-  if ( IbDtstTabelaQTDE.AsInteger <= 0 ) then
+  if ( IbDtstTabelaQTDE.AsCurrency <= 0 ) then
     dbgDados.Canvas.Font.Color := lblProdutoSemEstoque.Font.Color
   else
   // Destacar produtos em Promocao
