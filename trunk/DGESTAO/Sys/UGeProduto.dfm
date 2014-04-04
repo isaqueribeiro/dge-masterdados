@@ -2340,6 +2340,15 @@ inherited frmGeProduto: TfrmGeProduto
       Precision = 18
       Size = 3
     end
+    object IbDtstTabelaESTOQMIN: TIBBCDField
+      DisplayLabel = 'M'#237'nimo'
+      FieldName = 'ESTOQMIN'
+      Origin = '"TBPRODUTO"."ESTOQMIN"'
+      ProviderFlags = [pfInUpdate]
+      Required = True
+      Precision = 18
+      Size = 3
+    end
     object IbDtstTabelaRESERVA: TIBBCDField
       DisplayLabel = 'Reserva'
       FieldName = 'RESERVA'
@@ -2371,11 +2380,6 @@ inherited frmGeProduto: TfrmGeProduto
       FieldName = 'UNIDADE'
       Origin = 'TBPRODUTO.UNIDADE'
       Size = 5
-    end
-    object IbDtstTabelaESTOQMIN: TSmallintField
-      DisplayLabel = 'M'#237'mino'
-      FieldName = 'ESTOQMIN'
-      Origin = 'TBPRODUTO.ESTOQMIN'
     end
     object IbDtstTabelaCODGRUPO: TSmallintField
       DisplayLabel = 'Grupo'

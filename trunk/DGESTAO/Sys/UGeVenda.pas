@@ -334,6 +334,7 @@ type
     cdsTabelaItensESTOQUE: TIBBCDField;
     cdsTabelaItensRESERVA: TIBBCDField;
     cdsTabelaItensQTDEFINAL: TIBBCDField;
+    cdsTabelaItensCODCLIENTE: TIntegerField;
     procedure ImprimirOpcoesClick(Sender: TObject);
     procedure ImprimirOrcamentoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -798,8 +799,8 @@ begin
         cdsTabelaItensPUNIT_PROMOCAO.AsCurrency := FieldByName('Preco_Promocao').AsCurrency;
         cdsTabelaItensVALOR_IPI.AsCurrency      := FieldByName('Valor_ipi').AsCurrency;
         
-        cdsTabelaItensESTOQUE.AsCurrency := FieldByName('Qtde').AsCurrency;
-        cdsTabelaItensRESERVA.AsCurrency := FieldByName('Reserva').AsCurrency;
+        cdsTabelaItensESTOQUE.AsCurrency   := FieldByName('Qtde').AsCurrency;
+        cdsTabelaItensRESERVA.AsCurrency   := FieldByName('Reserva').AsCurrency;
 
         if ( cdsTabelaItensPUNIT_PROMOCAO.AsCurrency > 0 ) then
         begin
@@ -1420,6 +1421,7 @@ begin
   cdsTabelaItensDTVENDA.Value    := IbDtstTabelaDTVENDA.Value;
   cdsTabelaItensCODEMP.Value     := IbDtstTabelaCODEMP.Value;
   cdsTabelaItensCODCLI.Value     := IbDtstTabelaCODCLI.Value;
+  cdsTabelaItensCODCLIENTE.Value := IbDtstTabelaCODCLIENTE.Value;
   cdsTabelaItensCFOP_COD.Value        := GetCfopIDDefault;
   cdsTabelaItensCFOP_DESCRICAO.Value  := GetCfopNomeDefault;
   cdsTabelaItensCST.Value             := '000';
@@ -1428,6 +1430,7 @@ begin
   cdsTabelaItensALIQUOTA_PIS.Value    := 0.0;
   cdsTabelaItensALIQUOTA_COFINS.Value := 0.0;
   cdsTabelaItensQTDE.Value            := 1;
+  cdsTabelaItensQTDEFINAL.Value       := 0;
   cdsTabelaItensDESCONTO.Value        := 0;
   cdsTabelaItensDESCONTO_VALOR.Value  := 0;
   cdsTabelaItensPERCENTUAL_REDUCAO_BC.Value := 0.0;
