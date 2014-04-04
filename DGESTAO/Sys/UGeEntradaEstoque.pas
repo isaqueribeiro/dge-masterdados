@@ -987,7 +987,11 @@ begin
       ParamByName('Cfop_cod').AsInteger := iCodigo;
       Open;
       if not IsEmpty then
-        IbDtstTabelaCFOP_DESCRICAO.AsString := FieldByName('cfop_descricao').AsString
+      begin
+        IbDtstTabelaCFOP_DESCRICAO.AsString := FieldByName('cfop_descricao').AsString;
+        if ( Trim(FieldByName('Cfop_cst_padrao_entrada').AsString) <> EmptyStr ) then
+          cdsTabelaItensCST.AsString := Trim(FieldByName('Cfop_cst_padrao_entrada').AsString);
+      end
       else
       begin
         ShowWarning('Código CFOP não cadastrado');

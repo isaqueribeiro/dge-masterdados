@@ -1999,7 +1999,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           ParentFont = False
         end
         object lblNCM_SH: TLabel
-          Left = 672
+          Left = 736
           Top = 24
           Width = 43
           Height = 13
@@ -2013,7 +2013,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           ParentFont = False
         end
         object lblCST: TLabel
-          Left = 768
+          Left = 832
           Top = 24
           Width = 23
           Height = 13
@@ -2027,7 +2027,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           ParentFont = False
         end
         object lblCFOPItem: TLabel
-          Left = 832
+          Left = 672
           Top = 24
           Width = 31
           Height = 13
@@ -2615,7 +2615,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           TabOrder = 17
         end
         object dbNCM_SH: TDBEdit
-          Left = 672
+          Left = 736
           Top = 40
           Width = 89
           Height = 21
@@ -2628,11 +2628,11 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 4
+          TabOrder = 5
           OnExit = ControlEditExit
         end
         object dbCST: TDBEdit
-          Left = 768
+          Left = 832
           Top = 40
           Width = 57
           Height = 21
@@ -2645,11 +2645,11 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 5
+          TabOrder = 6
           OnExit = ControlEditExit
         end
         object dbCFOPItem: TDBEdit
-          Left = 832
+          Left = 672
           Top = 40
           Width = 57
           Height = 21
@@ -2662,7 +2662,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 6
+          TabOrder = 4
           OnExit = ControlEditExit
         end
         object dbAliquota: TDBEdit

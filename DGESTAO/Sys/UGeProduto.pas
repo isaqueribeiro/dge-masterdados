@@ -19,7 +19,6 @@ type
     IbDtstTabelaREFERENCIA: TIBStringField;
     IbDtstTabelaSECAO: TIBStringField;
     IbDtstTabelaUNIDADE: TIBStringField;
-    IbDtstTabelaESTOQMIN: TSmallintField;
     IbDtstTabelaCODGRUPO: TSmallintField;
     IbDtstTabelaCUSTOMEDIO: TIBBCDField;
     IbDtstTabelaCODEMP: TIBStringField;
@@ -239,6 +238,7 @@ type
     IbDtstTabelaQTDE: TIBBCDField;
     IbDtstTabelaDISPONIVEL: TIBBCDField;
     IbDtstTabelaRESERVA: TIBBCDField;
+    IbDtstTabelaESTOQMIN: TIBBCDField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);
@@ -644,7 +644,7 @@ begin
   if ( (IbDtstTabelaPERCENTUAL_REDUCAO_BC.AsCurrency < 0) or (IbDtstTabelaPERCENTUAL_REDUCAO_BC.AsCurrency > 100) ) then
     IbDtstTabelaPERCENTUAL_REDUCAO_BC.Value := 0;
 
-  IbDtstTabelaDISPONIVEL.Value := IbDtstTabelaQTDE.Value - IbDtstTabelaRESERVA.Value;
+  IbDtstTabelaDISPONIVEL.AsCurrency := IbDtstTabelaQTDE.AsCurrency - IbDtstTabelaRESERVA.AsCurrency;
 
   IbDtstTabelaCST.Value := IbDtstTabelaCODORIGEM.AsString + IbDtstTabelaCODTRIBUTACAO.AsString;
 
@@ -729,6 +729,7 @@ begin
   IbDtstTabelaCST.Value        := IbDtstTabelaCODORIGEM.AsString + IbDtstTabelaCODTRIBUTACAO.AsString;
   IbDtstTabelaESTOQMIN.Value   := 0;
   IbDtstTabelaQTDE.Value       := 0;
+  IbDtstTabelaESTOQMIN.Value   := 0;
   IbDtstTabelaRESERVA.Value    := 0;
   IbDtstTabelaCUSTOMEDIO.Value := 0;
   IbDtstTabelaPRECO.Value      := 0;
