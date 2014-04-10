@@ -273,8 +273,8 @@ type
     cdsTabelaItensQTDEANTES: TIBBCDField;
     cdsTabelaItensQTDEFINAL: TIBBCDField;
     cdsTabelaItensESTOQUE: TIBBCDField;
-    cdsTabelaItensTOTAL_BRUTO: TFMTBCDField;
-    cdsTabelaItensTOTAL_LIQUIDO: TFMTBCDField;
+    cdsTabelaItensTOTAL_BRUTO: TFloatField;
+    cdsTabelaItensTOTAL_LIQUIDO: TFloatField;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -550,6 +550,9 @@ begin
 
         if ( Trim(FieldByName('Cst').AsString) <> EmptyStr ) then
           cdsTabelaItensCST.AsString       := FieldByName('Cst').AsString;
+
+        if ( (qryCFOP.FieldByName('Cfop_cst_padrao_entrada').AsString) <> EmptyStr ) then
+          cdsTabelaItensCST.AsString := Trim(qryCFOP.FieldByName('Cfop_cst_padrao_entrada').AsString);
 
         if ( FieldByName('Codunidade').AsInteger > 0 ) then
           cdsTabelaItensUNID_COD.AsInteger   := FieldByName('Codunidade').AsInteger;
@@ -841,8 +844,12 @@ begin
   cdsTabelaItensCODEMP.Value     := IbDtstTabelaCODEMP.Value;
   cdsTabelaItensCODFORN.Value    := IbDtstTabelaCODFORN.Value;
   cdsTabelaItensNF.Value         := IbDtstTabelaNF.Value;
-  cdsTabelaItensCFOP.Value       := GetCfopIDDefault;
   cdsTabelaItensSEQ.Value        := cdsTabelaItens.RecordCount + 1;
+
+  if ( IbDtstTabelaNFCFOP.IsNull ) then
+    cdsTabelaItensCFOP.Value := GetCfopIDDefault
+  else
+    cdsTabelaItensCFOP.Assign( IbDtstTabelaNFCFOP );
 
   cdsTabelaItensQTDE.Value      := 0;
   cdsTabelaItensQTDEANTES.Value := 0;
@@ -987,11 +994,7 @@ begin
       ParamByName('Cfop_cod').AsInteger := iCodigo;
       Open;
       if not IsEmpty then
-      begin
-        IbDtstTabelaCFOP_DESCRICAO.AsString := FieldByName('cfop_descricao').AsString;
-        if ( Trim(FieldByName('Cfop_cst_padrao_entrada').AsString) <> EmptyStr ) then
-          cdsTabelaItensCST.AsString := Trim(FieldByName('Cfop_cst_padrao_entrada').AsString);
-      end
+        IbDtstTabelaCFOP_DESCRICAO.AsString := FieldByName('cfop_descricao').AsString
       else
       begin
         ShowWarning('Código CFOP não cadastrado');

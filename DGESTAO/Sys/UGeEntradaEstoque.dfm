@@ -1,6 +1,6 @@
 inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
-  Left = 435
-  Top = 167
+  Left = 247
+  Top = 83
   Width = 1115
   Height = 716
   ActiveControl = nil
@@ -2032,6 +2032,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           Width = 31
           Height = 13
           Caption = 'CFOP:'
+          Enabled = False
           FocusControl = dbCFOPItem
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
@@ -2656,6 +2657,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           Color = clWhite
           DataField = 'CFOP'
           DataSource = DtSrcTabelaItens
+          Enabled = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3267,6 +3269,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
   object tblEmpresa: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     TableName = 'TBEMPRESA'
     Left = 744
     Top = 8
@@ -3279,6 +3283,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
   object qryProduto: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (
@@ -3335,6 +3341,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
   object qryCFOP: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (
@@ -3353,6 +3361,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
   object tblFormaPagto: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     TableName = 'TBFORMPAGTO'
     Left = 744
     Top = 40
@@ -3365,6 +3375,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
   object tblCondicaoPagto: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     TableName = 'VW_CONDICAOPAGTO'
     TableTypes = [ttView]
     Left = 744
@@ -3379,6 +3391,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     OnNewRecord = cdsTabelaItensNewRecord
+    BufferChunks = 1000
     CachedUpdates = True
     RefreshSQL.Strings = (
       '')
@@ -3615,21 +3628,15 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       Precision = 18
       Size = 3
     end
-    object cdsTabelaItensTOTAL_BRUTO: TFMTBCDField
+    object cdsTabelaItensTOTAL_BRUTO: TFloatField
       DisplayLabel = 'Total Bruto (R$)'
       FieldName = 'TOTAL_BRUTO'
-      ProviderFlags = []
       DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 5
     end
-    object cdsTabelaItensTOTAL_LIQUIDO: TFMTBCDField
+    object cdsTabelaItensTOTAL_LIQUIDO: TFloatField
       DisplayLabel = 'Total L'#237'quido (R$)'
       FieldName = 'TOTAL_LIQUIDO'
-      ProviderFlags = []
       DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 5
     end
   end
   object IbUpdTabelaItens: TIBUpdateSQL
@@ -3752,6 +3759,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     OnCalcFields = qryDuplicatasCalcFields
+    BufferChunks = 1000
+    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (
@@ -4041,6 +4050,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
   object qryNFE: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
+    BufferChunks = 1000
+    CachedUpdates = False
     SelectSQL.Strings = (
       'Select'
       '    n.empresa'
