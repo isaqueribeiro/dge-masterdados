@@ -2609,3 +2609,83 @@ NUMERIC(18,3);COMMENT ON DOMAIN DMN_QUANTIDADE_D3_N IS 'Quantidade';
 CREATE DOMAIN DMN_MONEY_3 AS
 NUMERIC(15,3);COMMENT ON DOMAIN DMN_MONEY_3 IS 'Valor (3 Casas Decimais)';
 
+
+
+
+/*------ SYSDBA 10/04/2014 15:43:29 --------*/
+
+COMMENT ON COLUMN TBCLIENTE.CODIGO IS
+'Codigo
+
+Obs.: CONSUMIDOR FINAL = 1';
+
+
+
+
+/*------ SYSDBA 10/04/2014 15:43:49 --------*/
+
+COMMENT ON COLUMN TBCLIENTE.CODIGO IS
+'Codigo
+
+Obs.: CONSUMIDOR FINAL (99999999999999) = 1';
+
+
+
+
+/*------ SYSDBA 10/04/2014 16:06:33 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendasitens_totais_produto for tvendasitens
+inactive before insert or update position 0
+AS
+begin
+  new.total_bruto    = ( coalesce(new.qtde, 0) * coalesce(new.punit, 0) );
+  new.total_desconto = ( coalesce(new.qtde, 0) * coalesce(new.desconto_valor, 0) );
+  new.total_liquido  = ( coalesce(new.total_bruto, 0) - coalesce(new.total_desconto, 0) );
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_VENDASITENS_TOTAIS_PRODUTO IS 'IMR - Trigger desativada em 10/04/2014 por apresentar inconsistencia no calculo.';
+
+
+
+
+/*------ SYSDBA 10/04/2014 16:06:46 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendasitens_totais_produto for tvendasitens
+inactive before insert or update position 0
+AS
+begin
+  Exit;
+
+  new.total_bruto    = ( coalesce(new.qtde, 0) * coalesce(new.punit, 0) );
+  new.total_desconto = ( coalesce(new.qtde, 0) * coalesce(new.desconto_valor, 0) );
+  new.total_liquido  = ( coalesce(new.total_bruto, 0) - coalesce(new.total_desconto, 0) );
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 10/04/2014 16:07:15 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendasitens_totais_produto for tvendasitens
+inactive before insert or update position 0
+AS
+begin
+  Exit;
+
+  new.total_bruto    = ( coalesce(new.qtde, 0.0) * coalesce(new.punit, 0.0) );
+  new.total_desconto = ( coalesce(new.qtde, 0.0) * coalesce(new.desconto_valor, 0.0) );
+  new.total_liquido  = ( coalesce(new.total_bruto, 0.0) - coalesce(new.total_desconto, 0.0) );
+end^
+
+SET TERM ; ^
+
