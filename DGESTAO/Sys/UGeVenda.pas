@@ -795,6 +795,9 @@ begin
         if ( Trim(FieldByName('Csosn').AsString) <> EmptyStr ) then
           cdsTabelaItensCSOSN.AsString     := FieldByName('Csosn').AsString;
 
+        if ( Trim(qryCFOP.FieldByName('Cfop_cst_padrao_saida').AsString) <> EmptyStr ) then
+          cdsTabelaItensCST.AsString := Trim(qryCFOP.FieldByName('Cfop_cst_padrao_saida').AsString);
+
         cdsTabelaItensPUNIT.AsCurrency          := FieldByName('Preco').AsCurrency;
         cdsTabelaItensPUNIT_PROMOCAO.AsCurrency := FieldByName('Preco_Promocao').AsCurrency;
         cdsTabelaItensVALOR_IPI.AsCurrency      := FieldByName('Valor_ipi').AsCurrency;
@@ -835,11 +838,7 @@ begin
       ParamByName('Cfop_cod').AsInteger := iCodigo;
       Open;
       if not IsEmpty then
-      begin
-        cdsTabelaItensCFOP_DESCRICAO.AsString := FieldByName('cfop_descricao').AsString;
-        if ( Trim(FieldByName('Cfop_cst_padrao_saida').AsString) <> EmptyStr ) then
-          cdsTabelaItensCST.AsString := Trim(FieldByName('Cfop_cst_padrao_saida').AsString);
-      end
+        cdsTabelaItensCFOP_DESCRICAO.AsString := FieldByName('cfop_descricao').AsString
       else
       begin
         ShowWarning('Código CFOP não cadastrado');
@@ -1271,7 +1270,6 @@ begin
       cdsTabelaItensTOTAL_BRUTO.AsCurrency    := cdsTabelaItensQTDE.AsCurrency * cPrecoVND;
       cdsTabelaItensTOTAL_DESCONTO.AsCurrency := cdsTabelaItensQTDE.AsCurrency * cdsTabelaItensDESCONTO_VALOR.AsCurrency;
       cdsTabelaItensTOTAL_LIQUIDO.AsCurrency  := cdsTabelaItensTOTAL_BRUTO.AsCurrency - cdsTabelaItensTOTAL_DESCONTO.AsCurrency;;
-//      cdsTabelaItensTOTAL_LIQUIDO.AsCurrency  := cdsTabelaItensQTDE.AsCurrency * StrToCurr( FormatFloat('##########0.00', cdsTabelaItensPFINAL.AsCurrency) );
     end;
 
   if ( Sender = dbValorLiq ) then
@@ -1390,6 +1388,9 @@ begin
       cdsTabelaItensESTOQUE.AsCurrency := iEstoque;
       cdsTabelaItensRESERVA.AsCurrency := iReserva;
 
+      if ( Trim(qryCFOP.FieldByName('Cfop_cst_padrao_saida').AsString) <> EmptyStr ) then
+        cdsTabelaItensCST.AsString := Trim(qryCFOP.FieldByName('Cfop_cst_padrao_saida').AsString);
+
       if ( cValorPromocao > 0 ) then
       begin
         cdsTabelaItensDESCONTO_VALOR.AsCurrency := cValorVenda - cValorPromocao;
@@ -1422,8 +1423,18 @@ begin
   cdsTabelaItensCODEMP.Value     := IbDtstTabelaCODEMP.Value;
   cdsTabelaItensCODCLI.Value     := IbDtstTabelaCODCLI.Value;
   cdsTabelaItensCODCLIENTE.Value := IbDtstTabelaCODCLIENTE.Value;
-  cdsTabelaItensCFOP_COD.Value        := GetCfopIDDefault;
-  cdsTabelaItensCFOP_DESCRICAO.Value  := GetCfopNomeDefault;
+
+  if ( IbDtstTabelaCFOP.IsNull ) then
+  begin
+    cdsTabelaItensCFOP_COD.Value        := GetCfopIDDefault;
+    cdsTabelaItensCFOP_DESCRICAO.Value  := GetCfopNomeDefault;
+  end
+  else
+  begin
+    cdsTabelaItensCFOP_COD.Assign( IbDtstTabelaCFOP );
+    cdsTabelaItensCFOP_DESCRICAO.Assign( qryCFOP.FieldByName('cfop_descricao') );
+  end;
+
   cdsTabelaItensCST.Value             := '000';
   cdsTabelaItensPUNIT_PROMOCAO.Value  := 0.0;
   cdsTabelaItensALIQUOTA.Value        := 0;
