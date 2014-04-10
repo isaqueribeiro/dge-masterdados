@@ -3,7 +3,7 @@ unit UConstantesDGE;
 interface
 
 const
-  VERSION_NUMBER = '1.0.4.1';
+  VERSION_NUMBER = '1.0.5.0';
 
   SISTEMA_GESTAO = 0;
   SISTEMA_PDV    = 1;
