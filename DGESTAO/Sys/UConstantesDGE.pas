@@ -8,6 +8,10 @@ const
   SISTEMA_GESTAO = 0;
   SISTEMA_PDV    = 1;
 
+  INI_SECAO_DEFAULT = 'Default';
+  INI_KEY_ESTADO    = 'EstadoID';
+  INI_KEY_CIDADE    = 'CidadeID';
+  
   ROTINA_LENGTH_ID     = 10;
   ROTINA_TIPO_MENU     = 0;
   ROTINA_TIPO_TELA     = 1;
