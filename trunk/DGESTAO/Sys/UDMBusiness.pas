@@ -6,7 +6,8 @@ uses
   Windows, Forms, SysUtils, Classes, IBDatabase, DB, IBCustomDataSet, IniFIles,
   ShellApi, Printers, DateUtils, IBQuery, RpDefine, RpRave,
   frxClass, frxDBSet, EMsgDlg, IdBaseComponent, IdComponent, IdIPWatch, IBStoredProc,
-  FuncoesFormulario, UConstantesDGE, IBUpdateSQL, EUserAcs;
+  FuncoesFormulario, UConstantesDGE, IBUpdateSQL, EUserAcs, DBClient,
+  Provider;
 
 type
   TSistema = record
@@ -139,6 +140,8 @@ var
   procedure ShowError(sMsg : String);
   procedure UpdateSequence(GeneratorName, NomeTabela, CampoChave : String; const sWhr : String = '');
   procedure CommitTransaction;
+
+  procedure GetDataSet(const FDataSet : TClientDataSet; const sNomeTabela, sQuando, sOrdernarPor : String);
 
   procedure Desativar_Promocoes;
   procedure GerarSaldoContaCorrente(const ContaCorrente : Integer; const Data : TDateTime);
@@ -562,6 +565,47 @@ begin
   end;
 end;
 
+procedure GetDataSet(const FDataSet : TClientDataSet; const sNomeTabela, sQuando, sOrdernarPor : String);
+var
+  qry : TIBQuery;
+  dsp : TDataSetProvider;
+  cds : TClientDataSet;
+begin
+  qry := TIBQuery.Create(nil);
+  dsp := TDataSetProvider.Create(nil);
+  cds := TClientDataSet.Create(nil);
+  try
+    qry.Database    := DMBusiness.ibdtbsBusiness;
+    qry.Transaction := DMBusiness.ibtrnsctnBusiness;
+
+    with qry do
+    begin
+      SQL.BeginUpdate;
+      SQL.Clear;
+      SQL.Add('Select * ');
+      SQL.Add('from ' + sNomeTabela);
+
+      if ( Trim(sQuando) <> EmptyStr ) then
+        SQL.Add('where ' + sQuando);
+
+      if ( Trim(sOrdernarPor) <> EmptyStr ) then
+        SQL.Add('order by ' + sOrdernarPor);
+
+      SQL.EndUpdate;
+    end;
+
+    dsp.DataSet := qry;
+    cds.SetProvider( dsp );
+    cds.Open;
+
+    FDataSet.CloneCursor(cds, False);
+  finally
+    cds.Free;
+    dsp.Free;
+    qry.Free;
+  end;
+end;
+
 procedure Desativar_Promocoes;
 begin
   with DMBusiness, qryBusca do
@@ -876,52 +920,52 @@ end;
 
 function GetPaisIDDefault : String;
 begin
-  Result := FileINI.ReadString('Default', 'PaisID', '01058');
+  Result := FileINI.ReadString(INI_SECAO_DEFAULT, 'PaisID', '01058');
 end;
 
 function GetEstadoIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger('Default', 'EstadoID', 15);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_ESTADO, 15);
 end;
 
 function GetCidadeIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger('Default', 'CidadeID', 170);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_CIDADE, 170);
 end;
 
 function GetCfopIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger('Default', 'CfopID', 5102);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, 'CfopID', 5102);
 end;
 
 function GetCfopEntradaIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger('Default', 'CfopEntradaID', GetCfopIDDefault);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, 'CfopEntradaID', GetCfopIDDefault);
 end;
 
 function GetEmpresaIDDefault : String;
 begin
-  Result := FileINI.ReadString('Default', 'EmpresaID', EmptyStr);
+  Result := FileINI.ReadString(INI_SECAO_DEFAULT, 'EmpresaID', EmptyStr);
 end;
 
 function GetClienteIDDefault : Integer;
 begin
-  Result := StrToIntDef( FileINI.ReadString('Default', 'ClienteID', EmptyStr), CONSUMIDOR_FINAL_CODIGO);
+  Result := StrToIntDef( FileINI.ReadString(INI_SECAO_DEFAULT, 'ClienteID', EmptyStr), CONSUMIDOR_FINAL_CODIGO);
 end;
 
 function GetVendedorIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger('Default', 'VendedorID', 1);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, 'VendedorID', 1);
 end;
 
 function GetFormaPagtoIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger('Default', 'FormaPagtoID', 1);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, 'FormaPagtoID', 1);
 end;
 
 function GetCondicaoPagtoIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger('Default', 'CondicaoPagtoID', 1);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, 'CondicaoPagtoID', 1);
 end;
 
 function GetEstacaoEmitiBoleto : Boolean;
