@@ -102,7 +102,7 @@ const
   PORTA_SMTP_PADRAO = 587;
 
   STR_TAMANHO_NCMSH = 8;
-(*
+
   // Identificacores de rotinas no sistema
 
   MENU_CADASTRO        = '01';
@@ -168,7 +168,7 @@ const
   NFE_CONSULTAR_NFE      = '0400200';
   NFE_EXPORTAR_NFE_GERAD = '0400300';
   NFE_EXPORTAR_CHV_NFE   = '0400400';
-*)
+
 implementation
 
 end.
