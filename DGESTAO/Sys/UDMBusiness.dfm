@@ -692,4 +692,48 @@ object DMBusiness: TDMBusiness
         ParamType = ptInput
       end>
   end
+  object cdsLicenca: TIBDataSet
+    Database = ibdtbsBusiness
+    Transaction = ibtrnsctnBusiness
+    CachedUpdates = True
+    DeleteSQL.Strings = (
+      'delete from SYS_LICENCA'
+      'where'
+      '  LINHA_CONTROLE = :OLD_LINHA_CONTROLE')
+    InsertSQL.Strings = (
+      'insert into SYS_LICENCA'
+      '  (LINHA_CONTROLE)'
+      'values'
+      '  (:LINHA_CONTROLE)')
+    RefreshSQL.Strings = (
+      'Select '
+      '  LINHA_CONTROLE'
+      'from SYS_LICENCA '
+      'where'
+      '  LINHA_CONTROLE = :LINHA_CONTROLE')
+    SelectSQL.Strings = (
+      'Select * from SYS_LICENCA')
+    ModifySQL.Strings = (
+      'update SYS_LICENCA'
+      'set'
+      '  LINHA_CONTROLE = :LINHA_CONTROLE'
+      'where'
+      '  LINHA_CONTROLE = :OLD_LINHA_CONTROLE')
+    GeneratorField.ApplyEvent = gamOnServer
+    Left = 416
+    Top = 32
+    object cdsLicencaLINHA_CONTROLE: TIBStringField
+      FieldName = 'LINHA_CONTROLE'
+      Origin = '"SYS_LICENCA"."LINHA_CONTROLE"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+      Size = 250
+    end
+  end
+  object opdLicenca: TOpenDialog
+    Filter = 'Arquivo Licen'#231'a (*.lnc)|*.lnc'
+    Title = 'Carregar arquivo Licen'#231'a'
+    Left = 448
+    Top = 32
+  end
 end

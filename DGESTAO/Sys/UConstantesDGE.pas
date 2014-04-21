@@ -9,9 +9,15 @@ const
   SISTEMA_PDV    = 1;
 
   INI_SECAO_DEFAULT = 'Default';
+  INI_KEY_PAIS      = 'PaisID';
   INI_KEY_ESTADO    = 'EstadoID';
   INI_KEY_CIDADE    = 'CidadeID';
-  
+
+  SYS_PATH_REGISTER = {$IFDEF DGE}'MasterDados\DGE'{$ELSE}'Ágil Soluções em Softwares\SGE'{$ENDIF};
+  SYS_PASSWD_KEY    = 'TheLordIsGod';
+  KEY_REG_VERSAO    = 'Versão';
+  KEY_REG_DATA      = 'Data acesso';
+
   ROTINA_LENGTH_ID     = 10;
   ROTINA_TIPO_MENU     = 0;
   ROTINA_TIPO_TELA     = 1;

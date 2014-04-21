@@ -7,7 +7,7 @@ uses
   ShellApi, Printers, DateUtils, IBQuery, RpDefine, RpRave,
   frxClass, frxDBSet, EMsgDlg, IdBaseComponent, IdComponent, IdIPWatch, IBStoredProc,
   FuncoesFormulario, UConstantesDGE, IBUpdateSQL, EUserAcs, DBClient,
-  Provider;
+  Provider, Dialogs, Registry;
 
 type
   TSistema = record
@@ -33,6 +33,17 @@ type
     Assinatura_Padrao : String;
     RequerAutenticacao : Boolean;
     ConexaoSeguraSSL   : Boolean;
+  end;
+
+  TLicenca = record
+    Empresa  : String;
+    CNPJ     : String;
+    Endereco : String;
+    Bairro : String;
+    Cidade : String;
+    UF     : String;
+    CEP    : String;
+    Competencia : Integer;
   end;
 
   TTipoRegime = (trSimplesNacional, trSimplesExcessoReceita, trRegimeNormal);
@@ -96,6 +107,9 @@ type
     ibdtstAjustEstoqQTDENOVA: TIBBCDField;
     ibdtstAjustEstoqQTDEFINAL: TIBBCDField;
     ibdtstAjustEstoqUSUARIO: TIBStringField;
+    cdsLicenca: TIBDataSet;
+    cdsLicencaLINHA_CONTROLE: TIBStringField;
+    opdLicenca: TOpenDialog;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -116,6 +130,11 @@ type
     procedure MontarPermissao;
   public
     { Public declarations }
+    procedure CarregarLicenca(const sNomeArquivo : String);
+    procedure ValidarLicenca(const sNomeArquivo : String; var CNPJ : String);
+    procedure LimparLicenca;
+
+    function LiberarUsoLicenca(const iCompetencia : Integer; const Alertar : Boolean = FALSE) : Boolean;
   end;
 
 var
@@ -127,6 +146,8 @@ var
   gSistema    : TSistema;
   gUsuarioLogado : TUsuarioLogado;
   gContaEmail : TContaEmail;
+  gLicencaSistema : TLicenca;
+  RegistroSistema : TRegistry;
 
 
   function IfThen(AValue: Boolean; const ATrue: string; AFalse: string = ''): string; overload;
@@ -135,8 +156,10 @@ var
 
   procedure ShowInformation(sTitle, sMsg : String); overload;
   procedure ShowInformation(sMsg : String); overload;
-  procedure ShowWarning(sMsg : String);
-  procedure ShowStop(sMsg : String);
+  procedure ShowWarning(sMsg : String); overload;
+  procedure ShowWarning(sTitulo, sMsg : String); overload;
+  procedure ShowStop(sMsg : String); overload;
+  procedure ShowStop(sTitulo, sMsg : String); overload;
   procedure ShowError(sMsg : String);
   procedure UpdateSequence(GeneratorName, NomeTabela, CampoChave : String; const sWhr : String = '');
   procedure CommitTransaction;
@@ -155,6 +178,8 @@ var
   procedure SetSistema(iCodigo : Smallint; sNome, sVersao : String);
   procedure SetRotinaSistema(iTipo : Smallint; sCodigo, sDescricao, sRotinaPai : String);
 
+  function EncriptSenha_Master(const Value, Key : String) : String;
+  function DecriptarSenha_Master(const Value, Key : String) : String;
   function DelphiIsRunning : Boolean;
   function GetDirectoryTempApp : String;
 
@@ -496,6 +521,22 @@ begin
     Application.MessageBox(PChar(sMsg), 'Alerta', MB_ICONWARNING);
 end;
 
+procedure ShowWarning(sTitulo, sMsg : String);
+var
+  fMsg : TfrmGeMessage;
+begin
+  if (gSistema.Codigo = SISTEMA_PDV) then
+    try
+      fMsg := TfrmGeMessage.Create(Application);
+      fMsg.Alerta(IfThen(Trim(sTitulo) = EmptyStr, 'Alerta', Trim(sTitulo)), sMsg);
+      fMsg.ShowModal;
+    finally
+      fMsg.Free;
+    end
+  else
+    Application.MessageBox(PChar(sMsg), PChar(IfThen(Trim(sTitulo) = EmptyStr, 'Alerta', Trim(sTitulo))), MB_ICONWARNING);
+end;
+
 procedure ShowStop(sMsg : String);
 var
   fMsg : TfrmGeMessage;
@@ -510,6 +551,22 @@ begin
     end
   else
     Application.MessageBox(PChar(sMsg), 'Pare!', MB_ICONSTOP);
+end;
+
+procedure ShowStop(sTitulo, sMsg : String);
+var
+  fMsg : TfrmGeMessage;
+begin
+  if (gSistema.Codigo = SISTEMA_PDV) then
+    try
+      fMsg := TfrmGeMessage.Create(Application);
+      fMsg.Parar(IfThen(Trim(sTitulo) = EmptyStr, 'Pare!', Trim(sTitulo)), sMsg);
+      fMsg.ShowModal;
+    finally
+      fMsg.Free;
+    end
+  else
+    Application.MessageBox(PChar(sMsg), PChar(IfThen(Trim(sTitulo) = EmptyStr, 'Pare!', Trim(sTitulo))), MB_ICONSTOP);
 end;
 
 procedure ShowError(sMsg : String);
@@ -899,6 +956,27 @@ begin
   end;
 end;
 
+function EncriptSenha_Master(const Value, Key : String) : String;
+var
+  iCarac ,
+  KeyAlt : Integer;
+begin
+  KeyAlt := Length(Key);
+
+  for iCarac := 1 to Length(Key) do
+    KeyAlt := KeyAlt xor Ord(Key[iCarac]);
+
+  Result := Value;
+
+  for iCarac := 1 to Length(Value) do
+    Result[iCarac] := chr(not(ord(Value[iCarac]) xor Ord(KeyAlt)));
+end;
+
+function DecriptarSenha_Master(const Value, Key : String) : String;
+begin
+  Result := EncriptSenha_Master(Value, Key);
+end;
+
 function DelphiIsRunning : Boolean;
 begin
   // Verifica se o programa rodou a partir do IDE do Delphi7:
@@ -920,7 +998,7 @@ end;
 
 function GetPaisIDDefault : String;
 begin
-  Result := FileINI.ReadString(INI_SECAO_DEFAULT, 'PaisID', '01058');
+  Result := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_PAIS, '01058');
 end;
 
 function GetEstadoIDDefault : Integer;
@@ -2065,6 +2143,70 @@ begin
   end;
 end;
 
+procedure TDMBusiness.CarregarLicenca(const sNomeArquivo: String);
+var
+  Arquivo : TStringList;
+  ini : TIniFile;
+  I : Integer;
+begin
+
+  if FileExists(sNomeArquivo) then
+  begin
+
+    Arquivo := TStringList.Create;
+    Arquivo.LoadFromFile(sNomeArquivo);
+
+    for I := 0 to Arquivo.Count - 1 do
+    begin
+      cdsLicenca.Append;
+      cdsLicencaLINHA_CONTROLE.AsString := Arquivo.Strings[I];
+      cdsLicenca.Post;
+    end;
+
+    cdsLicenca.ApplyUpdates;
+    CommitTransaction;
+
+    Arquivo.Free;
+
+  end;
+
+  cdsLicenca.Close;
+  cdsLicenca.Open;
+
+  Arquivo := TStringList.Create;
+  try
+    cdsLicenca.First;
+    while not cdsLicenca.Eof do
+    begin
+      Arquivo.Add( cdsLicencaLINHA_CONTROLE.AsString );
+      cdsLicenca.Next;
+    end;
+
+    for I := 0 to Arquivo.Count - 1 do
+      Arquivo.Strings[I] := DecriptarSenha_Master(Arquivo.Strings[I], SYS_PASSWD_KEY);
+
+    Arquivo.SaveToFile(ExtractFilePath(Application.ExeName) + '_temp.ini');
+
+    ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + '_temp.ini');
+
+    gLicencaSistema.Empresa  := ini.ReadString('Licenca', 'edEmpresa',  '');
+    gLicencaSistema.CNPJ     := ini.ReadString('Licenca', 'edCGC',      '');
+    gLicencaSistema.Endereco := ini.ReadString('Licenca', 'edEndereco', '');
+    gLicencaSistema.Bairro   := ini.ReadString('Licenca', 'edBairro',   '');
+    gLicencaSistema.Cidade   := ini.ReadString('Licenca', 'edCidade',   '');
+    gLicencaSistema.UF       := ini.ReadString('Licenca', 'edUF',       '');
+    gLicencaSistema.CEP      := ini.ReadString('Licenca', 'edCEP',      '');
+    gLicencaSistema.Competencia := StrToIntDef(ini.ReadString('Licenca', 'edCompetencia', FormatDateTime('yyyymm', Date + 15)), 0);
+
+  finally
+    ini.Free;
+    Arquivo.Free;
+
+    DeleteFile(ExtractFilePath(Application.ExeName) + '_temp.ini');
+  end;
+
+end;
+
 procedure TDMBusiness.DataModuleCreate(Sender: TObject);
 begin
   gSistema.Codigo := SISTEMA_GESTAO;
@@ -2091,6 +2233,32 @@ begin
 
     MontarPermissao;
 
+    cdsLicenca.Open;
+    if cdsLicenca.IsEmpty then
+    begin
+      if opdLicenca.Execute then
+        CarregarLicenca(opdLicenca.FileName)
+      else
+      begin
+        ShowWarning('Licença', 'Sistema não registrado!' + #13 + 'Favor carregar arquivo de licença');
+        Application.Terminate;
+      end;
+    end
+    else
+    begin
+      CarregarLicenca(EmptyStr);
+    end;
+    
+    with RegistroSistema do
+    begin
+      RootKey := HKEY_CURRENT_USER;
+      OpenKey(SYS_PATH_REGISTER, True);
+
+      WriteString(KEY_REG_VERSAO, GetExeVersion);
+      WriteString(KEY_REG_DATA,   DateToStr(Date));
+      CloseKey;
+    end;
+    
   except
     On E : Exception do
       ShowError('Erro ao tentar conectar no Servidor/Base.' + #13#13 + E.Message);
@@ -2114,8 +2282,73 @@ begin
   _PermissaoPerfil_SYSTEM_ADM  := TStringList.Create;
 end;
 
+procedure TDMBusiness.ValidarLicenca(const sNomeArquivo: String;
+  var CNPJ: String);
+var
+  Arquivo : TStringList;
+  ini : TIniFile;
+  I : Integer;
+begin
+
+  Arquivo := TStringList.Create;
+  try
+
+    Arquivo.LoadFromFile( sNomeArquivo );
+
+    for I := 0 to Arquivo.Count - 1 do
+      Arquivo.Strings[I] := DecriptarSenha_Master(Arquivo.Strings[I], SYS_PASSWD_KEY);
+
+    Arquivo.SaveToFile(ExtractFilePath(Application.ExeName) + '_temp.ini');
+
+    ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + '_temp.ini');
+
+    CNPJ := ini.ReadString('Licenca', 'edCGC', '');
+
+  finally
+    ini.Free;
+    Arquivo.Free;
+
+    DeleteFile(ExtractFilePath(Application.ExeName) + '_temp.ini');
+  end;
+
+end;
+
+procedure TDMBusiness.LimparLicenca;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Delete from SYS_LICENCA');
+    ExecSQL;
+
+    CommitTransaction;
+  end;
+end;
+
+function TDMBusiness.LiberarUsoLicenca(const iCompetencia: Integer;
+  const Alertar: Boolean = FALSE): Boolean;
+var
+  iComp : Integer;
+begin
+  if ( iCompetencia <= 0 ) then
+    iComp := StrToInt(FormatDateTime('yyyymm', GetDateDB))
+  else
+    iComp := iCompetencia;
+
+  Result := (iComp > gLicencaSistema.Competencia);
+
+  if not Result then
+    if Alertar then
+      ShowStop('Licença',
+        'A licença do sistema expirou.' + #13 +
+        'Acessos a determinadas rotinas no sistema serão bloqueados!' + #13#13 +
+        'Favor entrar em contato com suporte.');
+end;
+
 initialization
-  FormFunction := TFormularios.Create;
+  FormFunction    := TFormularios.Create;
+  RegistroSistema := TRegistry.Create;
 
 finalization
   FormFunction.Destroy;
