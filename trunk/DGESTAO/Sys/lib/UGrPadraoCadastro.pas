@@ -79,6 +79,7 @@ type
     fCampoDescricao ,
     fCampoOrdenacao ,
     fWhereAdditional: String;
+    fLiberarUso     ,
     fOcorreuErro    ,
     fAbrirTabelaAuto: Boolean;
     sSQL : TStringList;
@@ -163,8 +164,10 @@ end;
 procedure TfrmGrPadraoCadastro.FormCreate(Sender: TObject);
 begin
   inherited;
+  fLiberarUso := DMBusiness.LiberarUsoLicenca(StrToInt(FormatDateTime('yyyymm', GetDateDB)));
+
   _ver := TInfoVersao.GetInstance;
-  
+
   DisplayFormatCodigo := '00000';
   NomeTabela      := EmptyStr;
   CampoCodigo     := EmptyStr;
@@ -242,9 +245,9 @@ begin
   dbgDados.Enabled    := not (IbDtstTabela.State in [dsEdit, dsInsert]);
   grpBxFiltro.Enabled := not (IbDtstTabela.State in [dsEdit, dsInsert]);
 
-  btbtnIncluir.Enabled    := (IbDtstTabela.State in [dsBrowse]);
-  btbtnAlterar.Enabled    := (IbDtstTabela.State in [dsBrowse]) and (not IbDtstTabela.IsEmpty);
-  btbtnExcluir.Enabled    := (IbDtstTabela.State in [dsBrowse]) and (not IbDtstTabela.IsEmpty);
+  btbtnIncluir.Enabled    := (IbDtstTabela.State in [dsBrowse]) and fLiberarUso;
+  btbtnAlterar.Enabled    := (IbDtstTabela.State in [dsBrowse]) and (not IbDtstTabela.IsEmpty) and fLiberarUso;
+  btbtnExcluir.Enabled    := (IbDtstTabela.State in [dsBrowse]) and (not IbDtstTabela.IsEmpty) and fLiberarUso;
   btbtnCancelar.Enabled   := (IbDtstTabela.State in [dsEdit, dsInsert]);
   btbtnSalvar.Enabled     := (IbDtstTabela.State in [dsEdit, dsInsert]);
   btbtnLista.Enabled      := (IbDtstTabela.State in [dsBrowse]);

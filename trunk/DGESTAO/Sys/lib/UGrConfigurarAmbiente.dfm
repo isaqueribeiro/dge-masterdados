@@ -171,7 +171,7 @@ inherited frmGrConfigurarAmbiente: TfrmGrConfigurarAmbiente
         Left = 0
         Top = 0
         Width = 414
-        Height = 137
+        Height = 113
         Align = alTop
         Caption = ' Dados Padr'#245'es '
         TabOrder = 0
@@ -213,36 +213,48 @@ inherited frmGrConfigurarAmbiente: TfrmGrConfigurarAmbiente
           Height = 21
           Enabled = False
           TabOrder = 0
+          OnKeyPress = ApenasNumerosKeyPress
         end
-        object edEstado: TComboBox
+        object edPaisNome: TEdit
+          Left = 140
+          Top = 24
+          Width = 249
+          Height = 21
+          Enabled = False
+          ReadOnly = True
+          TabOrder = 1
+        end
+        object edEstado: TEdit
           Left = 72
           Top = 48
-          Width = 329
+          Width = 65
           Height = 21
-          Style = csDropDownList
-          ItemHeight = 13
-          ItemIndex = 0
-          TabOrder = 1
-          Text = 'A'
-          Items.Strings = (
-            'A'
-            'B'
-            'C')
+          TabOrder = 2
+          OnKeyPress = ApenasNumerosKeyPress
         end
-        object edCidade: TComboBox
+        object edEstadoNome: TEdit
+          Left = 140
+          Top = 48
+          Width = 249
+          Height = 21
+          ReadOnly = True
+          TabOrder = 3
+        end
+        object edCidade: TEdit
           Left = 72
           Top = 72
-          Width = 329
+          Width = 65
           Height = 21
-          Style = csDropDownList
-          ItemHeight = 13
-          ItemIndex = 0
-          TabOrder = 2
-          Text = 'A'
-          Items.Strings = (
-            'A'
-            'B'
-            'C')
+          TabOrder = 4
+          OnKeyPress = ApenasNumerosKeyPress
+        end
+        object edCidadeNome: TEdit
+          Left = 140
+          Top = 72
+          Width = 249
+          Height = 21
+          ReadOnly = True
+          TabOrder = 5
         end
       end
     end

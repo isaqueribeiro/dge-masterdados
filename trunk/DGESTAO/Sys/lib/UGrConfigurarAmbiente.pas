@@ -18,23 +18,24 @@ type
     GrpBxPadrao: TGroupBox;
     lblPais: TLabel;
     edPais: TEdit;
+    edPaisNome: TEdit;
     lblEstado: TLabel;
-    edEstado: TComboBox;
+    edEstado: TEdit;
+    edEstadoNome: TEdit;
     lblCidade: TLabel;
-    edCidade: TComboBox;
+    edCidade: TEdit;
+    edCidadeNome: TEdit;
+    procedure ApenasNumerosKeyPress(Sender: TObject; var Key: Char);
     procedure btnCancelarClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnSalvarClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
-    FEstado : Array of Integer;
-    procedure CarregarEstados;
-
     procedure CarregarDadosINI;
     procedure GravarDadosINI;
-
-    function GetEstadoIndex(const ID : Integer) : Integer;
   public
     { Public declarations }
     procedure RegistrarRotinaSistema; override;
@@ -69,63 +70,26 @@ end;
 
 procedure TfrmGrConfigurarAmbiente.CarregarDadosINI;
 begin
-  edPais.Text        := FileINI.ReadString(INI_SECAO_DEFAULT, 'PaisID', '01058');
-  edEstado.ItemIndex := GetEstadoIndex( FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_ESTADO, 0) );
+  edPais.Text   := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_PAIS,   '01058');
+  edEstado.Text := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_ESTADO, '15');
+  edCidade.Text := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_CIDADE, '170');
+
+  edPaisNome.Text   := GetPaisNomeDefault;
+  edEstadoNome.Text := GetEstadoNome( StrToIntDef(edEstado.Text, 0) );
+  edCidadeNome.Text := GetCidadeNome( StrToIntDef(edCidade.Text, 0) );
 end;
 
 procedure TfrmGrConfigurarAmbiente.FormShow(Sender: TObject);
 begin
   inherited;
-  CarregarEstados;
-
   CarregarDadosINI;
-end;
-
-function TfrmGrConfigurarAmbiente.GetEstadoIndex(
-  const ID: Integer): Integer;
-var
-  I : Integer;
-begin
-  I := 0;
-
-  for I := Low(FEstado) to High(FEstado) do
-  begin
-    if ( FEstado[I] = ID ) then
-      Break;
-  end;
-
-  Result := I;
-end;
-
-procedure TfrmGrConfigurarAmbiente.CarregarEstados;
-var
-  cds : TClientDataSet;
-  I : Integer;
-begin
-  cds := TClientDataSet.Create(nil);
-  try
-    GetDataSet(cds, 'TBESTADO', EmptyStr, 'est_cod');
-    SetLength(FEstado, cds.RecordCount);
-    edEstado.Items.Clear;
-
-    cds.First;
-    I := 0;
-    while not cds.Eof do
-    begin
-      FEstado[I] := cds.FieldByName('est_cod').AsInteger;
-      edEstado.Items.Add( FormatFloat('000',  cds.FieldByName('est_cod').AsInteger) + ' . ' + cds.FieldByName('est_nome').AsString );
-
-      cds.Next;
-      Inc(I);
-    end;
-  finally
-    cds.Free;
-  end;
 end;
 
 procedure TfrmGrConfigurarAmbiente.GravarDadosINI;
 begin
-  FileINI.WriteInteger(INI_SECAO_DEFAULT, INI_KEY_ESTADO, FEstado[edEstado.ItemIndex]);
+  FileINI.WriteString(INI_SECAO_DEFAULT, INI_KEY_PAIS,   edPais.Text);
+  FileINI.WriteString(INI_SECAO_DEFAULT, INI_KEY_ESTADO, edEstado.Text);
+  FileINI.WriteString(INI_SECAO_DEFAULT, INI_KEY_CIDADE, edCidade.Text);
 end;
 
 procedure TfrmGrConfigurarAmbiente.btnSalvarClick(Sender: TObject);
@@ -135,6 +99,28 @@ begin
     GravarDadosINI;
     ModalResult := mrOk;
   end;
+end;
+
+procedure TfrmGrConfigurarAmbiente.ApenasNumerosKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if not (Key in ['0'..'9', #8]) then
+    Key := #0;
+end;
+
+procedure TfrmGrConfigurarAmbiente.FormKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if ( Key in [VK_TAB, VK_RETURN] ) then
+  begin
+    if edEstado.Focused then
+      edEstadoNome.Text := GetEstadoNome( StrToIntDef(edEstado.Text, 0) )
+    else
+    if edCidade.Focused then
+      edCidadeNome.Text := GetCidadeNome( StrToIntDef(edCidade.Text, 0) );
+  end;
+
+  inherited;
 end;
 
 initialization
