@@ -70,9 +70,9 @@ end;
 
 procedure TfrmGrConfigurarAmbiente.CarregarDadosINI;
 begin
-  edPais.Text   := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_PAIS,   '01058');
-  edEstado.Text := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_ESTADO, '15');
-  edCidade.Text := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_CIDADE, '170');
+  edPais.Text   := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_PAIS,   INI_KEY_PAIS_VALUE);
+  edEstado.Text := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_ESTADO, INI_KEY_ESTADO_VALUE);
+  edCidade.Text := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_CIDADE, INI_KEY_CIDADE_VALUE);
 
   edPaisNome.Text   := GetPaisNomeDefault;
   edEstadoNome.Text := GetEstadoNome( StrToIntDef(edEstado.Text, 0) );
@@ -104,20 +104,26 @@ end;
 procedure TfrmGrConfigurarAmbiente.ApenasNumerosKeyPress(Sender: TObject;
   var Key: Char);
 begin
-  if not (Key in ['0'..'9', #8]) then
+  if not (Key in ['0'..'9', #8, #9, #13]) then
     Key := #0;
 end;
 
 procedure TfrmGrConfigurarAmbiente.FormKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
-  if ( Key in [VK_TAB, VK_RETURN] ) then
+  if ( Key in [VK_RETURN, VK_TAB] ) then
   begin
     if edEstado.Focused then
-      edEstadoNome.Text := GetEstadoNome( StrToIntDef(edEstado.Text, 0) )
+    begin
+      edEstadoNome.Text := GetEstadoNome( StrToIntDef(edEstado.Text, 0) );
+      Perform(WM_NEXTDLGCTL, 0, 0);
+    end
     else
     if edCidade.Focused then
+    begin
       edCidadeNome.Text := GetCidadeNome( StrToIntDef(edCidade.Text, 0) );
+      Perform(WM_NEXTDLGCTL, 0, 0);
+    end;
   end;
 
   inherited;
