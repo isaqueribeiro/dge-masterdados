@@ -8,16 +8,6 @@ const
   SISTEMA_GESTAO = 0;
   SISTEMA_PDV    = 1;
 
-  INI_SECAO_DEFAULT = 'Default';
-  INI_KEY_PAIS      = 'PaisID';
-  INI_KEY_ESTADO    = 'EstadoID';
-  INI_KEY_CIDADE    = 'CidadeID';
-
-  SYS_PATH_REGISTER = {$IFDEF DGE}'MasterDados\DGE'{$ELSE}'Ágil Soluções em Softwares\SGE'{$ENDIF};
-  SYS_PASSWD_KEY    = 'TheLordIsGod';
-  KEY_REG_VERSAO    = 'Versão';
-  KEY_REG_DATA      = 'Data acesso';
-
   ROTINA_LENGTH_ID     = 10;
   ROTINA_TIPO_MENU     = 0;
   ROTINA_TIPO_TELA     = 1;
@@ -101,6 +91,8 @@ const
   CONSUMIDOR_FINAL_CNPJ   = '99999999999999';
   CONSUMIDOR_FINAL_NOME   = 'CONSUMIDOR FINAL';
 
+  EMPRESA_LICENCA_PADRAO  = 1;
+  
   TRIBUTO_ORIGEM_NACIONAL  = '0';
   TRIBUTO_TRIBUTADA_INTEG  = '00';
   TRIBUTO_NAO_TRIBUTADA_SN = '400';
@@ -174,6 +166,22 @@ const
   NFE_CONSULTAR_NFE      = '0400200';
   NFE_EXPORTAR_NFE_GERAD = '0400300';
   NFE_EXPORTAR_CHV_NFE   = '0400400';
+
+  // Chaves e campos de controle do arquivo INI
+  
+  INI_SECAO_DEFAULT = 'Default';
+  INI_KEY_PAIS      = 'PaisID';
+  INI_KEY_ESTADO    = 'EstadoID';
+  INI_KEY_CIDADE    = 'CidadeID';
+  INI_KEY_PAIS_VALUE   = '01058';
+  INI_KEY_ESTADO_VALUE = '15';
+  INI_KEY_CIDADE_VALUE = '170';
+
+  SYS_PATH_REGISTER = {$IFDEF DGE}'MasterDados\'{$ELSE}'Ágil Soluções em Softwares\'{$ENDIF};
+  SYS_PASSWD_KEY    = 'TheLordIsGod';
+  
+  KEY_REG_VERSAO    = 'Versão';
+  KEY_REG_DATA      = 'Data acesso';
 
 implementation
 

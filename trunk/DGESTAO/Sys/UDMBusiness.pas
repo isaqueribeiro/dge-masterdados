@@ -998,17 +998,17 @@ end;
 
 function GetPaisIDDefault : String;
 begin
-  Result := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_PAIS, '01058');
+  Result := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_PAIS, INI_KEY_PAIS_VALUE);
 end;
 
 function GetEstadoIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_ESTADO, 15);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_ESTADO, StrToInt(INI_KEY_ESTADO_VALUE));
 end;
 
 function GetCidadeIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_CIDADE, 170);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_CIDADE, StrToInt(INI_KEY_CIDADE_VALUE));
 end;
 
 function GetCfopIDDefault : Integer;
@@ -2252,7 +2252,7 @@ begin
     with RegistroSistema do
     begin
       RootKey := HKEY_CURRENT_USER;
-      OpenKey(SYS_PATH_REGISTER, True);
+      OpenKey(SYS_PATH_REGISTER + GetInternalName, True);
 
       WriteString(KEY_REG_VERSAO, GetExeVersion);
       WriteString(KEY_REG_DATA,   DateToStr(Date));
@@ -2336,11 +2336,12 @@ begin
   else
     iComp := iCompetencia;
 
-  Result := (iComp > gLicencaSistema.Competencia);
+  Result := (gLicencaSistema.Competencia > iComp);
 
   if not Result then
     if Alertar then
       ShowStop('Licença',
+        IntToStr(gLicencaSistema.Competencia) + #13#13 + 
         'A licença do sistema expirou.' + #13 +
         'Acessos a determinadas rotinas no sistema serão bloqueados!' + #13#13 +
         'Favor entrar em contato com suporte.');
