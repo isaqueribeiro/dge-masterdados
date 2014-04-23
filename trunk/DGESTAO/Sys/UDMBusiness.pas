@@ -43,7 +43,8 @@ type
     Cidade : String;
     UF     : String;
     CEP    : String;
-    Competencia : Integer;
+    Competencia  : Integer;
+    DataBloqueio : TDateTime;
   end;
 
   TTipoRegime = (trSimplesNacional, trSimplesExcessoReceita, trRegimeNormal);
@@ -134,7 +135,7 @@ type
     procedure ValidarLicenca(const sNomeArquivo : String; var CNPJ : String);
     procedure LimparLicenca;
 
-    function LiberarUsoLicenca(const iCompetencia : Integer; const Alertar : Boolean = FALSE) : Boolean;
+    function LiberarUsoLicenca(const dDataMovimento : TDateTime; const Alertar : Boolean = FALSE) : Boolean;
   end;
 
 var
@@ -2196,7 +2197,8 @@ begin
     gLicencaSistema.Cidade   := ini.ReadString('Licenca', 'edCidade',   '');
     gLicencaSistema.UF       := ini.ReadString('Licenca', 'edUF',       '');
     gLicencaSistema.CEP      := ini.ReadString('Licenca', 'edCEP',      '');
-    gLicencaSistema.Competencia := StrToIntDef(ini.ReadString('Licenca', 'edCompetencia', FormatDateTime('yyyymm', Date + 15)), 0);
+    gLicencaSistema.Competencia  := StrToIntDef(ini.ReadString('Licenca', 'edCompetencia', FormatDateTime('yyyymm', Date + 30)), 0);
+    gLicencaSistema.DataBloqueio := ini.ReadDateTime('Licenca', 'edDataBloqueio', Date + 45);
 
   finally
     ini.Free;
@@ -2326,22 +2328,23 @@ begin
   end;
 end;
 
-function TDMBusiness.LiberarUsoLicenca(const iCompetencia: Integer;
+function TDMBusiness.LiberarUsoLicenca(const dDataMovimento : TDateTime;
   const Alertar: Boolean = FALSE): Boolean;
 var
-  iComp : Integer;
+  dData : TDateTime;
 begin
-  if ( iCompetencia <= 0 ) then
-    iComp := StrToInt(FormatDateTime('yyyymm', GetDateDB))
+  if ( dDataMovimento = 0 ) then
+    dData := GetDateDB
   else
-    iComp := iCompetencia;
+    dData := dDataMovimento;
 
-  Result := (gLicencaSistema.Competencia > iComp);
+  Result := (gLicencaSistema.DataBloqueio > dData);
 
   if not Result then
     if Alertar then
       ShowStop('Licença',
-        IntToStr(gLicencaSistema.Competencia) + #13#13 + 
+        IntToStr (gLicencaSistema.Competencia)  + #13 +
+        DateToStr(gLicencaSistema.DataBloqueio) + #13#13 +
         'A licença do sistema expirou.' + #13 +
         'Acessos a determinadas rotinas no sistema serão bloqueados!' + #13#13 +
         'Favor entrar em contato com suporte.');

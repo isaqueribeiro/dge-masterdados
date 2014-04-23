@@ -164,7 +164,7 @@ end;
 procedure TfrmGrPadraoCadastro.FormCreate(Sender: TObject);
 begin
   inherited;
-  fLiberarUso := DMBusiness.LiberarUsoLicenca(StrToInt(FormatDateTime('yyyymm', GetDateDB)));
+  fLiberarUso := DMBusiness.LiberarUsoLicenca(GetDateDB);
 
   _ver := TInfoVersao.GetInstance;
 
