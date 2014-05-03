@@ -55,21 +55,21 @@ begin
 
   Caption := 'Sobre o ' + GetInternalName;
 
-  if ( StrIsCNPJ(GetEmpresaIDDefault) ) then
-    sCNPJ := StrFormatarCnpj(GetEmpresaIDDefault)
+  if ( StrIsCNPJ(gLicencaSistema.CNPJ) ) then
+    sCNPJ := StrFormatarCnpj(gLicencaSistema.CNPJ)
   else
-    sCNPJ := StrFormatarCpf(GetEmpresaIDDefault);
+    sCNPJ := StrFormatarCpf(gLicencaSistema.CNPJ);
 
   ProductName.Caption     := GetInternalName;
   FileDescription.Caption := GetFileDescription;
   {$IFDEF DGE}
-  Version.Caption     := 'Versão ' + VERSION_NUMBER; 
+  Version.Caption     := 'Versão ' + VERSION_NUMBER;
   Copyright.Caption   := '© 2012 | 2014 - Masterdados Tecnologia da Informação' + #13 + 'Todos os direitos reservados.';
   {$ELSE}
   Version.Caption      := 'Versão ' + GetExeVersion;
   Copyright.Caption    := GetCopyright;
   {$ENDIF}
-  Comments.Caption    := 'Licenciado a empresa ' + GetEmpresaNomeDefault + ' CPF/CNPJ.: ' + sCNPJ ;
+  Comments.Caption    := 'Licenciado a empresa ' + gLicencaSistema.Empresa + ' CPF/CNPJ.: ' + sCNPJ ;
 end;
 
 end.

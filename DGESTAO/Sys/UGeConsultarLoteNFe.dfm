@@ -4,7 +4,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
   BorderStyle = bsDialog
   BorderWidth = 4
   Caption = 'Consultar Recibo/Lote NF-e'
-  ClientHeight = 428
+  ClientHeight = 512
   ClientWidth = 593
   PixelsPerInch = 96
   TextHeight = 13
@@ -18,7 +18,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
   end
   object Bevel2: TBevel
     Left = 0
-    Top = 389
+    Top = 473
     Width = 593
     Height = 4
     Align = alTop
@@ -26,7 +26,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
   end
   object lblInforme: TLabel
     Left = 0
-    Top = 400
+    Top = 484
     Width = 216
     Height = 18
     Anchors = [akLeft, akBottom]
@@ -250,7 +250,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
     Left = 0
     Top = 125
     Width = 593
-    Height = 264
+    Height = 348
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
     Caption = 'Dados para Consulta do Lote / Recibo NF-e'
@@ -263,7 +263,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
     TabOrder = 1
     DesignSize = (
       593
-      264)
+      348)
     object lblUsuario: TLabel
       Left = 16
       Top = 24
@@ -294,11 +294,11 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
     end
     object lblJustificativa: TLabel
       Left = 16
-      Top = 104
+      Top = 144
       Width = 72
       Height = 13
       Caption = 'Justificativa:'
-      FocusControl = dbJustificativa
+      FocusControl = edJustificativa
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -351,11 +351,42 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object dbJustificativa: TMemo
+    object lblChaveNFe: TLabel
       Left = 16
-      Top = 120
+      Top = 104
+      Width = 66
+      Height = 13
+      Caption = 'Chave NF-e:'
+      Enabled = False
+      FocusControl = edChaveNFe
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object lblProtocoloTMP: TLabel
+      Left = 408
+      Top = 64
+      Width = 126
+      Height = 13
+      Caption = 'Protocolo da Consulta:'
+      Enabled = False
+      FocusControl = edProtocoloTMP
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Transparent = False
+    end
+    object edJustificativa: TMemo
+      Left = 16
+      Top = 160
       Width = 561
-      Height = 128
+      Height = 172
       Anchors = [akLeft, akTop, akRight, akBottom]
       Color = clWhite
       Font.Charset = ANSI_CHARSET
@@ -366,7 +397,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
       MaxLength = 250
       ParentFont = False
       ScrollBars = ssVertical
-      TabOrder = 5
+      TabOrder = 7
     end
     object dbUsuario: TEdit
       Left = 16
@@ -446,10 +477,40 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
       ParentFont = False
       TabOrder = 4
     end
+    object edChaveNFe: TEdit
+      Left = 16
+      Top = 120
+      Width = 561
+      Height = 21
+      Color = clWhite
+      Enabled = False
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 6
+    end
+    object edProtocoloTMP: TEdit
+      Left = 408
+      Top = 80
+      Width = 169
+      Height = 21
+      Color = clWhite
+      Enabled = False
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 5
+    end
   end
   object btnConfirmar: TBitBtn
     Left = 405
-    Top = 395
+    Top = 479
     Width = 92
     Height = 33
     Anchors = [akRight, akBottom]
@@ -511,7 +572,7 @@ inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
   end
   object btFechar: TBitBtn
     Left = 501
-    Top = 395
+    Top = 479
     Width = 92
     Height = 33
     Anchors = [akRight, akBottom]

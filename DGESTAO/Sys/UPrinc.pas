@@ -129,6 +129,9 @@ type
     Minimo1: TMenuItem;
     nmGerarArquivoNFC: TMenuItem;
     EAP: TEvAppProtect;
+    miCarregarLicenca: TMenuItem;
+    N13: TMenuItem;
+    miConfigurarAmbiente: TMenuItem;
     procedure btnEmpresaClick(Sender: TObject);
     procedure btnClienteClick(Sender: TObject);
     procedure btnContaAReceberClick(Sender: TObject);
@@ -189,6 +192,8 @@ type
     procedure VeculoMovimentao1Click(Sender: TObject);
     procedure Minimo1Click(Sender: TObject);
     procedure nmGerarArquivoNFCClick(Sender: TObject);
+    procedure miCarregarLicencaClick(Sender: TObject);
+    procedure miConfigurarAmbienteClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -394,12 +399,12 @@ procedure TfrmPrinc.FormActivate(Sender: TObject);
 var
   sCNPJ : String;
 begin
-  if ( StrIsCNPJ(GetEmpresaIDDefault) ) then
-    sCNPJ := ' CPF.: ' + StrFormatarCnpj(GetEmpresaIDDefault)
+  if ( StrIsCNPJ(gLicencaSistema.CNPJ) ) then
+    sCNPJ := ' CPF.: ' + StrFormatarCnpj(gLicencaSistema.CNPJ)
   else
-    sCNPJ := ' CNPJ.: ' + StrFormatarCpf(GetEmpresaIDDefault);
+    sCNPJ := ' CNPJ.: ' + StrFormatarCpf(gLicencaSistema.CNPJ);
 
-  stbMain.Panels.Items[2].Text  := 'Licenciado a empresa ' + GetEmpresaNomeDefault;
+  stbMain.Panels.Items[2].Text  := 'Licenciado a empresa ' + gLicencaSistema.Empresa;
   nmUsuarioAlterarSenha.Caption := Format('Alteração de Senha (%s)', [GetUserApp]);
 
   EvAcessUserPrincipal.UserID := GetUserFunctionID;
@@ -525,10 +530,12 @@ begin
       nmConultarVendaItem.Visible := true;
      end;
 
-  eap.Active := False;
-  eap.IdApplication := 99832505;
-  eap.Active := True;
-
+  if not DelphiIsRunning then
+  begin
+    eap.Active := False;
+    eap.IdApplication := 99832505;
+    eap.Active := True;
+  end;
 end;
 
 procedure TfrmPrinc.nmGerarBoletoClick(Sender: TObject);
@@ -659,6 +666,30 @@ end;
 procedure TfrmPrinc.nmGerarArquivoNFCClick(Sender: TObject);
 begin
   FormFunction.ShowModalForm(Self, 'frmGeExportarNFC');
+end;
+
+procedure TfrmPrinc.miCarregarLicencaClick(Sender: TObject);
+var
+  sCNPJ : String;
+begin
+  if DMBusiness.opdLicenca.Execute then
+  begin
+    DMBusiness.ValidarLicenca(DMBusiness.opdLicenca.FileName, sCNPJ);
+    if (sCNPJ <> gLicencaSistema.CNPJ) then
+      ShowStop('Licença', 'Arquivo de licença inválido para o cliente!' + #13 + 'Favor entrar em contato com suporte.')
+    else
+    begin
+      DMBusiness.LimparLicenca;
+      DMBusiness.CarregarLicenca(DMBusiness.opdLicenca.FileName);
+
+      ShowInformation('Licença', 'Arquivo para licença de uso do software carregado com sucesso.');
+    end;
+  end;
+end;
+
+procedure TfrmPrinc.miConfigurarAmbienteClick(Sender: TObject);
+begin
+  FormFunction.ShowModalForm(Self, 'frmGrConfigurarAmbiente');
 end;
 
 end.

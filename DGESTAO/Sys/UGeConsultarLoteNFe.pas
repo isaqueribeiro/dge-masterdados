@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UGrPadrao, DB, IBCustomDataSet, IBQuery, StdCtrls, Buttons,
-  ExtCtrls, Mask, DBCtrls, IBUpdateSQL;
+  ExtCtrls, Mask, DBCtrls, IBUpdateSQL, ClipBrd;
 
 type
   TTipoMovimento = (tmNFeEntrada, tmNFeSaida, tmNull);
@@ -48,7 +48,7 @@ type
     lblAno: TLabel;
     lblNumeroLote: TLabel;
     lblNumeroRecibo: TLabel;
-    dbJustificativa: TMemo;
+    edJustificativa: TMemo;
     dbUsuario: TEdit;
     dbDataHora: TEdit;
     edAno: TEdit;
@@ -82,6 +82,10 @@ type
     qryNFEEMPRESA: TIBStringField;
     qryNFEANOCOMPRA: TSmallintField;
     qryNFENUMCOMPRA: TIntegerField;
+    lblChaveNFe: TLabel;
+    edChaveNFe: TEdit;
+    lblProtocoloTMP: TLabel;
+    edProtocoloTMP: TEdit;
     procedure ApenasNumeroKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure btFecharClick(Sender: TObject);
@@ -89,6 +93,8 @@ type
       DisplayText: Boolean);
     procedure FormShow(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     FTipoMovimento : TTipoMovimento;
@@ -254,12 +260,17 @@ var
   iSerieNFe  ,
   iNumeroNFe ,
   iTipoNFe   : Integer;
+  sMensagem        ,
   sDestinatarioCNPJ,
   sFileNameXML ,
   sChaveNFE    ,
+  sProtocoloTMP,
   sProtocoloNFE,
   sReciboNFE   : String;
+  dDataEnvio   ,
   dDataEmissao : TDateTime;
+const
+  NOME_ARQUIVO_XML = '%s-NFe.xml';
 begin
   if not GetConectedInternet then
   begin
@@ -267,6 +278,51 @@ begin
     Exit;
   end;
 
+  if (Trim(edNumeroRecibo.Text) = EmptyStr) then
+    ShowInformation('Favor informar o Número do Recibo!')
+  else
+  if (Trim(edJustificativa.Lines.Text) = EmptyStr) then
+    ShowInformation('Favor informar a justificativa da consulta do recibo!')
+  else
+  begin
+
+    PesquisarLote(0, 0, Trim(edNumeroRecibo.Text), iAnoMov, iCodMov, sDestinatarioCNPJ);
+
+    if not DMNFe.GetValidadeCertificado then
+      Exit;
+
+    sRetorno := EmptyStr;
+
+    // Executar Consulta por Recibo para obter a Chave NF-e
+
+    if DMNFe.ConsultarNumeroLoteNFeACBr(GetEmpresaIDDefault, Trim(edNumeroRecibo.Text), sChaveNFE, sProtocoloTMP, sRetorno, dDataEnvio ) then
+    begin
+
+      edChaveNFe.Text     := Trim(sChaveNFE);
+      edProtocoloTMP.Text := Trim(sProtocoloTMP);
+
+      edJustificativa.Lines.Add('--');
+      edJustificativa.Lines.Add('Retorno:');
+      edJustificativa.Lines.Add('--');
+      edJustificativa.Lines.Add(sRetorno);
+
+      sFileNameXML := GetDiretorioNFe + Format(NOME_ARQUIVO_XML, [Trim(edChaveNFe.Text)]);
+      sMensagem    := 'Arquivo referenciado da NF-e:' + #13#13 + sFileNameXML;
+
+      // Executar Consulta por Chave NF-e para obter o arquivo e o Protocolo
+
+      if ( DMNFe.ConsultarChaveNFeACBr(GetEmpresaIDDefault, sChaveNFE, iSerieNFe, iNumeroNFe, iTipoNFe,
+        sDestinatarioCNPJ, sFileNameXML, sChaveNFE, sProtocoloNFE, dDataEmissao) ) then
+      begin
+        sMensagem := sMensagem + #13#13 + 'Arquivo a processar:' + #13#13 + sFileNameXML;
+        ShowInformation( sMensagem );
+
+      end;
+
+    end;
+
+  end;
+(*
   bTudo   := (Trim(edAno.Text) = EmptyStr) and (Trim(edNumeroLote.Text) = EmptyStr) and (Trim(edNumeroRecibo.Text) = EmptyStr);
   bLote   := ((Trim(edAno.Text) <> EmptyStr) and (Trim(edNumeroLote.Text) = EmptyStr))
     or ((Trim(edAno.Text) = EmptyStr) and (Trim(edNumeroLote.Text) <> EmptyStr));
@@ -429,12 +485,27 @@ begin
 
   end
   else
-    ShowInformation('Lote/Recibo não encontrado no sistema !');  
+    ShowInformation('Lote/Recibo não encontrado no sistema !');
+*)
+    
 end;
 
 procedure TfrmGeConsultarLoteNFe.RegistrarRotinaSistema;
 begin
   ;
+end;
+
+procedure TfrmGeConsultarLoteNFe.FormKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if ( Key = VK_F5 ) then
+  begin
+    if Clipboard.HasFormat( CF_TEXT ) then
+      if ( Length(Trim(Clipboard.AsText)) = NFE_TAMANHO_NUMERO_RECIBO ) then // 154000147188963
+        edNumeroRecibo.Text := Trim(Clipboard.AsText);
+  end
+  else
+    inherited;
 end;
 
 initialization

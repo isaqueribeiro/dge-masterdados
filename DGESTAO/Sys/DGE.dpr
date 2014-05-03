@@ -94,7 +94,9 @@ uses
   UBaseObject in 'lib\UBaseObject.pas',
   UObserverInterface in 'lib\UObserverInterface.pas',
   UGeExportarNFC in 'UGeExportarNFC.pas' {frmGeExportarNFC},
-  UGrMessage in 'lib\UGrMessage.pas' {frmGeMessage};
+  UGrMessage in 'lib\UGrMessage.pas' {frmGeMessage},
+  UGeConsultarLoteNFe in 'UGeConsultarLoteNFe.pas' {frmGeConsultarLoteNFe},
+  UGrConfigurarAmbiente in 'lib\UGrConfigurarAmbiente.pas' {frmGrConfigurarAmbiente};
 
 {$R *.res}
 
