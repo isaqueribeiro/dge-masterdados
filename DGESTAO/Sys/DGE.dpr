@@ -96,7 +96,8 @@ uses
   UGeExportarNFC in 'UGeExportarNFC.pas' {frmGeExportarNFC},
   UGrMessage in 'lib\UGrMessage.pas' {frmGeMessage},
   UGeConsultarLoteNFe in 'UGeConsultarLoteNFe.pas' {frmGeConsultarLoteNFe},
-  UGrConfigurarAmbiente in 'lib\UGrConfigurarAmbiente.pas' {frmGrConfigurarAmbiente};
+  UGrConfigurarAmbiente in 'lib\UGrConfigurarAmbiente.pas' {frmGrConfigurarAmbiente},
+  UfrmMovVeic in 'UfrmMovVeic.pas' {frmMovVeic};
 
 {$R *.res}
 

@@ -1693,10 +1693,6 @@ object frmRelProdutos: TfrmRelProdutos
       Precision = 18
       Size = 2
     end
-    object IBQuery1QTDE: TIntegerField
-      FieldName = 'QTDE'
-      Origin = 'TBPRODUTO.QTDE'
-    end
     object IBQuery1TotPrecoVenda: TCurrencyField
       FieldKind = fkCalculated
       FieldName = 'TotPrecoVenda'
@@ -1711,6 +1707,13 @@ object frmRelProdutos: TfrmRelProdutos
       FieldName = 'FABRIC'
       Origin = 'TBFABRICANTE.NOME'
       Size = 50
+    end
+    object IBQuery1QTDE: TIBBCDField
+      FieldName = 'QTDE'
+      Origin = 'TBPRODUTO.QTDE'
+      Required = True
+      Precision = 18
+      Size = 3
     end
   end
   object IBQuery2: TIBQuery
@@ -1760,14 +1763,17 @@ object frmRelProdutos: TfrmRelProdutos
       Precision = 18
       Size = 2
     end
-    object IntegerField1: TIntegerField
-      FieldName = 'QTDE'
-      Origin = 'TBPRODUTO.QTDE'
-    end
     object IBQuery2FABRIC: TIBStringField
       FieldName = 'FABRIC'
       Origin = 'TBFABRICANTE.NOME'
       Size = 50
+    end
+    object IBQuery2QTDE: TIBBCDField
+      FieldName = 'QTDE'
+      Origin = 'TBPRODUTO.QTDE'
+      Required = True
+      Precision = 18
+      Size = 3
     end
   end
 end

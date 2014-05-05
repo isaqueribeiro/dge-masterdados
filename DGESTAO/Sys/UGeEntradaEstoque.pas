@@ -273,8 +273,8 @@ type
     cdsTabelaItensQTDEANTES: TIBBCDField;
     cdsTabelaItensQTDEFINAL: TIBBCDField;
     cdsTabelaItensESTOQUE: TIBBCDField;
-    cdsTabelaItensTOTAL_BRUTO: TFMTBCDField;
-    cdsTabelaItensTOTAL_LIQUIDO: TFMTBCDField;
+    cdsTabelaItensTOTAL_BRUTO: TFloatField;
+    cdsTabelaItensTOTAL_LIQUIDO: TFloatField;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
