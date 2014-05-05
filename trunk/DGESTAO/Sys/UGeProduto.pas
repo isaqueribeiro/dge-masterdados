@@ -232,13 +232,25 @@ type
     lblNVE: TLabel;
     dbNVE: TDBEdit;
     IbDtstTabelaCODIGO_NVE: TIBStringField;
-    IbDtstTabelaPRECO_FRAC: TFMTBCDField;
-    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField;
-    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField;
     IbDtstTabelaQTDE: TIBBCDField;
     IbDtstTabelaDISPONIVEL: TIBBCDField;
     IbDtstTabelaRESERVA: TIBBCDField;
     IbDtstTabelaESTOQMIN: TIBBCDField;
+    IbDtstTabelaPRECO_FRAC: TFloatField;
+    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField;
+    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField;
+    tbsCustos_FI: TTabSheet;
+    grpCustos: TGroupBox;
+    lblValCompra: TLabel;
+    DBPRECO2: TDBEdit;
+    IbDtstTabelaPRECO2: TIBBCDField;
+    DBEdit1: TDBEdit;
+    Label1: TLabel;
+    DBEdit2: TDBEdit;
+    Label2: TLabel;
+    GroupBox1: TGroupBox;
+    Label3: TLabel;
+    DBEdit3: TDBEdit;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);
@@ -791,11 +803,17 @@ begin
   // Configurar Legendas de acordo com o segmento
   pnlVeiculo.Visible             := (GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID);
   tbsHistoricoVeiculo.TabVisible := (GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID);
+  tbsCustos_FI.TabVisible := (GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID);
 
   if ( pnlVeiculo.Visible ) then
   begin
     lblReferencia.Caption               := 'Placa:';
     IbDtstTabelaREFERENCIA.DisplayLabel := 'Placa';
+    lblDescricao.Caption := 'Veículo:';
+    IbDtstTabelaDESCRI.DisplayLabel := 'Veículo';
+    lblApresentacao.Caption := 'Chassi:';
+    IbDtstTabelaAPRESENTACAO.DisplayLabel := 'Chassi';
+    IbDtstTabelaDESCRI_APRESENTACAO.DisplayLabel := 'Veículo + Chassi';
   end;
 
   IbDtstTabelaCOR_VEICULO.Required            := pnlVeiculo.Visible;

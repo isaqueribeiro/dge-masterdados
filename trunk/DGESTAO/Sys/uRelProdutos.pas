@@ -42,7 +42,6 @@ type
     IBQuery1REFERENCIA: TIBStringField;
     IBQuery1PRECO: TIBBCDField;
     IBQuery1CUSTOMEDIO: TIBBCDField;
-    IBQuery1QTDE: TIntegerField;
     IBQuery1TotPrecoVenda: TCurrencyField;
     QRDBText7: TQRDBText;
     IBQuery1TotCustoEstoq: TCurrencyField;
@@ -75,13 +74,14 @@ type
     IBStringField4: TIBStringField;
     IBBCDField1: TIBBCDField;
     IBBCDField2: TIBBCDField;
-    IntegerField1: TIntegerField;
     IBQuery1FABRIC: TIBStringField;
     QRLabel18: TQRLabel;
     QRDBText19: TQRDBText;
     QRLabel15: TQRLabel;
     QRDBText15: TQRDBText;
     IBQuery2FABRIC: TIBStringField;
+    IBQuery1QTDE: TIBBCDField;
+    IBQuery2QTDE: TIBBCDField;
     procedure qckrpBeforePrint(Sender: TCustomQuickRep;
       var PrintReport: Boolean);
     procedure IBQuery1CalcFields(DataSet: TDataSet);
