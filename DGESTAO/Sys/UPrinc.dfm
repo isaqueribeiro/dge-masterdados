@@ -7515,6 +7515,10 @@ object frmPrinc: TfrmPrinc
           Caption = 'Vendas'
           OnClick = mnRelatorioFaturamentoVendasClick
         end
+        object RankingdeProdutos1: TMenuItem
+          Caption = 'Ranking de Produtos'
+          OnClick = RankingdeProdutos1Click
+        end
       end
       object mnRelatorioFinanceiro: TMenuItem
         Caption = 'Financeiro'

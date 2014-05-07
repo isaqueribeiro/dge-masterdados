@@ -132,6 +132,7 @@ type
     miCarregarLicenca: TMenuItem;
     N13: TMenuItem;
     miConfigurarAmbiente: TMenuItem;
+    RankingdeProdutos1: TMenuItem;
     procedure btnEmpresaClick(Sender: TObject);
     procedure btnClienteClick(Sender: TObject);
     procedure btnContaAReceberClick(Sender: TObject);
@@ -194,6 +195,7 @@ type
     procedure nmGerarArquivoNFCClick(Sender: TObject);
     procedure miCarregarLicencaClick(Sender: TObject);
     procedure miConfigurarAmbienteClick(Sender: TObject);
+    procedure RankingdeProdutos1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -225,7 +227,7 @@ uses
   UGeFluxoCaixa,
 
   // Relatórios
-  UfrmRelEstoque, UfrmRelEstoqMinimo;
+  UfrmRelEstoque, UfrmRelEstoqMinimo, UfrmRelVendas;
 
 {$R *.dfm}
 
@@ -587,7 +589,12 @@ end;
 
 procedure TfrmPrinc.mnRelatorioFaturamentoVendasClick(Sender: TObject);
 begin
-  FormFunction.ShowModalForm(Self, 'frmRelVendas');
+  //FormFunction.ShowModalForm(Self, 'frmRelVendas');
+  Application.CreateForm(TfrmRelVendas, frmRelVendas);
+  frmRelVendas.grpRanking.Visible := False;
+  frmRelVendas.btnRanking.Visible:= false;
+  frmRelVendas.ShowModal;
+  frmRelVendas.Destroy;
 end;
 
 procedure TfrmPrinc.nmFabricanteProdutoClick(Sender: TObject);
@@ -690,6 +697,23 @@ end;
 procedure TfrmPrinc.miConfigurarAmbienteClick(Sender: TObject);
 begin
   FormFunction.ShowModalForm(Self, 'frmGrConfigurarAmbiente');
+end;
+
+procedure TfrmPrinc.RankingdeProdutos1Click(Sender: TObject);
+begin
+  Application.CreateForm(TfrmRelVendas, frmRelVendas);
+  with frmRelVendas  do
+  begin
+   grpRanking.Visible := true;
+   btnRanking.Visible:= true;
+   grpbxVendedor.Visible := false;
+   GroupBox2.Visible := false;
+   btbtnLista.Visible:=false;
+   ShowModal;
+   Destroy;
+  end;
+
+
 end;
 
 end.

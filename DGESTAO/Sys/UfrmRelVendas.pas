@@ -12,7 +12,7 @@ type
     Label3: TLabel;
     Panel1: TPanel;
     BitBtn2: TBitBtn;
-    GroupBox1: TGroupBox;
+    grpPeriodo: TGroupBox;
     Label1: TLabel;
     Label2: TLabel;
     dttmpcIni: TDateTimePicker;
@@ -95,12 +95,54 @@ type
     ibqryVendasSinteticoVENDEDOR: TIBStringField;
     ibqryVendasSinteticoCOMISSAO: TIBBCDField;
     ibqryVendasSinteticoSUM: TIBBCDField;
+    grpRanking: TGroupBox;
+    Label4: TLabel;
+    edtReg: TEdit;
+    rdgrpOrdem: TRadioGroup;
+    qckrpRanking: TQuickRep;
+    QRBand6: TQRBand;
+    QRLabel12: TQRLabel;
+    QRSysData7: TQRSysData;
+    QRLabel14: TQRLabel;
+    QRLabel16: TQRLabel;
+    QRDBText13: TQRDBText;
+    QRBand7: TQRBand;
+    qrlblTVenda: TQRLabel;
+    QRLabel23: TQRLabel;
+    qrlblMargPerc: TQRLabel;
+    QRBand8: TQRBand;
+    QRDBText14: TQRDBText;
+    QRDBText15: TQRDBText;
+    QRDBText16: TQRDBText;
+    QRDBText17: TQRDBText;
+    QRBand9: TQRBand;
+    QRLabel26: TQRLabel;
+    QRSysData8: TQRSysData;
+    QRBand10: TQRBand;
+    QRSysData9: TQRSysData;
+    ibqryRanking: TIBQuery;
+    btnRanking: TBitBtn;
+    QRLabel21: TQRLabel;
+    qrlblTCusto: TQRLabel;
+    qrlblQtde: TQRLabel;
+    qrlblMargem: TQRLabel;
+    QRDBText18: TQRDBText;
+    QRDBText19: TQRDBText;
+    QRDBText20: TQRDBText;
+    ibqryRankingCODPROD: TIBStringField;
+    ibqryRankingDESCRI: TIBStringField;
+    ibqryRankingQTDE: TIBBCDField;
+    ibqryRankingTOTLIQ: TIBBCDField;
+    ibqryRankingTOTCUSTO: TFloatField;
+    ibqryRankingMARGEMLIQ: TFloatField;
+    ibqryRankingPERCMARGEM: TFloatField;
     procedure nmImprimirAnaliticoClick(Sender: TObject);
     procedure Analtico1Click(Sender: TObject);
     procedure btbtnListaClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ibqryVendasSinteticoCalcFields(DataSet: TDataSet);
     procedure Sinttico1Click(Sender: TObject);
+    procedure btnRankingClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -206,7 +248,40 @@ begin
  else qckrpVendasSintetico.Preview;
 end;
 
-initialization
-  FormFunction.RegisterForm('frmRelVendas', TfrmRelVendas);
+//initialization
+ // FormFunction.RegisterForm('frmRelVendas', TfrmRelVendas);
+procedure TfrmRelVendas.btnRankingClick(Sender: TObject);
+begin
+
+ ibqryRanking.Close;
+ ibqryRanking.ParamByName('dtini').Value := DateToStr(dttmpcIni.Date);
+ ibqryRanking.ParamByName('dtfim').Value := DateToStr(dttmpcFim.Date);
+ ibqryRanking.ParamByName('rk').Value := StrToInt(edtReg.Text);
+ case rdgrpOrdem.ItemIndex of
+  0 : begin
+       ibqryRanking.SQL.Add('order by 3 desc');
+       qrlblQtde.Font.Style:= [fsBold, fsItalic];
+      end;
+  1 : begin
+       ibqryRanking.SQL.Add('order by 4 desc');
+       qrlblTVenda.Font.Style:= [fsBold, fsItalic];
+      end;
+  2 : begin
+       ibqryRanking.SQL.Add('order by 7 desc');
+       qrlblMargPerc.Font.Style:= [fsBold, fsItalic];
+      end;
+  3 : begin
+       ibqryRanking.SQL.Add('order by 6 desc');
+       qrlblMargem.Font.Style:= [fsBold, fsItalic];
+      end;                 
+ end;
+ ibqryRanking.Open;
+
+ QRLabel14.Caption:= 'PERÍODO: '+ DateToStr(dttmpcIni.Date) +' a '+ DateToStr(dttmpcFim.date);
+ if ibqryRanking.IsEmpty then
+    MessageDlg ('Relatório Sem Registros!',mtWarning, [mbOk],0)
+ else qckrpRanking.Preview;
+ frmRelVendas.Close;
+end;
 
 end.
