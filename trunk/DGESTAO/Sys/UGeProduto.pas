@@ -251,6 +251,23 @@ type
     GroupBox1: TGroupBox;
     Label3: TLabel;
     DBEdit3: TDBEdit;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    DBEdit4: TDBEdit;
+    DBEdit5: TDBEdit;
+    DBEdit6: TDBEdit;
+    Label8: TLabel;
+    DBEdit8: TDBEdit;
+    Label9: TLabel;
+    DBEdit9: TDBEdit;
+    IbDtstTabelaCUST_DESP_OFIC: TIBBCDField;
+    IbDtstTabelaCUST_DESP_GERAIS: TIBBCDField;
+    IbDtstTabelaCUST_DESP_ADM: TIBBCDField;
+    IbDtstTabelaCUST_COMISSAO: TIBBCDField;
+    IbDtstTabelaCUST_IMPOSTO: TIBBCDField;
+    IbDtstTabelaFI_RET_FINANC: TIBBCDField;
+    IbDtstTabelaFI_RET_PLANO: TIBBCDField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);
@@ -809,11 +826,13 @@ begin
   begin
     lblReferencia.Caption               := 'Placa:';
     IbDtstTabelaREFERENCIA.DisplayLabel := 'Placa';
-    lblDescricao.Caption := 'Veículo:';
-    IbDtstTabelaDESCRI.DisplayLabel := 'Veículo';
+    lblDescricao.Caption := 'Veículo Modelo:';
+    IbDtstTabelaDESCRI.DisplayLabel := 'Veículo Modelo';
     lblApresentacao.Caption := 'Chassi:';
     IbDtstTabelaAPRESENTACAO.DisplayLabel := 'Chassi';
     IbDtstTabelaDESCRI_APRESENTACAO.DisplayLabel := 'Veículo + Chassi';
+    lblGrupo.Caption := 'Família:';
+    IbDtstTabelaDESCRICAO_GRUPO.DisplayLabel := 'Família';
   end;
 
   IbDtstTabelaCOR_VEICULO.Required            := pnlVeiculo.Visible;

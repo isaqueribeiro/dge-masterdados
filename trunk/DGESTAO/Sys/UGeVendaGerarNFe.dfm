@@ -896,6 +896,7 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     ForcedRefresh = True
+    BufferChunks = 1000
     CachedUpdates = True
     RefreshSQL.Strings = (
       '')
@@ -1075,30 +1076,6 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       ProviderFlags = [pfInUpdate]
       DisplayFormat = 'hh:mm:ss'
     end
-    object cdsVendaTOTALVENDA_BRUTA: TIBBCDField
-      FieldName = 'TOTALVENDA_BRUTA'
-      Origin = '"TBVENDAS"."TOTALVENDA_BRUTA"'
-      ProviderFlags = [pfInUpdate]
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
-    end
-    object cdsVendaDESCONTO: TIBBCDField
-      FieldName = 'DESCONTO'
-      Origin = '"TBVENDAS"."DESCONTO"'
-      ProviderFlags = [pfInUpdate]
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 4
-    end
-    object cdsVendaTOTALVENDA: TIBBCDField
-      FieldName = 'TOTALVENDA'
-      Origin = 'TBVENDAS.TOTALVENDA'
-      ProviderFlags = [pfInUpdate]
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
-    end
     object cdsVendaSERIE: TIBStringField
       FieldName = 'SERIE'
       Origin = 'TBVENDAS.SERIE'
@@ -1116,187 +1093,179 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       ProviderFlags = [pfInUpdate]
       Required = True
     end
+    object cdsVendaTOTALVENDA_BRUTA: TIBBCDField
+      FieldName = 'TOTALVENDA_BRUTA'
+      Origin = 'TBVENDAS.TOTALVENDA_BRUTA'
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 2
+    end
+    object cdsVendaDESCONTO: TIBBCDField
+      FieldName = 'DESCONTO'
+      Origin = 'TBVENDAS.DESCONTO'
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 4
+    end
+    object cdsVendaTOTALVENDA: TIBBCDField
+      FieldName = 'TOTALVENDA'
+      Origin = 'TBVENDAS.TOTALVENDA'
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 2
+    end
     object cdsVendaNFE_VALOR_BASE_ICMS: TIBBCDField
       FieldName = 'NFE_VALOR_BASE_ICMS'
-      Origin = '"TBVENDAS"."NFE_VALOR_BASE_ICMS"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_BASE_ICMS'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_ICMS: TIBBCDField
       FieldName = 'NFE_VALOR_ICMS'
-      Origin = '"TBVENDAS"."NFE_VALOR_ICMS"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_ICMS'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_BASE_ICMS_SUBST: TIBBCDField
       FieldName = 'NFE_VALOR_BASE_ICMS_SUBST'
-      Origin = '"TBVENDAS"."NFE_VALOR_BASE_ICMS_SUBST"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_BASE_ICMS_SUBST'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_ICMS_SUBST: TIBBCDField
       FieldName = 'NFE_VALOR_ICMS_SUBST'
-      Origin = '"TBVENDAS"."NFE_VALOR_ICMS_SUBST"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_ICMS_SUBST'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_TOTAL_PRODUTO: TIBBCDField
       FieldName = 'NFE_VALOR_TOTAL_PRODUTO'
-      Origin = '"TBVENDAS"."NFE_VALOR_TOTAL_PRODUTO"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_TOTAL_PRODUTO'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_FRETE: TIBBCDField
       FieldName = 'NFE_VALOR_FRETE'
-      Origin = '"TBVENDAS"."NFE_VALOR_FRETE"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_FRETE'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_SEGURO: TIBBCDField
       FieldName = 'NFE_VALOR_SEGURO'
-      Origin = '"TBVENDAS"."NFE_VALOR_SEGURO"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_SEGURO'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_DESCONTO: TIBBCDField
       FieldName = 'NFE_VALOR_DESCONTO'
-      Origin = '"TBVENDAS"."NFE_VALOR_DESCONTO"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_DESCONTO'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_TOTAL_II: TIBBCDField
       FieldName = 'NFE_VALOR_TOTAL_II'
-      Origin = '"TBVENDAS"."NFE_VALOR_TOTAL_II"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_TOTAL_II'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_TOTAL_IPI: TIBBCDField
       FieldName = 'NFE_VALOR_TOTAL_IPI'
-      Origin = '"TBVENDAS"."NFE_VALOR_TOTAL_IPI"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_TOTAL_IPI'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_PIS: TIBBCDField
       FieldName = 'NFE_VALOR_PIS'
-      Origin = '"TBVENDAS"."NFE_VALOR_PIS"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_PIS'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_COFINS: TIBBCDField
       FieldName = 'NFE_VALOR_COFINS'
-      Origin = '"TBVENDAS"."NFE_VALOR_COFINS"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_COFINS'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_OUTROS: TIBBCDField
       FieldName = 'NFE_VALOR_OUTROS'
-      Origin = '"TBVENDAS"."NFE_VALOR_OUTROS"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_OUTROS'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaNFE_VALOR_TOTAL_NOTA: TIBBCDField
       FieldName = 'NFE_VALOR_TOTAL_NOTA'
-      Origin = '"TBVENDAS"."NFE_VALOR_TOTAL_NOTA"'
-      ProviderFlags = [pfInUpdate]
+      Origin = 'TBVENDAS.NFE_VALOR_TOTAL_NOTA'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaVALOR_TOTAL_IPI: TIBBCDField
       FieldName = 'VALOR_TOTAL_IPI'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaVALOR_TOTAL_BRUTO: TIBBCDField
       FieldName = 'VALOR_TOTAL_BRUTO'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaVALOR_TOTAL_DESCONTO: TIBBCDField
       FieldName = 'VALOR_TOTAL_DESCONTO'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaVALOR_TOTAL_LIQUIDO: TIBBCDField
       FieldName = 'VALOR_TOTAL_LIQUIDO'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
-    object cdsVendaVALOR_BASE_ICMS_NORMAL_ENTRADA: TIBBCDField
+    object cdsVendaVALOR_BASE_ICMS_NORMAL_ENTRADA: TFloatField
       FieldName = 'VALOR_BASE_ICMS_NORMAL_ENTRADA'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
     end
-    object cdsVendaVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TIBBCDField
+    object cdsVendaVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TFloatField
       FieldName = 'VALOR_TOTAL_ICMS_NORMAL_ENTRADA'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 4
     end
     object cdsVendaVALOR_BASE_ICMS_NORMAL_SAIDA: TIBBCDField
       FieldName = 'VALOR_BASE_ICMS_NORMAL_SAIDA'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 4
     end
     object cdsVendaVALOR_TOTAL_ICMS_NORMAL_SAIDA: TFloatField
       FieldName = 'VALOR_TOTAL_ICMS_NORMAL_SAIDA'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
     end
     object cdsVendaVALOR_TOTAL_ICMS_NORMAL_DEVIDO: TFloatField
       FieldName = 'VALOR_TOTAL_ICMS_NORMAL_DEVIDO'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
     end
     object cdsVendaVALOR_TOTAL_PIS: TIBBCDField
       FieldName = 'VALOR_TOTAL_PIS'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 4
     end
     object cdsVendaVALOR_TOTAL_COFINS: TIBBCDField
       FieldName = 'VALOR_TOTAL_COFINS'
-      ProviderFlags = [pfInUpdate]
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 4
