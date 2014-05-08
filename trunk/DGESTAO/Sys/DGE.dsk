@@ -11,63 +11,35 @@ File_8=SourceModule,'C:\Program Files\FastReports\FastReport 4632\LibD7\frxClass
 File_9=SourceModule,'C:\Users\Dorivaldo\Documents\DevExpress VCL\ExpressLibrary\Sources\cxControls.pas',0,1,4813,1,4830,0,0
 
 [Modules]
-<<<<<<< .mine
-Module0=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMBusiness.pas
-Module1=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UGeProduto.pas
-Module2=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UPrinc.pas
-Module3=C:\Delphi\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
-Module4=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMNFe.pas
-Module5=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UConstantesDGE.pas
-Module6=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\DGE.dpr
-Count=7
-=======
-Module0=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr
-Module1=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UGeEntradaEstoque.pas
-Module2=C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\UPrinc.pas
-Module3=C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\uRelProdutos.pas
-Module4=C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\UGeProduto.pas
-Count=5
->>>>>>> .r114
+Module0=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UPrinc.pas
+Module1=C:\Delphi\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
+Module2=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMNFe.pas
+Module3=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMBusiness.pas
+Module4=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UConstantesDGE.pas
+Module5=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\DGE.dpr
+Count=6
 EditWindowCount=1
 
-<<<<<<< .mine
-[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMBusiness.pas]
-=======
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr]
->>>>>>> .r114
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-<<<<<<< .mine
-[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UGeProduto.pas]
-=======
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UGeEntradaEstoque.pas]
->>>>>>> .r114
-ModuleType=SourceModule
-FormState=1
-FormOnTop=0
-
-<<<<<<< .mine
 [E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UPrinc.pas]
-=======
-[C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\UPrinc.pas]
->>>>>>> .r114
 ModuleType=SourceModule
 FormState=1
 FormOnTop=0
 
-[C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\uRelProdutos.pas]
-ModuleType=SourceModule
-FormState=1
-FormOnTop=1
-
-[C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\UGeProduto.pas]
+[C:\Delphi\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-<<<<<<< .mine
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMNFe.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMBusiness.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
 [E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UConstantesDGE.pas]
 ModuleType=SourceModule
 FormState=0
@@ -75,111 +47,83 @@ FormOnTop=0
 
 [E:\Projetos\MasterDados\trunk\DGESTAO\Sys\DGE.dpr]
 ModuleType=SourceModule
-=======
-[C:\Program Files\Borland\Delphi7\Projects\ProjectGroup1.bpg]
->>>>>>> .r114
 FormState=0
 FormOnTop=0
 
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UDMBusiness.pas]
-FormState=0
-FormOnTop=0
-
-<<<<<<< .mine
-[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\lib\UGrPadraoCadastro.pas]
-FormState=0
-FormOnTop=0
-
-[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\lib\UGrPadrao.pas]
-=======
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\lib\UGrPadraoCadastro.pas]
->>>>>>> .r114
-FormState=0
-FormOnTop=0
-
-[C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\lib\UGrPadrao.pas]
+[C:\Program Files (x86)\Borland\Delphi7\Projects\ProjectGroup1.bpg]
 FormState=0
 FormOnTop=0
 
 [EditWindow0]
-<<<<<<< .mine
-ViewCount=7
-CurrentView=2
-=======
-ViewCount=5
-CurrentView=2
->>>>>>> .r114
+ViewCount=6
+CurrentView=5
 View0=0
 View1=1
 View2=2
 View3=3
 View4=4
-View6=6
+View5=5
 CodeExplorer=CodeExplorer@EditWindow0
 MessageView=MessageView@EditWindow0
 Create=1
 Visible=1
 State=0
-Left=210
-Top=120
-Width=1021
-Height=616
-MaxLeft=-8
-MaxTop=106
-ClientWidth=1005
-ClientHeight=578
-LeftPanelSize=0
+Left=200
+Top=146
+Width=1718
+Height=892
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=1702
+ClientHeight=854
+LeftPanelSize=140
 LeftPanelClients=CodeExplorer@EditWindow0
-LeftPanelData=00000400010000000C000000436F64654578706C6F726572000000000000000000000000000000000001000000000000000000000000FFFFFFFF
+LeftPanelData=000004000000000000000000000000000000000000000000000100000000000000000C000000436F64654578706C6F726572FFFFFFFF
 RightPanelSize=0
-BottomPanelSize=85
+BottomPanelSize=0
 BottomPanelClients=MessageView@EditWindow0
-<<<<<<< .mine
-BottomPanelData=000004000000000000000000000000000000000000000000000100000000000000000B0000004D65737361676556696577FFFFFFFF
-=======
-BottomPanelData=0000040000000000ED03000000000000025500000000000000010000000000000000000000000100000000ED030000000000000100000000ED030000000000000100000000ED0300000B0000004D65737361676556696577FFFFFFFF
->>>>>>> .r114
+BottomPanelData=00000400010000000B0000004D657373616765566965770000000000000000000000000000000000FFFFFFFF
 
 [View0]
-Module=C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\UPrinc.pas
+Module=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\DGE.dpr
 CursorX=1
-CursorY=656
-TopLine=654
+CursorY=1
+TopLine=1
 LeftCol=1
 
 [View1]
-Module=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UGeEntradaEstoque.pas
+Module=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UConstantesDGE.pas
 CursorX=1
 CursorY=1
 TopLine=1
 LeftCol=1
 
 [View2]
-Module=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr
-CursorX=48
-CursorY=100
-TopLine=88
-LeftCol=1
-
-[View3]
-Module=C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\UGeProduto.pas
-CursorX=1
-CursorY=794
-TopLine=790
-LeftCol=1
-
-[View4]
-Module=C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\uRelProdutos.pas
+Module=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMBusiness.pas
 CursorX=1
 CursorY=1
 TopLine=1
 LeftCol=1
 
-[View6]
-Module=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UGeProduto.pas
-CursorX=45
-CursorY=647
-TopLine=627
+[View3]
+Module=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMNFe.pas
+CursorX=25
+CursorY=14
+TopLine=1
+LeftCol=1
+
+[View4]
+Module=C:\Delphi\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
+CursorX=1
+CursorY=46
+TopLine=1
+LeftCol=1
+
+[View5]
+Module=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UPrinc.pas
+CursorX=1
+CursorY=1
+TopLine=1
 LeftCol=1
 
 [Watches]
@@ -197,13 +141,13 @@ Visible=1
 State=2
 Left=0
 Top=0
-Width=1280
+Width=1920
 Height=122
 MaxLeft=-1
 MaxTop=-1
-MaxWidth=1296
+MaxWidth=1936
 MaxHeight=122
-ClientWidth=1280
+ClientWidth=1920
 ClientHeight=84
 
 [ProjectManager]
@@ -222,23 +166,6 @@ TBDockHeight=313
 LRDockWidth=446
 Dockable=1
 
-[CPUWindow]
-Create=1
-Visible=0
-State=0
-Left=107
-Top=106
-Width=1066
-Height=588
-MaxLeft=-1
-MaxTop=-1
-ClientWidth=1050
-ClientHeight=550
-DumpPane=79
-DisassemblyPane=187
-RegisterPane=231
-FlagPane=64
-
 [AlignmentPalette]
 Create=1
 Visible=0
@@ -256,31 +183,26 @@ ClientHeight=60
 Create=1
 Visible=1
 State=0
-Left=1
-Top=115
-Width=204
-Height=647
+Left=0
+Top=490
+Width=190
+Height=551
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=188
-ClientHeight=613
+ClientWidth=174
+ClientHeight=517
 TBDockHeight=551
 LRDockWidth=190
 Dockable=1
 SplitPos=85
 ArrangeBy=Name
-<<<<<<< .mine
-SelectedItem=Connected
-ExpandedItems=ProviderFlags
-=======
-SelectedItem=Name
-ExpandedItems=Title
->>>>>>> .r114
+SelectedItem=Caption
+ExpandedItems=
 HiddenCategories=
 
 [ObjectTree]
 Create=1
-Visible=0
+Visible=1
 State=0
 Left=0
 Top=122
@@ -294,33 +216,65 @@ TBDockHeight=366
 LRDockWidth=190
 Dockable=1
 
-[CodeExplorer@EditWindow0]
+[fmGrepResults]
 Create=1
 Visible=0
+State=0
+Left=735
+Top=345
+Width=450
+Height=350
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=434
+ClientHeight=316
+TBDockHeight=350
+LRDockWidth=450
+Dockable=1
+
+[fmMacroLibrary]
+Create=1
+Visible=0
+State=0
+Left=786
+Top=314
+Width=347
+Height=411
+MaxLeft=-1
+MaxTop=-1
+ClientWidth=331
+ClientHeight=377
+TBDockHeight=411
+LRDockWidth=347
+Dockable=1
+
+[CodeExplorer@EditWindow0]
+Create=1
+Visible=1
 State=0
 Left=0
 Top=12
 Width=140
-Height=754
+Height=842
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=140
-ClientHeight=754
+ClientHeight=842
 TBDockHeight=305
 LRDockWidth=140
 Dockable=1
 
 [MessageView@EditWindow0]
 Create=1
-Visible=1
+Visible=0
 State=0
-Left=12
-Top=0
-Width=993
+Left=-10
+Top=-713
+Width=443
 Height=85
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=993
+ClientWidth=443
 ClientHeight=85
 TBDockHeight=85
 LRDockWidth=443
