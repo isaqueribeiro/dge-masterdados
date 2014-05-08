@@ -239,6 +239,8 @@ type
     qryEntradaDadosProdutoCODFORN_CNPJ: TIBStringField;
     qryEntradaDadosProdutoDTENT: TDateField;
     qryEntradaDadosProdutoPUNIT: TIBBCDField;
+    qryEntradaDadosProdutoDESCONTO: TIBBCDField;
+    qryEntradaDadosProdutoDESCONTO_VALOR: TIBBCDField;
     qryEntradaDadosProdutoPFINAL: TIBBCDField;
     qryEntradaDadosProdutoUNID_COD: TSmallintField;
     qryEntradaDadosProdutoUNP_DESCRICAO: TIBStringField;
@@ -250,6 +252,8 @@ type
     qryEntradaDadosProdutoALIQUOTA_COFINS: TIBBCDField;
     qryEntradaDadosProdutoVALOR_IPI: TIBBCDField;
     qryEntradaDadosProdutoPERCENTUAL_REDUCAO_BC: TIBBCDField;
+    qryEntradaDadosProdutoVALOR_REDUCAO_BC: TIBBCDField;
+    qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField;
     qryEntradaDadosProdutoPRODUTO_NOVO: TSmallintField;
     qryEntradaDadosProdutoCOR_VEICULO: TIBStringField;
     qryEntradaDadosProdutoCOR_VEICULO_DESCRICAO: TIBStringField;
@@ -273,6 +277,8 @@ type
     qryEntradaDuplicatasVALORPAG: TIBBCDField;
     qryEntradaDuplicatasVALORMULTA: TIBBCDField;
     qryEntradaDuplicatasPERCENTDESCONTO: TIBBCDField;
+    qryEntradaDadosProdutoTOTAL_BRUTO: TIBBCDField;
+    qryEntradaDadosProdutoTOTAL_LIQUIDO: TIBBCDField;
     qryCalculoImportoANO: TSmallintField;
     qryCalculoImportoCODCONTROL: TIntegerField;
     qryCalculoImportoCODEMP: TIBStringField;
@@ -456,18 +462,12 @@ type
     qryDadosProdutoESTOQUE: TIBBCDField;
     qryDadosProdutoRESERVA: TIBBCDField;
     qryDadosProdutoDISPONIVEL: TIBBCDField;
-    qryDadosProdutoQTDEFINAL: TIBBCDField;
-    qryEntradaDadosProdutoQTDEFINAL: TIBBCDField;
     qryEntradaDadosProdutoQTDE: TIBBCDField;
-    qryEntradaDadosProdutoDESCONTO: TFloatField;
-    qryEntradaDadosProdutoDESCONTO_VALOR: TFloatField;
-    qryEntradaDadosProdutoVALOR_REDUCAO_BC: TIBBCDField;
-    qryEntradaDadosProdutoTOTAL_BRUTO: TFloatField;
-    qryEntradaDadosProdutoTOTAL_LIQUIDO: TFloatField;
-    qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField;
     qryEntradaDadosProdutoESTOQUE: TIBBCDField;
     qryEntradaDadosProdutoRESERVA: TIBBCDField;
     qryEntradaDadosProdutoDISPONIVEL: TIBBCDField;
+    qryDadosProdutoQTDEFINAL: TIBBCDField;
+    qryEntradaDadosProdutoQTDEFINAL: TIBBCDField;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);
@@ -3317,8 +3317,10 @@ begin
       ACBrNFe.NotasFiscais.GerarNFe;
       ACBrNFe.NotasFiscais.Assinar;
 
-      if not ACBrNFe.NotasFiscais.ValidaRegrasdeNegocios then
-        raise Exception.Create( ACBrNFe.NotasFiscais.Items[0].RegrasdeNegocios );
+//      if GetSolicitaDHSaidaNFe( sCNPJEmitente ) then
+//        if not ACBrNFe.NotasFiscais.ValidaRegrasdeNegocios then
+//          raise Exception.Create( ACBrNFe.NotasFiscais.Items[0].RegrasdeNegocios );
+
 
       ACBrNFe.NotasFiscais.Valida;
 

@@ -1,8 +1,8 @@
 object DMNFe: TDMNFe
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Left = 365
-  Top = 94
+  Left = 409
+  Top = 217
   Height = 704
   Width = 931
   object ACBrNFe: TACBrNFe
@@ -50,8 +50,6 @@ object DMNFe: TDMNFe
   object qryDestinatario: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    c.Codigo'
@@ -250,8 +248,6 @@ object DMNFe: TDMNFe
   object qryDuplicatas: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    r.Anolanc'
@@ -324,8 +320,6 @@ object DMNFe: TDMNFe
   object qryDadosProduto: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    i.Ano'
@@ -2121,7 +2115,6 @@ object DMNFe: TDMNFe
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     ForcedRefresh = True
-    BufferChunks = 1000
     CachedUpdates = True
     RefreshSQL.Strings = (
       '')
@@ -2369,7 +2362,6 @@ object DMNFe: TDMNFe
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     ForcedRefresh = True
-    BufferChunks = 1000
     CachedUpdates = True
     RefreshSQL.Strings = (
       '')
@@ -2787,7 +2779,6 @@ object DMNFe: TDMNFe
   end
   object IBSQL: TIBSQL
     Database = DMBusiness.ibdtbsBusiness
-    ParamCheck = True
     Transaction = DMBusiness.ibtrnsctnBusiness
     Left = 56
     Top = 360
@@ -3541,8 +3532,6 @@ object DMNFe: TDMNFe
   object qryFormaPagtos: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    v.formapagto_cod'
@@ -3710,8 +3699,6 @@ object DMNFe: TDMNFe
   object qryFornecedorDestinatario: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    f.codforn as Codigo'
@@ -4004,7 +3991,6 @@ object DMNFe: TDMNFe
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     ForcedRefresh = True
-    BufferChunks = 1000
     CachedUpdates = True
     RefreshSQL.Strings = (
       '')
@@ -4331,8 +4317,6 @@ object DMNFe: TDMNFe
   object qryEntradaDadosProduto: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    i.Ano'
@@ -4562,9 +4546,28 @@ object DMNFe: TDMNFe
       FieldName = 'DTENT'
       Origin = '"TBCOMPRASITENS"."DTENT"'
     end
+    object qryEntradaDadosProdutoQTDE: TIBBCDField
+      FieldName = 'QTDE'
+      Origin = '"TBCOMPRASITENS"."QTDE"'
+      ProviderFlags = [pfInUpdate]
+      Precision = 18
+      Size = 3
+    end
     object qryEntradaDadosProdutoPUNIT: TIBBCDField
       FieldName = 'PUNIT'
       Origin = '"TBCOMPRASITENS"."PRECOUNIT"'
+      Precision = 18
+      Size = 2
+    end
+    object qryEntradaDadosProdutoDESCONTO: TIBBCDField
+      FieldName = 'DESCONTO'
+      ProviderFlags = []
+      Precision = 18
+      Size = 4
+    end
+    object qryEntradaDadosProdutoDESCONTO_VALOR: TIBBCDField
+      FieldName = 'DESCONTO_VALOR'
+      ProviderFlags = []
       Precision = 18
       Size = 2
     end
@@ -4634,6 +4637,30 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 2
     end
+    object qryEntradaDadosProdutoVALOR_REDUCAO_BC: TIBBCDField
+      FieldName = 'VALOR_REDUCAO_BC'
+      ProviderFlags = []
+      Precision = 18
+      Size = 4
+    end
+    object qryEntradaDadosProdutoTOTAL_BRUTO: TIBBCDField
+      FieldName = 'TOTAL_BRUTO'
+      ProviderFlags = []
+      Precision = 18
+      Size = 2
+    end
+    object qryEntradaDadosProdutoTOTAL_LIQUIDO: TIBBCDField
+      FieldName = 'TOTAL_LIQUIDO'
+      ProviderFlags = []
+      Precision = 18
+      Size = 2
+    end
+    object qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField
+      FieldName = 'TOTAL_DESCONTO'
+      Origin = '"TBCOMPRASITENS"."VALOR_DESCONTO"'
+      Precision = 18
+      Size = 2
+    end
     object qryEntradaDadosProdutoPRODUTO_NOVO: TSmallintField
       FieldName = 'PRODUTO_NOVO'
       Origin = '"TBPRODUTO"."PRODUTO_NOVO"'
@@ -4695,53 +4722,23 @@ object DMNFe: TDMNFe
       FieldName = 'KILOMETRAGEM_VEICULO'
       Origin = '"TBPRODUTO"."KILOMETRAGEM_VEICULO"'
     end
-    object qryEntradaDadosProdutoQTDE: TIBBCDField
-      FieldName = 'QTDE'
-      Origin = 'TBCOMPRASITENS.QTDE'
-      Required = True
-      Precision = 18
-      Size = 3
-    end
-    object qryEntradaDadosProdutoDESCONTO: TFloatField
-      FieldName = 'DESCONTO'
-    end
-    object qryEntradaDadosProdutoDESCONTO_VALOR: TFloatField
-      FieldName = 'DESCONTO_VALOR'
-    end
-    object qryEntradaDadosProdutoVALOR_REDUCAO_BC: TIBBCDField
-      FieldName = 'VALOR_REDUCAO_BC'
-      Precision = 18
-      Size = 4
-    end
-    object qryEntradaDadosProdutoTOTAL_BRUTO: TFloatField
-      FieldName = 'TOTAL_BRUTO'
-    end
-    object qryEntradaDadosProdutoTOTAL_LIQUIDO: TFloatField
-      FieldName = 'TOTAL_LIQUIDO'
-    end
-    object qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField
-      FieldName = 'TOTAL_DESCONTO'
-      Origin = 'TBCOMPRASITENS.VALOR_DESCONTO'
-      Precision = 18
-      Size = 2
-    end
     object qryEntradaDadosProdutoESTOQUE: TIBBCDField
       FieldName = 'ESTOQUE'
-      Origin = 'TBPRODUTO.QTDE'
-      Required = True
+      Origin = '"TBPRODUTO"."QTDE"'
+      ProviderFlags = []
       Precision = 18
       Size = 3
     end
     object qryEntradaDadosProdutoRESERVA: TIBBCDField
       FieldName = 'RESERVA'
-      Origin = 'TBPRODUTO.RESERVA'
-      Required = True
+      Origin = '"TBPRODUTO"."RESERVA"'
+      ProviderFlags = []
       Precision = 18
       Size = 3
     end
     object qryEntradaDadosProdutoDISPONIVEL: TIBBCDField
       FieldName = 'DISPONIVEL'
-      Required = True
+      ProviderFlags = []
       Precision = 18
       Size = 3
     end
@@ -4817,8 +4814,6 @@ object DMNFe: TDMNFe
   object qryEntradaDuplicatas: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    p.anolanc'
@@ -4908,8 +4903,6 @@ object DMNFe: TDMNFe
   object qryNFeEmitida: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    n.ANOVENDA'
@@ -5012,8 +5005,6 @@ object DMNFe: TDMNFe
   object qryDadosVolume: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    v.sequencial'
@@ -5082,8 +5073,6 @@ object DMNFe: TDMNFe
   object qryLoteNFePendente: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    v.ano        as Ano'
@@ -9656,8 +9645,6 @@ object DMNFe: TDMNFe
   object qryRequisicaoCliente: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    r.ano'
@@ -9756,7 +9743,6 @@ object DMNFe: TDMNFe
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     ForcedRefresh = True
-    BufferChunks = 1000
     CachedUpdates = True
     RefreshSQL.Strings = (
       '')
@@ -9846,8 +9832,6 @@ object DMNFe: TDMNFe
   object qryNFeEmitidaEntrada: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     SQL.Strings = (
       'Select'
       '    n.ANOCOMPRA'
