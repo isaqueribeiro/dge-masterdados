@@ -280,3 +280,116 @@ end^
 /*------ 14/03/2014 12:38:03 --------*/
 
 SET TERM ; ^
+
+/*------ 08/05/2014 17:56:25 --------*/
+
+COMMENT ON COLUMN TBCLIENTE.CODIGO IS
+'Codigo
+
+Obs.: CONSUMIDOR FINAL = 1';
+
+/*------ 08/05/2014 17:56:25 --------*/
+
+COMMENT ON COLUMN TBCLIENTE.CODIGO IS
+'Codigo
+
+Obs.: CONSUMIDOR FINAL (99999999999999) = 1';
+
+/*------ 08/05/2014 17:56:25 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendasitens_totais_produto for tvendasitens
+inactive before insert or update position 0
+AS
+begin
+  new.total_bruto    = ( coalesce(new.qtde, 0) * coalesce(new.punit, 0) );
+  new.total_desconto = ( coalesce(new.qtde, 0) * coalesce(new.desconto_valor, 0) );
+  new.total_liquido  = ( coalesce(new.total_bruto, 0) - coalesce(new.total_desconto, 0) );
+end^
+
+/*------ 08/05/2014 17:56:25 --------*/
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_VENDASITENS_TOTAIS_PRODUTO IS 'IMR - Trigger desativada em 10/04/2014 por apresentar inconsistencia no calculo.';
+
+/*------ 08/05/2014 17:56:26 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendasitens_totais_produto for tvendasitens
+inactive before insert or update position 0
+AS
+begin
+  Exit;
+
+  new.total_bruto    = ( coalesce(new.qtde, 0) * coalesce(new.punit, 0) );
+  new.total_desconto = ( coalesce(new.qtde, 0) * coalesce(new.desconto_valor, 0) );
+  new.total_liquido  = ( coalesce(new.total_bruto, 0) - coalesce(new.total_desconto, 0) );
+end^
+
+/*------ 08/05/2014 17:56:26 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendasitens_totais_produto for tvendasitens
+inactive before insert or update position 0
+AS
+begin
+  Exit;
+
+  new.total_bruto    = ( coalesce(new.qtde, 0.0) * coalesce(new.punit, 0.0) );
+  new.total_desconto = ( coalesce(new.qtde, 0.0) * coalesce(new.desconto_valor, 0.0) );
+  new.total_liquido  = ( coalesce(new.total_bruto, 0.0) - coalesce(new.total_desconto, 0.0) );
+end^
+
+/*------ 08/05/2014 17:56:26 --------*/
+
+SET TERM ; ^
+
+CREATE TABLE SYS_LICENCA (
+    LINHA_CONTROLE DMN_VCHAR_250 NOT NULL);
+
+/*------ 08/05/2014 17:56:26 --------*/
+
+ALTER TABLE SYS_LICENCA
+ADD CONSTRAINT PK_SYS_LICENCA
+PRIMARY KEY (LINHA_CONTROLE);
+
+/*------ 08/05/2014 17:56:26 --------*/
+
+GRANT ALL ON SYS_LICENCA TO "PUBLIC";
+
+/*------ 08/05/2014 17:56:26 --------*/
+
+ALTER TABLE SYS_SISTEMA
+    ADD SIS_ATUALIZACAO DMN_DATETIME;
+
+/*------ 08/05/2014 17:56:26 --------*/
+
+COMMENT ON COLUMN SYS_SISTEMA.SIS_ATUALIZACAO IS
+'Data/Hora da ultima atualizacao';
+
+/*------ 08/05/2014 17:56:26 --------*/
+
+COMMENT ON TABLE SYS_SISTEMA IS 'Tabela Sistema.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   25/04/2014
+
+Tabela responsavel por armazenar dados sobre o(s) sistema(s) com conexao a base.';
+
+/*------ 08/05/2014 17:56:26 --------*/
+
+ALTER TABLE TBPRODUTO
+    ADD MOVIMENTA_ESTOQUE DMN_LOGICO DEFAULT 1;
+
+/*------ 08/05/2014 17:56:26 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.MOVIMENTA_ESTOQUE IS
+'Movimenta Estoque:
+0 - Nao
+1 - Sim';
