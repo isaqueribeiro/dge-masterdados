@@ -1,7 +1,7 @@
 inherited frmGeProduto: TfrmGeProduto
-  Left = 255
-  Top = 102
-  Width = 979
+  Left = 219
+  Top = 114
+  Width = 977
   Height = 648
   ActiveControl = dbCodigo
   Caption = 'Cadastro de Produtos/Servi'#231'os'
@@ -11,27 +11,27 @@ inherited frmGeProduto: TfrmGeProduto
   TextHeight = 13
   inherited Bevel1: TBevel
     Top = 606
-    Width = 963
+    Width = 961
   end
   inherited Bevel3: TBevel
     Top = 567
-    Width = 963
+    Width = 961
   end
   inherited tlbBotoes: TToolBar
     Top = 571
-    Width = 963
+    Width = 961
   end
   inherited pgcGuias: TPageControl
-    Width = 963
+    Width = 961
     Height = 567
     ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
         Top = 472
-        Width = 955
+        Width = 953
       end
       inherited dbgDados: TDBGrid
-        Width = 955
+        Width = 953
         Height = 472
         Columns = <
           item
@@ -143,7 +143,7 @@ inherited frmGeProduto: TfrmGeProduto
       end
       inherited pnlFiltros: TPanel
         Top = 476
-        Width = 955
+        Width = 953
         object lblProdutoPromocao: TLabel [0]
           Left = 2
           Top = 4
@@ -227,7 +227,7 @@ inherited frmGeProduto: TfrmGeProduto
           Transparent = True
         end
         inherited grpBxFiltro: TGroupBox
-          Left = 394
+          Left = 392
           Width = 557
           Caption = 'Pesquisar    '
           DesignSize = (
@@ -280,18 +280,18 @@ inherited frmGeProduto: TfrmGeProduto
     inherited tbsCadastro: TTabSheet
       inherited Bevel8: TBevel
         Top = 113
-        Width = 955
+        Width = 953
       end
       object Bevel5: TBevel [1]
         Left = 0
         Top = 193
-        Width = 955
+        Width = 953
         Height = 4
         Align = alTop
         Shape = bsSpacer
       end
       inherited GrpBxDadosNominais: TGroupBox
-        Width = 955
+        Width = 953
         Height = 113
         object lblDescricao: TLabel [1]
           Left = 208
@@ -738,7 +738,6 @@ inherited frmGeProduto: TfrmGeProduto
           Top = 40
           Width = 209
           Height = 21
-          CharCase = ecUpperCase
           DataField = 'APRESENTACAO'
           DataSource = DtSrcTabela
           Font.Charset = DEFAULT_CHARSET
@@ -753,9 +752,9 @@ inherited frmGeProduto: TfrmGeProduto
       object pgcMaisDados: TPageControl
         Left = 0
         Top = 197
-        Width = 955
+        Width = 953
         Height = 341
-        ActivePage = tbsCustos_FI
+        ActivePage = tbsValores
         Align = alClient
         TabOrder = 2
         object tbsValores: TTabSheet
@@ -1068,6 +1067,19 @@ inherited frmGeProduto: TfrmGeProduto
               ValueUnchecked = '0'
             end
           end
+          object DBCheckBox1: TDBCheckBox
+            Left = 16
+            Top = 152
+            Width = 209
+            Height = 17
+            Caption = 'Produto Movimenta Estoque'
+            DataField = 'MOVIMENTA_ESTOQUE'
+            DataSource = DtSrcTabela
+            Enabled = False
+            TabOrder = 8
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
         end
         object tbsTributacao: TTabSheet
           Caption = 'Tributa'#231#245'es'
@@ -1075,7 +1087,7 @@ inherited frmGeProduto: TfrmGeProduto
           object Bevel6: TBevel
             Left = 0
             Top = 233
-            Width = 947
+            Width = 945
             Height = 4
             Align = alTop
             Shape = bsSpacer
@@ -1083,7 +1095,7 @@ inherited frmGeProduto: TfrmGeProduto
           object Bevel7: TBevel
             Left = 0
             Top = 116
-            Width = 947
+            Width = 945
             Height = 4
             Align = alTop
             Shape = bsSpacer
@@ -1091,7 +1103,7 @@ inherited frmGeProduto: TfrmGeProduto
           object GrpBxDadosTributoICMS: TGroupBox
             Left = 0
             Top = 0
-            Width = 947
+            Width = 945
             Height = 116
             Align = alTop
             Caption = 'Dados fiscais p/ ICMS'
@@ -1453,7 +1465,7 @@ inherited frmGeProduto: TfrmGeProduto
           object GrpBxDadosTributoPIS: TGroupBox
             Left = 0
             Top = 120
-            Width = 947
+            Width = 945
             Height = 113
             Align = alTop
             Caption = 'Dados fiscais p/ PIS e COFINS'
@@ -1568,7 +1580,7 @@ inherited frmGeProduto: TfrmGeProduto
           object pnlVeiculo: TPanel
             Left = 0
             Top = 0
-            Width = 947
+            Width = 945
             Height = 113
             Align = alTop
             BevelOuter = bvNone
@@ -1576,7 +1588,7 @@ inherited frmGeProduto: TfrmGeProduto
             object GrpVeiculo: TGroupBox
               Left = 0
               Top = 0
-              Width = 947
+              Width = 945
               Height = 113
               Align = alClient
               Caption = 'Ve'#237'culo'
@@ -1608,9 +1620,9 @@ inherited frmGeProduto: TfrmGeProduto
               object lblChassi: TLabel
                 Left = 256
                 Top = 64
-                Width = 84
+                Width = 35
                 Height = 13
-                Caption = 'Chassi Resumido:'
+                Caption = 'Chassi:'
                 FocusControl = dbChassi
               end
               object lblTipoCombustivel: TLabel
@@ -1787,7 +1799,7 @@ inherited frmGeProduto: TfrmGeProduto
           object pnlVolume: TPanel
             Left = 0
             Top = 113
-            Width = 947
+            Width = 945
             Height = 64
             Align = alTop
             BevelOuter = bvNone
@@ -1795,7 +1807,7 @@ inherited frmGeProduto: TfrmGeProduto
             object GrpVolume: TGroupBox
               Left = 0
               Top = 0
-              Width = 947
+              Width = 945
               Height = 64
               Align = alClient
               Caption = 'Peso / Volume'
@@ -1876,7 +1888,7 @@ inherited frmGeProduto: TfrmGeProduto
           Caption = 'Hist'#243'ricos'
           ImageIndex = 1
           DesignSize = (
-            947
+            945
             313)
           object lblSituacaoVeiculo: TLabel
             Left = 16
@@ -1912,7 +1924,7 @@ inherited frmGeProduto: TfrmGeProduto
           object dbHistoricoSituacaoVeiculo: TDBMemo
             Left = 16
             Top = 64
-            Width = 915
+            Width = 913
             Height = 233
             TabStop = False
             Anchors = [akLeft, akTop, akRight, akBottom]
@@ -1929,302 +1941,11 @@ inherited frmGeProduto: TfrmGeProduto
             TabOrder = 1
           end
         end
-        object tbsCustos_FI: TTabSheet
-          Caption = 'Custos/F&&I'
-          ImageIndex = 4
-          object grpCustos: TGroupBox
-            Left = 0
-            Top = 0
-            Width = 947
-            Height = 121
-            Align = alTop
-            Caption = 'Custos'
-            TabOrder = 0
-            object lblValCompra: TLabel
-              Left = 16
-              Top = 24
-              Width = 107
-              Height = 13
-              Caption = 'Valor Compra (R$):'
-              FocusControl = dbTipoVeiculo
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-              ParentFont = False
-            end
-            object Label1: TLabel
-              Left = 295
-              Top = 72
-              Width = 69
-              Height = 13
-              Caption = 'Outros (R$):'
-              FocusControl = dbTipoVeiculo
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-              ParentFont = False
-            end
-            object Label2: TLabel
-              Left = 295
-              Top = 24
-              Width = 69
-              Height = 13
-              Caption = 'Oficina (R$):'
-              FocusControl = dbTipoVeiculo
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-              ParentFont = False
-            end
-            object Label4: TLabel
-              Left = 155
-              Top = 24
-              Width = 91
-              Height = 13
-              Caption = 'Comiss'#245'es (R$):'
-              FocusControl = dbTipoVeiculo
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-              ParentFont = False
-            end
-            object Label5: TLabel
-              Left = 16
-              Top = 72
-              Width = 85
-              Height = 13
-              Caption = 'Impostos (R$):'
-              FocusControl = dbTipoVeiculo
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-              ParentFont = False
-            end
-            object Label6: TLabel
-              Left = 155
-              Top = 72
-              Width = 57
-              Height = 13
-              Caption = 'ADM (R$):'
-              FocusControl = dbTipoVeiculo
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-              ParentFont = False
-            end
-            object DBPRECO2: TDBEdit
-              Left = 16
-              Top = 41
-              Width = 129
-              Height = 21
-              CharCase = ecUpperCase
-              DataField = 'PRECO2'
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 0
-            end
-            object DBEdit1: TDBEdit
-              Left = 155
-              Top = 41
-              Width = 129
-              Height = 21
-              CharCase = ecUpperCase
-              DataField = 'CUST_COMISSAO'
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 1
-            end
-            object DBEdit2: TDBEdit
-              Left = 295
-              Top = 41
-              Width = 129
-              Height = 21
-              CharCase = ecUpperCase
-              DataField = 'CUST_DESP_OFIC'
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 2
-            end
-            object DBEdit4: TDBEdit
-              Left = 16
-              Top = 89
-              Width = 129
-              Height = 21
-              CharCase = ecUpperCase
-              DataField = 'CUST_IMPOSTO'
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 3
-            end
-            object DBEdit5: TDBEdit
-              Left = 155
-              Top = 89
-              Width = 129
-              Height = 21
-              CharCase = ecUpperCase
-              DataField = 'CUST_DESP_ADM'
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 4
-            end
-            object DBEdit6: TDBEdit
-              Left = 295
-              Top = 89
-              Width = 129
-              Height = 21
-              CharCase = ecUpperCase
-              DataField = 'CUST_DESP_GERAIS'
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 5
-            end
-          end
-          object GroupBox1: TGroupBox
-            Left = 0
-            Top = 121
-            Width = 947
-            Height = 72
-            Align = alTop
-            Caption = 'F&&I - Retorno'
-            TabOrder = 1
-            object Label3: TLabel
-              Left = 155
-              Top = 24
-              Width = 84
-              Height = 13
-              Caption = 'Por Plano (R$):'
-              FocusControl = dbTipoVeiculo
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-              ParentFont = False
-            end
-            object Label8: TLabel
-              Left = 16
-              Top = 24
-              Width = 103
-              Height = 13
-              Caption = 'Financiadora (R$):'
-              FocusControl = dbTipoVeiculo
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-              ParentFont = False
-            end
-            object Label9: TLabel
-              Left = 296
-              Top = 24
-              Width = 109
-              Height = 13
-              Caption = 'Total Retorno (R$):'
-              FocusControl = dbTipoVeiculo
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-              ParentFont = False
-            end
-            object DBEdit3: TDBEdit
-              Left = 16
-              Top = 41
-              Width = 129
-              Height = 21
-              CharCase = ecUpperCase
-              DataField = 'FI_RET_FINANC'
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 0
-            end
-            object DBEdit8: TDBEdit
-              Left = 155
-              Top = 41
-              Width = 129
-              Height = 21
-              CharCase = ecUpperCase
-              DataField = 'FI_RET_PLANO'
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 1
-            end
-            object DBEdit9: TDBEdit
-              Left = 294
-              Top = 41
-              Width = 129
-              Height = 21
-              CharCase = ecUpperCase
-              DataSource = DtSrcTabela
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'MS Sans Serif'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 2
-            end
-          end
-        end
       end
       object GrpBxDadosEstoque: TGroupBox
         Left = 0
         Top = 117
-        Width = 955
+        Width = 953
         Height = 76
         Align = alTop
         Caption = 'Dados estoque'
@@ -2505,6 +2226,7 @@ inherited frmGeProduto: TfrmGeProduto
       '  , p.Situacao_historico_veiculo'
       '  , p.Percentual_reducao_BC'
       '  , p.Usuario'
+      '  , p.Movimenta_estoque'
       '  , case when coalesce(p.Reserva, 0) > 0'
       '      then coalesce(p.Qtde, 0) - coalesce(p.Reserva, 0)'
       '      else coalesce(p.Qtde, 0)'
@@ -2537,14 +2259,6 @@ inherited frmGeProduto: TfrmGeProduto
       
         '  , p.preco_sugerido / coalesce(nullif(p.fracionador, 0), 1) as ' +
         'preco_sugerido_frac'
-      '  , p.preco2'
-      '  , p.Cust_desp_ofic'
-      '  , p.Cust_desp_gerais'
-      '  , p.Cust_desp_adm'
-      '  , p.Cust_comissao'
-      '  , p.Cust_imposto'
-      '  , p.Fi_ret_financ'
-      '  , p.Fi_ret_plano'
       'from TBPRODUTO p'
       '  left join TBGRUPOPROD g on (g.Cod = p.Codgrupo)'
       '  left join TBSECAOPROD s on (s.Scp_cod = p.Codsecao)'
@@ -3037,6 +2751,33 @@ inherited frmGeProduto: TfrmGeProduto
       ProviderFlags = [pfInUpdate]
       Size = 50
     end
+    object IbDtstTabelaMOVIMENTA_ESTOQUE: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'MOVIMENTA_ESTOQUE'
+      Origin = '"TBPRODUTO"."MOVIMENTA_ESTOQUE"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbDtstTabelaPRECO_FRAC: TFMTBCDField
+      FieldName = 'PRECO_FRAC'
+      ProviderFlags = []
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 5
+    end
+    object IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField
+      FieldName = 'PRECO_PROMOCAO_FRAC'
+      ProviderFlags = []
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 5
+    end
+    object IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField
+      FieldName = 'PRECO_SUGERIDO_FRAC'
+      ProviderFlags = []
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 5
+    end
     object IbDtstTabelaDISPONIVEL: TIBBCDField
       DisplayLabel = 'Dispon'#237'vel'
       FieldName = 'DISPONIVEL'
@@ -3044,74 +2785,6 @@ inherited frmGeProduto: TfrmGeProduto
       DisplayFormat = ',0.###'
       Precision = 18
       Size = 3
-    end
-    object IbDtstTabelaPRECO_FRAC: TFloatField
-      FieldName = 'PRECO_FRAC'
-      DisplayFormat = ',0.00'
-    end
-    object IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField
-      FieldName = 'PRECO_PROMOCAO_FRAC'
-      DisplayFormat = ',0.00'
-    end
-    object IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField
-      FieldName = 'PRECO_SUGERIDO_FRAC'
-      DisplayFormat = ',0.00'
-    end
-    object IbDtstTabelaPRECO2: TIBBCDField
-      FieldName = 'PRECO2'
-      Origin = 'TBPRODUTO.PRECO2'
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 3
-    end
-    object IbDtstTabelaCUST_DESP_OFIC: TIBBCDField
-      FieldName = 'CUST_DESP_OFIC'
-      Origin = 'TBPRODUTO.CUST_DESP_OFIC'
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
-    end
-    object IbDtstTabelaCUST_DESP_GERAIS: TIBBCDField
-      FieldName = 'CUST_DESP_GERAIS'
-      Origin = 'TBPRODUTO.CUST_DESP_GERAIS'
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
-    end
-    object IbDtstTabelaCUST_DESP_ADM: TIBBCDField
-      FieldName = 'CUST_DESP_ADM'
-      Origin = 'TBPRODUTO.CUST_DESP_ADM'
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
-    end
-    object IbDtstTabelaCUST_COMISSAO: TIBBCDField
-      FieldName = 'CUST_COMISSAO'
-      Origin = 'TBPRODUTO.CUST_COMISSAO'
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
-    end
-    object IbDtstTabelaCUST_IMPOSTO: TIBBCDField
-      FieldName = 'CUST_IMPOSTO'
-      Origin = 'TBPRODUTO.CUST_IMPOSTO'
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
-    end
-    object IbDtstTabelaFI_RET_FINANC: TIBBCDField
-      FieldName = 'FI_RET_FINANC'
-      Origin = 'TBPRODUTO.FI_RET_FINANC'
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
-    end
-    object IbDtstTabelaFI_RET_PLANO: TIBBCDField
-      FieldName = 'FI_RET_PLANO'
-      Origin = 'TBPRODUTO.FI_RET_PLANO'
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
     end
   end
   inherited DtSrcTabela: TDataSource
@@ -3178,15 +2851,7 @@ inherited frmGeProduto: TfrmGeProduto
       '  SITUACAO_ATUAL_VEICULO,'
       '  SITUACAO_HISTORICO_VEICULO,'
       '  PERCENTUAL_REDUCAO_BC,'
-      '  USUARIO,'
-      '  PRECO2,'
-      ' CUST_DESP_OFIC,'
-      ' CUST_DESP_GERAIS,'
-      ' CUST_DESP_ADM,'
-      ' CUST_COMISSAO,'
-      ' CUST_IMPOSTO,'
-      ' FI_RET_FINANC,'
-      ' FI_RET_PLANO'
+      '  USUARIO'
       'from TBPRODUTO '
       'where'
       '  COD = :COD')
@@ -3250,14 +2915,7 @@ inherited frmGeProduto: TfrmGeProduto
       '  UNIDADE = :UNIDADE,'
       '  USUARIO = :USUARIO,'
       '  VALOR_IPI = :VALOR_IPI,'
-      '  VENDA_FRACIONADA = :VENDA_FRACIONADA,'
-      '  PRECO2 = :PRECO2,'
-      '  CUST_DESP_OFIC = :CUST_DESP_OFIC,'
-      '  CUST_DESP_GERAIS = :CUST_DESP_GERAIS,'
-      '  CUST_DESP_ADM = :CUST_DESP_ADM,'
-      '  CUST_COMISSAO = :CUST_COMISSAO,'
-      '  CUST_IMPOSTO = :CUST_IMPOSTO,'
-      '  FI_RET_FINANC = :FI_RET_FINANC'
+      '  VENDA_FRACIONADA = :VENDA_FRACIONADA'
       'where'
       '  COD = :OLD_COD')
     InsertSQL.Strings = (
@@ -3339,8 +2997,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblEmpresa: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     TableName = 'TBEMPRESA'
     Left = 296
   end
@@ -3351,8 +3007,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblOrigem: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'ORP_COD'
@@ -3389,8 +3043,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTributacaoNM: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'TPT_COD'
@@ -3431,8 +3083,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblAliquota: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3474,8 +3124,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTributacaoSN: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'TPT_COD'
@@ -3514,8 +3162,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblCor: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3538,8 +3184,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblCombustivel: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3564,8 +3208,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTipoVeiculo: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3599,8 +3241,6 @@ inherited frmGeProduto: TfrmGeProduto
   object qryAliquotaPIS: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (
@@ -3617,8 +3257,6 @@ inherited frmGeProduto: TfrmGeProduto
   object qryAliquotaCOFINS: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (
