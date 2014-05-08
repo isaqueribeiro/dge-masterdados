@@ -11,25 +11,48 @@ File_8=SourceModule,'C:\Program Files\FastReports\FastReport 4632\LibD7\frxClass
 File_9=SourceModule,'C:\Users\Dorivaldo\Documents\DevExpress VCL\ExpressLibrary\Sources\cxControls.pas',0,1,4813,1,4830,0,0
 
 [Modules]
+<<<<<<< .mine
+Module0=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMBusiness.pas
+Module1=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UGeProduto.pas
+Module2=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UPrinc.pas
+Module3=C:\Delphi\ACBr\Fontes\ACBrBoleto\ACBrBoletoFCFR.pas
+Module4=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMNFe.pas
+Module5=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UConstantesDGE.pas
+Module6=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\DGE.dpr
+Count=7
+=======
 Module0=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr
 Module1=C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UGeEntradaEstoque.pas
 Module2=C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\UPrinc.pas
 Module3=C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\uRelProdutos.pas
 Module4=C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\UGeProduto.pas
 Count=5
+>>>>>>> .r114
 EditWindowCount=1
 
+<<<<<<< .mine
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UDMBusiness.pas]
+=======
 [C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\DGE.dpr]
+>>>>>>> .r114
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
+<<<<<<< .mine
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UGeProduto.pas]
+=======
 [C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\UGeEntradaEstoque.pas]
+>>>>>>> .r114
 ModuleType=SourceModule
 FormState=1
 FormOnTop=0
 
+<<<<<<< .mine
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UPrinc.pas]
+=======
 [C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\UPrinc.pas]
+>>>>>>> .r114
 ModuleType=SourceModule
 FormState=1
 FormOnTop=0
@@ -44,7 +67,17 @@ ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
+<<<<<<< .mine
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UConstantesDGE.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\DGE.dpr]
+ModuleType=SourceModule
+=======
 [C:\Program Files\Borland\Delphi7\Projects\ProjectGroup1.bpg]
+>>>>>>> .r114
 FormState=0
 FormOnTop=0
 
@@ -52,7 +85,15 @@ FormOnTop=0
 FormState=0
 FormOnTop=0
 
+<<<<<<< .mine
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\lib\UGrPadraoCadastro.pas]
+FormState=0
+FormOnTop=0
+
+[E:\Projetos\MasterDados\trunk\DGESTAO\Sys\lib\UGrPadrao.pas]
+=======
 [C:\Users\Dorivaldo\Documents\MySys\DGE_TESTE\Sys\lib\UGrPadraoCadastro.pas]
+>>>>>>> .r114
 FormState=0
 FormOnTop=0
 
@@ -61,13 +102,19 @@ FormState=0
 FormOnTop=0
 
 [EditWindow0]
+<<<<<<< .mine
+ViewCount=7
+CurrentView=2
+=======
 ViewCount=5
 CurrentView=2
+>>>>>>> .r114
 View0=0
 View1=1
 View2=2
 View3=3
 View4=4
+View6=6
 CodeExplorer=CodeExplorer@EditWindow0
 MessageView=MessageView@EditWindow0
 Create=1
@@ -87,7 +134,11 @@ LeftPanelData=00000400010000000C000000436F64654578706C6F726572000000000000000000
 RightPanelSize=0
 BottomPanelSize=85
 BottomPanelClients=MessageView@EditWindow0
+<<<<<<< .mine
+BottomPanelData=000004000000000000000000000000000000000000000000000100000000000000000B0000004D65737361676556696577FFFFFFFF
+=======
 BottomPanelData=0000040000000000ED03000000000000025500000000000000010000000000000000000000000100000000ED030000000000000100000000ED030000000000000100000000ED0300000B0000004D65737361676556696577FFFFFFFF
+>>>>>>> .r114
 
 [View0]
 Module=C:\Users\Dorivaldo\Documents\MySys\DGE\Sys\UPrinc.pas
@@ -124,6 +175,13 @@ CursorY=1
 TopLine=1
 LeftCol=1
 
+[View6]
+Module=E:\Projetos\MasterDados\trunk\DGESTAO\Sys\UGeProduto.pas
+CursorX=45
+CursorY=647
+TopLine=627
+LeftCol=1
+
 [Watches]
 Count=0
 
@@ -141,8 +199,8 @@ Left=0
 Top=0
 Width=1280
 Height=122
-MaxLeft=-8
-MaxTop=-8
+MaxLeft=-1
+MaxTop=-1
 MaxWidth=1296
 MaxHeight=122
 ClientWidth=1280
@@ -211,8 +269,13 @@ LRDockWidth=190
 Dockable=1
 SplitPos=85
 ArrangeBy=Name
+<<<<<<< .mine
+SelectedItem=Connected
+ExpandedItems=ProviderFlags
+=======
 SelectedItem=Name
 ExpandedItems=Title
+>>>>>>> .r114
 HiddenCategories=
 
 [ObjectTree]
@@ -238,11 +301,11 @@ State=0
 Left=0
 Top=12
 Width=140
-Height=842
+Height=754
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=140
-ClientHeight=842
+ClientHeight=754
 TBDockHeight=305
 LRDockWidth=140
 Dockable=1
