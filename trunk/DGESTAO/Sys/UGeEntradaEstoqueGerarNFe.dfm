@@ -861,7 +861,6 @@ inherited frmGeEntradaEstoqueGerarNFe: TfrmGeEntradaEstoqueGerarNFe
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     ForcedRefresh = True
-    BufferChunks = 1000
     CachedUpdates = True
     RefreshSQL.Strings = (
       '')
@@ -1149,27 +1148,41 @@ inherited frmGeEntradaEstoqueGerarNFe: TfrmGeEntradaEstoqueGerarNFe
       Precision = 18
       Size = 2
     end
+    object cdsCompraVALOR_TOTAL_BRUTO: TIBBCDField
+      FieldName = 'VALOR_TOTAL_BRUTO'
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 2
+    end
     object cdsCompraVALOR_TOTAL_DESCONTO: TIBBCDField
       FieldName = 'VALOR_TOTAL_DESCONTO'
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
-    object cdsCompraVALOR_TOTAL_BRUTO: TFloatField
-      FieldName = 'VALOR_TOTAL_BRUTO'
-      DisplayFormat = ',0.00'
-    end
-    object cdsCompraVALOR_TOTAL_LIQUIDO: TFloatField
+    object cdsCompraVALOR_TOTAL_LIQUIDO: TIBBCDField
       FieldName = 'VALOR_TOTAL_LIQUIDO'
       DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 2
     end
-    object cdsCompraVALOR_BASE_ICMS_NORMAL_ENTRADA: TFloatField
+    object cdsCompraVALOR_BASE_ICMS_NORMAL_ENTRADA: TIBBCDField
       FieldName = 'VALOR_BASE_ICMS_NORMAL_ENTRADA'
       DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 2
     end
-    object cdsCompraVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TFloatField
+    object cdsCompraVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TIBBCDField
       FieldName = 'VALOR_TOTAL_ICMS_NORMAL_ENTRADA'
       DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 4
+    end
+    object cdsCompraVALOR_BASE_ICMS_NORMAL_SAIDA: TIBBCDField
+      FieldName = 'VALOR_BASE_ICMS_NORMAL_SAIDA'
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 4
     end
     object cdsCompraVALOR_TOTAL_ICMS_NORMAL_SAIDA: TFloatField
       FieldName = 'VALOR_TOTAL_ICMS_NORMAL_SAIDA'
@@ -1179,17 +1192,17 @@ inherited frmGeEntradaEstoqueGerarNFe: TfrmGeEntradaEstoqueGerarNFe
       FieldName = 'VALOR_TOTAL_ICMS_NORMAL_DEVIDO'
       DisplayFormat = ',0.00'
     end
-    object cdsCompraVALOR_BASE_ICMS_NORMAL_SAIDA: TFloatField
-      FieldName = 'VALOR_BASE_ICMS_NORMAL_SAIDA'
-      DisplayFormat = ',0.00'
-    end
-    object cdsCompraVALOR_TOTAL_PIS: TFloatField
+    object cdsCompraVALOR_TOTAL_PIS: TIBBCDField
       FieldName = 'VALOR_TOTAL_PIS'
       DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 4
     end
-    object cdsCompraVALOR_TOTAL_COFINS: TFloatField
+    object cdsCompraVALOR_TOTAL_COFINS: TIBBCDField
       FieldName = 'VALOR_TOTAL_COFINS'
       DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 4
     end
   end
   object updCompra: TIBUpdateSQL
