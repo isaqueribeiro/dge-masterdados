@@ -283,6 +283,8 @@ type
     procedure dbgEstoqueSateliteKeyPress(Sender: TObject; var Key: Char);
     procedure btnFiltrarClick(Sender: TObject);
     procedure ProdutoSelecionado(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     bApenasPossuiEstoque : Boolean;
@@ -1372,6 +1374,22 @@ begin
   end;
 
   ModalResult := mrOk;
+end;
+
+procedure TfrmGeCliente.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  iCodigo : Integer;
+  sRazao  : String;  
+begin
+  if ( dbCNPJ.Focused and (Key = VK_RETURN) and (IbDtstTabela.State in [dsEdit, dsInsert]) )  then
+    if ( Length(dbCNPJ.Text) > 10 ) then
+      if GetExisteCPF_CNPJ(IbDtstTabelaCODIGO.AsInteger, dbCNPJ.Text, iCodigo, sRazao) then
+        ShowWarning(
+          'CPF/CNJP já cadastrado para o cliente ' + sRazao + ' ' + FormatFloat('"("###00000")."', iCodigo) );
+
+  inherited;
+
 end;
 
 initialization
