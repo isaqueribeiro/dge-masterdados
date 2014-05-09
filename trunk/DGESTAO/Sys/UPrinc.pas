@@ -133,6 +133,15 @@ type
     N13: TMenuItem;
     miConfigurarAmbiente: TMenuItem;
     RankingdeProdutos1: TMenuItem;
+    SegmentoVarejo1: TMenuItem;
+    SegmentoVeculos1: TMenuItem;
+    Estoque1: TMenuItem;
+    Vendas1: TMenuItem;
+    Veculos1: TMenuItem;
+    CustosVeculos1: TMenuItem;
+    Listagem1: TMenuItem;
+    CustoDetalhado1: TMenuItem;
+    Comisso1: TMenuItem;
     procedure btnEmpresaClick(Sender: TObject);
     procedure btnClienteClick(Sender: TObject);
     procedure btnContaAReceberClick(Sender: TObject);
@@ -196,6 +205,7 @@ type
     procedure miCarregarLicencaClick(Sender: TObject);
     procedure miConfigurarAmbienteClick(Sender: TObject);
     procedure RankingdeProdutos1Click(Sender: TObject);
+    procedure Veculos1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -227,7 +237,7 @@ uses
   UGeFluxoCaixa,
 
   // Relatórios
-  UfrmRelEstoque, UfrmRelEstoqMinimo, UfrmRelVendas;
+  UfrmRelEstoque, UfrmRelEstoqMinimo, UfrmRelVendas, URelEstoqVeic;
 
 {$R *.dfm}
 
@@ -713,6 +723,17 @@ begin
    Destroy;
   end;
 
+
+end;
+
+procedure TfrmPrinc.Veculos1Click(Sender: TObject);
+begin
+  Application.CreateForm(TfrmRelEstoqVeic, frmRelEstoqVeic);
+ // frmRelEstoqVeic.ShowModal;
+  frmRelEstoqVeic.ibqryEstoqVeic.Open;
+  frmRelEstoqVeic.qckrp.Preview;
+  frmRelEstoqVeic.ibqryEstoqVeic.Close;
+  frmRelEstoqVeic.Destroy;
 
 end;
 

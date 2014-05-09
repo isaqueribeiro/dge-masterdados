@@ -97,7 +97,8 @@ uses
   UGrMessage in 'lib\UGrMessage.pas' {frmGeMessage},
   UGeConsultarLoteNFe in 'UGeConsultarLoteNFe.pas' {frmGeConsultarLoteNFe},
   UGrConfigurarAmbiente in 'lib\UGrConfigurarAmbiente.pas' {frmGrConfigurarAmbiente},
-  UfrmMovVeic in 'UfrmMovVeic.pas' {frmMovVeic};
+  UfrmMovVeic in 'UfrmMovVeic.pas' {frmMovVeic},
+  URelEstoqVeic in 'URelEstoqVeic.pas' {frmRelEstoqVeic};
 
 {$R *.res}
 

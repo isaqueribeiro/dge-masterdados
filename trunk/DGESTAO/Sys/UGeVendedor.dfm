@@ -1,19 +1,20 @@
 inherited frmGeVendedor: TfrmGeVendedor
-  Left = 313
-  Top = 229
-  Width = 722
+  Left = 268
+  Top = 180
+  Width = 746
+  ActiveControl = dbCodigo
   Caption = 'Cadastro de Vendedores'
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   inherited Bevel1: TBevel
-    Width = 706
+    Width = 730
   end
   inherited Bevel3: TBevel
-    Width = 706
+    Width = 730
   end
   inherited tlbBotoes: TToolBar
-    Width = 706
+    Width = 730
     inherited bvlToolExpandir: TBevel
       Width = 36
     end
@@ -25,18 +26,19 @@ inherited frmGeVendedor: TfrmGeVendedor
     end
   end
   inherited pgcGuias: TPageControl
-    Width = 706
+    Width = 730
+    ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
-        Width = 698
+        Width = 722
       end
       inherited dbgDados: TDBGrid
-        Width = 698
+        Width = 722
         Columns = <
           item
             Expanded = False
             FieldName = 'COD'
-            Visible = True
+            Visible = False
           end
           item
             Expanded = False
@@ -55,12 +57,20 @@ inherited frmGeVendedor: TfrmGeVendedor
             FieldName = 'COMISSAO'
             Title.Caption = 'Comiss'#227'o(%)'
             Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'COMISSAO_VL'
+            Title.Alignment = taRightJustify
+            Title.Caption = 'Comiss'#227'o(R$)'
+            Width = 111
+            Visible = True
           end>
       end
       inherited pnlFiltros: TPanel
-        Width = 698
+        Width = 722
         inherited grpBxFiltro: TGroupBox
-          Left = 404
+          Left = 428
           Width = 290
           inherited lbltFiltrar: TLabel
             Width = 57
@@ -78,12 +88,12 @@ inherited frmGeVendedor: TfrmGeVendedor
     end
     inherited tbsCadastro: TTabSheet
       inherited Bevel8: TBevel
-        Top = 81
-        Width = 698
+        Top = 100
+        Width = 722
       end
       inherited GrpBxDadosNominais: TGroupBox
-        Width = 698
-        Height = 81
+        Width = 722
+        Height = 100
         object lblNome: TLabel [1]
           Left = 88
           Top = 24
@@ -105,6 +115,14 @@ inherited frmGeVendedor: TfrmGeVendedor
           Width = 68
           Height = 13
           Caption = 'Comiss'#227'o(%):'
+          FocusControl = dbCPF
+        end
+        object Label1: TLabel [4]
+          Left = 608
+          Top = 24
+          Width = 70
+          Height = 13
+          Caption = 'Comiss'#227'o(R$):'
           FocusControl = dbCPF
         end
         inherited dbCodigo: TDBEdit
@@ -140,7 +158,6 @@ inherited frmGeVendedor: TfrmGeVendedor
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
-          MaxLength = 14
           ParentFont = False
           TabOrder = 2
         end
@@ -160,6 +177,30 @@ inherited frmGeVendedor: TfrmGeVendedor
           ParentFont = False
           TabOrder = 3
         end
+        object DBEdit1: TDBEdit
+          Left = 608
+          Top = 40
+          Width = 97
+          Height = 21
+          CharCase = ecUpperCase
+          DataField = 'COMISSAO_VL'
+          DataSource = DtSrcTabela
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 4
+        end
+        object chkbxAtivo: TCheckBox
+          Left = 16
+          Top = 72
+          Width = 97
+          Height = 17
+          Caption = 'Demitido'
+          TabOrder = 5
+        end
       end
     end
   end
@@ -170,8 +211,11 @@ inherited frmGeVendedor: TfrmGeVendedor
       '    v.Cod'
       '  , v.Nome'
       '  , v.Cpf'
+      '  , v.Ativo'
       '  , v.comissao'
-      'from TBVENDEDOR v')
+      '  , v.Comissao_vl'
+      'from TBVENDEDOR v'
+      'where v.ativo=1')
     GeneratorField.Field = 'COD'
     GeneratorField.Generator = 'GEN_GRUPOPRODUTO_COD'
     Left = 488
@@ -202,6 +246,20 @@ inherited frmGeVendedor: TfrmGeVendedor
       Precision = 9
       Size = 2
     end
+    object IbDtstTabelaATIVO: TSmallintField
+      FieldName = 'ATIVO'
+      Origin = 'TBVENDEDOR.ATIVO'
+      Required = True
+    end
+    object IbDtstTabelaCOMISSAO_VL: TIBBCDField
+      DisplayLabel = 'Valor Comiss'#227'o'
+      FieldName = 'COMISSAO_VL'
+      Origin = 'TBVENDEDOR.COMISSAO_VL'
+      Required = True
+      DisplayFormat = ',0.00'
+      Precision = 9
+      Size = 2
+    end
   end
   inherited DtSrcTabela: TDataSource
     Left = 552
@@ -212,7 +270,9 @@ inherited frmGeVendedor: TfrmGeVendedor
       '  COD,'
       '  NOME,'
       '  CPF,'
-      '  COMISSAO'
+      '  ATIVO,'
+      '  COMISSAO,'
+      '  COMISSAO_VL'
       'from TBVENDEDOR '
       'where'
       '  COD = :COD')
@@ -222,14 +282,16 @@ inherited frmGeVendedor: TfrmGeVendedor
       '  COD = :COD,'
       '  NOME = :NOME,'
       '  CPF = :CPF,'
-      '  COMISSAO = :COMISSAO'
+      '  ATIVO = :ATIVO,'
+      '  COMISSAO = :COMISSAO,'
+      '  COMISSAO_VL = :COMISSAO_VL'
       'where'
       '  COD = :OLD_COD')
     InsertSQL.Strings = (
       'insert into TBVENDEDOR'
-      '  (COD, NOME, CPF, COMISSAO)'
+      '  (COD, NOME, CPF, ATIVO, COMISSAO, COMISSAO_VL)'
       'values'
-      '  (:COD, :NOME, :CPF, :COMISSAO)')
+      '  (:COD, :NOME, :CPF, :ATIVO, :COMISSAO, :COMISSAO_VL)')
     DeleteSQL.Strings = (
       'delete from TBVENDEDOR'
       'where'
