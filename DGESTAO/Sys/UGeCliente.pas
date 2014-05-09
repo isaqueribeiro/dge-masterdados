@@ -671,6 +671,9 @@ begin
 end;
 
 procedure TfrmGeCliente.btbtnSalvarClick(Sender: TObject);
+var
+  iCodigo : Integer;
+  sRazao  : String;
 begin
   if ( IbDtstTabelaPESSOA_FISICA.AsInteger = 1 ) then
     if ( not FuncoesString.StrIsCPF(IbDtstTabelaCNPJ.AsString) ) then
@@ -699,6 +702,11 @@ begin
       Abort;
     end;
   end;
+
+  if GetExisteCPF_CNPJ(IbDtstTabelaCODIGO.AsInteger, IbDtstTabelaCNPJ.AsString, iCodigo, sRazao) then
+    if not ShowConfirm('CPF/CNJP já cadastrado para o cliente ' + sRazao + ' ' + FormatFloat('"("###00000")"', iCodigo) + #13 +
+      'Deseja salvar este registro assim mesmo?') then
+      Abort;
 
   IbDtstTabelaUSUARIO.AsString := GetUserApp;
 

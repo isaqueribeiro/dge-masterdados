@@ -262,7 +262,10 @@ var
   function GetUserPermitirAlterarValorVenda : Boolean;
   function GetSolicitaDHSaidaNFe(const sCNPJEmitente : String) : Boolean;
   function GetImprimirCodClienteNFe(const sCNPJEmitente : String) : Boolean;
+  function GetExisteCPF_CNPJ(iCodigoCliente : Integer; sCpfCnpj : String; var iCodigo : Integer; var sRazao : String) : Boolean;
+
   function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
+
   function SetMovimentoCaixa(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint;
     const AnoLancamento, NumLancamento, SeqPagto : Integer; const Valor : Currency; const TipoMov : TTipoMovimentoCaixa) : Boolean;
   function SetMovimentoCaixaEstorno(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint;
@@ -2002,6 +2005,32 @@ begin
     Open;
 
     Result := (FieldByName('nfe_imprimir_cod_cliente').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
+function GetExisteCPF_CNPJ(iCodigoCliente : Integer; sCpfCnpj : String; var iCodigo : Integer; var sRazao : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('    c.codigo');
+    SQL.Add('  , c.nome');
+    SQL.Add('from TBCLIENTE c');
+    SQL.Add('where c.Cnpj    = ' + QuotedStr(Trim(sCpfCnpj)));
+    SQL.Add('  and c.codigo <> ' + IntToStr(iCodigoCliente));
+    Open;
+
+    Result := (FieldByName('codigo').AsInteger > 0);
+
+    if Result then
+    begin
+      iCodigo := FieldByName('codigo').AsInteger;
+      sRazao  := Trim(FieldByName('nome').AsString);
+    end;
 
     Close;
   end;
