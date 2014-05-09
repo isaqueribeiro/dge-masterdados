@@ -7494,32 +7494,6 @@ object frmPrinc: TfrmPrinc
         Caption = 'Produtos'
         OnClick = nmRelatorioProdutoClick
       end
-      object mnRelatorioEstoque: TMenuItem
-        Caption = 'Estoque'
-        object mnRelatorioEstoqueProduto: TMenuItem
-          Caption = 'Produtos'
-          OnClick = mnRelatorioEstoqueProdutoClick
-        end
-        object mnRelatorioEstoqueDemanda: TMenuItem
-          Caption = 'Demanda Compra x Venda'
-          OnClick = mnRelatorioEstoqueDemandaClick
-        end
-        object Minimo1: TMenuItem
-          Caption = 'M'#237'nimo (Fabricante)'
-          OnClick = Minimo1Click
-        end
-      end
-      object mnRelatorioFaturamento: TMenuItem
-        Caption = 'Faturamento'
-        object mnRelatorioFaturamentoVendas: TMenuItem
-          Caption = 'Vendas'
-          OnClick = mnRelatorioFaturamentoVendasClick
-        end
-        object RankingdeProdutos1: TMenuItem
-          Caption = 'Ranking de Produtos'
-          OnClick = RankingdeProdutos1Click
-        end
-      end
       object mnRelatorioFinanceiro: TMenuItem
         Caption = 'Financeiro'
         object mnRelatorioFinanceiroContasAPagar: TMenuItem
@@ -7533,6 +7507,60 @@ object frmPrinc: TfrmPrinc
         object mnRelatorioFinanceiroPorFormaPagto: TMenuItem
           Caption = 'Por Forma de Pagamento'
           OnClick = mnRelatorioFinanceiroPorFormaPagtoClick
+        end
+      end
+      object SegmentoVarejo1: TMenuItem
+        Caption = 'Segmento Varejo'
+        object mnRelatorioEstoque: TMenuItem
+          Caption = 'Estoque'
+          object mnRelatorioEstoqueProduto: TMenuItem
+            Caption = 'Listagem'
+            OnClick = mnRelatorioEstoqueProdutoClick
+          end
+          object mnRelatorioEstoqueDemanda: TMenuItem
+            Caption = 'Demanda Compra x Venda'
+            OnClick = mnRelatorioEstoqueDemandaClick
+          end
+          object Minimo1: TMenuItem
+            Caption = 'M'#237'nimo (Fabricante)'
+            OnClick = Minimo1Click
+          end
+        end
+        object mnRelatorioFaturamento: TMenuItem
+          Caption = 'Vendas'
+          object mnRelatorioFaturamentoVendas: TMenuItem
+            Caption = 'Faturamento'
+            OnClick = mnRelatorioFaturamentoVendasClick
+          end
+          object RankingdeProdutos1: TMenuItem
+            Caption = 'Ranking de Produtos'
+            OnClick = RankingdeProdutos1Click
+          end
+        end
+      end
+      object SegmentoVeculos1: TMenuItem
+        Caption = 'Segmento Ve'#237'culos'
+        object Estoque1: TMenuItem
+          Caption = 'Estoque'
+          object Veculos1: TMenuItem
+            Caption = 'Listagem'
+            OnClick = Veculos1Click
+          end
+          object CustosVeculos1: TMenuItem
+            Caption = 'Custos Detalhado'
+          end
+        end
+        object Vendas1: TMenuItem
+          Caption = 'Vendas'
+          object Listagem1: TMenuItem
+            Caption = 'Listagem'
+          end
+          object CustoDetalhado1: TMenuItem
+            Caption = 'Custo Detalhado'
+          end
+          object Comisso1: TMenuItem
+            Caption = 'Comiss'#227'o'
+          end
         end
       end
     end

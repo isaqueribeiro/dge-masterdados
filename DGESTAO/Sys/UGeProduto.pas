@@ -232,15 +232,42 @@ type
     lblNVE: TLabel;
     dbNVE: TDBEdit;
     IbDtstTabelaCODIGO_NVE: TIBStringField;
-    IbDtstTabelaPRECO_FRAC: TFMTBCDField;
-    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField;
-    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField;
     IbDtstTabelaQTDE: TIBBCDField;
     IbDtstTabelaDISPONIVEL: TIBBCDField;
     IbDtstTabelaRESERVA: TIBBCDField;
     IbDtstTabelaESTOQMIN: TIBBCDField;
-    IbDtstTabelaMOVIMENTA_ESTOQUE: TSmallintField;
-    DBCheckBox1: TDBCheckBox;
+    IbDtstTabelaPRECO_FRAC: TFloatField;
+    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField;
+    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField;
+    tbsCustos_FI: TTabSheet;
+    grpCustos: TGroupBox;
+    lblValCompra: TLabel;
+    dbVlCompra: TDBEdit;
+    IbDtstTabelaPRECO2: TIBBCDField;
+    dbComissao: TDBEdit;
+    lblOutros: TLabel;
+    dbOficina: TDBEdit;
+    lblOficina: TLabel;
+    grpFI: TGroupBox;
+    lblRetPlano: TLabel;
+    dbFinanciadora: TDBEdit;
+    lblComissao: TLabel;
+    lblImpostos: TLabel;
+    lblAdm: TLabel;
+    dbImpostos: TDBEdit;
+    dbAdm: TDBEdit;
+    dbOutros: TDBEdit;
+    lblFinanciadora: TLabel;
+    dbPorPlano: TDBEdit;
+    lblTotRetorno: TLabel;
+    dbTotRetorno: TDBEdit;
+    IbDtstTabelaCUST_DESP_OFIC: TIBBCDField;
+    IbDtstTabelaCUST_DESP_GERAIS: TIBBCDField;
+    IbDtstTabelaCUST_DESP_ADM: TIBBCDField;
+    IbDtstTabelaCUST_COMISSAO: TIBBCDField;
+    IbDtstTabelaCUST_IMPOSTO: TIBBCDField;
+    IbDtstTabelaFI_RET_FINANC: TIBBCDField;
+    IbDtstTabelaFI_RET_PLANO: TIBBCDField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);
@@ -633,7 +660,7 @@ begin
 
   IbDtstTabelaDESCRI_APRESENTACAO.AsString := AnsiUpperCase(Trim(IbDtstTabelaDESCRI.AsString + ' ' + IbDtstTabelaAPRESENTACAO.AsString));
   IbDtstTabelaUSUARIO.AsString             := GetUserApp;
-
+  
   if ( IbDtstTabelaQTDE.AsCurrency < 0 ) then
     IbDtstTabelaQTDE.Value := 0;
 
@@ -642,9 +669,6 @@ begin
 
   if ( IbDtstTabelaPRODUTO_NOVO.IsNull ) then
     IbDtstTabelaPRODUTO_NOVO.Value := 0;
-
-  if ( IbDtstTabelaMOVIMENTA_ESTOQUE.IsNull ) then
-    IbDtstTabelaMOVIMENTA_ESTOQUE.Value := 1;
 
   if ( (IbDtstTabelaPERCENTUAL_REDUCAO_BC.AsCurrency < 0) or (IbDtstTabelaPERCENTUAL_REDUCAO_BC.AsCurrency > 100) ) then
     IbDtstTabelaPERCENTUAL_REDUCAO_BC.Value := 0;
@@ -767,9 +791,8 @@ begin
 
   IbDtstTabelaCST_PIS.AsString    := '99';
   IbDtstTabelaCST_COFINS.AsString := '99';
-  IbDtstTabelaALIQUOTA_PIS.AsCurrency     := 0.0;
-  IbDtstTabelaALIQUOTA_COFINS.AsCurrency  := 0.0;
-  IbDtstTabelaMOVIMENTA_ESTOQUE.AsInteger := 1;
+  IbDtstTabelaALIQUOTA_PIS.AsCurrency    := 0.0;
+  IbDtstTabelaALIQUOTA_COFINS.AsCurrency := 0.0;
 end;
 
 procedure TfrmGeProduto.FormShow(Sender: TObject);
@@ -797,11 +820,19 @@ begin
   // Configurar Legendas de acordo com o segmento
   pnlVeiculo.Visible             := (GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID);
   tbsHistoricoVeiculo.TabVisible := (GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID);
+  tbsCustos_FI.TabVisible := (GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID);
 
   if ( pnlVeiculo.Visible ) then
   begin
     lblReferencia.Caption               := 'Placa:';
     IbDtstTabelaREFERENCIA.DisplayLabel := 'Placa';
+    lblDescricao.Caption := 'Veículo Modelo:';
+    IbDtstTabelaDESCRI.DisplayLabel := 'Veículo Modelo';
+    lblApresentacao.Caption := 'Chassi:';
+    IbDtstTabelaAPRESENTACAO.DisplayLabel := 'Chassi';
+    IbDtstTabelaDESCRI_APRESENTACAO.DisplayLabel := 'Veículo + Chassi';
+    lblGrupo.Caption := 'Família:';
+    IbDtstTabelaDESCRICAO_GRUPO.DisplayLabel := 'Família';
   end;
 
   IbDtstTabelaCOR_VEICULO.Required            := pnlVeiculo.Visible;

@@ -20,6 +20,11 @@ type
     dbComissao: TDBEdit;
     lblComissao: TLabel;
     IbDtstTabelaCOMISSAO: TIBBCDField;
+    IbDtstTabelaATIVO: TSmallintField;
+    IbDtstTabelaCOMISSAO_VL: TIBBCDField;
+    DBEdit1: TDBEdit;
+    Label1: TLabel;
+    chkbxAtivo: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure btbtnSalvarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -82,8 +87,11 @@ begin
     ShowWarning('Favor informar um CPF válido.');
     Abort;
   end;
-  
+  if chkbxAtivo.Checked = True then IbDtstTabelaATIVO.Value := 0 else IbDtstTabelaATIVO.Value := 1 ;
+  chkbxAtivo.Checked := False;
+
   inherited;
+
 end;
 
 procedure TfrmGeVendedor.IbDtstTabelaNewRecord(DataSet: TDataSet);

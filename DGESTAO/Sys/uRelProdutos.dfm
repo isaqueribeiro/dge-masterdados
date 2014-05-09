@@ -1,6 +1,6 @@
 object frmRelProdutos: TfrmRelProdutos
-  Left = 357
-  Top = 163
+  Left = 222
+  Top = 126
   Width = 870
   Height = 500
   HorzScrollBar.Position = 341
@@ -17,8 +17,8 @@ object frmRelProdutos: TfrmRelProdutos
   PixelsPerInch = 96
   TextHeight = 13
   object qckrp: TQuickRep
-    Left = -95
-    Top = 53
+    Left = 25
+    Top = 21
     Width = 476
     Height = 674
     Frame.Color = clBlack
