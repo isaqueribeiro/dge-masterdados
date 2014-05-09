@@ -393,3 +393,247 @@ COMMENT ON COLUMN TBPRODUTO.MOVIMENTA_ESTOQUE IS
 'Movimenta Estoque:
 0 - Nao
 1 - Sim';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN SYS_SISTEMA.SIS_ATUALIZACAO IS
+'Data/Hora da ultima atualizacao';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON TABLE SYS_SISTEMA IS 'Tabela Sistema.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   25/04/2014
+
+Tabela responsavel por armazenar dados sobre o(s) sistema(s) com conexao a base.';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.MOVIMENTA_ESTOQUE IS
+'Movimenta Estoque:
+0 - Nao
+1 - Sim';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN TBTPDESPESA.COD IS
+'Codigo';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN TBTPDESPESA.TIPODESP IS
+'Descricao';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+CREATE TABLE TBPLANO_CONTA (
+    EMPRESA DMN_CNPJ NOT NULL,
+    CODIGO DMN_BIGINT_NN NOT NULL,
+    DESCRICAO_COMPLETA DMN_VCHAR_250,
+    DESCRICAO_RESUMIDA DMN_VCHAR_100);
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+ALTER TABLE TBPLANO_CONTA
+ADD CONSTRAINT PK_TBPLANO_CONTA
+PRIMARY KEY (CODIGO,EMPRESA);
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.EMPRESA IS
+'Empresa';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.CODIGO IS
+'Codigo';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.DESCRICAO_COMPLETA IS
+'Descricao completa';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.DESCRICAO_RESUMIDA IS
+'Descricao resumida';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON TABLE TBPLANO_CONTA IS 'Tabela Plano de Contas (Contabilidade).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   09/05/2014
+
+Tabela responsavel por armazenar o plano de contas adotado pela empresa. Informacoes estas lancadas pela Contabilidade.';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+GRANT ALL ON TBPLANO_CONTA TO "PUBLIC";
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+CREATE DOMAIN DMN_BIGINT_N AS
+INTEGER;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+ALTER TABLE TBTPDESPESA
+    ADD PLANO_CONTA DMN_BIGINT_N;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+ALTER TABLE TBPLANO_CONTA DROP CONSTRAINT PK_TBPLANO_CONTA;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+ALTER TABLE TBPLANO_CONTA DROP EMPRESA;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+ALTER TABLE TBPLANO_CONTA
+ADD CONSTRAINT PK_TBPLANO_CONTA
+PRIMARY KEY (CODIGO);
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+ALTER TABLE TBPLANO_CONTA
+    ADD EXERCICIO DMN_SMALLINT_NN DEFAULT 0,
+    ADD GRUPO DMN_SMALLINT_NN DEFAULT 0;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.EXERCICIO IS
+'Exercicio';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.GRUPO IS
+'Grupo:
+0 - A Definir
+1 - Ativo
+2 - Passivo
+3 ...
+4 ...
+5 ...
+6 ...';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+alter table TBPLANO_CONTA
+alter EXERCICIO position 1;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+alter table TBPLANO_CONTA
+alter CODIGO position 2;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+alter table TBPLANO_CONTA
+alter DESCRICAO_COMPLETA position 3;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+alter table TBPLANO_CONTA
+alter DESCRICAO_RESUMIDA position 4;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+alter table TBPLANO_CONTA
+alter GRUPO position 5;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+alter table TBPLANO_CONTA
+alter column CODIGO position 1;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+alter table TBPLANO_CONTA
+alter column EXERCICIO position 2;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+alter table TBPLANO_CONTA
+alter column GRUPO position 3;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+alter table TBPLANO_CONTA
+alter column DESCRICAO_COMPLETA position 4;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+alter table TBPLANO_CONTA
+alter column DESCRICAO_RESUMIDA position 5;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+CREATE INDEX IDX_PLANO_CONTA_GRUPO
+ON TBPLANO_CONTA (GRUPO);
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+CREATE INDEX IDX_PLANO_CONTA_EXERCICIO
+ON TBPLANO_CONTA (EXERCICIO);
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+ALTER TABLE TBTPDESPESA
+ADD CONSTRAINT FK_TBTPDESPESA_PLANO_CONTA
+FOREIGN KEY (PLANO_CONTA)
+REFERENCES TBPLANO_CONTA(CODIGO);
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON COLUMN TBTPDESPESA.PLANO_CONTA IS
+'Plano de contas para despesas';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+CREATE SEQUENCE GEN_PLANO_CONTA;
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+COMMENT ON SEQUENCE GEN_PLANO_CONTA IS 'Sequencializador para o PLANO DE CONTAS';
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_plano_conta_novo for tbplano_conta
+active before insert position 0
+AS
+begin
+  if ( new.codigo is null ) then
+    new.codigo = GEN_ID(GEN_PLANO_CONTA, 1);
+
+end^
+
+/*------ 09/05/2014 14:37:52 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_plano_conta_novo for tbplano_conta
+active before insert position 0
+AS
+begin
+  if ( new.codigo is null ) then
+    new.codigo = GEN_ID(GEN_PLANO_CONTA, 1);
+
+end^
+
+/*------ 09/05/2014 14:37:53 --------*/
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_PLANO_CONTA_NOVO IS 'Trigger Novo Plano de Contas (Contabilidade).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   09/05/2014
+
+Trigger responsavel por gerar o sequencial unico para o registro quando este nao for informado pela aplicacao.';

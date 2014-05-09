@@ -109,64 +109,6 @@ inherited frmGeTipoDespesa: TfrmGeTipoDespesa
         Caption = 'Classifica'#231#227'o Cont'#225'bil'
         TabOrder = 1
         Visible = False
-        object lblNumeroContaContabil: TLabel
-          Left = 16
-          Top = 24
-          Width = 115
-          Height = 13
-          Caption = 'N'#250'mero Conta Cont'#225'bil:'
-          FocusControl = dbNumeroContaContabil
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-        end
-        object lblNumeroResumido: TLabel
-          Left = 160
-          Top = 24
-          Width = 90
-          Height = 13
-          Caption = 'N'#250'mero Resumido:'
-          FocusControl = dbNumeroResumido
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-        end
-        object dbNumeroContaContabil: TDBEdit
-          Left = 16
-          Top = 40
-          Width = 137
-          Height = 21
-          CharCase = ecUpperCase
-          DataSource = DtSrcTabela
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 0
-        end
-        object dbNumeroResumido: TDBEdit
-          Left = 160
-          Top = 40
-          Width = 137
-          Height = 21
-          CharCase = ecUpperCase
-          DataSource = DtSrcTabela
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 1
-        end
       end
     end
   end
@@ -180,14 +122,17 @@ inherited frmGeTipoDespesa: TfrmGeTipoDespesa
     object IbDtstTabelaCOD: TSmallintField
       DisplayLabel = 'C'#243'digo'
       FieldName = 'COD'
-      Origin = 'TBTPDESPESA.COD'
+      Origin = '"TBTPDESPESA"."COD"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
     object IbDtstTabelaTIPODESP: TIBStringField
       DisplayLabel = 'Descri'#231#227'o'
       FieldName = 'TIPODESP'
-      Origin = 'TBTPDESPESA.TIPODESP'
-      Size = 25
+      Origin = '"TBTPDESPESA"."TIPODESP"'
+      ProviderFlags = [pfInUpdate]
+      Required = True
+      Size = 50
     end
   end
   inherited IbUpdTabela: TIBUpdateSQL

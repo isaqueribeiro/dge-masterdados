@@ -12,13 +12,9 @@ type
   TfrmGeTipoDespesa = class(TfrmGrPadraoCadastro)
     lblDescricao: TLabel;
     dbDescricao: TDBEdit;
+    GrpBxDadosClassificacao: TGroupBox;
     IbDtstTabelaCOD: TSmallintField;
     IbDtstTabelaTIPODESP: TIBStringField;
-    GrpBxDadosClassificacao: TGroupBox;
-    lblNumeroContaContabil: TLabel;
-    dbNumeroContaContabil: TDBEdit;
-    dbNumeroResumido: TDBEdit;
-    lblNumeroResumido: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
   private
