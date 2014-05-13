@@ -583,7 +583,7 @@ begin
 
   IbDtstTabelaCODCLIENTE.Value := CONSUMIDOR_FINAL_CODIGO;
   IbDtstTabelaCODCLI.Value     := CONSUMIDOR_FINAL_CNPJ;
-  IbDtstTabelaNOME.Value       := GetClienteNomeDefault;
+  IbDtstTabelaNOME.Value       := GetClienteNome( CONSUMIDOR_FINAL_CODIGO );
 
   if (AnsiUpperCase(Trim(IbDtstTabelaNOME.AsString)) <> CONSUMIDOR_FINAL_NOME) then
   begin
@@ -604,6 +604,8 @@ begin
   IbDtstTabelaNFE_TRANSPORTADORA.Required := False;
   IbDtstTabelaNFE_PLACA_VEICULO.Required  := False;
   IbDtstTabelaNFE_PLACA_UF.Required       := False;
+
+  CarregarDadosCFOP( cdsTabelaItensCFOP_COD.AsInteger );
 end;
 
 procedure TfrmGeVenda.dbClienteButtonClick(Sender: TObject);
@@ -829,16 +831,17 @@ end;
 
 procedure TfrmGeVenda.CarregarDadosCFOP( iCodigo : Integer );
 begin
-  if ( not cdsTabelaItens.Active ) then
-    Exit
-  else
-  if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
+  with qryCFOP do
   begin
-    with qryCFOP do
+    Close;
+    ParamByName('Cfop_cod').AsInteger := iCodigo;
+    Open;
+
+    if ( not cdsTabelaItens.Active ) then
+      Exit
+    else
+    if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
     begin
-      Close;
-      ParamByName('Cfop_cod').AsInteger := iCodigo;
-      Open;
       if not IsEmpty then
         cdsTabelaItensCFOP_DESCRICAO.AsString := FieldByName('cfop_descricao').AsString
       else
@@ -1254,6 +1257,10 @@ begin
   if ( Sender = dbCFOP ) then
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
       CarregarDadosCFOP( cdsTabelaItensCFOP_COD.AsInteger );
+
+  if ( Sender = dbCFOPVenda ) then
+    if ( IbDtstTabela.State in [dsEdit, dsInsert] ) then
+      CarregarDadosCFOP( IbDtstTabelaCFOP.AsInteger );
 
   if ( (Sender = dbQuantidade) or (Sender = dbValorUnit) or (Sender = dbDesconto) ) then
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
