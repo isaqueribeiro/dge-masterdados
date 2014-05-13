@@ -38,12 +38,13 @@ inherited frmGeVendedor: TfrmGeVendedor
           item
             Expanded = False
             FieldName = 'COD'
-            Visible = False
+            Width = 50
+            Visible = True
           end
           item
             Expanded = False
             FieldName = 'NOME'
-            Width = 350
+            Width = 330
             Visible = True
           end
           item
@@ -55,15 +56,16 @@ inherited frmGeVendedor: TfrmGeVendedor
           item
             Expanded = False
             FieldName = 'COMISSAO'
-            Title.Caption = 'Comiss'#227'o(%)'
+            Title.Caption = 'Comiss'#227'o (%)'
+            Width = 85
             Visible = True
           end
           item
             Expanded = False
             FieldName = 'COMISSAO_VL'
             Title.Alignment = taRightJustify
-            Title.Caption = 'Comiss'#227'o(R$)'
-            Width = 111
+            Title.Caption = 'Comiss'#227'o (R$)'
+            Width = 110
             Visible = True
           end>
       end
@@ -72,6 +74,9 @@ inherited frmGeVendedor: TfrmGeVendedor
         inherited grpBxFiltro: TGroupBox
           Left = 428
           Width = 290
+          DesignSize = (
+            290
+            54)
           inherited lbltFiltrar: TLabel
             Width = 57
             Caption = 'Vendedor:'
@@ -112,18 +117,18 @@ inherited frmGeVendedor: TfrmGeVendedor
         object lblComissao: TLabel [3]
           Left = 520
           Top = 24
-          Width = 68
+          Width = 71
           Height = 13
-          Caption = 'Comiss'#227'o(%):'
-          FocusControl = dbCPF
+          Caption = 'Comiss'#227'o (%):'
+          FocusControl = dbComissao
         end
-        object Label1: TLabel [4]
+        object lblComissaoValor: TLabel [4]
           Left = 608
           Top = 24
-          Width = 70
+          Width = 73
           Height = 13
-          Caption = 'Comiss'#227'o(R$):'
-          FocusControl = dbCPF
+          Caption = 'Comiss'#227'o (R$):'
+          FocusControl = dbComissaoValor
         end
         inherited dbCodigo: TDBEdit
           Color = clMoneyGreen
@@ -177,7 +182,7 @@ inherited frmGeVendedor: TfrmGeVendedor
           ParentFont = False
           TabOrder = 3
         end
-        object DBEdit1: TDBEdit
+        object dbComissaoValor: TDBEdit
           Left = 608
           Top = 40
           Width = 97
@@ -193,18 +198,23 @@ inherited frmGeVendedor: TfrmGeVendedor
           ParentFont = False
           TabOrder = 4
         end
-        object chkbxAtivo: TCheckBox
+        object chkbxAtivo: TDBCheckBox
           Left = 16
           Top = 72
-          Width = 97
+          Width = 113
           Height = 17
-          Caption = 'Demitido'
+          Caption = 'Vendedor Ativo'
+          DataField = 'ATIVO'
+          DataSource = DtSrcTabela
           TabOrder = 5
+          ValueChecked = '1'
+          ValueUnchecked = '0'
         end
       end
     end
   end
   inherited IbDtstTabela: TIBDataSet
+    BeforePost = IbDtstTabelaBeforePost
     OnNewRecord = IbDtstTabelaNewRecord
     SelectSQL.Strings = (
       'Select'
@@ -218,7 +228,8 @@ inherited frmGeVendedor: TfrmGeVendedor
       'where v.ativo=1')
     GeneratorField.Field = 'COD'
     GeneratorField.Generator = 'GEN_GRUPOPRODUTO_COD'
-    Left = 488
+    Left = 96
+    Top = 312
     object IbDtstTabelaCOD: TIntegerField
       DisplayLabel = 'C'#243'digo'
       FieldName = 'COD'
@@ -246,11 +257,6 @@ inherited frmGeVendedor: TfrmGeVendedor
       Precision = 9
       Size = 2
     end
-    object IbDtstTabelaATIVO: TSmallintField
-      FieldName = 'ATIVO'
-      Origin = 'TBVENDEDOR.ATIVO'
-      Required = True
-    end
     object IbDtstTabelaCOMISSAO_VL: TIBBCDField
       DisplayLabel = 'Valor Comiss'#227'o'
       FieldName = 'COMISSAO_VL'
@@ -260,9 +266,16 @@ inherited frmGeVendedor: TfrmGeVendedor
       Precision = 9
       Size = 2
     end
+    object IbDtstTabelaATIVO: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'ATIVO'
+      Origin = 'TBVENDEDOR.ATIVO'
+      Required = True
+    end
   end
   inherited DtSrcTabela: TDataSource
-    Left = 552
+    Left = 160
+    Top = 312
   end
   inherited IbUpdTabela: TIBUpdateSQL
     RefreshSQL.Strings = (
@@ -296,9 +309,11 @@ inherited frmGeVendedor: TfrmGeVendedor
       'delete from TBVENDEDOR'
       'where'
       '  COD = :OLD_COD')
-    Left = 520
+    Left = 128
+    Top = 312
   end
   inherited ImgList: TImageList
-    Left = 456
+    Left = 64
+    Top = 312
   end
 end
