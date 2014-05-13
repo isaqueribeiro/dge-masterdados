@@ -283,6 +283,9 @@ begin
   if ( not IbDtstTabela.Active ) then
     FecharAbrirTabela(IbDtstTabela, True);
 
+  if ( (pgcGuias.ActivePage = tbsTabela) and edtFiltrar.Visible and edtFiltrar.Enabled ) then
+    edtFiltrar.SetFocus;
+    
   IbDtstTabela.Append;
 end;
 
@@ -293,6 +296,9 @@ begin
 
   if ( not IbDtstTabela.Active ) then
     Exit;
+    
+  if ( (pgcGuias.ActivePage = tbsTabela) and edtFiltrar.Visible and edtFiltrar.Enabled ) then
+    edtFiltrar.SetFocus;
     
   IbDtstTabela.Edit;
 end;

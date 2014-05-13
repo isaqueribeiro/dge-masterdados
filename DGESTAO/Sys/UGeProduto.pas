@@ -268,6 +268,8 @@ type
     IbDtstTabelaCUST_IMPOSTO: TIBBCDField;
     IbDtstTabelaFI_RET_FINANC: TIBBCDField;
     IbDtstTabelaFI_RET_PLANO: TIBBCDField;
+    dbMovimentaEstoque: TDBCheckBox;
+    IbDtstTabelaMOVIMENTA_ESTOQUE: TSmallintField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);
@@ -670,6 +672,9 @@ begin
   if ( IbDtstTabelaPRODUTO_NOVO.IsNull ) then
     IbDtstTabelaPRODUTO_NOVO.Value := 0;
 
+  if ( IbDtstTabelaMOVIMENTA_ESTOQUE.IsNull ) then
+    IbDtstTabelaMOVIMENTA_ESTOQUE.Value := 1;
+
   if ( (IbDtstTabelaPERCENTUAL_REDUCAO_BC.AsCurrency < 0) or (IbDtstTabelaPERCENTUAL_REDUCAO_BC.AsCurrency > 100) ) then
     IbDtstTabelaPERCENTUAL_REDUCAO_BC.Value := 0;
 
@@ -791,8 +796,9 @@ begin
 
   IbDtstTabelaCST_PIS.AsString    := '99';
   IbDtstTabelaCST_COFINS.AsString := '99';
-  IbDtstTabelaALIQUOTA_PIS.AsCurrency    := 0.0;
-  IbDtstTabelaALIQUOTA_COFINS.AsCurrency := 0.0;
+  IbDtstTabelaALIQUOTA_PIS.AsCurrency     := 0.0;
+  IbDtstTabelaALIQUOTA_COFINS.AsCurrency  := 0.0;
+  IbDtstTabelaMOVIMENTA_ESTOQUE.AsInteger := 1;
 end;
 
 procedure TfrmGeProduto.FormShow(Sender: TObject);
@@ -951,7 +957,7 @@ procedure TfrmGeProduto.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_RETURN then
-    if ( (ActiveControl = dbProdutoNovo) and tbsTributacao.TabVisible ) then
+    if ( (ActiveControl = dbMovimentaEstoque) and tbsTributacao.TabVisible ) then
     begin
       pgcMaisDados.ActivePage := tbsTributacao;
       dbOrigem.SetFocus;

@@ -1118,3 +1118,1102 @@ alter VALOR_DESCONTO position 24;
 alter table TBAUTORIZA_COMPRA
 alter VALOR_TOTAL position 25;
 
+
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+ALTER TABLE TBPRODUTO
+    ADD CUST_DESP_OFIC DMN_MONEY,
+    ADD CUST_DESP_GERAIS DMN_MONEY,
+    ADD CUST_DESP_ADM DMN_MONEY,
+    ADD CUST_COMISSAO DMN_MONEY,
+    ADD CUST_IMPOSTO DMN_MONEY,
+    ADD FI_RET_FINANC DMN_MONEY,
+    ADD FI_RET_PLANO DMN_MONEY;
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+CREATE DOMAIN DMN_COMISSAOVALOR AS
+NUMERIC(6,2)
+DEFAULT 0
+NOT NULL;
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+COMMENT ON DOMAIN DMN_COMISSAOVALOR IS 'Valor de Comissao';
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+ALTER TABLE TBVENDEDOR
+    ADD COMISSAO_VL DMN_COMISSAOVALOR;
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+COMMENT ON COLUMN TBVENDEDOR.COMISSAO_VL IS
+'Valor de Comissao';
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.CUST_DESP_OFIC IS
+'Custo Veiculo - Despesas Oficina';
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.CUST_DESP_GERAIS IS
+'Custo Veiculo - Despesas Gerais';
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.CUST_DESP_ADM IS
+'Custo Veiculo - Despesas Administrativas';
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.CUST_COMISSAO IS
+'Custo Veiculo - Despesas Comissao';
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.CUST_IMPOSTO IS
+'Custo Veiculo - Despesas Impostos';
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.FI_RET_FINANC IS
+'Retorno Financeiro - Financiadora';
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.FI_RET_PLANO IS
+'Retorno Financeiro - Por Plano';
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+ALTER TABLE TBVENDEDOR
+    ADD ATIVO DMN_LOGICO DEFAULT 1;
+
+/*------ 13/05/2014 14:29:22 --------*/
+
+COMMENT ON COLUMN TBVENDEDOR.ATIVO IS
+'Usuario ativo:
+0 - Nao
+1 - Sim';
+
+
+/*------ SYSDBA 13/05/2014 14:29:38 --------*/
+
+COMMENT ON COLUMN TBVENDEDOR.ATIVO IS
+'Vendedor ativo:
+0 - Nao
+1 - Sim';
+
+
+
+
+/*------ SYSDBA 13/05/2014 15:08:13 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_ajust_estoque_historico for tbajustestoq
+active after insert position 0
+AS
+--  declare variable movimentar Smallint;
+begin
+/*
+  Select
+    coalesce(p.movimenta_estoque, 1)
+  from TBPRODUTO p
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa
+  Into
+    movimentar;
+
+  movimentar = coalesce(:movimentar, 1);
+
+  if (:movimentar = 0) then
+    Exit;
+*/
+  update TBPRODUTO p set
+    p.qtde = coalesce(p.qtde, 0) + coalesce(new.qtdenova, 0)
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa;
+
+  Insert Into TBPRODHIST (
+      Codempresa
+    , Codprod
+    , Doc
+    , Historico
+    , Dthist
+    , Qtdeatual
+    , Qtdenova
+    , Qtdefinal
+    , Resp
+    , Motivo
+  ) values (
+      new.codempresa
+    , new.codprod
+    , new.doc
+    , case when new.qtdenova > 0 then 'AJUSTE DE ESTOQUE - ENTRADA' else 'AJUSTE DE ESTOQUE - SAIDA' end
+    , new.dtajust
+    , new.qtdeatual
+    , new.qtdenova
+    , new.qtdefinal
+    , coalesce(new.Usuario, user)
+    , substring(trim(new.motivo) from 1 for 40)
+  );
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 13/05/2014 15:11:50 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+  declare variable movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+        , p.movimenta_estoque
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+        , Movimentar
+    do
+    begin
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = Case when :Movimentar = 1    then :Estoque + :Quantidade else :Estoque end
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = Case when :Movimentar = 1 then :Estoque + :Quantidade else :Estoque end
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'ENTRADA - COMPRA'
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , Case when :Movimentar = 1 then :Estoque + :Quantidade else :Estoque end
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 13/05/2014 15:12:31 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_ajust_estoque_historico for tbajustestoq
+active after insert position 0
+AS
+begin
+  update TBPRODUTO p set
+    p.qtde = coalesce(p.qtde, 0) + coalesce(new.qtdenova, 0)
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa;
+
+  Insert Into TBPRODHIST (
+      Codempresa
+    , Codprod
+    , Doc
+    , Historico
+    , Dthist
+    , Qtdeatual
+    , Qtdenova
+    , Qtdefinal
+    , Resp
+    , Motivo
+  ) values (
+      new.codempresa
+    , new.codprod
+    , new.doc
+    , case when new.qtdenova > 0 then 'AJUSTE DE ESTOQUE - ENTRADA' else 'AJUSTE DE ESTOQUE - SAIDA' end
+    , new.dtajust
+    , new.qtdeatual
+    , new.qtdenova
+    , new.qtdefinal
+    , coalesce(new.Usuario, user)
+    , substring(trim(new.motivo) from 1 for 40)
+  );
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 13/05/2014 15:13:51 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+  declare variable movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+        , p.movimenta_estoque
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+        , Movimentar
+    do
+    begin
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = Case when :Movimentar = 1    then :Estoque + :Quantidade else :Estoque end
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = :Estoque + :Quantidade
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'ENTRADA - COMPRA'
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque + :Quantidade
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 13/05/2014 15:16:41 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_cancelar for tbcompras
+active after update position 2
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_compra numeric(15,2);
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then
+  begin
+
+    -- Decrementar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Movimentar
+    do
+    begin
+      -- Decrementar estoque
+      Update TBPRODUTO p Set
+        p.Qtde       = Case when :Movimentar = 1 then :Estoque - :Quantidade else :Estoque end
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('SAIDA - COMPRA CANCELADA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque - :Quantidade
+        , new.Cancel_usuario
+        , 'Custo Final no valor de R$ ' || :Custo_compra
+      );
+    end
+     
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Fornecedor = new.Codforn
+      and m.Compra_ano = new.Ano
+      and m.Compra_num = new.Codcontrol;
+
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 13/05/2014 15:17:13 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+  declare variable movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+        , Movimentar
+    do
+    begin
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = Case when :Movimentar = 1    then :Estoque + :Quantidade else :Estoque end
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = :Estoque + :Quantidade
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('ENTRADA - COMPRA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque + :Quantidade
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 13/05/2014 15:19:06 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_cancelar for tbvendas
+active after update position 3
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable valor_produto numeric(15,2);
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 5)) then /* 5. Cancelada */
+  begin
+
+    -- Retornar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Preco, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , valor_produto
+        , Movimentar
+    do
+    begin
+      estoque = Case when :Movimentar = 1 then (:Estoque + :Quantidade) else :Estoque end;
+
+      -- Retornar estoque
+      Update TBPRODUTO p Set
+        p.Qtde = :Estoque
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('ENTRADA - VENDA CANCELADA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque - :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Cancel_usuario
+        , 'Venda no valor de R$ ' || :Valor_produto
+      );
+
+    end
+
+    -- Cancelar Contas A Receber (Apenas parcelas nao pagas)
+    Update TBCONTREC r Set
+        r.status   = 'CANCELADA'
+      , r.Situacao = 0 -- Cancelado
+      , r.enviado  = 0 -- Enviar boleto novamente para o banco
+    where r.anovenda = new.ano
+      and r.numvenda = new.codcontrol
+      and coalesce(r.Valorrectot, 0) = 0;
+
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Cliente = new.Codcli
+      and m.Venda_ano = new.Ano
+      and m.Venda_num = new.Codcontrol;
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 13/05/2014 15:20:34 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_estoque_atualizar for tbvendas
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable reserva    DMN_QUANTIDADE_D3;
+  declare variable valor_produto numeric(15,2);
+  declare variable estoque_unico Smallint;
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Baixar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Reserva, 0)
+        , coalesce(p.Preco, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , reserva
+        , valor_produto
+        , Movimentar
+    do
+    begin
+      reserva = 0; -- :reserva - :Quantidade;  -- Descontinuada RESERVA
+      estoque = Case when :Movimentar = 1 then (:Estoque - :Quantidade) else :Estoque end;
+
+      -- Baixar estoque
+      Update TBPRODUTO p Set
+          p.Qtde    = :Estoque
+        --, p.Reserva = :Reserva               -- Descontinuada RESERVA
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TVENDASITENS i Set
+        i.Qtdefinal = :Estoque
+      where i.Ano        = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('SAIDA - VENDA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque + :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Usuario
+        , 'Venda no valor de R$ ' || :Valor_produto
+      );
+    end
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 13/05/2014 15:21:01 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+  declare variable movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+        , Movimentar
+    do
+    begin
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = Case when :Movimentar = 1    then (:Estoque + :Quantidade) else :Estoque end
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = :Estoque + :Quantidade
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('ENTRADA - COMPRA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque + :Quantidade
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 13/05/2014 15:21:20 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_cancelar for tbcompras
+active after update position 2
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_compra numeric(15,2);
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then
+  begin
+
+    -- Decrementar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Movimentar
+    do
+    begin
+      -- Decrementar estoque
+      Update TBPRODUTO p Set
+        p.Qtde       = Case when :Movimentar = 1 then (:Estoque - :Quantidade) else :Estoque end
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('SAIDA - COMPRA CANCELADA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque - :Quantidade
+        , new.Cancel_usuario
+        , 'Custo Final no valor de R$ ' || :Custo_compra
+      );
+    end
+     
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Fornecedor = new.Codforn
+      and m.Compra_ano = new.Ano
+      and m.Compra_num = new.Codcontrol;
+
+  end 
+end^
+
+SET TERM ; ^
+
