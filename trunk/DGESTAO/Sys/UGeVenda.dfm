@@ -1529,6 +1529,7 @@ inherited frmGeVenda: TfrmGeVenda
           NumGlyphs = 2
           ParentFont = False
           ParentShowHint = False
+          ReadOnly = True
           ShowHint = True
           TabOrder = 4
           OnButtonClick = dbCFOPButtonClick

@@ -244,6 +244,7 @@ var
   function GetCfopEntradaNomeDefault : String;
   function GetEmpresaNomeDefault : String;
   function GetClienteNomeDefault : String;
+  function GetClienteNome(const iCodigo : Integer) : String;
   function GetClienteEmail(const iCodigo : Integer) : String;
   function GetVendedorNomeDefault : String;
   function GetFormaPagtoNomeDefault : String;
@@ -1800,6 +1801,21 @@ begin
     Close;
     SQL.Clear;
     SQL.Add('Select nome from TBCLIENTE where Codigo = ' + IntToStr(GetClienteIDDefault));
+    Open;
+
+    Result := FieldByName('nome').AsString;
+
+    Close;
+  end;
+end;
+
+function GetClienteNome(const iCodigo : Integer) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select nome from TBCLIENTE where Codigo = ' + IntToStr(iCodigo));
     Open;
 
     Result := FieldByName('nome').AsString;
