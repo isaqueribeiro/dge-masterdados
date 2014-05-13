@@ -3758,6 +3758,7 @@ inherited frmGeVenda: TfrmGeVenda
       '  , o.Cfop_descricao'
       '  , p.Cst'
       '  , p.Csosn'
+      '  , p.Movimenta_Estoque'
       'from TVENDASITENS i'
       '  inner join TBPRODUTO p on (p.Cod = i.Codprod)'
       '  left join TBUNIDADEPROD u on (u.Unp_cod = p.Codunidade)'
@@ -3990,6 +3991,11 @@ inherited frmGeVenda: TfrmGeVenda
       Precision = 18
       Size = 3
     end
+    object cdsTabelaItensMOVIMENTA_ESTOQUE: TSmallintField
+      FieldName = 'MOVIMENTA_ESTOQUE'
+      Origin = '"TBPRODUTO"."MOVIMENTA_ESTOQUE"'
+      ProviderFlags = []
+    end
   end
   object IbUpdTabelaItens: TIBUpdateSQL
     RefreshSQL.Strings = (
@@ -4108,82 +4114,6 @@ inherited frmGeVenda: TfrmGeVenda
     OnStateChange = DtSrcTabelaItensStateChange
     Left = 1056
     Top = 112
-  end
-  object qryProduto: TIBDataSet
-    Database = DMBusiness.ibdtbsBusiness
-    Transaction = DMBusiness.ibtrnsctnBusiness
-    RefreshSQL.Strings = (
-      '')
-    SelectSQL.Strings = (
-      'Select'
-      '    p.Codigo'
-      '  , p.Cod'
-      '  , p.Descri'
-      '  , p.Modelo'
-      '  , p.Preco'
-      '  , p.Preco_Promocao'
-      '  , p.Referencia'
-      '  , p.Secao'
-      '  , p.Qtde'
-      '  , p.Unidade'
-      '  , p.Estoqmin'
-      '  , p.Codgrupo'
-      '  , p.Customedio'
-      '  , p.Codemp'
-      '  , p.Codsecao'
-      '  , p.Codorigem'
-      '  , p.Codtributacao'
-      '  , p.Cst'
-      '  , p.Csosn'
-      '  , p.Codcfop'
-      '  , p.Codbarra_ean'
-      '  , p.Codunidade'
-      '  , p.Aliquota_tipo'
-      '  , p.Aliquota'
-      '  , p.Aliquota_csosn'
-      '  , p.Aliquota_pis'
-      '  , p.Aliquota_cofins'
-      '  , p.Percentual_reducao_BC'
-      '  , p.Valor_ipi'
-      '  , p.Reserva'
-      '  , case when coalesce(p.Reserva, 0) > 0'
-      '      then coalesce(p.Qtde, 0) - coalesce(p.Reserva, 0)'
-      '      else coalesce(p.Qtde, 0)'
-      '    end as Disponivel'
-      '  , g.Descri as Descricao_Grupo'
-      '  , coalesce(s.Scp_descricao, p.Secao) as Descricao_Secao'
-      '  , coalesce(u.Unp_descricao, p.Unidade) as Descricao_Unidade'
-      '  , u.Unp_sigla'
-      '  , c.Cfop_descricao'
-      '  , c.Cfop_especificacao'
-      'from TBPRODUTO p'
-      '  left join TBGRUPOPROD g on (g.Cod = p.Codgrupo)'
-      '  left join TBSECAOPROD s on (s.Scp_cod = p.Codsecao)'
-      '  left join TBUNIDADEPROD u on (u.Unp_cod = p.Codunidade)'
-      '  left join TBCFOP c on (c.Cfop_cod = p.Codcfop)'
-      'where p.Codigo = :Codigo')
-    ModifySQL.Strings = (
-      '')
-    Left = 928
-    Top = 512
-  end
-  object qryCFOP: TIBDataSet
-    Database = DMBusiness.ibdtbsBusiness
-    Transaction = DMBusiness.ibtrnsctnBusiness
-    RefreshSQL.Strings = (
-      '')
-    SelectSQL.Strings = (
-      'Select'
-      '    c.Cfop_cod'
-      '  , c.Cfop_descricao'
-      '  , c.Cfop_cst_padrao_entrada'
-      '  , c.Cfop_cst_padrao_saida'
-      'from TBCFOP c'
-      'where c.Cfop_cod = :Cfop_cod')
-    ModifySQL.Strings = (
-      '')
-    Left = 960
-    Top = 512
   end
   object qryTitulos: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
@@ -5094,5 +5024,82 @@ inherited frmGeVenda: TfrmGeVenda
       Caption = '&3. Visualizar Nome do Arquivo NF-e'
       OnClick = nmPpArquivoNFeClick
     end
+  end
+  object qryProduto: TIBDataSet
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    RefreshSQL.Strings = (
+      '')
+    SelectSQL.Strings = (
+      'Select'
+      '    p.Codigo'
+      '  , p.Cod'
+      '  , p.Descri'
+      '  , p.Modelo'
+      '  , p.Preco'
+      '  , p.Preco_Promocao'
+      '  , p.Referencia'
+      '  , p.Secao'
+      '  , p.Qtde'
+      '  , p.Unidade'
+      '  , p.Estoqmin'
+      '  , p.Codgrupo'
+      '  , p.Customedio'
+      '  , p.Codemp'
+      '  , p.Codsecao'
+      '  , p.Codorigem'
+      '  , p.Codtributacao'
+      '  , p.Cst'
+      '  , p.Csosn'
+      '  , p.Codcfop'
+      '  , p.Codbarra_ean'
+      '  , p.Codunidade'
+      '  , p.Aliquota_tipo'
+      '  , p.Aliquota'
+      '  , p.Aliquota_csosn'
+      '  , p.Aliquota_pis'
+      '  , p.Aliquota_cofins'
+      '  , p.Percentual_reducao_BC'
+      '  , p.Valor_ipi'
+      '  , p.Reserva'
+      '  , p.Movimenta_Estoque'
+      '  , case when coalesce(p.Reserva, 0) > 0'
+      '      then coalesce(p.Qtde, 0) - coalesce(p.Reserva, 0)'
+      '      else coalesce(p.Qtde, 0)'
+      '    end as Disponivel'
+      '  , g.Descri as Descricao_Grupo'
+      '  , coalesce(s.Scp_descricao, p.Secao) as Descricao_Secao'
+      '  , coalesce(u.Unp_descricao, p.Unidade) as Descricao_Unidade'
+      '  , u.Unp_sigla'
+      '  , c.Cfop_descricao'
+      '  , c.Cfop_especificacao'
+      'from TBPRODUTO p'
+      '  left join TBGRUPOPROD g on (g.Cod = p.Codgrupo)'
+      '  left join TBSECAOPROD s on (s.Scp_cod = p.Codsecao)'
+      '  left join TBUNIDADEPROD u on (u.Unp_cod = p.Codunidade)'
+      '  left join TBCFOP c on (c.Cfop_cod = p.Codcfop)'
+      'where p.Codigo = :Codigo')
+    ModifySQL.Strings = (
+      '')
+    Left = 928
+    Top = 512
+  end
+  object qryCFOP: TIBDataSet
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    RefreshSQL.Strings = (
+      '')
+    SelectSQL.Strings = (
+      'Select'
+      '    c.Cfop_cod'
+      '  , c.Cfop_descricao'
+      '  , c.Cfop_cst_padrao_entrada'
+      '  , c.Cfop_cst_padrao_saida'
+      'from TBCFOP c'
+      'where c.Cfop_cod = :Cfop_cod')
+    ModifySQL.Strings = (
+      '')
+    Left = 960
+    Top = 512
   end
 end

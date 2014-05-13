@@ -117,8 +117,6 @@ type
     cdsTabelaItens: TIBDataSet;
     IbUpdTabelaItens: TIBUpdateSQL;
     DtSrcTabelaItens: TDataSource;
-    qryProduto: TIBDataSet;
-    qryCFOP: TIBDataSet;
     btbtnFinalizar: TBitBtn;
     btbtnGerarNFe: TBitBtn;
     Bevel11: TBevel;
@@ -335,6 +333,9 @@ type
     cdsTabelaItensRESERVA: TIBBCDField;
     cdsTabelaItensQTDEFINAL: TIBBCDField;
     cdsTabelaItensCODCLIENTE: TIntegerField;
+    qryProduto: TIBDataSet;
+    qryCFOP: TIBDataSet;
+    cdsTabelaItensMOVIMENTA_ESTOQUE: TSmallintField;
     procedure ImprimirOpcoesClick(Sender: TObject);
     procedure ImprimirOrcamentoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -414,7 +415,7 @@ type
     procedure RecarregarRegistro;
     procedure GravarEmailCliente(iCliente : Integer; sEmail : String);
 
-    function ValidarQuantidade(Codigo : Integer; Quantidade : Integer) : Boolean;
+    //function ValidarQuantidade(Codigo : Integer; Quantidade : Integer) : Boolean;
     function PossuiTitulosPagos(AnoVenda : Smallint; NumVenda : Integer) : Boolean;
     function GetTotalValorFormaPagto : Currency;
     function GetTotalValorFormaPagto_APrazo : Currency;
@@ -802,8 +803,9 @@ begin
         cdsTabelaItensPUNIT_PROMOCAO.AsCurrency := FieldByName('Preco_Promocao').AsCurrency;
         cdsTabelaItensVALOR_IPI.AsCurrency      := FieldByName('Valor_ipi').AsCurrency;
         
-        cdsTabelaItensESTOQUE.AsCurrency   := FieldByName('Qtde').AsCurrency;
-        cdsTabelaItensRESERVA.AsCurrency   := FieldByName('Reserva').AsCurrency;
+        cdsTabelaItensESTOQUE.AsCurrency          := FieldByName('Qtde').AsCurrency;
+        cdsTabelaItensRESERVA.AsCurrency          := FieldByName('Reserva').AsCurrency;
+        cdsTabelaItensMOVIMENTA_ESTOQUE.AsInteger := FieldByName('Movimenta_Estoque').AsInteger;
 
         if ( cdsTabelaItensPUNIT_PROMOCAO.AsCurrency > 0 ) then
         begin
@@ -884,6 +886,7 @@ begin
   end;
 end;
 
+(*
 function TfrmGeVenda.ValidarQuantidade(Codigo : Integer; Quantidade : Integer) : Boolean;
 var
   iEstoque ,
@@ -901,6 +904,7 @@ begin
     Result := ( (iEstoque - iReserva) >= Quantidade );
   end;
 end;
+*)
 
 procedure TfrmGeVenda.dbFormaPagtoClick(Sender: TObject);
 begin
@@ -1453,7 +1457,7 @@ procedure TfrmGeVenda.btbtnFinalizarClick(Sender: TObject);
   var
     Return : Boolean;
   begin
-    Return := not GetPermitirVendaEstoqueInsEmpresa(IbDtstTabelaCODEMP.AsString);
+    Return := not GetPermitirVendaEstoqueInsEmpresa(IbDtstTabelaCODEMP.AsString); // Permitir vendas de produtos com estoque insuficiente
 
     if Return then
     begin
@@ -1461,7 +1465,11 @@ procedure TfrmGeVenda.btbtnFinalizarClick(Sender: TObject);
       cdsTabelaItens.First;
       while not cdsTabelaItens.Eof do
       begin
-        Return := ( (cdsTabelaItensQTDE.AsCurrency > (cdsTabelaItensESTOQUE.AsCurrency - cdsTabelaItensRESERVA.AsCurrency)) or (cdsTabelaItensESTOQUE.AsCurrency <= 0) );
+        if ( cdsTabelaItensMOVIMENTA_ESTOQUE.AsInteger = 0 ) then // Produto não movimenta estoque
+          Return := False
+        else
+          Return := ( (cdsTabelaItensQTDE.AsCurrency > (cdsTabelaItensESTOQUE.AsCurrency - cdsTabelaItensRESERVA.AsCurrency)) or (cdsTabelaItensESTOQUE.AsCurrency <= 0) );
+
         if ( Return ) then
           Break;
         cdsTabelaItens.Next;

@@ -755,7 +755,7 @@ inherited frmGeProduto: TfrmGeProduto
         Top = 197
         Width = 955
         Height = 341
-        ActivePage = tbsCustos_FI
+        ActivePage = tbsValores
         Align = alClient
         TabOrder = 2
         object tbsValores: TTabSheet
@@ -1067,6 +1067,18 @@ inherited frmGeProduto: TfrmGeProduto
               ValueChecked = '1'
               ValueUnchecked = '0'
             end
+          end
+          object dbMovimentaEstoque: TDBCheckBox
+            Left = 16
+            Top = 152
+            Width = 209
+            Height = 17
+            Caption = 'Produto Movimenta Estoque'
+            DataField = 'MOVIMENTA_ESTOQUE'
+            DataSource = DtSrcTabela
+            TabOrder = 8
+            ValueChecked = '1'
+            ValueUnchecked = '0'
           end
         end
         object tbsTributacao: TTabSheet
@@ -2505,6 +2517,7 @@ inherited frmGeProduto: TfrmGeProduto
       '  , p.Situacao_historico_veiculo'
       '  , p.Percentual_reducao_BC'
       '  , p.Usuario'
+      '  , p.Movimenta_estoque'
       '  , case when coalesce(p.Reserva, 0) > 0'
       '      then coalesce(p.Qtde, 0) - coalesce(p.Reserva, 0)'
       '      else coalesce(p.Qtde, 0)'
@@ -3113,6 +3126,11 @@ inherited frmGeProduto: TfrmGeProduto
       Precision = 18
       Size = 2
     end
+    object IbDtstTabelaMOVIMENTA_ESTOQUE: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'MOVIMENTA_ESTOQUE'
+      Origin = '"TBPRODUTO"."MOVIMENTA_ESTOQUE"'
+    end
   end
   inherited DtSrcTabela: TDataSource
     OnDataChange = DtSrcTabelaDataChange
@@ -3339,8 +3357,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblEmpresa: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     TableName = 'TBEMPRESA'
     Left = 296
   end
@@ -3351,8 +3367,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblOrigem: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'ORP_COD'
@@ -3389,8 +3403,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTributacaoNM: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'TPT_COD'
@@ -3431,8 +3443,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblAliquota: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3474,8 +3484,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTributacaoSN: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'TPT_COD'
@@ -3514,8 +3522,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblCor: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3538,8 +3544,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblCombustivel: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3564,8 +3568,6 @@ inherited frmGeProduto: TfrmGeProduto
   object tblTipoVeiculo: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     FieldDefs = <
       item
         Name = 'CODIGO'
@@ -3599,8 +3601,6 @@ inherited frmGeProduto: TfrmGeProduto
   object qryAliquotaPIS: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (
@@ -3617,8 +3617,6 @@ inherited frmGeProduto: TfrmGeProduto
   object qryAliquotaCOFINS: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
     RefreshSQL.Strings = (
       '')
     SelectSQL.Strings = (
