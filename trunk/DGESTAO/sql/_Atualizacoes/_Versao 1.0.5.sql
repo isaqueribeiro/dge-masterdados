@@ -2217,3 +2217,752 @@ end^
 
 SET TERM ; ^
 
+
+
+
+/*------ SYSDBA 13/05/2014 23:37:31 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD COMPETENCIA DMN_INTEGER_N,
+    ADD DATA_FATURA DMN_DATE;
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.COMPETENCIA IS
+'Competencia';
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.DATA_FATURA IS
+'Data de faturamento (Entrada)';
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 4;
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 5;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 6;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 7;
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 8;
+
+alter table TBAUTORIZA_COMPRA
+alter COMPETENCIA position 9;
+
+alter table TBAUTORIZA_COMPRA
+alter DATA_FATURA position 10;
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 11;
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 12;
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 13;
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 14;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 15;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 16;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 17;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 18;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 19;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 20;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 21;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_FUNCAO position 22;
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 23;
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 24;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 25;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 26;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 27;
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ANO position 1;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CODIGO position 2;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMPRESA position 3;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORNECEDOR position 4;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column TIPO position 5;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_DATA position 6;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_USUARIO position 7;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALIDADE position 8;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column DATA_FATURA position 9;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column COMPETENCIA position 10;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column MOVITO position 11;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column OBSERVACAO position 12;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ENDERECO_ENTREGA position 13;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column STATUS position 14;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_DATA position 15;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_USUARIO position 16;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_DATA position 17;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_USUARIO position 18;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_MOTIVO position 19;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_NOME position 20;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_CPF position 21;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_FUNCAO position 22;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORMA_PAGTO position 23;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CONDICAO_PAGTO position 24;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_BRUTO position 25;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_DESCONTO position 26;
+
+
+/*------ SYSDBA 13/05/2014 23:37:42 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_TOTAL position 27;
+
+
+/*------ SYSDBA 13/05/2014 23:37:50 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.COMPETENCIA IS
+'Competencia de faturamento';
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:38:14 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.COMPETENCIA IS
+'Competencia';
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ANO position 1;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CODIGO position 2;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMPRESA position 3;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORNECEDOR position 4;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column TIPO position 5;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_DATA position 6;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_USUARIO position 7;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALIDADE position 8;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column COMPETENCIA position 9;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column DATA_FATURA position 10;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column MOVITO position 11;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column OBSERVACAO position 12;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ENDERECO_ENTREGA position 13;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column STATUS position 14;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_DATA position 15;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_USUARIO position 16;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_DATA position 17;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_USUARIO position 18;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_MOTIVO position 19;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_NOME position 20;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_CPF position 21;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_FUNCAO position 22;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORMA_PAGTO position 23;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CONDICAO_PAGTO position 24;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_BRUTO position 25;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_DESCONTO position 26;
+
+
+/*------ SYSDBA 13/05/2014 23:38:26 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_TOTAL position 27;
+
+
+/*------ SYSDBA 13/05/2014 23:40:29 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_autoriza_compra_competencia for tbautoriza_compra
+active before insert or update position 1
+AS
+begin
+  Select
+    c.cmp_num
+  from TBCOMPETENCIA c
+  where c.cmp_num = extract(year from new.emissao_data) || right('00' || extract(month from new.emissao_data), 2)
+  Into
+    new.competencia;
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:42:43 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_autoriza_compra_competencia for tbautoriza_compra
+active before insert or update position 1
+AS
+begin
+  Select
+    c.cmp_num
+  from TBCOMPETENCIA c
+  where c.cmp_num = extract(year from new.emissao_data) || right('00' || extract(month from new.emissao_data), 2)
+  Into
+    new.competencia;
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_AUTORIZA_COMPRA_COMPETENCIA IS 'Trigger Competencia Autorizacao
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Trigger responsavel por identificar a competencia da autorizacao quando esta nao for informada, baseando-se na data de
+emissao.';
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:43:15 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+ADD CONSTRAINT FK_TBAUTORIZA_COMPRA_COMPET
+FOREIGN KEY (COMPETENCIA)
+REFERENCES TBCOMPETENCIA(CMP_NUM);
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:44:04 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD NUMERO DMN_VCHAR_20;
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.NUMERO IS
+'Numero da Autorizacao (Livre)';
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+alter table TBAUTORIZA_COMPRA
+alter NUMERO position 4;
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 5;
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 6;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 7;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 8;
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 9;
+
+alter table TBAUTORIZA_COMPRA
+alter COMPETENCIA position 10;
+
+alter table TBAUTORIZA_COMPRA
+alter DATA_FATURA position 11;
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 12;
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 13;
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 14;
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 15;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 16;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 17;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 18;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 19;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 20;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 21;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 22;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_FUNCAO position 23;
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 24;
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 25;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 26;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 27;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 28;
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:44:22 --------*/
+
+CREATE INDEX IDX_TBAUTORIZA_COMPRA_NUMERO
+ON TBAUTORIZA_COMPRA (NUMERO);
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:45:12 --------*/
+
+CREATE DOMAIN DMN_VCHAR_20_NN AS
+VARCHAR(20)
+NOT NULL;
+
+
+/*------ SYSDBA 13/05/2014 23:45:24 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_VCHAR_20_NN'
+where (RDB$FIELD_NAME = 'NUMERO') and
+(RDB$RELATION_NAME = 'TBAUTORIZA_COMPRA')
+;
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:46:20 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRAITEM
+    ADD UNIDADE DMN_SMALLINT_N;
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.UNIDADE IS
+'Unidade de Medida';
+
+alter table TBAUTORIZA_COMPRAITEM
+alter ANO position 1;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter CODIGO position 2;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter EMPRESA position 3;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter SEQ position 4;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter FORNECEDOR position 5;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter PRODUTO position 6;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter QUANTIDADE position 7;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter UNIDADE position 8;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter VALOR_UNITARIO position 9;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter VALOR_TOTAL position 10;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter CONFIRMADO_RECEBIMENTO position 11;
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:46:37 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRAITEM
+ADD CONSTRAINT FK_TBAUTORIZA_COMPRAITEM_UND
+FOREIGN KEY (UNIDADE)
+REFERENCES TBUNIDADEPROD(UNP_COD);
+
+
+
+
+/*------ SYSDBA 13/05/2014 23:48:47 --------*/
+
+CREATE INDEX IDX_TBUNIDADEPROD_SIGLA
+ON TBUNIDADEPROD (UNP_SIGLA);
+
+
+
+
+/*------ SYSDBA 14/05/2014 00:38:58 --------*/
+
+ALTER TABLE TBCOMPRAS
+    ADD AUTORIZACAO_ANO DMN_SMALLINT_N,
+    ADD AUTORIZACAO_CODIGO DMN_BIGINT_N;
+
+COMMENT ON COLUMN TBCOMPRAS.AUTORIZACAO_ANO IS
+'Autorizacao - Ano.';
+
+COMMENT ON COLUMN TBCOMPRAS.AUTORIZACAO_CODIGO IS
+'Autorizacao - Codigo.';
+
+
+
+
+/*------ SYSDBA 14/05/2014 00:39:59 --------*/
+
+ALTER TABLE TBCOMPRAS
+    ADD AUTORIZACAO_EMPRESA INTEGER;
+
+COMMENT ON COLUMN TBCOMPRAS.AUTORIZACAO_EMPRESA IS
+'Autorizacao - Empresa.';
+
+
+
+
+/*------ SYSDBA 14/05/2014 00:40:31 --------*/
+
+ALTER TABLE TBCOMPRAS
+    ALTER AUTORIZACAO_EMPRESA TYPE DMN_CNPJ;
+
+
+
+
+/*------ SYSDBA 14/05/2014 00:41:01 --------*/
+
+ALTER TABLE TBCOMPRAS
+ADD CONSTRAINT FK_TBCOMPRAS_AUTORIZACAO
+FOREIGN KEY (AUTORIZACAO_ANO,AUTORIZACAO_CODIGO,AUTORIZACAO_EMPRESA)
+REFERENCES TBAUTORIZA_COMPRA(ANO,CODIGO,EMPRESA);
+
+
+
+
+/*------ SYSDBA 14/05/2014 00:41:35 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.STATUS IS
+'Status:
+0 - Em edicao
+1 - Aberta
+2 - Autorizada
+3 - Faturada
+4 - Cancelada';
+
+
+
+
+/*------ SYSDBA 14/05/2014 00:42:06 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.STATUS IS
+'Status:
+0 - Em edicao
+1 - Aberta
+2 - Autorizada
+3 - Faturada (NF/NFS registrada no sistema referente a autorizacao)
+4 - Cancelada';
+
