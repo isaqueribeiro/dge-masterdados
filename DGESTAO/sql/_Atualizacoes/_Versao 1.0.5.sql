@@ -2966,3 +2966,201 @@ COMMENT ON COLUMN TBAUTORIZA_COMPRA.STATUS IS
 3 - Faturada (NF/NFS registrada no sistema referente a autorizacao)
 4 - Cancelada';
 
+
+
+
+/*------ SYSDBA 15/05/2014 14:41:35 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD INSERCAO_DATA DMN_DATETIME;
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.INSERCAO_DATA IS
+'Data/hora de insercao';
+
+
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ANO position 1;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CODIGO position 2;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMPRESA position 3;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column NUMERO position 4;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORNECEDOR position 5;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column TIPO position 6;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column INSERCAO_DATA position 7;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_DATA position 8;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_USUARIO position 9;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALIDADE position 10;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column COMPETENCIA position 11;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column DATA_FATURA position 12;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column MOVITO position 13;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column OBSERVACAO position 14;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ENDERECO_ENTREGA position 15;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column STATUS position 16;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_DATA position 17;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_USUARIO position 18;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_DATA position 19;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_USUARIO position 20;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_MOTIVO position 21;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_NOME position 22;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_CPF position 23;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_FUNCAO position 24;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORMA_PAGTO position 25;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CONDICAO_PAGTO position 26;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_BRUTO position 27;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_DESCONTO position 28;
+
+
+/*------ SYSDBA 15/05/2014 14:41:56 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_TOTAL position 29;
+
+
+/*------ SYSDBA 15/05/2014 15:15:29 --------*/
+
+create view vw_tipo_autorizacao (Codigo, Descricao)
+as
+Select 1 as Codigo , 'Compra'         as Descricao from RDB$DATABASE Union
+Select 2 as Codigo , 'Serviço'        as Descricao from RDB$DATABASE Union
+Select 3 as Codigo , 'Compra/Serviço' as Descricao from RDB$DATABASE
+;
+
+GRANT ALL ON VW_TIPO_AUTORIZACAO TO "PUBLIC";
