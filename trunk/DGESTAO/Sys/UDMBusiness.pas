@@ -312,6 +312,12 @@ const
   STATUS_REQ_FCH = 3;
   STATUS_REQ_CAN = 4;
 
+  STATUS_AUTORIZACAO_EDC = 0;
+  STATUS_AUTORIZACAO_ABR = 1;
+  STATUS_AUTORIZACAO_AUT = 2;
+  STATUS_AUTORIZACAO_FAT = 3;
+  STATUS_AUTORIZACAO_CAN = 4;
+
   // Mensagens padrões do sistema
   CLIENTE_BLOQUEADO_PORDEBITO = 'Cliente bloqueado, automaticamente, pelo sistema por se encontrar com títulos vencidos. Favor buscar mais informações junto ao FINANCEIRO.';
 

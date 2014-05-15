@@ -2799,3 +2799,2877 @@ end^
 /*------ 13/05/2014 15:23:13 --------*/
 
 SET TERM ; ^
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON COLUMN SYS_SISTEMA.SIS_ATUALIZACAO IS
+'Data/Hora da ultima atualizacao';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON TABLE SYS_SISTEMA IS 'Tabela Sistema.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   25/04/2014
+
+Tabela responsavel por armazenar dados sobre o(s) sistema(s) com conexao a base.';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.MOVIMENTA_ESTOQUE IS
+'Movimenta Estoque:
+0 - Nao
+1 - Sim';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON COLUMN TBTPDESPESA.COD IS
+'Codigo';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON COLUMN TBTPDESPESA.TIPODESP IS
+'Descricao';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.CODIGO IS
+'Codigo';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.DESCRICAO_COMPLETA IS
+'Descricao completa';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.DESCRICAO_RESUMIDA IS
+'Descricao resumida';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON TABLE TBPLANO_CONTA IS 'Tabela Plano de Contas (Contabilidade).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   09/05/2014
+
+Tabela responsavel por armazenar o plano de contas adotado pela empresa. Informacoes estas lancadas pela Contabilidade.';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+GRANT ALL ON TBPLANO_CONTA TO "PUBLIC";
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.EXERCICIO IS
+'Exercicio';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.GRUPO IS
+'Grupo:
+0 - A Definir
+1 - Ativo
+2 - Passivo
+3 ...
+4 ...
+5 ...
+6 ...';
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+alter table TBPLANO_CONTA
+alter EXERCICIO position 1;
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+alter table TBPLANO_CONTA
+alter CODIGO position 2;
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+alter table TBPLANO_CONTA
+alter DESCRICAO_COMPLETA position 3;
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+alter table TBPLANO_CONTA
+alter DESCRICAO_RESUMIDA position 4;
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+alter table TBPLANO_CONTA
+alter GRUPO position 5;
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+alter table TBPLANO_CONTA
+alter column CODIGO position 1;
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+alter table TBPLANO_CONTA
+alter column EXERCICIO position 2;
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+alter table TBPLANO_CONTA
+alter column GRUPO position 3;
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+alter table TBPLANO_CONTA
+alter column DESCRICAO_COMPLETA position 4;
+
+/*------ 15/05/2014 14:21:15 --------*/
+
+alter table TBPLANO_CONTA
+alter column DESCRICAO_RESUMIDA position 5;
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBTPDESPESA.PLANO_CONTA IS
+'Plano de contas para despesas';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON SEQUENCE GEN_PLANO_CONTA IS 'Sequencializador para o PLANO DE CONTAS';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+SET TERM ^ ;
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_plano_conta_novo for tbplano_conta
+active before insert position 0
+AS
+begin
+  if ( new.codigo is null ) then
+    new.codigo = GEN_ID(GEN_PLANO_CONTA, 1);
+
+end^
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_PLANO_CONTA_NOVO IS 'Trigger Novo Plano de Contas (Contabilidade).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   09/05/2014
+
+Trigger responsavel por gerar o sequencial unico para o registro quando este nao for informado pela aplicacao.';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.ANO IS
+'Ano';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.CODIGO IS
+'Codigo';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.EMPRESA IS
+'Empresa';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.FORNECEDOR IS
+'Fornecedor';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.TIPO IS
+'Tipo:
+0 - A Definir
+1 - Compra
+2 - Servico
+3 - Compra/Servico';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.EMISSAO_DATA IS
+'Data de Emissao';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.EMISSAO_USUARIO IS
+'Usuario de Emissao';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.VALIDADE IS
+'Data de Validade';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.MOVITO IS
+'Motivo';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.OBSERVACAO IS
+'Observacoes';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.ENDERECO_ENTREGA IS
+'Endereco de Entrega';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.STATUS IS
+'Status:
+0 - Em edicao
+1 - Aberta
+2 - Autorizada
+3 - Cancelada';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.AUTORIZADO_DATA IS
+'Data de Autorizacao';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.AUTORIZADO_USUARIO IS
+'Usuario de Autorizacao';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.RECEBEDOR_NOME IS
+'Recebedor (Nome)';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.RECEBEDOR_CPF IS
+'Recebedor (CPF)';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.FORMA_PAGTO IS
+'Forma de Pagamento';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.CONDICAO_PAGTO IS
+'Condicao de Pagamento';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+GRANT ALL ON TBAUTORIZA_COMPRA TO "PUBLIC";
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+SET TERM ^ ;
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_autoriza_compra_codigo for tbautoriza_compra
+active before insert position 0
+AS
+begin
+  if (new.codigo is null) then
+    if ( new.ano = 2014 ) then
+      new.codigo = gen_id(GEN_AUTORIZA_COMPRA_2014, 1);
+    else
+    if ( new.ano = 2015 ) then
+      new.codigo = gen_id(GEN_AUTORIZA_COMPRA_2015, 1);
+    else
+    if ( new.ano = 2016 ) then
+      new.codigo = gen_id(GEN_AUTORIZA_COMPRA_2016, 1);
+    else
+    if ( new.ano = 2017 ) then
+      new.codigo = gen_id(GEN_AUTORIZA_COMPRA_2017, 1);
+    else
+    if ( new.ano = 2018 ) then
+      new.codigo = gen_id(GEN_AUTORIZA_COMPRA_2018, 1);
+    else
+    if ( new.ano = 2019 ) then
+      new.codigo = gen_id(GEN_AUTORIZA_COMPRA_2019, 1);
+    else
+    if ( new.ano = 2020 ) then
+      new.codigo = gen_id(GEN_AUTORIZA_COMPRA_2020, 1);
+end^
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_AUTORIZA_COMPRA_CODIGO IS 'Trigger Nova Autorizacao de Compra.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Trigger responsavel por gerar um sequencial unico para cada novo registro de autorizacao de compra no ano.';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+COMMENT ON TABLE TBAUTORIZA_COMPRA IS 'Tabela Autorizacao de Compras
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Tabela responsavel por armazenar as autorizacoes de compras da empresa.';
+
+/*------ 15/05/2014 14:21:16 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+ADD CONSTRAINT FK_TBAUTORIZA_COMPRA_EMP
+FOREIGN KEY (EMPRESA)
+REFERENCES TBEMPRESA(CNPJ)
+ON UPDATE CASCADE;
+
+/*------ 15/05/2014 14:21:17 --------*/
+
+ALTER TABLE TBCONTREC_BAIXA DROP CONSTRAINT FK_TBCONTREC_BAIXA_USUARIO;
+
+/*------ 15/05/2014 14:21:17 --------*/
+
+ALTER TABLE TBCONTPAG_BAIXA DROP CONSTRAINT FK_TBCONTPAG_BAIXA_USUARIO;
+
+/*------ 15/05/2014 14:21:17 --------*/
+
+ALTER TABLE TBCAIXA_MOVIMENTO DROP CONSTRAINT FK_TBCAIXA_MOVIMENTO_US;
+
+/*------ 15/05/2014 14:21:17 --------*/
+
+ALTER TABLE TBCAIXA DROP CONSTRAINT FK_TBCAIXA_USUARIO;
+
+/*------ 15/05/2014 14:21:17 --------*/
+
+ALTER TABLE TBCAIXA DROP CONSTRAINT FK_TBCAIXA_USUARIO_CANCEL;
+
+/*------ 15/05/2014 14:21:17 --------*/
+
+ALTER TABLE TBCAIXA
+ADD CONSTRAINT FK_TBCAIXA_USUARIO
+FOREIGN KEY (USUARIO)
+REFERENCES TBUSERS(NOME);
+
+/*------ 15/05/2014 14:21:17 --------*/
+
+ALTER TABLE TBCAIXA
+ADD CONSTRAINT FK_TBCAIXA_USUARIO_CANCEL
+FOREIGN KEY (USUARIO_CANCEL)
+REFERENCES TBUSERS(NOME);
+
+/*------ 15/05/2014 14:21:18 --------*/
+
+ALTER TABLE TBCAIXA_MOVIMENTO
+ADD CONSTRAINT FK_TBCAIXA_MOVIMENTO_US
+FOREIGN KEY (USUARIO)
+REFERENCES TBUSERS(NOME);
+
+/*------ 15/05/2014 14:21:19 --------*/
+
+ALTER TABLE TBCONTPAG_BAIXA
+ADD CONSTRAINT FK_TBCONTPAG_BAIXA_USUARIO
+FOREIGN KEY (USUARIO)
+REFERENCES TBUSERS(NOME);
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+ALTER TABLE TBCONTREC_BAIXA
+ADD CONSTRAINT FK_TBCONTREC_BAIXA_USUARIO
+FOREIGN KEY (USUARIO)
+REFERENCES TBUSERS(NOME);
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.CANCELADO_DATA IS
+'Data de Cancelamento';
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.CANCELADO_USUARIO IS
+'Usuario de Cancelamento';
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.CANCELADO_MOTIVO IS
+'Motivo de Cancelamento';
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 4;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 5;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 6;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 7;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 8;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 9;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 10;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 11;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 12;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 13;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 14;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 15;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 16;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 17;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 18;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 19;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 20;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 21;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.VALOR_BRUTO IS
+'Valor Total Bruto (Total Produtos)';
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.VALOR_DESCONTO IS
+'Valor Total de Descontos';
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.VALOR_TOTAL IS
+'Valor Total (Valor Bruto - Valor Desconto)';
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 5;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 6;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 7;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 8;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 9;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 10;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 11;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 12;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 13;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 14;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 15;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 16;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 17;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 18;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 19;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 20;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 21;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 22;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 23;
+
+/*------ 15/05/2014 14:21:20 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 24;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 25;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA DROP CONSTRAINT FK_TBAUTORIZA_COMPRA_EMP;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA DROP CONSTRAINT FK_TBAUTORIZA_COMPRA_EMPRESA;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+ADD CONSTRAINT FK_TBAUTORIZA_COMPRA_EMPRESA
+FOREIGN KEY (EMPRESA)
+REFERENCES TBEMPRESA(CNPJ)
+USING INDEX FK_TBAUTORIZA_COMPRA_EMPRESA;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.VALOR_BRUTO IS
+'Valor Total Bruto';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.ANO IS
+'Ano da Autorizacao';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.CODIGO IS
+'Codigo da Autorizacao';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.EMPRESA IS
+'Empresa da Autorizacao';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.SEQ IS
+'Sequencial';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.FORNECEDOR IS
+'Fornecedor';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.PRODUTO IS
+'Produto/Servico';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.QUANTIDADE IS
+'Quantidade
+
+(Aceita valores decimais)';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.VALOR_UNITARIO IS
+'Valor Unitario';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.VALOR_TOTAL IS
+'Valor Total (Quantidade * Valor Unitario)';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.CONFIRMADO_RECEBIMENTO IS
+'Confirmado recebimento do produto/servico pela empresa:
+0 - Nao
+1 - Sim';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+GRANT ALL ON TBAUTORIZA_COMPRAITEM TO "PUBLIC";
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON TABLE TBAUTORIZA_COMPRAITEM IS 'Tabela de Produtos/Servicos da Autorizacao de Compra/Servico.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Tabela responsavel por armazenar os itens (produtos eou servicos) das autorizacoes de compras/servicos.';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON TABLE TBAUTORIZA_COMPRA IS 'Tabela Autorizacao de Compras/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Tabela responsavel por armazenar as autorizacoes de compras/servicos da empresa.';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.RECEBEDOR_FUNCAO IS
+'Recebedor (Funcao)';
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 4;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 5;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 6;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 7;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 8;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 9;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 10;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 11;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 12;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 13;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 14;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 15;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 16;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 17;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 18;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 19;
+
+/*------ 15/05/2014 14:21:21 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_FUNCAO position 20;
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 21;
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 22;
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 23;
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 24;
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 25;
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON DOMAIN DMN_COMISSAOVALOR IS 'Valor de Comissao';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON COLUMN TBVENDEDOR.COMISSAO_VL IS
+'Valor de Comissao';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.CUST_DESP_OFIC IS
+'Custo Veiculo - Despesas Oficina';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.CUST_DESP_GERAIS IS
+'Custo Veiculo - Despesas Gerais';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.CUST_DESP_ADM IS
+'Custo Veiculo - Despesas Administrativas';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.CUST_COMISSAO IS
+'Custo Veiculo - Despesas Comissao';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.CUST_IMPOSTO IS
+'Custo Veiculo - Despesas Impostos';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.FI_RET_FINANC IS
+'Retorno Financeiro - Financiadora';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON COLUMN TBPRODUTO.FI_RET_PLANO IS
+'Retorno Financeiro - Por Plano';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON COLUMN TBVENDEDOR.ATIVO IS
+'Usuario ativo:
+0 - Nao
+1 - Sim';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+COMMENT ON COLUMN TBVENDEDOR.ATIVO IS
+'Vendedor ativo:
+0 - Nao
+1 - Sim';
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_ajust_estoque_historico for tbajustestoq
+active after insert position 0
+AS
+--  declare variable movimentar Smallint;
+begin
+/*
+  Select
+    coalesce(p.movimenta_estoque, 1)
+  from TBPRODUTO p
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa
+  Into
+    movimentar;
+
+  movimentar = coalesce(:movimentar, 1);
+
+  if (:movimentar = 0) then
+    Exit;
+*/
+  update TBPRODUTO p set
+    p.qtde = coalesce(p.qtde, 0) + coalesce(new.qtdenova, 0)
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa;
+
+  Insert Into TBPRODHIST (
+      Codempresa
+    , Codprod
+    , Doc
+    , Historico
+    , Dthist
+    , Qtdeatual
+    , Qtdenova
+    , Qtdefinal
+    , Resp
+    , Motivo
+  ) values (
+      new.codempresa
+    , new.codprod
+    , new.doc
+    , case when new.qtdenova > 0 then 'AJUSTE DE ESTOQUE - ENTRADA' else 'AJUSTE DE ESTOQUE - SAIDA' end
+    , new.dtajust
+    , new.qtdeatual
+    , new.qtdenova
+    , new.qtdefinal
+    , coalesce(new.Usuario, user)
+    , substring(trim(new.motivo) from 1 for 40)
+  );
+end^
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+  declare variable movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+        , p.movimenta_estoque
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+        , Movimentar
+    do
+    begin
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = Case when :Movimentar = 1    then :Estoque + :Quantidade else :Estoque end
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = Case when :Movimentar = 1 then :Estoque + :Quantidade else :Estoque end
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'ENTRADA - COMPRA'
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , Case when :Movimentar = 1 then :Estoque + :Quantidade else :Estoque end
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+/*------ 15/05/2014 14:21:22 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_ajust_estoque_historico for tbajustestoq
+active after insert position 0
+AS
+begin
+  update TBPRODUTO p set
+    p.qtde = coalesce(p.qtde, 0) + coalesce(new.qtdenova, 0)
+  where p.cod    = new.codprod
+    and p.codemp = new.codempresa;
+
+  Insert Into TBPRODHIST (
+      Codempresa
+    , Codprod
+    , Doc
+    , Historico
+    , Dthist
+    , Qtdeatual
+    , Qtdenova
+    , Qtdefinal
+    , Resp
+    , Motivo
+  ) values (
+      new.codempresa
+    , new.codprod
+    , new.doc
+    , case when new.qtdenova > 0 then 'AJUSTE DE ESTOQUE - ENTRADA' else 'AJUSTE DE ESTOQUE - SAIDA' end
+    , new.dtajust
+    , new.qtdeatual
+    , new.qtdenova
+    , new.qtdefinal
+    , coalesce(new.Usuario, user)
+    , substring(trim(new.motivo) from 1 for 40)
+  );
+end^
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+  declare variable movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+        , p.movimenta_estoque
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+        , Movimentar
+    do
+    begin
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = Case when :Movimentar = 1    then :Estoque + :Quantidade else :Estoque end
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = :Estoque + :Quantidade
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , 'ENTRADA - COMPRA'
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque + :Quantidade
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_cancelar for tbcompras
+active after update position 2
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_compra numeric(15,2);
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then
+  begin
+
+    -- Decrementar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Movimentar
+    do
+    begin
+      -- Decrementar estoque
+      Update TBPRODUTO p Set
+        p.Qtde       = Case when :Movimentar = 1 then :Estoque - :Quantidade else :Estoque end
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('SAIDA - COMPRA CANCELADA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque - :Quantidade
+        , new.Cancel_usuario
+        , 'Custo Final no valor de R$ ' || :Custo_compra
+      );
+    end
+     
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Fornecedor = new.Codforn
+      and m.Compra_ano = new.Ano
+      and m.Compra_num = new.Codcontrol;
+
+  end 
+end^
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+  declare variable movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+        , Movimentar
+    do
+    begin
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = Case when :Movimentar = 1    then :Estoque + :Quantidade else :Estoque end
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = :Estoque + :Quantidade
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('ENTRADA - COMPRA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque + :Quantidade
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_cancelar for tbvendas
+active after update position 3
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable valor_produto numeric(15,2);
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 5)) then /* 5. Cancelada */
+  begin
+
+    -- Retornar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Preco, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , valor_produto
+        , Movimentar
+    do
+    begin
+      estoque = Case when :Movimentar = 1 then (:Estoque + :Quantidade) else :Estoque end;
+
+      -- Retornar estoque
+      Update TBPRODUTO p Set
+        p.Qtde = :Estoque
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('ENTRADA - VENDA CANCELADA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque - :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Cancel_usuario
+        , 'Venda no valor de R$ ' || :Valor_produto
+      );
+
+    end
+
+    -- Cancelar Contas A Receber (Apenas parcelas nao pagas)
+    Update TBCONTREC r Set
+        r.status   = 'CANCELADA'
+      , r.Situacao = 0 -- Cancelado
+      , r.enviado  = 0 -- Enviar boleto novamente para o banco
+    where r.anovenda = new.ano
+      and r.numvenda = new.codcontrol
+      and coalesce(r.Valorrectot, 0) = 0;
+
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Cliente = new.Codcli
+      and m.Venda_ano = new.Ano
+      and m.Venda_num = new.Codcontrol;
+     
+  end 
+end^
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_estoque_atualizar for tbvendas
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable reserva    DMN_QUANTIDADE_D3;
+  declare variable valor_produto numeric(15,2);
+  declare variable estoque_unico Smallint;
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Baixar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Reserva, 0)
+        , coalesce(p.Preco, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , reserva
+        , valor_produto
+        , Movimentar
+    do
+    begin
+      reserva = 0; -- :reserva - :Quantidade;  -- Descontinuada RESERVA
+      estoque = Case when :Movimentar = 1 then (:Estoque - :Quantidade) else :Estoque end;
+
+      -- Baixar estoque
+      Update TBPRODUTO p Set
+          p.Qtde    = :Estoque
+        --, p.Reserva = :Reserva               -- Descontinuada RESERVA
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TVENDASITENS i Set
+        i.Qtdefinal = :Estoque
+      where i.Ano        = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('SAIDA - VENDA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque + :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Usuario
+        , 'Venda no valor de R$ ' || :Valor_produto
+      );
+    end
+     
+  end 
+end^
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+  declare variable movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+        , Movimentar
+    do
+    begin
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = Case when :Movimentar = 1    then (:Estoque + :Quantidade) else :Estoque end
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = :Estoque + :Quantidade
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('ENTRADA - COMPRA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque + :Quantidade
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_cancelar for tbcompras
+active after update position 2
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_compra numeric(15,2);
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then
+  begin
+
+    -- Decrementar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Movimentar
+    do
+    begin
+      -- Decrementar estoque
+      Update TBPRODUTO p Set
+        p.Qtde       = Case when :Movimentar = 1 then (:Estoque - :Quantidade) else :Estoque end
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('SAIDA - COMPRA CANCELADA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque - :Quantidade
+        , new.Cancel_usuario
+        , 'Custo Final no valor de R$ ' || :Custo_compra
+      );
+    end
+     
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Fornecedor = new.Codforn
+      and m.Compra_ano = new.Ano
+      and m.Compra_num = new.Codcontrol;
+
+  end 
+end^
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+SET TERM ; ^
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD COMPETENCIA DMN_INTEGER_N,
+    ADD DATA_FATURA DMN_DATE;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.COMPETENCIA IS
+'Competencia';
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.DATA_FATURA IS
+'Data de faturamento (Entrada)';
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 4;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 5;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 6;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 7;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 8;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter COMPETENCIA position 9;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter DATA_FATURA position 10;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 11;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 12;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 13;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 14;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 15;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 16;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 17;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 18;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 19;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 20;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 21;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_FUNCAO position 22;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 23;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 24;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 25;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 26;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 27;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ANO position 1;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CODIGO position 2;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMPRESA position 3;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORNECEDOR position 4;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column TIPO position 5;
+
+/*------ 15/05/2014 14:21:23 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_DATA position 6;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_USUARIO position 7;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALIDADE position 8;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column DATA_FATURA position 9;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column COMPETENCIA position 10;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column MOVITO position 11;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column OBSERVACAO position 12;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ENDERECO_ENTREGA position 13;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column STATUS position 14;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_DATA position 15;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_USUARIO position 16;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_DATA position 17;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_USUARIO position 18;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_MOTIVO position 19;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_NOME position 20;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_CPF position 21;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_FUNCAO position 22;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORMA_PAGTO position 23;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CONDICAO_PAGTO position 24;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_BRUTO position 25;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_DESCONTO position 26;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_TOTAL position 27;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.COMPETENCIA IS
+'Competencia de faturamento';
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.COMPETENCIA IS
+'Competencia';
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ANO position 1;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CODIGO position 2;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMPRESA position 3;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORNECEDOR position 4;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column TIPO position 5;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_DATA position 6;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_USUARIO position 7;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALIDADE position 8;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column COMPETENCIA position 9;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column DATA_FATURA position 10;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column MOVITO position 11;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column OBSERVACAO position 12;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ENDERECO_ENTREGA position 13;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column STATUS position 14;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_DATA position 15;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_USUARIO position 16;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_DATA position 17;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_USUARIO position 18;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_MOTIVO position 19;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_NOME position 20;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_CPF position 21;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_FUNCAO position 22;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORMA_PAGTO position 23;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CONDICAO_PAGTO position 24;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_BRUTO position 25;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_DESCONTO position 26;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_TOTAL position 27;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_autoriza_compra_competencia for tbautoriza_compra
+active before insert or update position 1
+AS
+begin
+  Select
+    c.cmp_num
+  from TBCOMPETENCIA c
+  where c.cmp_num = extract(year from new.emissao_data) || right('00' || extract(month from new.emissao_data), 2)
+  Into
+    new.competencia;
+end^
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+SET TERM ; ^
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_autoriza_compra_competencia for tbautoriza_compra
+active before insert or update position 1
+AS
+begin
+  Select
+    c.cmp_num
+  from TBCOMPETENCIA c
+  where c.cmp_num = extract(year from new.emissao_data) || right('00' || extract(month from new.emissao_data), 2)
+  Into
+    new.competencia;
+end^
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_AUTORIZA_COMPRA_COMPETENCIA IS 'Trigger Competencia Autorizacao
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Trigger responsavel por identificar a competencia da autorizacao quando esta nao for informada, baseando-se na data de
+emissao.';
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+ADD CONSTRAINT FK_TBAUTORIZA_COMPRA_COMPET
+FOREIGN KEY (COMPETENCIA)
+REFERENCES TBCOMPETENCIA(CMP_NUM);
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD NUMERO DMN_VCHAR_20;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.NUMERO IS
+'Numero da Autorizacao (Livre)';
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter NUMERO position 4;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 5;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 6;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 7;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 8;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 9;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter COMPETENCIA position 10;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter DATA_FATURA position 11;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 12;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 13;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 14;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 15;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 16;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 17;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 18;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 19;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 20;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 21;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 22;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_FUNCAO position 23;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 24;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 25;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 26;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 27;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 28;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+CREATE INDEX IDX_TBAUTORIZA_COMPRA_NUMERO
+ON TBAUTORIZA_COMPRA (NUMERO);
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+CREATE DOMAIN DMN_VCHAR_20_NN AS
+VARCHAR(20)
+NOT NULL;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRAITEM
+    ADD UNIDADE DMN_SMALLINT_N;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.UNIDADE IS
+'Unidade de Medida';
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter ANO position 1;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter CODIGO position 2;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter EMPRESA position 3;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter SEQ position 4;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter FORNECEDOR position 5;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter PRODUTO position 6;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter QUANTIDADE position 7;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter UNIDADE position 8;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter VALOR_UNITARIO position 9;
+
+/*------ 15/05/2014 14:21:24 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter VALOR_TOTAL position 10;
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+alter table TBAUTORIZA_COMPRAITEM
+alter CONFIRMADO_RECEBIMENTO position 11;
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRAITEM
+ADD CONSTRAINT FK_TBAUTORIZA_COMPRAITEM_UND
+FOREIGN KEY (UNIDADE)
+REFERENCES TBUNIDADEPROD(UNP_COD);
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+CREATE INDEX IDX_TBUNIDADEPROD_SIGLA
+ON TBUNIDADEPROD (UNP_SIGLA);
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+ALTER TABLE TBCOMPRAS
+    ADD AUTORIZACAO_ANO DMN_SMALLINT_N,
+    ADD AUTORIZACAO_CODIGO DMN_BIGINT_N;
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.AUTORIZACAO_ANO IS
+'Autorizacao - Ano.';
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.AUTORIZACAO_CODIGO IS
+'Autorizacao - Codigo.';
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+ALTER TABLE TBCOMPRAS
+    ADD AUTORIZACAO_EMPRESA INTEGER;
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.AUTORIZACAO_EMPRESA IS
+'Autorizacao - Empresa.';
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+ALTER TABLE TBCOMPRAS
+    ALTER AUTORIZACAO_EMPRESA TYPE DMN_CNPJ;
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.STATUS IS
+'Status:
+0 - Em edicao
+1 - Aberta
+2 - Autorizada
+3 - Faturada
+4 - Cancelada';
+
+/*------ 15/05/2014 14:21:25 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.STATUS IS
+'Status:
+0 - Em edicao
+1 - Aberta
+2 - Autorizada
+3 - Faturada (NF/NFS registrada no sistema referente a autorizacao)
+4 - Cancelada';
+
+/*------ 15/05/2014 14:42:16 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD INSERCAO_DATA DMN_DATETIME;
+
+/*------ 15/05/2014 14:42:16 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.INSERCAO_DATA IS
+'Data/hora de insercao';
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ANO position 1;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CODIGO position 2;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMPRESA position 3;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column NUMERO position 4;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORNECEDOR position 5;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column TIPO position 6;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column INSERCAO_DATA position 7;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_DATA position 8;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column EMISSAO_USUARIO position 9;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALIDADE position 10;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column COMPETENCIA position 11;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column DATA_FATURA position 12;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column MOVITO position 13;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column OBSERVACAO position 14;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column ENDERECO_ENTREGA position 15;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column STATUS position 16;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_DATA position 17;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column AUTORIZADO_USUARIO position 18;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_DATA position 19;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_USUARIO position 20;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CANCELADO_MOTIVO position 21;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_NOME position 22;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_CPF position 23;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column RECEBEDOR_FUNCAO position 24;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column FORMA_PAGTO position 25;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column CONDICAO_PAGTO position 26;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_BRUTO position 27;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_DESCONTO position 28;
+
+
+/*------ SYSDBA 15/05/2014 14:42:28 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter column VALOR_TOTAL position 29;
+
+/*------ 15/05/2014 15:16:02 --------*/
+
+CREATE VIEW VW_TIPO_AUTORIZACAO(
+    CODIGO,
+    DESCRICAO)
+AS
+Select 1 as Codigo , 'Compra'         as Descricao from RDB$DATABASE Union
+Select 2 as Codigo , 'Serviço'        as Descricao from RDB$DATABASE Union
+Select 3 as Codigo , 'Compra/Serviço' as Descricao from RDB$DATABASE;
+
+/*------ 15/05/2014 15:16:02 --------*/
+
+GRANT ALL ON VW_TIPO_AUTORIZACAO TO PUBLIC;
