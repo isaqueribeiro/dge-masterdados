@@ -3197,17 +3197,42 @@ inherited frmGeProduto: TfrmGeProduto
       '  SITUACAO_HISTORICO_VEICULO,'
       '  PERCENTUAL_REDUCAO_BC,'
       '  USUARIO,'
+      '  IAT,'
+      '  IPPT,'
+      '  SITUACAO_TRIB,'
+      '  DTESTOQ,'
+      '  FLAGACEITO,'
+      '  FLAGSIS,'
+      '  FLAGEST,'
+      '  FLAGCOMBUST,'
+      '  PRECO_APRAZO,'
       '  PRECO2,'
-      ' CUST_DESP_OFIC,'
-      ' CUST_DESP_GERAIS,'
-      ' CUST_DESP_ADM,'
-      ' CUST_COMISSAO,'
-      ' CUST_IMPOSTO,'
-      ' FI_RET_FINANC,'
-      ' FI_RET_PLANO'
+      '  FLAGGRADE,'
+      '  FLAGBALANCA,'
+      '  DTINIPROM,'
+      '  DTFIMPROM,'
+      '  PROD_SERV,'
+      '  FLAGATIVO,'
+      '  DESCONTO_MAX,'
+      '  FLAGKITPROD,'
+      '  FLAGSERIAL,'
+      '  TCSMART,'
+      '  TIPI,'
+      '  GENERO,'
+      '  ALIQUOTA_IPI,'
+      '  TPMERCREV,'
+      '  DESCRIUNID,'
+      '  MOVIMENTA_ESTOQUE,'
+      '  CUST_DESP_OFIC,'
+      '  CUST_DESP_GERAIS,'
+      '  CUST_DESP_ADM,'
+      '  CUST_COMISSAO,'
+      '  CUST_IMPOSTO,'
+      '  FI_RET_FINANC,'
+      '  FI_RET_PLANO'
       'from TBPRODUTO '
       'where'
-      '  COD = :COD')
+      '  CHASSI_VEICULO = :CHASSI_VEICULO')
     ModifySQL.Strings = (
       'update TBPRODUTO'
       'set'
@@ -3240,13 +3265,21 @@ inherited frmGeProduto: TfrmGeProduto
       '  CST_COFINS = :CST_COFINS,'
       '  CST_PIS = :CST_PIS,'
       '  CUBAGEM = :CUBAGEM,'
+      '  CUST_COMISSAO = :CUST_COMISSAO,'
+      '  CUST_DESP_ADM = :CUST_DESP_ADM,'
+      '  CUST_DESP_GERAIS = :CUST_DESP_GERAIS,'
+      '  CUST_DESP_OFIC = :CUST_DESP_OFIC,'
+      '  CUST_IMPOSTO = :CUST_IMPOSTO,'
       '  CUSTOMEDIO = :CUSTOMEDIO,'
       '  DESCRI = :DESCRI,'
       '  DESCRI_APRESENTACAO = :DESCRI_APRESENTACAO,'
       '  ESTOQMIN = :ESTOQMIN,'
+      '  FI_RET_FINANC = :FI_RET_FINANC,'
+      '  FI_RET_PLANO = :FI_RET_PLANO,'
       '  FRACIONADOR = :FRACIONADOR,'
       '  KILOMETRAGEM_VEICULO = :KILOMETRAGEM_VEICULO,'
       '  MODELO = :MODELO,'
+      '  MOVIMENTA_ESTOQUE = :MOVIMENTA_ESTOQUE,'
       '  NCM_SH = :NCM_SH,'
       '  PERCENTUAL_MARCKUP = :PERCENTUAL_MARCKUP,'
       '  PERCENTUAL_MARGEM = :PERCENTUAL_MARGEM,'
@@ -3256,6 +3289,7 @@ inherited frmGeProduto: TfrmGeProduto
       '  PRECO = :PRECO,'
       '  PRECO_PROMOCAO = :PRECO_PROMOCAO,'
       '  PRECO_SUGERIDO = :PRECO_SUGERIDO,'
+      '  PRECO2 = :PRECO2,'
       '  PRODUTO_NOVO = :PRODUTO_NOVO,'
       '  QTDE = :QTDE,'
       '  REFERENCIA = :REFERENCIA,'
@@ -3268,16 +3302,9 @@ inherited frmGeProduto: TfrmGeProduto
       '  UNIDADE = :UNIDADE,'
       '  USUARIO = :USUARIO,'
       '  VALOR_IPI = :VALOR_IPI,'
-      '  VENDA_FRACIONADA = :VENDA_FRACIONADA,'
-      '  PRECO2 = :PRECO2,'
-      '  CUST_DESP_OFIC = :CUST_DESP_OFIC,'
-      '  CUST_DESP_GERAIS = :CUST_DESP_GERAIS,'
-      '  CUST_DESP_ADM = :CUST_DESP_ADM,'
-      '  CUST_COMISSAO = :CUST_COMISSAO,'
-      '  CUST_IMPOSTO = :CUST_IMPOSTO,'
-      '  FI_RET_FINANC = :FI_RET_FINANC'
+      '  VENDA_FRACIONADA = :VENDA_FRACIONADA'
       'where'
-      '  COD = :OLD_COD')
+      '  CHASSI_VEICULO = :OLD_CHASSI_VEICULO')
     InsertSQL.Strings = (
       'insert into TBPRODUTO'
       
@@ -3296,14 +3323,20 @@ inherited frmGeProduto: TfrmGeProduto
         '   COMBUSTIVEL_VEICULO, COR_VEICULO, CSOSN, CST, CST_COFINS, CST' +
         '_PIS, CUBAGEM, '
       
-        '   CUSTOMEDIO, DESCRI, DESCRI_APRESENTACAO, ESTOQMIN, FRACIONADO' +
-        'R, KILOMETRAGEM_VEICULO, '
+        '   CUST_COMISSAO, CUST_DESP_ADM, CUST_DESP_GERAIS, CUST_DESP_OFI' +
+        'C, CUST_IMPOSTO, '
       
-        '   MODELO, NCM_SH, PERCENTUAL_MARCKUP, PERCENTUAL_MARGEM, PERCEN' +
-        'TUAL_REDUCAO_BC, '
+        '   CUSTOMEDIO, DESCRI, DESCRI_APRESENTACAO, ESTOQMIN, FI_RET_FIN' +
+        'ANC, FI_RET_PLANO, '
       
-        '   PESO_BRUTO, PESO_LIQUIDO, PRECO, PRECO_PROMOCAO, PRECO_SUGERI' +
-        'DO, PRODUTO_NOVO, '
+        '   FRACIONADOR, KILOMETRAGEM_VEICULO, MODELO, MOVIMENTA_ESTOQUE,' +
+        ' NCM_SH, '
+      
+        '   PERCENTUAL_MARCKUP, PERCENTUAL_MARGEM, PERCENTUAL_REDUCAO_BC,' +
+        ' PESO_BRUTO, '
+      
+        '   PESO_LIQUIDO, PRECO, PRECO_PROMOCAO, PRECO_SUGERIDO, PRECO2, ' +
+        'PRODUTO_NOVO, '
       
         '   QTDE, REFERENCIA, RENAVAM_VEICULO, RESERVA, SECAO, SITUACAO_A' +
         'TUAL_VEICULO, '
@@ -3328,17 +3361,23 @@ inherited frmGeProduto: TfrmGeProduto
         '   :COMBUSTIVEL_VEICULO, :COR_VEICULO, :CSOSN, :CST, :CST_COFINS' +
         ', :CST_PIS, '
       
-        '   :CUBAGEM, :CUSTOMEDIO, :DESCRI, :DESCRI_APRESENTACAO, :ESTOQM' +
-        'IN, :FRACIONADOR, '
+        '   :CUBAGEM, :CUST_COMISSAO, :CUST_DESP_ADM, :CUST_DESP_GERAIS, ' +
+        ':CUST_DESP_OFIC, '
       
-        '   :KILOMETRAGEM_VEICULO, :MODELO, :NCM_SH, :PERCENTUAL_MARCKUP,' +
-        ' :PERCENTUAL_MARGEM, '
+        '   :CUST_IMPOSTO, :CUSTOMEDIO, :DESCRI, :DESCRI_APRESENTACAO, :E' +
+        'STOQMIN, '
+      
+        '   :FI_RET_FINANC, :FI_RET_PLANO, :FRACIONADOR, :KILOMETRAGEM_VE' +
+        'ICULO, '
+      
+        '   :MODELO, :MOVIMENTA_ESTOQUE, :NCM_SH, :PERCENTUAL_MARCKUP, :P' +
+        'ERCENTUAL_MARGEM, '
       
         '   :PERCENTUAL_REDUCAO_BC, :PESO_BRUTO, :PESO_LIQUIDO, :PRECO, :' +
         'PRECO_PROMOCAO, '
       
-        '   :PRECO_SUGERIDO, :PRODUTO_NOVO, :QTDE, :REFERENCIA, :RENAVAM_' +
-        'VEICULO, '
+        '   :PRECO_SUGERIDO, :PRECO2, :PRODUTO_NOVO, :QTDE, :REFERENCIA, ' +
+        ':RENAVAM_VEICULO, '
       
         '   :RESERVA, :SECAO, :SITUACAO_ATUAL_VEICULO, :SITUACAO_HISTORIC' +
         'O_VEICULO, '
@@ -3348,7 +3387,7 @@ inherited frmGeProduto: TfrmGeProduto
     DeleteSQL.Strings = (
       'delete from TBPRODUTO'
       'where'
-      '  COD = :OLD_COD')
+      '  CHASSI_VEICULO = :OLD_CHASSI_VEICULO')
     Left = 784
   end
   inherited ImgList: TImageList
