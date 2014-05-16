@@ -3746,3 +3746,23 @@ Historico:
         + Criacao do campo CLIENTE_PERMITIR_DUPLICAR_CNPJ para permitir ou nao duplicacao de CPF/CNPJ no cadastro dos
         clientes.';
 
+
+
+
+/*------ SYSDBA 16/05/2014 11:42:37 --------*/
+
+COMMENT ON TABLE SYS_LICENCA IS 'Tabela Licenca de Uso
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   ?
+
+Tabela responsavel por armazenar, de forma criptografada, informacoes importantes referentes a Licenca de Uso do sistema.';
+
+
+
+
+/*------ SYSDBA 16/05/2014 11:42:58 --------*/
+
+COMMENT ON COLUMN SYS_LICENCA.LINHA_CONTROLE IS
+'Dados criptografados.';
+
