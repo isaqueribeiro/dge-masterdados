@@ -377,6 +377,24 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
           end
           object DBCheckBox2: TDBCheckBox
             Left = 16
+            Top = 112
+            Width = 321
+            Height = 17
+            Caption = 'Permitir duplicar CPF/CNPJ no cadastro dos clientes'
+            DataField = 'CLIENTE_PERMITIR_DUPLICAR_CNPJ'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 3
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
+          object DBCheckBox3: TDBCheckBox
+            Left = 16
             Top = 88
             Width = 241
             Height = 17
@@ -389,7 +407,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 3
+            TabOrder = 4
             ValueChecked = '1'
             ValueUnchecked = '0'
           end
@@ -413,6 +431,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  , c.email_mensagem_padrao'
       '  , c.nfe_solicita_dh_saida'
       '  , c.nfe_imprimir_cod_cliente'
+      '  , c.cliente_permitir_duplicar_cnpj'
       '  , c.custo_oper_calcular'
       '  , c.permitir_venda_estoque_ins'
       '  , c.estoque_unico_empresas'
@@ -500,6 +519,12 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       Origin = '"TBCONFIGURACAO"."NFE_IMPRIMIR_COD_CLIENTE"'
       ProviderFlags = [pfInUpdate]
     end
+    object IbDtstTabelaCLIENTE_PERMITIR_DUPLICAR_CNPJ: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'CLIENTE_PERMITIR_DUPLICAR_CNPJ'
+      Origin = '"TBCONFIGURACAO"."CLIENTE_PERMITIR_DUPLICAR_CNPJ"'
+      ProviderFlags = [pfInUpdate]
+    end
     object IbDtstTabelaCUSTO_OPER_CALCULAR: TSmallintField
       Alignment = taLeftJustify
       FieldName = 'CUSTO_OPER_CALCULAR'
@@ -558,6 +583,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  EMAIL_MENSAGEM_PADRAO,'
       '  NFE_SOLICITA_DH_SAIDA,'
       '  NFE_IMPRIMIR_COD_CLIENTE,'
+      '  CLIENTE_PERMITIR_DUPLICAR_CNPJ,'
       '  CUSTO_OPER_CALCULAR,'
       '  PERMITIR_VENDA_ESTOQUE_INS,'
       '  ESTOQUE_UNICO_EMPRESAS,'
@@ -569,6 +595,9 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
     ModifySQL.Strings = (
       'update TBCONFIGURACAO'
       'set'
+      
+        '  CLIENTE_PERMITIR_DUPLICAR_CNPJ = :CLIENTE_PERMITIR_DUPLICAR_CN' +
+        'PJ,'
       '  CUSTO_OPER_CALCULAR = :CUSTO_OPER_CALCULAR,'
       '  EMAIL_ASSUNTO_PADRAO = :EMAIL_ASSUNTO_PADRAO,'
       '  EMAIL_CONEXAO_SSL = :EMAIL_CONEXAO_SSL,'
@@ -591,32 +620,34 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
     InsertSQL.Strings = (
       'insert into TBCONFIGURACAO'
       
-        '  (CUSTO_OPER_CALCULAR, EMAIL_ASSUNTO_PADRAO, EMAIL_CONEXAO_SSL,' +
-        ' EMAIL_CONTA, '
+        '  (CLIENTE_PERMITIR_DUPLICAR_CNPJ, CUSTO_OPER_CALCULAR, EMAIL_AS' +
+        'SUNTO_PADRAO, '
       
-        '   EMAIL_MENSAGEM_PADRAO, EMAIL_POP, EMAIL_REQUER_AUTENTICACAO, ' +
-        'EMAIL_SENHA, '
+        '   EMAIL_CONEXAO_SSL, EMAIL_CONTA, EMAIL_MENSAGEM_PADRAO, EMAIL_' +
+        'POP, EMAIL_REQUER_AUTENTICACAO, '
       
-        '   EMAIL_SMTP, EMAIL_SMTP_PORTA, EMPRESA, ESTOQUE_SATELITE_CLIEN' +
-        'TE, ESTOQUE_UNICO_EMPRESAS, '
+        '   EMAIL_SENHA, EMAIL_SMTP, EMAIL_SMTP_PORTA, EMPRESA, ESTOQUE_S' +
+        'ATELITE_CLIENTE, '
       
-        '   NFE_IMPRIMIR_COD_CLIENTE, NFE_SOLICITA_DH_SAIDA, PERMITIR_VEN' +
-        'DA_ESTOQUE_INS, '
-      '   USUARIO)'
+        '   ESTOQUE_UNICO_EMPRESAS, NFE_IMPRIMIR_COD_CLIENTE, NFE_SOLICIT' +
+        'A_DH_SAIDA, '
+      '   PERMITIR_VENDA_ESTOQUE_INS, USUARIO)'
       'values'
       
-        '  (:CUSTO_OPER_CALCULAR, :EMAIL_ASSUNTO_PADRAO, :EMAIL_CONEXAO_S' +
-        'SL, :EMAIL_CONTA, '
+        '  (:CLIENTE_PERMITIR_DUPLICAR_CNPJ, :CUSTO_OPER_CALCULAR, :EMAIL' +
+        '_ASSUNTO_PADRAO, '
       
-        '   :EMAIL_MENSAGEM_PADRAO, :EMAIL_POP, :EMAIL_REQUER_AUTENTICACA' +
-        'O, :EMAIL_SENHA, '
+        '   :EMAIL_CONEXAO_SSL, :EMAIL_CONTA, :EMAIL_MENSAGEM_PADRAO, :EM' +
+        'AIL_POP, '
       
-        '   :EMAIL_SMTP, :EMAIL_SMTP_PORTA, :EMPRESA, :ESTOQUE_SATELITE_C' +
-        'LIENTE, '
+        '   :EMAIL_REQUER_AUTENTICACAO, :EMAIL_SENHA, :EMAIL_SMTP, :EMAIL' +
+        '_SMTP_PORTA, '
       
-        '   :ESTOQUE_UNICO_EMPRESAS, :NFE_IMPRIMIR_COD_CLIENTE, :NFE_SOLI' +
-        'CITA_DH_SAIDA, '
-      '   :PERMITIR_VENDA_ESTOQUE_INS, :USUARIO)')
+        '   :EMPRESA, :ESTOQUE_SATELITE_CLIENTE, :ESTOQUE_UNICO_EMPRESAS,' +
+        ' :NFE_IMPRIMIR_COD_CLIENTE, '
+      
+        '   :NFE_SOLICITA_DH_SAIDA, :PERMITIR_VENDA_ESTOQUE_INS, :USUARIO' +
+        ')')
     DeleteSQL.Strings = (
       'delete from TBCONFIGURACAO'
       'where'

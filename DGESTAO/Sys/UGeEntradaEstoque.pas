@@ -275,6 +275,11 @@ type
     cdsTabelaItensESTOQUE: TIBBCDField;
     cdsTabelaItensTOTAL_BRUTO: TFMTBCDField;
     cdsTabelaItensTOTAL_LIQUIDO: TFMTBCDField;
+    lblAutorizacao: TLabel;
+    dbAutorizacao: TRxDBComboEdit;
+    IbDtstTabelaAUTORIZACAO_ANO: TSmallintField;
+    IbDtstTabelaAUTORIZACAO_CODIGO: TIntegerField;
+    IbDtstTabelaAUTORIZACAO_EMPRESA: TIBStringField;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -309,6 +314,9 @@ type
     procedure nmImprimirDANFEClick(Sender: TObject);
     procedure nmGerarDANFEXMLClick(Sender: TObject);
     procedure IbDtstTabelaAfterScroll(DataSet: TDataSet);
+    procedure dbAutorizacaoButtonClick(Sender: TObject);
+    procedure IbDtstTabelaAUTORIZACAO_CODIGOGetText(Sender: TField;
+      var Text: String; DisplayText: Boolean);
   private
     { Private declarations }
     SQL_Itens   ,
@@ -330,8 +338,9 @@ var
 
 implementation
 
-uses DateUtils, UDMBusiness, UGeCondicaoPagto, UGeProduto, UGeTabelaCFOP,
-  UGeFornecedor, UGeEntradaEstoqueCancelar, UGeEntradaConfirmaDuplicatas, UGeEntradaEstoqueGerarNFe, UDMNFe, UConstantesDGE;
+uses
+  UConstantesDGE, DateUtils, UDMBusiness, UGeCondicaoPagto, UGeProduto, UGeTabelaCFOP, {$IFNDEF DGE}UGeAutorizacaoCompra,{$ENDIF}
+  UGeFornecedor, UGeEntradaEstoqueCancelar, UGeEntradaConfirmaDuplicatas, UGeEntradaEstoqueGerarNFe, UDMNFe;
 
 {$R *.dfm}
 
@@ -362,6 +371,14 @@ end;
 
 procedure TfrmGeEntradaEstoque.FormCreate(Sender: TObject);
 begin
+  {$IFDEF DGE}
+  dbCFOPNFDescricao.Width := 457;
+  lblSituacao.Left        := 944;
+  dbSituacao.Left         := 944;
+  lblAutorizacao.Visible  := False;
+  dbAutorizacao.Visible   := False;
+  {$ENDIF}
+
   IbDtstTabela.GeneratorField.Generator := 'GEN_COMPRAS_CONTROLE_' + FormatFloat('0000', YearOf(Date));
 
   inherited;
@@ -428,6 +445,9 @@ begin
   IbDtstTabelaTOTALNF.Value        := 0;
   IbDtstTabelaTOTALPROD.Value      := 0;
   IbDtstTabelaUSUARIO.Value        := GetUserApp;
+  IbDtstTabelaAUTORIZACAO_ANO.Clear;
+  IbDtstTabelaAUTORIZACAO_CODIGO.Clear;
+  IbDtstTabelaAUTORIZACAO_EMPRESA.Clear;
 end;
 
 procedure TfrmGeEntradaEstoque.dbFornecedorButtonClick(Sender: TObject);
@@ -1183,6 +1203,42 @@ begin
     qryCFOP.ParamByName('Cfop_cod').AsInteger := IbDtstTabelaNFCFOP.AsInteger;
     qryCFOP.Open;
   end;
+end;
+
+procedure TfrmGeEntradaEstoque.dbAutorizacaoButtonClick(Sender: TObject);
+{$IFNDEF DGE}
+var
+  iAno    ,
+  iCodigo : Integer;
+  sEmpresa : String;
+{$ENDIF}
+begin
+{$IFNDEF DGE}
+  if ( IbDtstTabela.State in [dsEdit, dsInsert] ) then
+  begin
+    if ( IbDtstTabelaCODFORN.AsInteger = 0 ) then
+    begin
+      ShowInformation('Favor selecionar o Fornecedor primeiramente!');
+      dbFornecedor.SetFocus;
+    end
+    else
+      if ( SelecionarAutorizacao(Self, IbDtstTabelaCODFORN.AsInteger, iAno, iCodigo, sEmpresa) ) then
+      begin
+        IbDtstTabelaAUTORIZACAO_ANO.AsInteger    := iAno;
+        IbDtstTabelaAUTORIZACAO_CODIGO.AsInteger := iCodigo;
+        IbDtstTabelaAUTORIZACAO_EMPRESA.AsString := sEmpresa;
+      end;
+  end;
+{$ENDIF}
+end;
+
+procedure TfrmGeEntradaEstoque.IbDtstTabelaAUTORIZACAO_CODIGOGetText(
+  Sender: TField; var Text: String; DisplayText: Boolean);
+begin
+{$IFNDEF DGE}
+  if not Sender.IsNull then
+    Text := IbDtstTabelaAUTORIZACAO_ANO.AsString + FormatFloat('"/"###0000000', Sender.AsInteger);
+{$ENDIF}
 end;
 
 initialization

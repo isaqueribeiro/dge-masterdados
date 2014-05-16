@@ -14,6 +14,20 @@ const
   ROTINA_TIPO_FUNCAO   = 2;
   ROTINA_TIPO_PROCESSO = 3;
 
+  // Constantes FR3
+
+  CATEGORY_VAR = 'Local';
+  VAR_TITLE    = 'Titulo';
+  VAR_SUBTITLE = 'SubTitulo';
+  VAR_PERIODO  = 'Periodo';
+  VAR_TODOS    = 'Todos';
+  VAR_APENASCONSOLIDADO = 'ApenasConsolidado';
+  VAR_SYSTEM            = 'Sistema';
+  VAR_USER              = 'Usuario';
+  VAR_EMPRESA           = 'Entidade';
+  VAR_DEPARTAMENTO      = 'Depto';
+  VAR_FILTROS           = 'Filtros';
+
   // Identificacores de rotinas no sistema
 
   ROTINA_MENU_CADASTRO_ID     = '0010000000';

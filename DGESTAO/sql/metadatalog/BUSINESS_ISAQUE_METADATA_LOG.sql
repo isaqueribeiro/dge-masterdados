@@ -5673,3 +5673,264 @@ Select 3 as Codigo , 'Compra/Serviço' as Descricao from RDB$DATABASE;
 /*------ 15/05/2014 15:16:02 --------*/
 
 GRANT ALL ON VW_TIPO_AUTORIZACAO TO PUBLIC;
+
+
+/*------ SYSDBA 16/05/2014 00:35:12 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRAITEM
+    ADD USUARIO DMN_USUARIO;
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.USUARIO IS
+'Usuario de lancamento';
+
+
+
+/*------ 16/05/2014 04:34:56 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable preco_venda dmn_money;
+  declare variable percentual_markup dmn_percentual_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+  declare variable movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Marcar como FATURADA a Autorizacao de Compra associada a Entrada
+    Update TBAUTORIZA_COMPRA ac Set
+      ac.status = 3 -- 3. Faturada (NF/NFS registrada no sistema referente a autorizacao)
+    where ac.ano     = coalesce(new.autorizacao_ano, 0)
+      and ac.codigo  = coalesce(new.autorizacao_codigo, 0)
+      and ac.empresa = coalesce(new.autorizacao_empresa, '0');
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.preco
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Preco_venda
+        , Movimentar
+    do
+    begin
+
+      -- Confirmar recebimento dos produtos autorizados na Autorizacao de Compras
+      Update TBAUTORIZA_COMPRAITEM aci Set
+        aci.confirmado_recebimento = 1
+      where aci.ano     = coalesce(new.autorizacao_ano, 0)
+        and aci.codigo  = coalesce(new.autorizacao_codigo, 0)
+        and aci.empresa = coalesce(new.autorizacao_empresa, '0')
+        and aci.produto = :Produto;
+
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+--      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_medio) / :Custo_medio) * 100) as numeric(18,3) );
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_compra) / :Custo_compra) * 100 ) as numeric(18,3) );
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          --p.Customedio = Case when :alterar_custo = 1 then :Custo_medio else p.Customedio end
+          p.Customedio = Case when :alterar_custo = 1 then :Custo_compra else p.Customedio end
+        , p.Qtde       = Case when :Movimentar = 1    then (:Estoque + :Quantidade) else :Estoque end
+        , p.percentual_marckup = :Percentual_markup
+--        , p.preco_sugerido     = cast( (:Custo_medio + (:Custo_medio * :Percentual_markup / 100)) as numeric(15,2) )
+        , p.preco_sugerido     = cast( (:Custo_compra + (:Custo_compra * :Percentual_markup / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = :Estoque + :Quantidade
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('ENTRADA - COMPRA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque + :Quantidade
+        , new.Usuario
+        , 'Custo Medio no valor de R$ ' || :Custo_medio
+      );
+    end
+     
+  end 
+end^
+
+/*------ 16/05/2014 04:34:56 --------*/
+
+SET TERM ; ^
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+ALTER TABLE TBCONFIGURACAO
+    ADD CLIENTE_PERMITIR_DUPLICAR_CNPJ DMN_LOGICO DEFAULT 0;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+COMMENT ON COLUMN TBCONFIGURACAO.CLIENTE_PERMITIR_DUPLICAR_CNPJ IS
+'Cliente: Permitir duplicar CPF/CNPJ no Cadastro:
+0 - Nao
+1 - Sim';
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter EMPRESA position 1;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter EMAIL_CONTA position 2;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter EMAIL_SENHA position 3;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter EMAIL_POP position 4;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter EMAIL_SMTP position 5;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter EMAIL_SMTP_PORTA position 6;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter EMAIL_REQUER_AUTENTICACAO position 7;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter EMAIL_CONEXAO_SSL position 8;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter EMAIL_ASSUNTO_PADRAO position 9;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter EMAIL_MENSAGEM_PADRAO position 10;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter NFE_SOLICITA_DH_SAIDA position 11;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter NFE_IMPRIMIR_COD_CLIENTE position 12;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter CLIENTE_PERMITIR_DUPLICAR_CNPJ position 13;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter CUSTO_OPER_CALCULAR position 14;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter PERMITIR_VENDA_ESTOQUE_INS position 15;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter ESTOQUE_UNICO_EMPRESAS position 16;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter ESTOQUE_SATELITE_CLIENTE position 17;
+
+/*------ 16/05/2014 10:30:41 --------*/
+
+alter table TBCONFIGURACAO
+alter USUARIO position 18;

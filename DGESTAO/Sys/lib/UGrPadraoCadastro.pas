@@ -225,6 +225,9 @@ begin
   begin
     Key := #0;
     pgcGuias.ActivePage := tbsCadastro;
+
+    if Assigned(pgcGuias.OnChange) then
+      pgcGuias.OnChange(pgcGuias);
   end
   else
   if ( Key in ['0'..'9', ' ', 'a'..'z', 'A'..'Z'] ) then
@@ -238,6 +241,8 @@ end;
 procedure TfrmGrPadraoCadastro.dbgDadosDblClick(Sender: TObject);
 begin
   pgcGuias.ActivePage := tbsCadastro;
+  if Assigned(pgcGuias.OnChange) then
+    pgcGuias.OnChange(pgcGuias);
 end;
 
 procedure TfrmGrPadraoCadastro.DtSrcTabelaStateChange(Sender: TObject);
@@ -395,6 +400,12 @@ begin
   Case Key of
     VK_F2 : if ( btbtnSelecionar.Visible and btbtnSelecionar.Enabled ) then
               btbtnSelecionar.Click;
+
+    VK_F5 : if ( (pgcGuias.ActivePage = tbsTabela) and IbDtstTabela.Active ) then
+            begin
+              DtSrcTabela.DataSet.Close;
+              DtSrcTabela.DataSet.Open;
+            end;
 
     VK_ESCAPE : if (IbDtstTabela.State in [dsEdit, dsInsert]) then
                   btbtnCancelar.Click
