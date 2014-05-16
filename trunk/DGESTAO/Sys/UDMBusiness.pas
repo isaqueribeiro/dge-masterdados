@@ -129,6 +129,7 @@ type
     _PermissaoPerfil_SUPORTE_TI ,
     _PermissaoPerfil_SYSTEM_ADM : TStringList;
     procedure MontarPermissao;
+    procedure MontarPermissao_Diretoria;
   public
     { Public declarations }
     procedure CarregarLicenca(const sNomeArquivo : String);
@@ -205,12 +206,14 @@ var
   function GetEmailEmpresa(const sCNPJEmpresa : String) : String;
   function GetCalcularCustoOperEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetPermitirVendaEstoqueInsEmpresa(const sCNPJEmpresa : String) : Boolean;
+  function GetPermitirDuplicarCNPJCliente(const sCNPJEmpresa : String) : Boolean;
   function GetSimplesNacionalInsEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetEstoqueUnicoEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetEstoqueSateliteEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetRegimeEmpresa(const sCNPJEmpresa : String) : TTipoRegime;
   function GetRazaoSocialEmpresa(const sCNPJEmpresa : String) : String;
   function GetNomeFantasiaEmpresa(const sCNPJEmpresa : String) : String;
+  function GetPrazoValidadeAutorizacaoCompra(const sCNPJEmpresa : String) : Integer;
 
   function StrIsCNPJ(const Num: string): Boolean;
   function StrIsCPF(const Num: string): Boolean;
@@ -233,6 +236,7 @@ var
   function GetEstadoNome(const iEstado : Integer) : String; overload;
   function GetEstadoNome(const sSigla : String) : String; overload;
   function GetEstadoID(const sSigla : String) : Integer;
+  function GetEstadoUF(const iEstado : Integer) : String;
   function GetCidadeNomeDefault : String;
   function GetCidadeNome(const iCidade : Integer) : String;
   function GetCidadeID(const iEstado : Integer; const sNome : String) : Integer; overload;
@@ -264,6 +268,7 @@ var
   function GetSolicitaDHSaidaNFe(const sCNPJEmitente : String) : Boolean;
   function GetImprimirCodClienteNFe(const sCNPJEmitente : String) : Boolean;
   function GetExisteCPF_CNPJ(iCodigoCliente : Integer; sCpfCnpj : String; var iCodigo : Integer; var sRazao : String) : Boolean;
+  function GetExisteNumeroAutorizacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
 
   function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
 
@@ -317,6 +322,10 @@ const
   STATUS_AUTORIZACAO_AUT = 2;
   STATUS_AUTORIZACAO_FAT = 3;
   STATUS_AUTORIZACAO_CAN = 4;
+
+  TIPO_AUTORIZACAO_COMPRA         = 1;
+  TIPO_AUTORIZACAO_SERVICO        = 2;
+  TIPO_AUTORIZACAO_COMPRA_SERVICO = 3;
 
   // Mensagens padrões do sistema
   CLIENTE_BLOQUEADO_PORDEBITO = 'Cliente bloqueado, automaticamente, pelo sistema por se encontrar com títulos vencidos. Favor buscar mais informações junto ao FINANCEIRO.';
@@ -1161,6 +1170,21 @@ begin
   end;
 end;
 
+function GetPermitirDuplicarCNPJCliente(const sCNPJEmpresa : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select cliente_permitir_duplicar_cnpj as permitir from TBCONFIGURACAO where empresa = ' + QuotedStr(sCNPJEmpresa));
+    Open;
+
+    Result := (FieldByName('permitir').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
 function GetSimplesNacionalInsEmpresa(const sCNPJEmpresa : String) : Boolean;
 begin
   with DMBusiness, qryBusca do
@@ -1249,6 +1273,11 @@ begin
 
     Close;
   end;
+end;
+
+function GetPrazoValidadeAutorizacaoCompra(const sCNPJEmpresa : String) : Integer;
+begin
+  Result := 5;
 end;
 
 function StrIsCNPJ(const Num: string): Boolean;
@@ -1641,6 +1670,21 @@ begin
     Open;
 
     Result := FieldByName('est_cod').AsInteger;
+
+    Close;
+  end;
+end;
+
+function GetEstadoUF(const iEstado : Integer) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select est_sigla from TBESTADO where est_cod = ' + IntToStr(iEstado));
+    Open;
+
+    Result := Trim(FieldByName('est_sigla').AsString);
 
     Close;
   end;
@@ -2058,6 +2102,33 @@ begin
   end;
 end;
 
+function GetExisteNumeroAutorizacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('    a.ano');
+    SQL.Add('  , a.codigo');
+    SQL.Add('  , a.numero');
+    SQL.Add('from TBAUTORIZA_COMPRA a');
+    SQL.Add('where a.Numero  = ' + QuotedStr(Trim(sNumero)));
+    SQL.Add('  and (not (');
+    SQL.Add('           a.ano    = ' + IntToStr(iAno));
+    SQL.Add('       and a.codigo = ' + IntToStr(iCodigo));
+    SQL.Add('  ))');
+    Open;
+
+    Result := (FieldByName('codigo').AsInteger > 0);
+
+    if Result then
+      sControleInterno := Trim(FieldByName('ano').AsString) + FormatFloat('###0000000', FieldByName('codigo').AsInteger);
+
+    Close;
+  end;
+end;
+
 function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
 begin
   with DMBusiness, qryCaixaAberto do
@@ -2333,6 +2404,8 @@ begin
   _PermissaoPerfil_ESTOQUISTA  := TStringList.Create;
   _PermissaoPerfil_SUPORTE_TI  := TStringList.Create;
   _PermissaoPerfil_SYSTEM_ADM  := TStringList.Create;
+
+  MontarPermissao_Diretoria;
 end;
 
 procedure TDMBusiness.ValidarLicenca(const sNomeArquivo: String;
@@ -2399,6 +2472,17 @@ begin
         'A licença do sistema expirou.' + #13 +
         'Acessos a determinadas rotinas no sistema serão bloqueados!' + #13#13 +
         'Favor entrar em contato com suporte.');
+end;
+
+procedure TDMBusiness.MontarPermissao_Diretoria;
+begin
+  _PermissaoPerfilDiretoria.BeginUpdate;
+  _PermissaoPerfilDiretoria.Clear;
+
+  _PermissaoPerfilDiretoria.Add( ROTINA_MENU_CADASTRO_ID );
+  _PermissaoPerfilDiretoria.Add( ROTINA_MENU_ESTOQUE_ID );
+
+  _PermissaoPerfilDiretoria.EndUpdate;
 end;
 
 initialization

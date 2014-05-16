@@ -593,6 +593,9 @@ begin
   IbDtstTabelaVALOR_LIMITE_COMPRA.Value  := 0;
   IbDtstTabelaPAIS_ID.AsString           := GetPaisIDDefault;
   IbDtstTabelaPAIS_NOME.AsString         := GetPaisNomeDefault;
+  IbDtstTabelaEST_COD.AsInteger          := GetEstadoIDDefault;
+  IbDtstTabelaEST_NOME.AsString          := GetEstadoNomeDefault;
+  IbDtstTabelaUF.AsString                := GetEstadoUF(GetEstadoIDDefault);
   IbDtstTabelaDTCAD.AsDateTime           := GetDateDB;
   IbDtstTabelaBLOQUEADO.AsInteger             := 0; // Ord(False);
   IbDtstTabelaEMITIR_NFE_DEVOLUCAO.AsInteger  := 0; // Ord(False);
@@ -705,7 +708,15 @@ begin
     end;
   end;
 
+  { DONE -oIsaque -cCliente : 16/05/2014 - Rotina para verificar a duplicidade de CPF/CNPJ (1) }
+  
   if GetExisteCPF_CNPJ(IbDtstTabelaCODIGO.AsInteger, IbDtstTabelaCNPJ.AsString, iCodigo, sRazao) then
+    if not GetPermitirDuplicarCNPJCliente(GetEmpresaIDDefault) then
+    begin
+      ShowWarning('CPF/CNJP já cadastrado para o cliente ' + sRazao + ' ' + FormatFloat('"("###00000")."', iCodigo) );
+      Abort;
+    end  
+    else
     if not ShowConfirm('CPF/CNJP já cadastrado para o cliente ' + sRazao + ' ' + FormatFloat('"("###00000")"', iCodigo) + #13 +
       'Deseja salvar este registro assim mesmo?') then
       Abort;
@@ -1382,6 +1393,8 @@ var
   iCodigo : Integer;
   sRazao  : String;  
 begin
+  { DONE -oIsaque -cCliente : 16/05/2014 - Rotina para verificar a duplicidade de CPF/CNPJ (2) }
+  
   if ( dbCNPJ.Focused and (Key = VK_RETURN) and (IbDtstTabela.State in [dsEdit, dsInsert]) )  then
     if ( Length(dbCNPJ.Text) > 10 ) then
       if GetExisteCPF_CNPJ(IbDtstTabelaCODIGO.AsInteger, dbCNPJ.Text, iCodigo, sRazao) then

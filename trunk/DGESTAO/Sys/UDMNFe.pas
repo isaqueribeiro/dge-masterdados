@@ -3,7 +3,7 @@ unit UDMNFe;
 interface
 
 uses
-  // UFuncoesRede,
+  UInfoVersao,
 
   Windows, SysUtils, Classes, ACBrNFeDANFEClass, ACBrNFeDANFERave, ACBrNFe, DB,
   IBCustomDataSet, IBQuery, frxClass, frxDBSet, frxExportRTF, frxExportXLS,
@@ -468,13 +468,20 @@ type
     qryEntradaDadosProdutoDISPONIVEL: TIBBCDField;
     qryDadosProdutoQTDEFINAL: TIBBCDField;
     qryEntradaDadosProdutoQTDEFINAL: TIBBCDField;
+    qryAutorizacaoCompra: TIBQuery;
+    frdAutorizacaoCompra: TfrxDBDataset;
+    frrAutorizacaoCompra: TfrxReport;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);
     procedure FrECFPoolerGetValue(const VarName: String;
       var Value: Variant);
+    procedure frrAutorizacaoCompraGetValue(const VarName: String;
+      var Value: Variant);
   private
     { Private declarations }
+    ver : TInfoVersao;
+    
     frmACBr : TfrmGeConfigurarNFeACBr;
     fr3Designer: TfrxDesigner;
 
@@ -731,12 +738,14 @@ end;
 
 procedure TDMNFe.DataModuleCreate(Sender: TObject);
 begin
+  ver := TInfoVersao.GetInstance();
+  
   AbrirEmitente( GetEmpresaIDDefault );
   ConfigACBr := TfrmGeConfigurarNFeACBr.Create(Application);
 
   ConfigACBr.sbtnGetCert.OnClick := SelecionarCertificado;
   ConfigACBr.btnServico.OnClick  := TestarServico;
-  
+
   rvDANFE.Sistema := GetCompanyName + ' - Contato(s): ' + GetContacts;
 
   LerConfiguracao(GetEmpresaIDDefault);
@@ -3925,6 +3934,16 @@ begin
     Signature.Clear;
     Signature.Add(sAssinaturaTxt);
   end;
+end;
+
+procedure TDMNFe.frrAutorizacaoCompraGetValue(const VarName: String;
+  var Value: Variant);
+begin
+  if ( VarName = VAR_SYSTEM ) then
+    Value := Application.Title + ' - versão ' + ver.FileVersion;
+
+  if ( VarName = VAR_USER ) then
+    Value := GetUserApp;
 end;
 
 end.
