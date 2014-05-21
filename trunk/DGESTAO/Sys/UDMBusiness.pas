@@ -247,6 +247,8 @@ var
   function GetCfopNomeDefault : String;
   function GetCfopEntradaNomeDefault : String;
   function GetEmpresaNomeDefault : String;
+  function GetEmpresaEnderecoDefault : String;
+  function GetEmpresaEndereco(const sCNPJEmitente : String) : String;
   function GetClienteNomeDefault : String;
   function GetClienteNome(const iCodigo : Integer) : String;
   function GetClienteEmail(const iCodigo : Integer) : String;
@@ -1839,6 +1841,38 @@ begin
     Open;
 
     Result := FieldByName('rzsoc').AsString;
+
+    Close;
+  end;
+end;
+
+function GetEmpresaEnderecoDefault : String;
+begin
+  Result := GetEmpresaEndereco(GetEmpresaIDDefault);
+end;
+
+function GetEmpresaEndereco(const sCNPJEmitente : String) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('    e.ender');
+    SQL.Add('  , e.numero_end');
+    SQL.Add('  , e.complemento');
+    SQL.Add('  , e.bairro');
+    SQL.Add('  , e.cidade');
+    SQL.Add('  , e.uf');
+    SQL.Add('  , e.cep');
+    SQL.Add('from TBEMPRESA e');
+    SQL.Add('where e.cnpj = ' + QuotedStr(GetEmpresaIDDefault));
+    Open;
+
+    Result := Trim(FieldByName('ender').AsString) + ', No. ' + Trim(FieldByName('numero_end').AsString) +
+      IfThen(Trim(FieldByName('complemento').AsString) = EmptyStr, '', ' (' + Trim(FieldByName('complemento').AsString) + ')') + ', ' +
+      'BAIRRO: ' + Trim(FieldByName('bairro').AsString) + ' - ' + Trim(FieldByName('cidade').AsString) + ' ' +
+      'CEP: ' + StrFormatarCEP(Trim(FieldByName('cep').AsString));
 
     Close;
   end;

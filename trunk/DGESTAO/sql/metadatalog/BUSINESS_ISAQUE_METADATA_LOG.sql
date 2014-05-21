@@ -5934,3 +5934,178 @@ alter ESTOQUE_SATELITE_CLIENTE position 17;
 
 alter table TBCONFIGURACAO
 alter USUARIO position 18;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD NOME_CONTATO DMN_VCHAR_100;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.NOME_CONTATO IS
+'Nome do Contato';
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter NUMERO position 4;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 5;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter NOME_CONTATO position 6;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 7;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter INSERCAO_DATA position 8;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 9;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 10;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 11;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter COMPETENCIA position 12;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter DATA_FATURA position 13;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 14;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 15;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 16;
+
+/*------ 20/05/2014 12:01:58 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 17;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 18;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 19;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 20;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 21;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 22;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 23;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 24;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_FUNCAO position 25;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 26;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 27;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter TRANSPORTADOR position 28;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 29;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 30;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL_FRETE position 31;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL_IPI position 32;
+
+/*------ 20/05/2014 12:01:59 --------*/
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 33;

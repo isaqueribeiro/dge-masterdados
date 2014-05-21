@@ -967,6 +967,12 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       FixedChar = True
       Size = 1
     end
+    object IbDtstTabelaCODTPDESP: TSmallintField
+      DisplayLabel = 'Tipo de Despesa'
+      FieldName = 'CODTPDESP'
+      Origin = 'TBCONTPAG.CODTPDESP'
+      Required = True
+    end
     object IbDtstTabelaDOCBAIX: TIBStringField
       DisplayLabel = 'Doc. Baixa'
       FieldName = 'DOCBAIX'
@@ -996,10 +1002,6 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       Origin = 'TBCONTPAG.QUITADO'
       Required = True
       OnGetText = IbDtstTabelaQUITADOGetText
-    end
-    object IbDtstTabelaCODTPDESP: TSmallintField
-      FieldName = 'CODTPDESP'
-      Origin = 'TBCONTPAG.CODTPDESP'
     end
   end
   inherited IbUpdTabela: TIBUpdateSQL

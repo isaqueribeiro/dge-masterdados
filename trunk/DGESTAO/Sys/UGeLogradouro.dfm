@@ -1,11 +1,13 @@
 inherited frmGeLogradouro: TfrmGeLogradouro
   Left = 548
   Top = 271
+  ActiveControl = dbCodigo
   Caption = 'Tabela de Logradouros'
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   inherited pgcGuias: TPageControl
+    ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited dbgDados: TDBGrid
         Columns = <
@@ -205,15 +207,18 @@ inherited frmGeLogradouro: TfrmGeLogradouro
       DisplayLabel = 'Tipo'
       FieldName = 'TLG_COD'
       Origin = 'TBLOGRADOURO.TLG_COD'
+      Required = True
     end
     object IbDtstTabelaCID_COD: TIntegerField
       DisplayLabel = 'Cidade'
       FieldName = 'CID_COD'
       Origin = 'TBLOGRADOURO.CID_COD'
+      Required = True
     end
     object IbDtstTabelaLOGRADOURO: TIBStringField
       DisplayLabel = 'Nome'
       FieldName = 'LOGRADOURO'
+      Required = True
       Size = 300
     end
     object IbDtstTabelaCID_NOME: TIBStringField

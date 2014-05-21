@@ -1287,7 +1287,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             FocusControl = dbFormaPagto
           end
           object lblCondicaoPagto: TLabel
-            Left = 160
+            Left = 152
             Top = 75
             Width = 120
             Height = 13
@@ -1296,7 +1296,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             FocusControl = dbCondicaoPagto
           end
           object lblPrazo01: TLabel
-            Left = 472
+            Left = 600
             Top = 75
             Width = 24
             Height = 13
@@ -1311,7 +1311,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo02: TLabel
-            Left = 520
+            Left = 640
             Top = 75
             Width = 24
             Height = 13
@@ -1326,7 +1326,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo03: TLabel
-            Left = 568
+            Left = 680
             Top = 75
             Width = 24
             Height = 13
@@ -1341,7 +1341,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo04: TLabel
-            Left = 616
+            Left = 720
             Top = 75
             Width = 24
             Height = 13
@@ -1356,7 +1356,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo05: TLabel
-            Left = 664
+            Left = 760
             Top = 75
             Width = 24
             Height = 13
@@ -1371,7 +1371,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo06: TLabel
-            Left = 712
+            Left = 800
             Top = 75
             Width = 24
             Height = 13
@@ -1386,7 +1386,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo07: TLabel
-            Left = 760
+            Left = 840
             Top = 75
             Width = 24
             Height = 13
@@ -1401,7 +1401,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo08: TLabel
-            Left = 808
+            Left = 880
             Top = 75
             Width = 24
             Height = 13
@@ -1416,7 +1416,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo09: TLabel
-            Left = 856
+            Left = 920
             Top = 75
             Width = 24
             Height = 13
@@ -1431,7 +1431,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo10: TLabel
-            Left = 904
+            Left = 960
             Top = 75
             Width = 24
             Height = 13
@@ -1446,7 +1446,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo11: TLabel
-            Left = 952
+            Left = 1000
             Top = 75
             Width = 24
             Height = 13
@@ -1461,7 +1461,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ParentFont = False
           end
           object lblPrazo12: TLabel
-            Left = 1000
+            Left = 1040
             Top = 75
             Width = 24
             Height = 13
@@ -1475,11 +1475,28 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
           end
-          object dbObservacao: TDBMemo
+          object Bevel13: TBevel
             Left = 0
             Top = 13
             Width = 1083
-            Height = 58
+            Height = 4
+            Align = alTop
+            Shape = bsSpacer
+          end
+          object lblTipoDespesa: TLabel
+            Left = 384
+            Top = 75
+            Width = 83
+            Height = 13
+            Anchors = [akLeft, akBottom]
+            Caption = 'Tipo de Despesa:'
+            FocusControl = dbTipoDespesa
+          end
+          object dbObservacao: TDBMemo
+            Left = 0
+            Top = 17
+            Width = 1083
+            Height = 56
             Align = alTop
             Anchors = [akLeft, akTop, akRight, akBottom]
             DataField = 'OBS'
@@ -1489,7 +1506,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           object dbFormaPagto: TDBLookupComboBox
             Left = 0
             Top = 91
-            Width = 153
+            Width = 145
             Height = 21
             Anchors = [akLeft, akBottom]
             DataField = 'FORMAPAGTO_COD'
@@ -1507,9 +1524,9 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             TabOrder = 1
           end
           object dbCondicaoPagto: TDBLookupComboBox
-            Left = 160
+            Left = 152
             Top = 91
-            Width = 305
+            Width = 225
             Height = 21
             Anchors = [akLeft, akBottom]
             DataField = 'CONDICAOPAGTO_COD'
@@ -1528,9 +1545,9 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             OnClick = dbCondicaoPagtoClick
           end
           object dbPrazo01: TDBEdit
-            Left = 472
+            Left = 600
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1544,12 +1561,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 3
+            TabOrder = 4
           end
           object dbPrazo02: TDBEdit
-            Left = 520
+            Left = 640
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1563,12 +1580,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 4
+            TabOrder = 5
           end
           object dbPrazo03: TDBEdit
-            Left = 568
+            Left = 680
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1582,12 +1599,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 5
+            TabOrder = 6
           end
           object dbPrazo04: TDBEdit
-            Left = 616
+            Left = 720
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1601,12 +1618,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 6
+            TabOrder = 7
           end
           object dbPrazo05: TDBEdit
-            Left = 664
+            Left = 760
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1620,12 +1637,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 7
+            TabOrder = 8
           end
           object dbPrazo06: TDBEdit
-            Left = 712
+            Left = 800
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1639,12 +1656,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 8
+            TabOrder = 9
           end
           object dbPrazo07: TDBEdit
-            Left = 760
+            Left = 840
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1658,12 +1675,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 9
+            TabOrder = 10
           end
           object dbPrazo08: TDBEdit
-            Left = 808
+            Left = 880
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1677,12 +1694,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 10
+            TabOrder = 11
           end
           object dbPrazo09: TDBEdit
-            Left = 856
+            Left = 920
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1696,12 +1713,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 11
+            TabOrder = 12
           end
           object dbPrazo10: TDBEdit
-            Left = 904
+            Left = 960
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1715,12 +1732,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 12
+            TabOrder = 13
           end
           object dbPrazo11: TDBEdit
-            Left = 952
+            Left = 1000
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1734,12 +1751,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 13
+            TabOrder = 14
           end
           object dbPrazo12: TDBEdit
-            Left = 1000
+            Left = 1040
             Top = 91
-            Width = 41
+            Width = 33
             Height = 21
             TabStop = False
             Anchors = [akLeft, akBottom]
@@ -1753,7 +1770,28 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Font.Style = [fsBold]
             ParentFont = False
             ReadOnly = True
-            TabOrder = 14
+            TabOrder = 15
+          end
+          object dbTipoDespesa: TDBLookupComboBox
+            Left = 384
+            Top = 91
+            Width = 209
+            Height = 21
+            Anchors = [akLeft, akBottom]
+            DataField = 'TIPO_DESPESA'
+            DataSource = DtSrcTabela
+            DropDownRows = 10
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            KeyField = 'COD'
+            ListField = 'TIPODESP'
+            ListSource = dtsTpDespesa
+            ParentFont = False
+            TabOrder = 3
+            OnClick = dbCondicaoPagtoClick
           end
         end
         object tbsDuplicatas: TTabSheet
@@ -2926,6 +2964,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  , c.PRAZO_10'
       '  , c.PRAZO_11'
       '  , c.PRAZO_12'
+      '  , c.TIPO_DESPESA'
       '  , c.AUTORIZACAO_ANO'
       '  , c.AUTORIZACAO_CODIGO'
       '  , c.AUTORIZACAO_EMPRESA'
@@ -3143,52 +3182,71 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       Required = True
     end
     object IbDtstTabelaPRAZO_01: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_01'
       Origin = 'TBCOMPRAS.PRAZO_01'
     end
     object IbDtstTabelaPRAZO_02: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_02'
       Origin = 'TBCOMPRAS.PRAZO_02'
     end
     object IbDtstTabelaPRAZO_03: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_03'
       Origin = 'TBCOMPRAS.PRAZO_03'
     end
     object IbDtstTabelaPRAZO_04: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_04'
       Origin = 'TBCOMPRAS.PRAZO_04'
     end
     object IbDtstTabelaPRAZO_05: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_05'
       Origin = 'TBCOMPRAS.PRAZO_05'
     end
     object IbDtstTabelaPRAZO_06: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_06'
       Origin = 'TBCOMPRAS.PRAZO_06'
     end
     object IbDtstTabelaPRAZO_07: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_07'
       Origin = 'TBCOMPRAS.PRAZO_07'
     end
     object IbDtstTabelaPRAZO_08: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_08'
       Origin = 'TBCOMPRAS.PRAZO_08'
     end
     object IbDtstTabelaPRAZO_09: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_09'
       Origin = 'TBCOMPRAS.PRAZO_09'
     end
     object IbDtstTabelaPRAZO_10: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_10'
       Origin = 'TBCOMPRAS.PRAZO_10'
     end
     object IbDtstTabelaPRAZO_11: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_11'
       Origin = 'TBCOMPRAS.PRAZO_11'
     end
     object IbDtstTabelaPRAZO_12: TSmallintField
+      Alignment = taCenter
       FieldName = 'PRAZO_12'
       Origin = 'TBCOMPRAS.PRAZO_12'
+    end
+    object IbDtstTabelaTIPO_DESPESA: TSmallintField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Tipo Despesa'
+      FieldName = 'TIPO_DESPESA'
+      Origin = '"TBCOMPRAS"."TIPO_DESPESA"'
+      Required = True
     end
     object IbDtstTabelaAUTORIZACAO_ANO: TSmallintField
       FieldName = 'AUTORIZACAO_ANO'
@@ -3284,6 +3342,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  PRAZO_11,'
       '  PRAZO_12,'
       '  DTFINALIZACAO_COMPRA,'
+      '  TIPO_DESPESA,'
       '  CANCEL_USUARIO,'
       '  CANCEL_DATAHORA,'
       '  CANCEL_MOTIVO,'
@@ -3340,6 +3399,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  PRAZO_11 = :PRAZO_11,'
       '  PRAZO_12 = :PRAZO_12,'
       '  STATUS = :STATUS,'
+      '  TIPO_DESPESA = :TIPO_DESPESA,'
       '  TOTALNF = :TOTALNF,'
       '  TOTALPROD = :TOTALPROD,'
       '  USUARIO = :USUARIO'
@@ -3367,9 +3427,9 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
         '   PRAZO_02, PRAZO_03, PRAZO_04, PRAZO_05, PRAZO_06, PRAZO_07, P' +
         'RAZO_08, '
       
-        '   PRAZO_09, PRAZO_10, PRAZO_11, PRAZO_12, STATUS, TOTALNF, TOTA' +
-        'LPROD, '
-      '   USUARIO)'
+        '   PRAZO_09, PRAZO_10, PRAZO_11, PRAZO_12, STATUS, TIPO_DESPESA,' +
+        ' TOTALNF, '
+      '   TOTALPROD, USUARIO)'
       'values'
       
         '  (:ANO, :AUTORIZACAO_ANO, :AUTORIZACAO_CODIGO, :AUTORIZACAO_EMP' +
@@ -3392,7 +3452,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       
         '   :PRAZO_06, :PRAZO_07, :PRAZO_08, :PRAZO_09, :PRAZO_10, :PRAZO' +
         '_11, :PRAZO_12, '
-      '   :STATUS, :TOTALNF, :TOTALPROD, :USUARIO)')
+      '   :STATUS, :TIPO_DESPESA, :TOTALNF, :TOTALPROD, :USUARIO)')
     DeleteSQL.Strings = (
       'delete from TBCOMPRAS'
       'where'
@@ -3442,6 +3502,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  , p.Codcfop'
       '  , p.Codbarra_ean'
       '  , p.Codunidade'
+      '  , p.Ncm_sh'
       '  , p.Aliquota_tipo'
       '  , p.Aliquota'
       '  , p.Aliquota_csosn'
@@ -4345,8 +4406,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
     Top = 40
   end
   object ppImprimir: TPopupMenu
-    Left = 392
-    Top = 592
+    Left = 144
+    Top = 408
     object nmImprimirVenda: TMenuItem
       Caption = 'Or'#231'amento / Venda'
       Visible = False
@@ -4365,5 +4426,19 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       Enabled = False
       OnClick = nmGerarDANFEXMLClick
     end
+  end
+  object qryTpDespesa: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'select * from TBTPDESPESA'
+      'order by tipodesp')
+    Left = 280
+    Top = 472
+  end
+  object dtsTpDespesa: TDataSource
+    DataSet = qryTpDespesa
+    Left = 312
+    Top = 472
   end
 end

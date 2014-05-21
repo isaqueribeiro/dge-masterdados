@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UGrPadraoCadastro, ImgList, IBCustomDataSet, IBUpdateSQL, DB,
   Mask, DBCtrls, StdCtrls, Buttons, ExtCtrls, Grids, DBGrids, ComCtrls,
-  ToolWin, IBTable, rxToolEdit, RXDBCtrl, IBStoredProc, Menus;
+  ToolWin, IBTable, rxToolEdit, RXDBCtrl, IBStoredProc, Menus, IBQuery;
 
 type
   TfrmGeEntradaEstoque = class(TfrmGrPadraoCadastro)
@@ -280,6 +280,12 @@ type
     IbDtstTabelaAUTORIZACAO_ANO: TSmallintField;
     IbDtstTabelaAUTORIZACAO_CODIGO: TIntegerField;
     IbDtstTabelaAUTORIZACAO_EMPRESA: TIBStringField;
+    qryTpDespesa: TIBQuery;
+    dtsTpDespesa: TDataSource;
+    IbDtstTabelaTIPO_DESPESA: TSmallintField;
+    Bevel13: TBevel;
+    lblTipoDespesa: TLabel;
+    dbTipoDespesa: TDBLookupComboBox;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -400,6 +406,7 @@ begin
   tblEmpresa.Open;
   tblFormaPagto.Open;
   tblCondicaoPagto.Open;
+  qryTpDespesa.Open;
 
   DisplayFormatCodigo := '###0000000';
   NomeTabela     := 'TBCOMPRAS';
@@ -445,6 +452,7 @@ begin
   IbDtstTabelaTOTALNF.Value        := 0;
   IbDtstTabelaTOTALPROD.Value      := 0;
   IbDtstTabelaUSUARIO.Value        := GetUserApp;
+  IbDtstTabelaTIPO_DESPESA.Clear;
   IbDtstTabelaAUTORIZACAO_ANO.Clear;
   IbDtstTabelaAUTORIZACAO_CODIGO.Clear;
   IbDtstTabelaAUTORIZACAO_EMPRESA.Clear;
@@ -562,6 +570,7 @@ begin
         cdsTabelaItensUNP_SIGLA.AsString   := FieldByName('Unp_sigla').AsString;
         cdsTabelaItensQTDEANTES.AsCurrency := FieldByName('Qtde').AsCurrency;
 
+        cdsTabelaItensNCM_SH.AsCurrency                := FieldByName('Ncm_sh').AsString;
         cdsTabelaItensALIQUOTA.AsCurrency              := FieldByName('Aliquota').AsCurrency;
         cdsTabelaItensALIQUOTA_CSOSN.AsCurrency        := FieldByName('Aliquota_csosn').AsCurrency;
         cdsTabelaItensALIQUOTA_PIS.AsCurrency          := FieldByName('Aliquota_pis').AsCurrency;
@@ -826,6 +835,7 @@ var
   sCodigoAlfa,
   sDescricao ,
   sUnidade   ,
+  sNCM_SH    ,
   sCST       : String;
   cAliquota      ,
   cAliquotaPIS   ,
@@ -836,12 +846,14 @@ var
   cPercRedBC    : Currency;
 begin
   if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
-    if ( SelecionarProdutoParaEntrada(Self, iCodigo, sCodigoAlfa, sDescricao, sUnidade, sCST, iUnidade, iCFOP, cAliquota, cAliquotaPIS, cAliquotaCOFINS, cValorVenda, cValorPromocao, cValorIPI, cPercRedBC, iEstoque, iReserva) ) then
+    if ( SelecionarProdutoParaEntrada(Self, iCodigo, sCodigoAlfa, sDescricao, sUnidade, sNCM_SH, sCST, iUnidade, iCFOP,
+      cAliquota, cAliquotaPIS, cAliquotaCOFINS, cValorVenda, cValorPromocao, cValorIPI, cPercRedBC, iEstoque, iReserva) ) then
     begin
       cdsTabelaItensCODPROD.AsString     := sCodigoAlfa;
       cdsTabelaItensDESCRI.AsString      := sDescricao;
       cdsTabelaItensUNP_SIGLA.AsString   := sUnidade;
 
+      cdsTabelaItensNCM_SH.AsString                  := sNCM_SH;
       cdsTabelaItensCST.AsString                     := sCST;
       cdsTabelaItensALIQUOTA.AsCurrency              := cAliquota;
       cdsTabelaItensALIQUOTA_PIS.AsCurrency          := cAliquotaPIS;
