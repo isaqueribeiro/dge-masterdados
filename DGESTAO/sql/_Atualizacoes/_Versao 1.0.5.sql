@@ -3766,3 +3766,1342 @@ Tabela responsavel por armazenar, de forma criptografada, informacoes importante
 COMMENT ON COLUMN SYS_LICENCA.LINHA_CONTROLE IS
 'Dados criptografados.';
 
+
+
+
+/*------ SYSDBA 20/05/2014 10:19:46 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRAITEM
+    ADD IPI_PERCENTUAL DMN_PERCENTUAL,
+    ADD IPI_VALOR_TOTAL DMN_MONEY;
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.IPI_PERCENTUAL IS
+'Percentual IPI';
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.IPI_VALOR_TOTAL IS
+'Valor Total do IPI';
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.VALOR_TOTAL IS
+'Valor Total (Quantidade * Valor Unitario) + Valor Total IPI';
+
+alter table TBAUTORIZA_COMPRAITEM
+alter ANO position 1;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter CODIGO position 2;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter EMPRESA position 3;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter SEQ position 4;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter FORNECEDOR position 5;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter PRODUTO position 6;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter QUANTIDADE position 7;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter UNIDADE position 8;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter VALOR_UNITARIO position 9;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter IPI_PERCENTUAL position 10;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter IPI_VALOR_TOTAL position 11;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter VALOR_TOTAL position 12;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter CONFIRMADO_RECEBIMENTO position 13;
+
+alter table TBAUTORIZA_COMPRAITEM
+alter USUARIO position 14;
+
+
+
+
+/*------ SYSDBA 20/05/2014 10:21:09 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD VALOR_TOTAL_FRETE DMN_MONEY,
+    ADD VALOR_TOTAL_IPI DMN_MONEY;
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.VALOR_TOTAL_FRETE IS
+'Valor Total Frete';
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.VALOR_TOTAL_IPI IS
+'Valor Total IPI';
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.VALOR_TOTAL IS
+'Valor Total = (Valor Bruto - Valor Desconto) + Valor Total Frete + Valor Total IPI';
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+alter table TBAUTORIZA_COMPRA
+alter NUMERO position 4;
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 5;
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 6;
+
+alter table TBAUTORIZA_COMPRA
+alter INSERCAO_DATA position 7;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 8;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 9;
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 10;
+
+alter table TBAUTORIZA_COMPRA
+alter COMPETENCIA position 11;
+
+alter table TBAUTORIZA_COMPRA
+alter DATA_FATURA position 12;
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 13;
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 14;
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 15;
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 16;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 17;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 18;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 19;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 20;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 21;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 22;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 23;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_FUNCAO position 24;
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 25;
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 26;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 27;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 28;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL_FRETE position 29;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL_IPI position 30;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 31;
+
+
+
+
+/*------ SYSDBA 20/05/2014 10:21:14 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRAITEM.VALOR_TOTAL IS
+'Valor Total = (Quantidade * Valor Unitario) + Valor Total IPI';
+
+
+
+
+/*------ SYSDBA 20/05/2014 10:22:37 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD TRANSPORTADOR DMN_INTEGER_N;
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.TRANSPORTADOR IS
+'Transportador';
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+alter table TBAUTORIZA_COMPRA
+alter NUMERO position 4;
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 5;
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 6;
+
+alter table TBAUTORIZA_COMPRA
+alter INSERCAO_DATA position 7;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 8;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 9;
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 10;
+
+alter table TBAUTORIZA_COMPRA
+alter COMPETENCIA position 11;
+
+alter table TBAUTORIZA_COMPRA
+alter DATA_FATURA position 12;
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 13;
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 14;
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 15;
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 16;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 17;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 18;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 19;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 20;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 21;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 22;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 23;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_FUNCAO position 24;
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 25;
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 26;
+
+alter table TBAUTORIZA_COMPRA
+alter TRANSPORTADOR position 27;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 28;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 29;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL_FRETE position 30;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL_IPI position 31;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 32;
+
+
+
+
+/*------ SYSDBA 20/05/2014 10:22:57 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+ADD CONSTRAINT FK_TBAUTORIZA_COMPRA_TRANSP
+FOREIGN KEY (TRANSPORTADOR)
+REFERENCES TBFORNECEDOR(CODFORN);
+
+
+
+
+/*------ SYSDBA 20/05/2014 12:01:36 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD NOME_CONTATO DMN_VCHAR_100;
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.NOME_CONTATO IS
+'Nome do Contato';
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+alter table TBAUTORIZA_COMPRA
+alter NUMERO position 4;
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 5;
+
+alter table TBAUTORIZA_COMPRA
+alter NOME_CONTATO position 6;
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 7;
+
+alter table TBAUTORIZA_COMPRA
+alter INSERCAO_DATA position 8;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 9;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 10;
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 11;
+
+alter table TBAUTORIZA_COMPRA
+alter COMPETENCIA position 12;
+
+alter table TBAUTORIZA_COMPRA
+alter DATA_FATURA position 13;
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 14;
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 15;
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 16;
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 17;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 18;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 19;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 20;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 21;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 22;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 23;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 24;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_FUNCAO position 25;
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 26;
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 27;
+
+alter table TBAUTORIZA_COMPRA
+alter TRANSPORTADOR position 28;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 29;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 30;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL_FRETE position 31;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL_IPI position 32;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 33;
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:27:25 --------*/
+
+ALTER TABLE TBCOMPRAS
+    ADD TIPO_DESPESA DMN_SMALLINT_N;
+
+COMMENT ON COLUMN TBCOMPRAS.TIPO_DESPESA IS
+'Tipo de Despesa.';
+
+alter table TBCOMPRAS
+alter ANO position 1;
+
+alter table TBCOMPRAS
+alter CODCONTROL position 2;
+
+alter table TBCOMPRAS
+alter CODEMP position 3;
+
+alter table TBCOMPRAS
+alter CODFORN position 4;
+
+alter table TBCOMPRAS
+alter NF position 5;
+
+alter table TBCOMPRAS
+alter NFSERIE position 6;
+
+alter table TBCOMPRAS
+alter LOTE_NFE_ANO position 7;
+
+alter table TBCOMPRAS
+alter LOTE_NFE_NUMERO position 8;
+
+alter table TBCOMPRAS
+alter LOTE_NFE_RECIBO position 9;
+
+alter table TBCOMPRAS
+alter NFE_ENVIADA position 10;
+
+alter table TBCOMPRAS
+alter VERIFICADOR_NFE position 11;
+
+alter table TBCOMPRAS
+alter XML_NFE position 12;
+
+alter table TBCOMPRAS
+alter XML_NFE_FILENAME position 13;
+
+alter table TBCOMPRAS
+alter DTLANCAMENTO position 14;
+
+alter table TBCOMPRAS
+alter DTEMISS position 15;
+
+alter table TBCOMPRAS
+alter HREMISS position 16;
+
+alter table TBCOMPRAS
+alter DTENT position 17;
+
+alter table TBCOMPRAS
+alter NFCFOP position 18;
+
+alter table TBCOMPRAS
+alter NATUREZA position 19;
+
+alter table TBCOMPRAS
+alter STATUS position 20;
+
+alter table TBCOMPRAS
+alter IPI position 21;
+
+alter table TBCOMPRAS
+alter ICMSBASE position 22;
+
+alter table TBCOMPRAS
+alter ICMSVALOR position 23;
+
+alter table TBCOMPRAS
+alter ICMSSUBSTBASE position 24;
+
+alter table TBCOMPRAS
+alter ICMSSUBSTVALOR position 25;
+
+alter table TBCOMPRAS
+alter FRETE position 26;
+
+alter table TBCOMPRAS
+alter OUTROSCUSTOS position 27;
+
+alter table TBCOMPRAS
+alter DESCONTO position 28;
+
+alter table TBCOMPRAS
+alter VALORSEGURO position 29;
+
+alter table TBCOMPRAS
+alter VALORTOTAL_II position 30;
+
+alter table TBCOMPRAS
+alter VALORTOTAL_IPI position 31;
+
+alter table TBCOMPRAS
+alter VALORPIS position 32;
+
+alter table TBCOMPRAS
+alter VALORCOFINS position 33;
+
+alter table TBCOMPRAS
+alter TOTALPROD position 34;
+
+alter table TBCOMPRAS
+alter TOTALNF position 35;
+
+alter table TBCOMPRAS
+alter OBS position 36;
+
+alter table TBCOMPRAS
+alter USUARIO position 37;
+
+alter table TBCOMPRAS
+alter FORMAPAGTO_COD position 38;
+
+alter table TBCOMPRAS
+alter CONDICAOPAGTO_COD position 39;
+
+alter table TBCOMPRAS
+alter COMPRA_PRAZO position 40;
+
+alter table TBCOMPRAS
+alter PRAZO_01 position 41;
+
+alter table TBCOMPRAS
+alter PRAZO_02 position 42;
+
+alter table TBCOMPRAS
+alter PRAZO_03 position 43;
+
+alter table TBCOMPRAS
+alter PRAZO_04 position 44;
+
+alter table TBCOMPRAS
+alter PRAZO_05 position 45;
+
+alter table TBCOMPRAS
+alter PRAZO_06 position 46;
+
+alter table TBCOMPRAS
+alter PRAZO_07 position 47;
+
+alter table TBCOMPRAS
+alter PRAZO_08 position 48;
+
+alter table TBCOMPRAS
+alter PRAZO_09 position 49;
+
+alter table TBCOMPRAS
+alter PRAZO_10 position 50;
+
+alter table TBCOMPRAS
+alter PRAZO_11 position 51;
+
+alter table TBCOMPRAS
+alter PRAZO_12 position 52;
+
+alter table TBCOMPRAS
+alter DTFINALIZACAO_COMPRA position 53;
+
+alter table TBCOMPRAS
+alter TIPO_DESPESA position 54;
+
+alter table TBCOMPRAS
+alter CANCEL_USUARIO position 55;
+
+alter table TBCOMPRAS
+alter CANCEL_DATAHORA position 56;
+
+alter table TBCOMPRAS
+alter CANCEL_MOTIVO position 57;
+
+alter table TBCOMPRAS
+alter AUTORIZACAO_ANO position 58;
+
+alter table TBCOMPRAS
+alter AUTORIZACAO_CODIGO position 59;
+
+alter table TBCOMPRAS
+alter AUTORIZACAO_EMPRESA position 60;
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:28:12 --------*/
+
+ALTER TABLE TBCOMPRAS
+ADD CONSTRAINT FK_TBCOMPRAS_TIPO_DESPESA
+FOREIGN KEY (TIPO_DESPESA)
+REFERENCES TBTPDESPESA(COD);
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:48:21 --------*/
+
+COMMENT ON COLUMN TBCONTPAG.CODTPDESP IS
+'Tipo Despesa';
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:48:37 --------*/
+
+ALTER TABLE TBCONTPAG DROP CONSTRAINT FK_TBCONTPAG_1;
+
+ALTER TABLE TBCONTPAG
+ADD CONSTRAINT FK_TBCONTPAG_TPDESPESA
+FOREIGN KEY (CODTPDESP)
+REFERENCES TBTPDESPESA(COD)
+USING INDEX FK_TBCONTPAG_1;
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:48:59 --------*/
+
+COMMENT ON COLUMN TBCONTPAG.QUITADO IS
+'Quitado:
+0 - Nao
+1 - Sim';
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:49:20 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER procedure SET_DUPLICATA_PAGAR (
+    ANOCOMPRA smallint,
+    NUMCOMPRA integer,
+    FORNECEDOR integer,
+    NF integer,
+    FORMA_PAGTO smallint,
+    CONDICAO_PAGTO smallint,
+    EMISSAO date,
+    VENCIMENTO date,
+    VALOR_DOCUMENTO numeric(15,2),
+    PARCELA smallint,
+    TIPO_DESPESA smallint)
+returns (
+    ANOLANCAMENTO smallint,
+    NUMLANCAMENTO integer)
+as
+declare variable FORMA_PAGTO_DESC varchar(30);
+begin
+  if ( Exists(
+    Select
+      p.Numlanc
+    from TBCONTPAG p
+    where p.Anocompra = :Anocompra
+      and p.Numcompra = :Numcompra
+      and p.Parcela  = :Parcela
+  ) ) then
+    Exit;
+
+  Select
+    f.Descri
+  from TBFORMPAGTO f
+  where f.Cod = :Forma_pagto
+  into
+    Forma_pagto_desc;
+
+  Anolancamento = :Anocompra;
+
+  if ( :Anolancamento = 2011 ) then
+    Numlancamento = gen_id(Gen_contapag_num_2011, 1);
+  else
+  if ( :Anolancamento = 2012 ) then
+    Numlancamento = gen_id(Gen_contapag_num_2012, 1);
+  else
+  if ( :Anolancamento = 2013 ) then
+    Numlancamento = gen_id(Gen_contapag_num_2013, 1);
+  else
+  if ( :Anolancamento = 2014 ) then
+    Numlancamento = gen_id(Gen_contapag_num_2014, 1);
+  else
+  if ( :Anolancamento = 2015 ) then
+    Numlancamento = gen_id(Gen_contapag_num_2015, 1);
+  else
+  if ( :Anolancamento = 2016 ) then
+    Numlancamento = gen_id(Gen_contapag_num_2016, 1);
+  else
+  if ( :Anolancamento = 2017 ) then
+    Numlancamento = gen_id(Gen_contapag_num_2017, 1);
+  else
+  if ( :Anolancamento = 2018 ) then
+    Numlancamento = gen_id(Gen_contapag_num_2018, 1);
+  else
+  if ( :Anolancamento = 2019 ) then
+    Numlancamento = gen_id(Gen_contapag_num_2019, 1);
+  else
+  if ( :Anolancamento = 2020 ) then
+    Numlancamento = gen_id(Gen_contapag_num_2020, 1);
+
+  Insert Into TBCONTPAG (
+      Anolanc
+    , Numlanc
+    , Anocompra
+    , Numcompra
+    , Parcela
+    , Codforn
+    , Tippag
+    , Forma_pagto
+    , Condicao_pagto
+    , Codtpdesp
+    , Notfisc
+    , Dtemiss
+    , Dtvenc
+    , Valorpag
+    , Quitado
+  ) values (
+      :Anolancamento
+    , :Numlancamento
+    , :Anocompra
+    , :Numcompra
+    , :Parcela
+    , :Fornecedor
+    , :Forma_pagto_desc
+    , :Forma_pagto
+    , :Condicao_pagto
+    , :Tipo_Despesa
+    , :Nf
+    , :Emissao
+    , :Vencimento
+    , :Valor_documento
+    , 0
+  );
+
+  suspend;
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:50:46 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER procedure SET_GERAR_DUPLICATAS (
+    ANOCOMPRA smallint,
+    NUMCOMPRA integer)
+returns (
+    FORNECEDOR integer,
+    NOTAFISCAL integer,
+    PARCELAS smallint,
+    VALOR_TOTAL numeric(15,2),
+    PARCELA smallint,
+    EMISSAO date,
+    VENCIMENTO date,
+    VALOR_DOCUMENTO numeric(15,2),
+    FORMA_PAGTO smallint,
+    CONDICAO_PAGTO smallint,
+    DATA_ENTRADA date,
+    ANO_LANC smallint,
+    NUM_LANC integer)
+as
+declare variable Tipo_Despesa Smallint;
+declare variable P01 smallint;
+declare variable P02 smallint;
+declare variable P03 smallint;
+declare variable P04 smallint;
+declare variable P05 smallint;
+declare variable P06 smallint;
+declare variable P07 smallint;
+declare variable P08 smallint;
+declare variable P09 smallint;
+declare variable P10 smallint;
+declare variable P11 smallint;
+declare variable P12 smallint;
+declare variable VALOR_TOTAL_PARCELAS numeric(15,2);
+begin
+  for
+    Select
+        c.Codforn
+      , c.Nf
+      , c.tipo_despesa
+      , coalesce(c.Prazo_01, 0)
+      , c.Prazo_02
+      , c.Prazo_03
+      , c.Prazo_04
+      , c.Prazo_05
+      , c.Prazo_06
+      , c.Prazo_07
+      , c.Prazo_08
+      , c.Prazo_09
+      , c.Prazo_10
+      , c.Prazo_11
+      , c.Prazo_12
+      , case when coalesce(c.Prazo_01, 0) is not null then 1 else 0 end +
+        case when c.Prazo_02 is not null then 1 else 0 end +
+        case when c.Prazo_03 is not null then 1 else 0 end +
+        case when c.Prazo_04 is not null then 1 else 0 end +
+        case when c.Prazo_05 is not null then 1 else 0 end +
+        case when c.Prazo_06 is not null then 1 else 0 end +
+        case when c.Prazo_07 is not null then 1 else 0 end +
+        case when c.Prazo_08 is not null then 1 else 0 end +
+        case when c.Prazo_09 is not null then 1 else 0 end +
+        case when c.Prazo_10 is not null then 1 else 0 end +
+        case when c.Prazo_11 is not null then 1 else 0 end +
+        case when c.Prazo_12 is not null then 1 else 0 end as parcelas
+      , c.Totalnf
+      , c.Formapagto_cod
+      , c.Condicaopagto_cod
+      , c.Dtent
+    from TBCOMPRAS c
+    where c.Ano        = :Anocompra
+      and c.Codcontrol = :Numcompra
+    into
+        Fornecedor
+      , NotaFiscal
+      , Tipo_Despesa
+      , p01
+      , p02
+      , p03
+      , p04
+      , p05
+      , p06
+      , p07
+      , p08
+      , p09
+      , p10
+      , p11
+      , p12
+      , parcelas
+      , valor_total
+      , forma_pagto
+      , Condicao_pagto
+      , Data_entrada
+  do
+  begin
+
+    parcela = 0;
+    emissao = :Data_entrada;
+    valor_documento = :Valor_total / :Parcelas;
+
+    -- Parcela 1
+    if ( :P01 is not null ) then
+    begin
+      if ( :P01 = 0 ) then
+        parcela = 0;
+      else
+      if ( :P01 > 0 ) then
+        parcela = 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P01) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 2
+    if ( :P02 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P02) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 3
+    if ( :P03 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P03) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 4
+    if ( :P04 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P04) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 5
+    if ( :P05 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P05) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 6
+    if ( :P06 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P06) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 7
+    if ( :P07 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P07) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 8
+    if ( :P08 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P08) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 9
+    if ( :P09 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P09) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 10
+    if ( :P10 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P10) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 11
+    if ( :P11 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P11) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Parcela 12
+    if ( :P12 is not null ) then
+    begin
+      parcela = :Parcela + 1;
+
+      Select d.Dia_util from Get_dia_util(:Emissao, :P12) d into vencimento;
+
+      Select
+          d.Anolancamento
+        , d.Numlancamento
+      from SET_DUPLICATA_PAGAR (
+          :Anocompra
+        , :Numcompra
+        , :Fornecedor
+        , :Notafiscal
+        , :Forma_pagto
+        , :Condicao_pagto
+        , :Emissao
+        , :Vencimento
+        , :Valor_documento
+        , :Parcela
+        , :Tipo_Despesa) d
+      into
+          Ano_lanc
+        , Num_lanc;
+    end
+
+    -- Verificar ao valor total das parcelas
+    if ( :Parcelas > 1 ) then
+    begin
+      Select
+          sum( coalesce(d.Valorpag, 0) )
+      from TBCONTPAG d
+      where d.Anocompra = :Anocompra
+        and d.Numcompra = :Numcompra
+      into
+          valor_total_parcelas;
+
+      -- Atualizar o valor da ultima parcela
+      if ( :Valor_total_parcelas < :Valor_total ) then
+      begin
+        Update TBCONTPAG d Set
+            d.Valorpag = :Valor_documento + (:Valor_total - :Valor_total_parcelas)
+        where d.Anocompra = :Anocompra
+          and d.Numcompra = :Numcompra
+          and d.Parcela   = :Parcela;
+      end 
+    end 
+
+  end
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:55:08 --------*/
+
+COMMENT ON TABLE TBCOMPRAS IS 'Tabela Entrada (Compras)
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   01/01/2013
+
+Tabela responsavel por armazenar todos os registros de movimento de entrada no estoque.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    20/05/2014 - IMR :
+        + Criacao do campo TIPO_DESPESA para permitir que os registros de Contas A Pagar ja possam ser gerados com o
+        devido Tipo de Despesa informado. Este campo passa a ser obrigatorio para uma melhor classificacao das Contas
+        A Pagar.';
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:55:48 --------*/
+
+COMMENT ON TABLE TBAUTORIZA_COMPRA IS 'Tabela Autorizacao de Compras/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Tabela responsavel por armazenar as autorizacoes de compras/servicos da empresa.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    20/05/2014 - IMR :
+        + Criacao dos campos CLIENTE_PERMITIR_DUPLICAR_CNPJ para permitir ou nao duplicacao de CPF/CNPJ no cadastro dos
+        clientes.';
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:57:43 --------*/
+
+COMMENT ON TABLE TBAUTORIZA_COMPRA IS 'Tabela Autorizacao de Compras/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Tabela responsavel por armazenar as autorizacoes de compras/servicos da empresa.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    20/05/2014 - IMR :
+        + Criacao dos campos NOME_CONTATO, TRANSPORTADOR, VALOR_TOTAL_FRETE e VALOR_TOTAL_IPI, uma vez que nos processos
+        de Autorizacao de Compra essas informacoes sao necessarias.';
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:58:15 --------*/
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.VALOR_TOTAL IS
+'Valor Total = (Valor Bruto - Valor Desconto) + Valor Total IPI';
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:58:35 --------*/
+
+COMMENT ON TABLE TBAUTORIZA_COMPRAITEM IS 'Tabela de Produtos/Servicos da Autorizacao de Compra/Servico.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Tabela responsavel por armazenar os itens (produtos eou servicos) das autorizacoes de compras/servicos.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    20/05/2014 - IMR :
+        + Criacao dos campos NOME_CONTATO, TRANSPORTADOR, VALOR_TOTAL_FRETE e VALOR_TOTAL_IPI, uma vez que nos processos
+        de Autorizacao de Compra essas informacoes sao necessarias.';
+
+
+
+
+/*------ SYSDBA 20/05/2014 16:59:11 --------*/
+
+COMMENT ON TABLE TBAUTORIZA_COMPRAITEM IS 'Tabela de Produtos/Servicos da Autorizacao de Compra/Servico.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Tabela responsavel por armazenar os itens (produtos eou servicos) das autorizacoes de compras/servicos.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    20/05/2014 - IMR :
+        + Criacao dos campos IPI_PERCENTUAL e IPI_VALOR_TOTAL, uma vez que nos processos
+        de Autorizacao de Compra essas informacoes sao necessarias.';
+
