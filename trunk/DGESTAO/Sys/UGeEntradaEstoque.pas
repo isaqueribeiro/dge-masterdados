@@ -570,7 +570,7 @@ begin
         cdsTabelaItensUNP_SIGLA.AsString   := FieldByName('Unp_sigla').AsString;
         cdsTabelaItensQTDEANTES.AsCurrency := FieldByName('Qtde').AsCurrency;
 
-        cdsTabelaItensNCM_SH.AsCurrency                := FieldByName('Ncm_sh').AsString;
+        cdsTabelaItensNCM_SH.AsString                  := FieldByName('Ncm_sh').AsString;
         cdsTabelaItensALIQUOTA.AsCurrency              := FieldByName('Aliquota').AsCurrency;
         cdsTabelaItensALIQUOTA_CSOSN.AsCurrency        := FieldByName('Aliquota_csosn').AsCurrency;
         cdsTabelaItensALIQUOTA_PIS.AsCurrency          := FieldByName('Aliquota_pis').AsCurrency;
