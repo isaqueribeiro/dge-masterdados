@@ -1154,7 +1154,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
         '  , right('#39'0000000'#39' || vn.Nfe, 7) || '#39'/'#39' || trim(vn.Serie) as NF' +
         'E_VENDA'
       'from TBCONTREC r'
-      '  inner join TBCLIENTE c on (c.Codigo = r.Cliente)'
+      '  left join TBCLIENTE c on (c.Codigo = r.Cliente)'
       
         '  left join TBVENDAS vn on (vn.Ano = r.Anovenda and vn.Codcontro' +
         'l = r.Numvenda)')
@@ -1189,6 +1189,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       DisplayLabel = 'Cliente'
       FieldName = 'CLIENTE'
       Origin = '"TBCONTREC"."CLIENTE"'
+      Required = True
     end
     object IbDtstTabelaCNPJ: TIBStringField
       DisplayLabel = 'Cliente'
@@ -1223,6 +1224,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       DisplayLabel = 'Emiss'#227'o'
       FieldName = 'DTEMISS'
       Origin = 'TBCONTREC.DTEMISS'
+      Required = True
       DisplayFormat = 'dd/mm/yyyy'
       EditMask = '!99/99/0000;1; '
     end
@@ -1230,6 +1232,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       DisplayLabel = 'Vencimento'
       FieldName = 'DTVENC'
       Origin = 'TBCONTREC.DTVENC'
+      Required = True
       DisplayFormat = 'dd/mm/yyyy'
       EditMask = '!99/99/0000;1; '
     end
@@ -1249,6 +1252,7 @@ inherited frmGeContasAReceber: TfrmGeContasAReceber
       DisplayLabel = 'Valor A Receber (R$)'
       FieldName = 'VALORREC'
       Origin = 'TBCONTREC.VALORREC'
+      Required = True
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2

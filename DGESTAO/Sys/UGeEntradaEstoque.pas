@@ -333,6 +333,7 @@ type
     procedure CarregarDadosProduto( Codigo : Integer);
     procedure CarregarDadosCFOP( iCodigo : Integer );
     procedure HabilitarDesabilitar_Btns;
+    procedure RecarregarRegistro;
   public
     { Public declarations }
   end;
@@ -630,6 +631,8 @@ procedure TfrmGeEntradaEstoque.btbtnExcluirClick(Sender: TObject);
 var
   sMsg : String;
 begin
+  RecarregarRegistro;
+  
   if ( IbDtstTabelaSTATUS.AsInteger > STATUS_CMP_ABR ) then
   begin
     Case IbDtstTabelaSTATUS.AsInteger of
@@ -803,6 +806,8 @@ procedure TfrmGeEntradaEstoque.btbtnAlterarClick(Sender: TObject);
 var
   sMsg : String;
 begin
+  RecarregarRegistro;
+  
   if ( IbDtstTabelaSTATUS.AsInteger > STATUS_CMP_ABR ) then
   begin
     Case IbDtstTabelaSTATUS.AsInteger of
@@ -898,6 +903,8 @@ procedure TfrmGeEntradaEstoque.btbtnFinalizarClick(Sender: TObject);
 begin
   if ( IbDtstTabela.IsEmpty ) then
     Exit;
+
+  RecarregarRegistro;
 
   IbDtstTabela.Edit;
 
@@ -1048,27 +1055,22 @@ begin
 end;
 
 procedure TfrmGeEntradaEstoque.btbtnCancelarENTClick(Sender: TObject);
-var
- iNumero : Integer;
 begin
   if ( IbDtstTabela.IsEmpty ) then
     Exit;
 (*
   if ( PossuiTitulosPagos(IbDtstTabelaANO.Value, IbDtstTabelaCODCONTROL.Value) ) then
   begin
-    ShowWarning('A compra possui duplicata(s) já baixada(s).' + #13 + 'Favor providenciar a exclusão da(s) baixa(s) para que a compra possa ser cancelada!');
+    ShowWarning('A compra possui despesa(s) já baixada(s).' + #13 + 'Favor providenciar a exclusão da(s) baixa(s) para que a compra possa ser cancelada!');
     Exit;
   end;
 *)
+  RecarregarRegistro;
+
   if ( CancelarENT(Self, IbDtstTabelaANO.Value, IbDtstTabelaCODCONTROL.Value) ) then
     with IbDtstTabela do
     begin
-      iNumero := IbDtstTabelaCODCONTROL.AsInteger;
-
-      IbDtstTabela.Close;
-      IbDtstTabela.Open;
-
-      IbDtstTabela.Locate(CampoCodigo, iNumero, []);
+      RecarregarRegistro;
 
       ShowInformation('Entrada cancelada com sucesso.' + #13#13 + 'Ano/Controle: ' + IbDtstTabelaANO.AsString + '/' + FormatFloat('##0000000', IbDtstTabelaCODCONTROL.AsInteger));
 
@@ -1112,6 +1114,8 @@ begin
   if not DMNFe.GetValidadeCertificado then
     Exit;
 
+  RecarregarRegistro;
+    
   if ( IbDtstTabelaLOTE_NFE_NUMERO.AsInteger > 0 ) then
   begin
     ShowWarning('O processo de geração de NF-e para esta venda já foi solicitado, mas não fora concluído.' + #13 +
@@ -1251,6 +1255,42 @@ begin
   if not Sender.IsNull then
     Text := FormatFloat('###0000000"/"', Sender.AsInteger) + Copy(IbDtstTabelaAUTORIZACAO_ANO.AsString, 3, 2);
 {$ENDIF}
+end;
+
+procedure TfrmGeEntradaEstoque.RecarregarRegistro;
+var
+  iAno ,
+  iCod : Integer;
+  sID : String;
+begin
+  { DONE -oIsaque -cEntrada : 22/05/2014 - Rotina de busca dos dados atualizados dos registros antes de qualquer manipulação }
+
+  if ( IbDtstTabela.State in [dsEdit, dsInsert] ) then
+    Exit;
+
+  if IbDtstTabela.IsEmpty then
+    sID := EmptyStr
+  else
+    sID := IbDtstTabelaCODCONTROL.AsString;
+
+  if ( sID <> EmptyStr ) then
+  begin
+    iAno := IbDtstTabelaANO.AsInteger;
+    iCod := IbDtstTabelaCODCONTROL.AsInteger;
+
+    if ( not IbDtstTabelaDTEMISS.IsNull ) then
+    begin
+      if ( IbDtstTabelaDTEMISS.AsDateTime < e1Data.Date ) then
+        e1Data.Date := IbDtstTabelaDTEMISS.AsDateTime;
+
+      if ( IbDtstTabelaDTEMISS.AsDateTime > e2Data.Date ) then
+        e2Data.Date := IbDtstTabelaDTEMISS.AsDateTime;
+    end;
+
+    IbDtstTabela.Close;
+    IbDtstTabela.Open;
+    IbDtstTabela.Locate('CODCONTROL', sID, []);
+  end;
 end;
 
 initialization

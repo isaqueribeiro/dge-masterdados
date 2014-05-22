@@ -860,7 +860,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       '  , p.Quitado'
       '  , p.Codtpdesp'
       'from TBCONTPAG p'
-      '  inner join TBFORNECEDOR f on (f.Codforn = p.Codforn)'
+      '  left join TBFORNECEDOR f on (f.Codforn = p.Codforn)'
       '  left join TBBANCO_BOLETO b on (b.Bco_cod = p.Banco)')
     GeneratorField.Field = 'NUMLANC'
     GeneratorField.Generator = 'GEN_CONTAPAG_NUM_2013'
@@ -888,16 +888,18 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       Origin = 'TBCONTPAG.PARCELA'
       DisplayFormat = '00'
     end
-    object IbDtstTabelaCODFORN: TSmallintField
-      DisplayLabel = 'Fornecedor'
-      FieldName = 'CODFORN'
-      Origin = 'TBCONTPAG.CODFORN'
-    end
     object IbDtstTabelaNOMEEMP: TIBStringField
       DisplayLabel = 'Empresa'
       FieldName = 'NOMEEMP'
       Origin = 'TBCONTPAG.NOMEEMP'
+      Required = True
       Size = 40
+    end
+    object IbDtstTabelaCODFORN: TSmallintField
+      DisplayLabel = 'Fornecedor'
+      FieldName = 'CODFORN'
+      Origin = 'TBCONTPAG.CODFORN'
+      Required = True
     end
     object IbDtstTabelaNOMEFORN: TIBStringField
       DisplayLabel = 'Fornecedor'
@@ -927,6 +929,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       DisplayLabel = 'Emiss'#227'o'
       FieldName = 'DTEMISS'
       Origin = 'TBCONTPAG.DTEMISS'
+      Required = True
       DisplayFormat = 'dd/mm/yyyy'
       EditMask = '!99/99/0000;1; '
     end
@@ -935,6 +938,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       DisplayLabel = 'Vencimento'
       FieldName = 'DTVENC'
       Origin = 'TBCONTPAG.DTVENC'
+      Required = True
       DisplayFormat = 'dd/mm/yyyy'
       EditMask = '!99/99/0000;1; '
     end
@@ -949,6 +953,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       DisplayLabel = 'Valor A Pagar (R$)'
       FieldName = 'VALORPAG'
       Origin = 'TBCONTPAG.VALORPAG'
+      Required = True
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
@@ -958,6 +963,12 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       Origin = '"TBCONTPAG"."VALORSALDO"'
       Precision = 18
       Size = 2
+    end
+    object IbDtstTabelaCODTPDESP: TSmallintField
+      DisplayLabel = 'Tipo de Despesa'
+      FieldName = 'CODTPDESP'
+      Origin = 'TBCONTPAG.CODTPDESP'
+      Required = True
     end
     object IbDtstTabelaBANCO: TSmallintField
       DisplayLabel = 'Banco'
@@ -982,12 +993,6 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       FieldName = 'PAGO_'
       FixedChar = True
       Size = 1
-    end
-    object IbDtstTabelaCODTPDESP: TSmallintField
-      DisplayLabel = 'Tipo de Despesa'
-      FieldName = 'CODTPDESP'
-      Origin = 'TBCONTPAG.CODTPDESP'
-      Required = True
     end
     object IbDtstTabelaDOCBAIX: TIBStringField
       DisplayLabel = 'Doc. Baixa'

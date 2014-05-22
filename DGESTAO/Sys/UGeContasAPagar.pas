@@ -164,6 +164,8 @@ type
 var
   frmGeContasAPagar: TfrmGeContasAPagar;
 
+  { DONE -oIsaque -cContas A Pagar : 22/05/2014 - Correção de BUG porque a rotina estava permitindo a gravação de um lançamento sem FORNECEDOR, DATAS e VALOR }
+
 const
   STATUS_APAGAR_PENDENTE = 0;
   STATUS_APAGAR_PAGO     = 1;
@@ -183,8 +185,10 @@ var
 begin
   frm := TfrmGeContasAPagar.Create(AOwner);
   try
-    whr := '(cast(p.dtvenc as date) between ' + QuotedStr( FormatDateTime('yyyy-mm-dd', frm.e1Data.Date) ) +
-           ' and ' + QuotedStr( FormatDateTime('yyyy-mm-dd', frm.e2Data.Date) ) + ')';
+    whr :=
+      '(p.empresa = ' + QuotedStr(GetEmpresaIDDefault) + ') and ' +
+      '(cast(p.dtvenc as date) between ' + QuotedStr( FormatDateTime('yyyy-mm-dd', frm.e1Data.Date) ) +
+      ' and ' + QuotedStr( FormatDateTime('yyyy-mm-dd', frm.e2Data.Date) ) + ')';
 
     with frm, IbDtstTabela do
     begin
@@ -226,6 +230,7 @@ begin
   CampoOrdenacao := 'p.dtvenc, f.NomeForn';
 
   WhereAdditional :=
+    '(p.empresa = ' + QuotedStr(GetEmpresaIDDefault) + ') and ' +
     '(cast(p.dtvenc as date) between ' + QuotedStr( FormatDateTime('yyyy-mm-dd', e1Data.Date) ) +
     ' and ' + QuotedStr( FormatDateTime('yyyy-mm-dd', e2Data.Date) ) + ')';
 
@@ -252,6 +257,7 @@ end;
 procedure TfrmGeContasAPagar.btnFiltrarClick(Sender: TObject);
 begin
   WhereAdditional :=
+    '(p.empresa = ' + QuotedStr(GetEmpresaIDDefault) + ') and ' +
     '(cast(p.dtvenc as date) between ' + QuotedStr( FormatDateTime('yyyy-mm-dd', e1Data.Date) ) +
     ' and ' + QuotedStr( FormatDateTime('yyyy-mm-dd', e2Data.Date) ) + ')';
 

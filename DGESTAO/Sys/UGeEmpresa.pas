@@ -159,11 +159,15 @@ end;
 
 procedure TfrmGeEmpresa.FormCreate(Sender: TObject);
 begin
+  { DONE -oIsaque -cEmpresa : 22/05/2014 - Inserção automática do segmento INDÚSTRIA para atender meu novo cliente }
+
   RegistrarSegmentos(SEGMENTO_PADRAO_ID,          SEGMENTO_PADRAO_DS);
   RegistrarSegmentos(SEGMENTO_VAREJO_ATACADO_ID,  SEGMENTO_VAREJO_ATACADO_DS);
   RegistrarSegmentos(SEGMENTO_MERCADO_CARRO_ID,   SEGMENTO_MERCADO_CARRO_DS);
   RegistrarSegmentos(SEGMENTO_SERVICOS_ID,        SEGMENTO_SERVICOS_DS);
   RegistrarSegmentos(SEGMENTO_VAREJO_SERVICOS_ID, SEGMENTO_VAREJO_SERVICOS_DS);
+  RegistrarSegmentos(SEGMENTO_INDUSTRIA_METAL_ID, SEGMENTO_INDUSTRIA_METAL_DS);
+  RegistrarSegmentos(SEGMENTO_INDUSTRIA_GERAL_ID, SEGMENTO_INDUSTRIA_GERAL_DS);
 
   inherited;
 

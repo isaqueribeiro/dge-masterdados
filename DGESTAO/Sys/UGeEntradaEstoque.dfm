@@ -1,6 +1,6 @@
 inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
-  Left = 435
-  Top = 167
+  Left = 416
+  Top = 179
   Width = 1115
   Height = 716
   ActiveControl = nil
@@ -2972,7 +2972,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  , f.Cnpj'
       '  , n.Cfop_descricao'
       'from TBCOMPRAS c'
-      '  inner join TBFORNECEDOR f on (f.Codforn = c.Codforn)'
+      '  left join TBFORNECEDOR f on (f.Codforn = c.Codforn)'
       '  left join TBCFOP n on (n.Cfop_cod = c.Nfcfop)')
     GeneratorField.Field = 'CODCONTROL'
     GeneratorField.Generator = 'GEN_COMPRAS_CONTROLE_2011'
@@ -3001,6 +3001,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       DisplayLabel = 'Fornecedor'
       FieldName = 'CODFORN'
       Origin = 'TBCOMPRAS.CODFORN'
+      Required = True
     end
     object IbDtstTabelaNF: TIntegerField
       DisplayLabel = 'Nota Fiscal'
@@ -3034,6 +3035,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       DisplayLabel = 'Data Lan'#231'amento'
       FieldName = 'DTLANCAMENTO'
       Origin = 'TBCOMPRAS.DTLANCAMENTO'
+      Required = True
       DisplayFormat = 'dd/mm/yyyy hh:mm'
     end
     object IbDtstTabelaDTEMISS: TDateField
@@ -3041,6 +3043,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       DisplayLabel = 'Data Emiss'#227'o'
       FieldName = 'DTEMISS'
       Origin = 'TBCOMPRAS.DTEMISS'
+      Required = True
       DisplayFormat = 'dd/mm/yyyy'
       EditMask = '!99/99/0000;1; '
     end
@@ -3049,6 +3052,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       DisplayLabel = 'Data Entrada'
       FieldName = 'DTENT'
       Origin = 'TBCOMPRAS.DTENT'
+      Required = True
       DisplayFormat = 'dd/mm/yyyy'
       EditMask = '!99/99/0000;1; '
     end
@@ -3139,18 +3143,20 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       Precision = 18
       Size = 2
     end
-    object IbDtstTabelaTOTALNF: TIBBCDField
-      DisplayLabel = 'Total Nota Fiscal'
-      FieldName = 'TOTALNF'
-      Origin = 'TBCOMPRAS.TOTALNF'
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 2
-    end
     object IbDtstTabelaTOTALPROD: TIBBCDField
       DisplayLabel = 'Total Produto'
       FieldName = 'TOTALPROD'
       Origin = 'TBCOMPRAS.TOTALPROD'
+      Required = True
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 2
+    end
+    object IbDtstTabelaTOTALNF: TIBBCDField
+      DisplayLabel = 'Total Nota Fiscal'
+      FieldName = 'TOTALNF'
+      Origin = 'TBCOMPRAS.TOTALNF'
+      Required = True
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
@@ -3170,11 +3176,20 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       DisplayLabel = 'Forma de Pagamento'
       FieldName = 'FORMAPAGTO_COD'
       Origin = 'TBCOMPRAS.FORMAPAGTO_COD'
+      Required = True
     end
     object IbDtstTabelaCONDICAOPAGTO_COD: TSmallintField
       DisplayLabel = 'Condi'#231#227'o de Pagamento'
       FieldName = 'CONDICAOPAGTO_COD'
       Origin = 'TBCOMPRAS.CONDICAOPAGTO_COD'
+      Required = True
+    end
+    object IbDtstTabelaTIPO_DESPESA: TSmallintField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Tipo Despesa'
+      FieldName = 'TIPO_DESPESA'
+      Origin = '"TBCOMPRAS"."TIPO_DESPESA"'
+      Required = True
     end
     object IbDtstTabelaCOMPRA_PRAZO: TSmallintField
       FieldName = 'COMPRA_PRAZO'
@@ -3240,13 +3255,6 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       Alignment = taCenter
       FieldName = 'PRAZO_12'
       Origin = 'TBCOMPRAS.PRAZO_12'
-    end
-    object IbDtstTabelaTIPO_DESPESA: TSmallintField
-      Alignment = taLeftJustify
-      DisplayLabel = 'Tipo Despesa'
-      FieldName = 'TIPO_DESPESA'
-      Origin = '"TBCOMPRAS"."TIPO_DESPESA"'
-      Required = True
     end
     object IbDtstTabelaAUTORIZACAO_ANO: TSmallintField
       FieldName = 'AUTORIZACAO_ANO'

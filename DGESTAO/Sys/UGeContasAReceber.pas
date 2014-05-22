@@ -150,6 +150,8 @@ type
 var
   frmGeContasAReceber: TfrmGeContasAReceber;
 
+  { DONE -oIsaque -cContas A Receber : 22/05/2014 - Correção de BUG porque a rotina estava permitindo a gravação de um lançamento sem CLIENTE, DATAS e VALOR }
+
   procedure MostrarControleContasAReceber(const AOwner : TComponent);
 
 implementation
@@ -238,7 +240,7 @@ end;
 procedure TfrmGeContasAReceber.btnFiltrarClick(Sender: TObject);
 begin
   WhereAdditional :=
-    '( (r.Situacao > 0) and (r.Parcela > 0) ) and (' +
+    '( (r.empresa = ' + QuotedStr(GetEmpresaIDDefault) + ') and (r.Situacao > 0) and (r.Parcela > 0) ) and (' +
     'cast(r.dtvenc as date) between ' + QuotedStr( FormatDateTime('yyyy-mm-dd', e1Data.Date) ) +
     ' and ' + QuotedStr( FormatDateTime('yyyy-mm-dd', e2Data.Date) ) + ')';
     
