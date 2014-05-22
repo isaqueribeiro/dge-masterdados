@@ -311,7 +311,7 @@ var
     var Estoque, Reserva : Currency; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, CodigoEAN, Nome : String; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
   function SelecionarProduto(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, Unidade : String; var ValorVenda, ValorPromocao : Currency; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
-  function SelecionarProdutoParaEntrada(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
+  function SelecionarProdutoParaEntrada(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, NCM_SH, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
     var Estoque, Reserva : Currency; const TipoAliquota : TAliquota = taICMS) : Boolean;
 
 implementation
@@ -457,7 +457,7 @@ begin
   end;
 end;
 
-function SelecionarProdutoParaEntrada(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
+function SelecionarProdutoParaEntrada(const AOwner : TComponent; var Codigo : Integer; var CodigoAlfa, Nome, sUnidade, NCM_SH, CST : String; var iUnidade, CFOP : Integer; var Aliquota, AliquotaPIS, AliquotaCOFINS, ValorVenda, ValorPromocao, ValorIPI, PercentualRedBC : Currency;
   var Estoque, Reserva : Currency; const TipoAliquota : TAliquota = taICMS) : Boolean; overload;
 var
   frm : TfrmGeProduto;
@@ -483,6 +483,7 @@ begin
       CodigoAlfa := frm.IbDtstTabelaCOD.AsString;
       iUnidade   := frm.IbDtstTabelaCODUNIDADE.AsInteger;
       sUnidade   := frm.IbDtstTabelaUNP_SIGLA.AsString;
+      NCM_SH     := frm.IbDtstTabelaNCM_SH.AsString;
       CST        := frm.IbDtstTabelaCST.AsString;
       CFOP       := frm.IbDtstTabelaCODCFOP.AsInteger;
       Aliquota       := frm.IbDtstTabelaALIQUOTA.AsCurrency;
