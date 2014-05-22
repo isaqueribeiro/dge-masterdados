@@ -129,6 +129,8 @@ type
     popImprimir: TPopupMenu;
     popGerarRecibo: TMenuItem;
     ACBrExtenso: TACBrExtenso;
+    IbDtstTabelaEMPRESA: TIBStringField;
+    IbDtstTabelaVALORSALDO: TIBBCDField;
     procedure FormCreate(Sender: TObject);
     procedure dbFornecedorButtonClick(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
@@ -149,6 +151,7 @@ type
     procedure btbtnListaClick(Sender: TObject);
     procedure CdsReciboCalcFields(DataSet: TDataSet);
     procedure FrReciboGetValue(const VarName: String; var Value: Variant);
+    procedure IbDtstTabelaBeforePost(DataSet: TDataSet);
   private
     { Private declarations }
     SQL_Pagamentos : TStringList;
@@ -273,6 +276,7 @@ procedure TfrmGeContasAPagar.IbDtstTabelaNewRecord(DataSet: TDataSet);
 begin
   inherited;
   IbDtstTabelaANOLANC.Value := YearOf(Date);
+  IbDtstTabelaEMPRESA.Value := GetEmpresaIDDefault;
   IbDtstTabelaNOMEEMP.Value := GetEmpresaNomeDefault;
   IbDtstTabelaPARCELA.Value := 0;
   IbDtstTabelaDTEMISS.Value := Date;
@@ -592,6 +596,12 @@ begin
 
   if ( VarName = VAR_SYSTEM ) then
     Value := Application.Title + ' - versão ' + ver.FileVersion;
+end;
+
+procedure TfrmGeContasAPagar.IbDtstTabelaBeforePost(DataSet: TDataSet);
+begin
+  IbDtstTabelaVALORSALDO.AsCurrency := IbDtstTabelaVALORPAG.AsCurrency; 
+  inherited;
 end;
 
 initialization

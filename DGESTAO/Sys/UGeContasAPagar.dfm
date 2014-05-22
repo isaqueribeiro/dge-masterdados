@@ -830,11 +830,13 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
     end
   end
   inherited IbDtstTabela: TIBDataSet
+    BeforePost = IbDtstTabelaBeforePost
     OnNewRecord = IbDtstTabelaNewRecord
     SelectSQL.Strings = (
       'Select'
       '    p.Anolanc'
       '  , p.Numlanc'
+      '  , p.Empresa'
       '  , p.Parcela'
       '  , p.Codforn'
       '  , p.Nomeemp'
@@ -846,6 +848,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       '  , p.Dtvenc'
       '  , p.Dtpag'
       '  , p.Valorpag'
+      '  , p.ValorSaldo'
       '  , p.Banco'
       '  , b.Bco_nome'
       '  , p.Numchq'
@@ -870,6 +873,13 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       DisplayLabel = 'No. Lan'#231'amento'
       FieldName = 'NUMLANC'
       Origin = 'TBCONTPAG.NUMLANC'
+    end
+    object IbDtstTabelaEMPRESA: TIBStringField
+      DisplayLabel = 'Empresa'
+      FieldName = 'EMPRESA'
+      Origin = '"TBCONTPAG"."EMPRESA"'
+      ProviderFlags = [pfInUpdate]
+      Size = 18
     end
     object IbDtstTabelaPARCELA: TSmallintField
       Alignment = taCenter
@@ -943,6 +953,12 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       Precision = 18
       Size = 2
     end
+    object IbDtstTabelaVALORSALDO: TIBBCDField
+      FieldName = 'VALORSALDO'
+      Origin = '"TBCONTPAG"."VALORSALDO"'
+      Precision = 18
+      Size = 2
+    end
     object IbDtstTabelaBANCO: TSmallintField
       DisplayLabel = 'Banco'
       FieldName = 'BANCO'
@@ -1009,8 +1025,9 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       'Select '
       '  ANOLANC,'
       '  NUMLANC,'
-      '  PARCELA,'
+      '  EMPRESA,'
       '  CODFORN,'
+      '  PARCELA,'
       '  TIPPAG,'
       '  HISTORIC,'
       '  NOTFISC,'
@@ -1019,6 +1036,9 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       '  DTPAG,'
       '  DOCBAIX,'
       '  VALORPAG,'
+      '  VALORMULTA,'
+      '  VALORPAGTOT,'
+      '  VALORSALDO,'
       '  NOMEEMP,'
       '  TIPOCATEG,'
       '  BANCO,'
@@ -1028,7 +1048,8 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       '  FORMA_PAGTO,'
       '  CONDICAO_PAGTO,'
       '  QUITADO,'
-      '  CODTPDESP'
+      '  CODTPDESP,'
+      '  SITUACAO'
       'from TBCONTPAG '
       'where'
       '  ANOLANC = :ANOLANC and'
@@ -1037,44 +1058,48 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       'update TBCONTPAG'
       'set'
       '  ANOLANC = :ANOLANC,'
+      '  BANCO = :BANCO,'
+      '  CODFORN = :CODFORN,'
+      '  CODTPDESP = :CODTPDESP,'
+      '  CONDICAO_PAGTO = :CONDICAO_PAGTO,'
+      '  DOCBAIX = :DOCBAIX,'
+      '  DTEMISS = :DTEMISS,'
+      '  DTPAG = :DTPAG,'
+      '  DTVENC = :DTVENC,'
+      '  EMPRESA = :EMPRESA,'
+      '  FORMA_PAGTO = :FORMA_PAGTO,'
+      '  HISTORIC = :HISTORIC,'
+      '  NOMEEMP = :NOMEEMP,'
+      '  NOTFISC = :NOTFISC,'
+      '  NUMCHQ = :NUMCHQ,'
       '  NUMLANC = :NUMLANC,'
       '  PARCELA = :PARCELA,'
-      '  CODFORN = :CODFORN,'
-      '  TIPPAG = :TIPPAG,'
-      '  HISTORIC = :HISTORIC,'
-      '  NOTFISC = :NOTFISC,'
-      '  DTEMISS = :DTEMISS,'
-      '  DTVENC = :DTVENC,'
-      '  DTPAG = :DTPAG,'
-      '  DOCBAIX = :DOCBAIX,'
-      '  VALORPAG = :VALORPAG,'
-      '  NOMEEMP = :NOMEEMP,'
-      '  BANCO = :BANCO,'
-      '  NUMCHQ = :NUMCHQ,'
-      '  FORMA_PAGTO = :FORMA_PAGTO,'
-      '  CONDICAO_PAGTO = :CONDICAO_PAGTO,'
       '  QUITADO = :QUITADO,'
-      '  CODTPDESP = :CODTPDESP'
+      '  TIPPAG = :TIPPAG,'
+      '  VALORPAG = :VALORPAG,'
+      '  VALORSALDO = :VALORSALDO'
       'where'
       '  ANOLANC = :OLD_ANOLANC and'
       '  NUMLANC = :OLD_NUMLANC')
     InsertSQL.Strings = (
       'insert into TBCONTPAG'
       
-        '  (ANOLANC, NUMLANC, PARCELA, CODFORN, TIPPAG, HISTORIC, NOTFISC' +
-        ', DTEMISS, '
+        '  (ANOLANC, BANCO, CODFORN, CODTPDESP, CONDICAO_PAGTO, DOCBAIX, ' +
+        'DTEMISS, '
       
-        '   DTVENC, DTPAG, DOCBAIX, VALORPAG, NOMEEMP, BANCO, NUMCHQ, FOR' +
-        'MA_PAGTO, '
-      '   CONDICAO_PAGTO, QUITADO, CODTPDESP)'
+        '   DTPAG, DTVENC, EMPRESA, FORMA_PAGTO, HISTORIC, NOMEEMP, NOTFI' +
+        'SC, NUMCHQ, '
+      '   NUMLANC, PARCELA, QUITADO, TIPPAG, VALORPAG, VALORSALDO)'
       'values'
       
-        '  (:ANOLANC, :NUMLANC, :PARCELA, :CODFORN, :TIPPAG, :HISTORIC, :' +
-        'NOTFISC, '
+        '  (:ANOLANC, :BANCO, :CODFORN, :CODTPDESP, :CONDICAO_PAGTO, :DOC' +
+        'BAIX, :DTEMISS, '
       
-        '   :DTEMISS, :DTVENC, :DTPAG, :DOCBAIX, :VALORPAG, :NOMEEMP, :BA' +
-        'NCO, :NUMCHQ, '
-      '   :FORMA_PAGTO, :CONDICAO_PAGTO, :QUITADO, :CODTPDESP)')
+        '   :DTPAG, :DTVENC, :EMPRESA, :FORMA_PAGTO, :HISTORIC, :NOMEEMP,' +
+        ' :NOTFISC, '
+      
+        '   :NUMCHQ, :NUMLANC, :PARCELA, :QUITADO, :TIPPAG, :VALORPAG, :V' +
+        'ALORSALDO)')
     DeleteSQL.Strings = (
       'delete from TBCONTPAG'
       'where'
