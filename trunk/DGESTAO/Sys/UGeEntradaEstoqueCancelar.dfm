@@ -4,6 +4,7 @@ inherited frmGeEntradaEstoqueCancelar: TfrmGeEntradaEstoqueCancelar
   Width = 617
   Height = 474
   ActiveControl = dbMotivo
+  BorderIcons = [biSystemMenu]
   BorderWidth = 4
   Caption = 'Cancelar Entrada no Estoque'
   OldCreateOrder = True

@@ -708,7 +708,7 @@ begin
     end;
   end;
 
-  { DONE -oIsaque -cCliente : 16/05/2014 - Rotina para verificar a duplicidade de CPF/CNPJ (1) }
+  { DONE 1 -oIsaque -cCliente : 16/05/2014 - Rotina para verificar a duplicidade de CPF/CNPJ (1) }
   
   if GetExisteCPF_CNPJ(IbDtstTabelaCODIGO.AsInteger, IbDtstTabelaCNPJ.AsString, iCodigo, sRazao) then
     if not GetPermitirDuplicarCNPJCliente(GetEmpresaIDDefault) then

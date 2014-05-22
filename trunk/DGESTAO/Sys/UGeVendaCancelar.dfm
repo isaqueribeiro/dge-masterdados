@@ -4,6 +4,7 @@ inherited frmGeVendaCancelar: TfrmGeVendaCancelar
   Width = 617
   Height = 474
   ActiveControl = dbMotivo
+  BorderIcons = [biSystemMenu]
   BorderWidth = 4
   Caption = 'Cancelar Venda'
   OldCreateOrder = True

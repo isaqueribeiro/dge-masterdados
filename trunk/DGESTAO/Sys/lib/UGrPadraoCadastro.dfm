@@ -1,6 +1,6 @@
 object frmGrPadraoCadastro: TfrmGrPadraoCadastro
-  Left = 333
-  Top = 198
+  Left = 397
+  Top = 229
   Width = 751
   Height = 440
   ActiveControl = dbgDados

@@ -63,11 +63,23 @@ const
   MODELO_NFE  = 55; // NF-e  (Nota Fiscal Eletrônica de Venda)
   MODELO_NFCE = 65; // NFC-e (Nota Fiscal Eletrônica de Venda ao Consumidor Final)
 
+  { DONE -oIsaque -cEmpresa : 22/05/2014 - Inserção do segmento INDÚSTRIA para atender meu novo cliente }
+
   SEGMENTO_PADRAO_ID          = 0;
   SEGMENTO_VAREJO_ATACADO_ID  = 1;
   SEGMENTO_MERCADO_CARRO_ID   = 2;
   SEGMENTO_SERVICOS_ID        = 3;
   SEGMENTO_VAREJO_SERVICOS_ID = 4;
+  SEGMENTO_INDUSTRIA_METAL_ID = 8;
+  SEGMENTO_INDUSTRIA_GERAL_ID = 9;
+
+  SEGMENTO_PADRAO_DS          = 'Padrão';
+  SEGMENTO_VAREJO_ATACADO_DS  = 'Produtos a Varejo e Atacado';
+  SEGMENTO_MERCADO_CARRO_DS   = 'Comércio de Veículos';
+  SEGMENTO_SERVICOS_DS        = 'Serviços';
+  SEGMENTO_VAREJO_SERVICOS_DS = 'Produtos a Varejo e Serviços';
+  SEGMENTO_INDUSTRIA_METAL_DS = 'Indústria Metalúrgica';
+  SEGMENTO_INDUSTRIA_GERAL_DS = 'Indústria';
 
   TIPO_LOG_TRANS_NOTIFIC = 0;
   TIPO_LOG_TRANS_SEFA    = 1;
@@ -77,12 +89,6 @@ const
   DESC_LOG_EVENTO_CANCELAR_NFE_ET = 'Cancelar NF-e de Entrada';
   DESC_LOG_INUTILIZA_NRO_NFE      = 'Inutilização de numerão para NF-e';
   DESC_LOG_CONSULTAR_NRO_LOTE_NFE = 'Consultar retorno do Lote/Recibo de NF-e';
-
-  SEGMENTO_PADRAO_DS          = 'Padrão';
-  SEGMENTO_VAREJO_ATACADO_DS  = 'Produtos a Varejo e Atacado';
-  SEGMENTO_MERCADO_CARRO_DS   = 'Comércio de Veículos';
-  SEGMENTO_SERVICOS_DS        = 'Serviços';
-  SEGMENTO_VAREJO_SERVICOS_DS = 'Produtos a Varejo e Serviços';
 
   CONTA_CORRENTE_TIPO_CAIXA = 1;
   CONTA_CORRENTE_TIPO_BANCO = 2;
@@ -107,7 +113,7 @@ const
 
   EMPRESA_LICENCA_PADRAO  = 1;
 
-  TRIBUTO_NCM_SH_PADRAO    = '0000000';
+  TRIBUTO_NCM_SH_PADRAO    = '00000000';
   TRIBUTO_ORIGEM_NACIONAL  = '0';
   TRIBUTO_TRIBUTADA_INTEG  = '00';
   TRIBUTO_NAO_TRIBUTADA_SN = '400';
