@@ -1249,7 +1249,7 @@ procedure TfrmGeEntradaEstoque.IbDtstTabelaAUTORIZACAO_CODIGOGetText(
 begin
 {$IFNDEF DGE}
   if not Sender.IsNull then
-    Text := IbDtstTabelaAUTORIZACAO_ANO.AsString + FormatFloat('"/"###0000000', Sender.AsInteger);
+    Text := FormatFloat('###0000000"/"', Sender.AsInteger) + Copy(IbDtstTabelaAUTORIZACAO_ANO.AsString, 3, 2);
 {$ENDIF}
 end;
 
