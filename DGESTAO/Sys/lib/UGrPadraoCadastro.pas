@@ -91,7 +91,6 @@ type
     _Todos ,
     _ApenasConsolidado : Boolean;
 
-    procedure CentralizarCodigo;
     procedure SetWhereAdditional(Value : String);
     procedure ClearFieldEmptyStr;
     procedure CarregarControleAcesso;
@@ -126,6 +125,7 @@ type
     procedure RedimencionarBevel(const ToolBar : TToolBar; const bvl : TBevel);
     procedure RegistrarRotinaSistema; override;
   protected
+    procedure CentralizarCodigo;
     procedure SetVariablesDefault(const pFastReport : TfrxReport);
     procedure FiltarDados; overload;
     procedure FecharAbrirTabela(const Tabela : TIBDataSet; const Vazia : Boolean = FALSE); overload;
@@ -438,6 +438,7 @@ end;
 procedure TfrmGrPadraoCadastro.btnFiltrarClick(Sender: TObject);
 begin
   FiltarDados;
+  CentralizarCodigo;  
 end;
 
 procedure TfrmGrPadraoCadastro.edtFiltrarKeyDown(Sender: TObject; var Key: Word;
@@ -660,7 +661,7 @@ begin
 
     IbDtstTabela.FieldByName(sCampoCodigo).Alignment := taCenter;
     IbDtstTabela.FieldByName(sCampoCodigo).Required  := False;
-    TIntegerField(IbDtstTabela.FieldByName(sCampoCodigo)).DisplayFormat := DisplayFormatCodigo;
+    TCurrencyField(IbDtstTabela.FieldByName(sCampoCodigo)).DisplayFormat := DisplayFormatCodigo;
   end;
 end;
 

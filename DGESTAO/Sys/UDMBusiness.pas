@@ -227,7 +227,7 @@ var
   function StrOnlyNumbers(const Str : String) : String;
 
   function SetBairro(const iCidade : Integer; const sNome : String) : Integer;
-  function SetLogradouro(const iCidade : Integer; const sNome : String) : Integer;
+  function SetLogradouro(const iCidade : Integer; const sNome : String; var Tipo : Smallint) : Integer;
 
   function GetGeneratorID(const GeneratorName : String) : Integer;
   function GetNextID(NomeTabela, CampoChave : String; const sWhere : String = '') : Largeint;
@@ -271,6 +271,7 @@ var
   function GetImprimirCodClienteNFe(const sCNPJEmitente : String) : Boolean;
   function GetExisteCPF_CNPJ(iCodigoCliente : Integer; sCpfCnpj : String; var iCodigo : Integer; var sRazao : String) : Boolean;
   function GetExisteNumeroAutorizacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+  function GetMenorVencimentoAPagar : TDateTime;
 
   function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
 
@@ -1543,7 +1544,7 @@ begin
   end;
 end;
 
-function SetLogradouro(const iCidade : Integer; const sNome : String) : Integer;
+function SetLogradouro(const iCidade : Integer; const sNome : String; var Tipo : Smallint) : Integer;
 var
   sTipo ,
   sDesc : String;
@@ -1561,9 +1562,10 @@ begin
   begin
     Close;
     SQL.Clear;
-    SQL.Add('Select g.cod_logradouro from SET_LOGRADOURO(' + QuotedStr(sDesc) + ', ' + QuotedStr(sTipo) + ', ' + IntToStr(iCidade) + ') g');
+    SQL.Add('Select g.cod_logradouro, g.cod_tipo from SET_LOGRADOURO(' + QuotedStr(sDesc) + ', ' + QuotedStr(sTipo) + ', ' + IntToStr(iCidade) + ') g');
     Open;
 
+    Tipo   := FieldByName('cod_tipo').AsInteger;
     Result := FieldByName('cod_logradouro').AsInteger;
 
     CommitTransaction;
@@ -2157,7 +2159,29 @@ begin
     Result := (FieldByName('codigo').AsInteger > 0);
 
     if Result then
-      sControleInterno := Trim(FieldByName('ano').AsString) + FormatFloat('###0000000', FieldByName('codigo').AsInteger);
+      sControleInterno := Trim(FieldByName('ano').AsString) + '/' + FormatFloat('###0000000', FieldByName('codigo').AsInteger);
+
+    Close;
+  end;
+end;
+
+function GetMenorVencimentoAPagar : TDateTime;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('  min(cp.dtvenc) as vencimento');
+    SQL.Add('from TBCONTPAG cp');
+    SQL.Add('where cp.empresa = ' + QuotedStr(GetEmpresaIDDefault));
+    SQL.Add('  and cp.quitado = 0');
+    Open;
+
+    if not IsEmpty then
+      Result := FieldByName('vencimento').AsDateTime
+    else
+      Result := GetDateDB;
 
     Close;
   end;

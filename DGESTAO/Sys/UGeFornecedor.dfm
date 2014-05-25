@@ -46,26 +46,33 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           item
             Expanded = False
             FieldName = 'CODFORN'
+            Width = 50
             Visible = True
           end
           item
             Expanded = False
             FieldName = 'NOMEFORN'
-            Width = 250
+            Width = 280
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'NOMEFANT'
+            Width = 190
             Visible = True
           end
           item
             Expanded = False
             FieldName = 'CNPJ'
-            Width = 140
+            Width = 120
             Visible = True
           end
           item
             Expanded = False
             FieldName = 'INSCEST'
             Title.Caption = 'RG / Ins. Estadual'
-            Width = 120
-            Visible = True
+            Width = -1
+            Visible = False
           end
           item
             Expanded = False
@@ -120,7 +127,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           FocusControl = dbRazao
         end
         object lblIE: TLabel [2]
-          Left = 16
+          Left = 264
           Top = 64
           Width = 115
           Height = 13
@@ -128,7 +135,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           FocusControl = dbIE
         end
         object lblIM: TLabel [3]
-          Left = 192
+          Left = 424
           Top = 64
           Width = 93
           Height = 13
@@ -136,7 +143,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           FocusControl = dbIM
         end
         object lblGrupo: TLabel [4]
-          Left = 352
+          Left = 584
           Top = 64
           Width = 33
           Height = 13
@@ -163,6 +170,14 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
+        end
+        object lblNomeFantasia: TLabel [7]
+          Left = 16
+          Top = 64
+          Width = 75
+          Height = 13
+          Caption = 'Nome Fantasia:'
+          FocusControl = dbNomeFantasia
         end
         inherited dbCodigo: TDBEdit
           Color = clMoneyGreen
@@ -197,9 +212,9 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           TabOrder = 3
         end
         object dbIE: TDBEdit
-          Left = 16
+          Left = 264
           Top = 80
-          Width = 169
+          Width = 153
           Height = 21
           CharCase = ecUpperCase
           DataField = 'INSCEST'
@@ -210,10 +225,10 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 5
+          TabOrder = 6
         end
         object dbIM: TDBEdit
-          Left = 192
+          Left = 424
           Top = 80
           Width = 153
           Height = 21
@@ -226,12 +241,12 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 6
+          TabOrder = 7
         end
         object dbGrupo: TDBLookupComboBox
-          Left = 352
+          Left = 584
           Top = 80
-          Width = 369
+          Width = 233
           Height = 21
           DataField = 'GRF_COD'
           DataSource = DtSrcTabela
@@ -245,7 +260,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           ListField = 'GRF_DESCRICAO'
           ListSource = dtsGrupo
           ParentFont = False
-          TabOrder = 7
+          TabOrder = 8
         end
         object dbCNPJ: TRxDBComboEdit
           Left = 192
@@ -335,6 +350,22 @@ inherited frmGeFornecedor: TfrmGeFornecedor
           ParentFont = False
           ReadOnly = True
           TabOrder = 4
+        end
+        object dbNomeFantasia: TDBEdit
+          Left = 16
+          Top = 80
+          Width = 241
+          Height = 21
+          CharCase = ecUpperCase
+          DataField = 'NOMEFANT'
+          DataSource = DtSrcTabela
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 5
         end
       end
       object GroupBox1: TGroupBox
@@ -1622,6 +1653,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       '  , f.Pessoa_fisica'
       '  , f.Cnpj'
       '  , f.Nomeforn'
+      '  , f.Nomefant'
       '  , f.Inscest'
       '  , f.Inscmun'
       '  , f.Ender'
@@ -1662,7 +1694,8 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       '  left join TBPAIS p on (p.Pais_id = f.Pais_id)')
     GeneratorField.Field = 'CODFORN'
     GeneratorField.Generator = 'GEN_FORNECEDOR_ID'
-    Left = 640
+    Left = 672
+    Top = 120
     object IbDtstTabelaCODFORN: TIntegerField
       DisplayLabel = 'C'#243'digo'
       FieldName = 'CODFORN'
@@ -1689,6 +1722,13 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       Required = True
       Size = 60
     end
+    object IbDtstTabelaNOMEFANT: TIBStringField
+      DisplayLabel = 'Nome Fantasia'
+      FieldName = 'NOMEFANT'
+      Origin = '"TBFORNECEDOR"."NOMEFANT"'
+      ProviderFlags = [pfInUpdate]
+      Size = 100
+    end
     object IbDtstTabelaINSCEST: TIBStringField
       DisplayLabel = 'RG / Inscri'#231#227'o Estadual'
       FieldName = 'INSCEST'
@@ -1698,6 +1738,12 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       DisplayLabel = 'Inscri'#231#227'o Municipal'
       FieldName = 'INSCMUN'
       Origin = 'TBFORNECEDOR.INSCMUN'
+    end
+    object IbDtstTabelaGRF_COD: TSmallintField
+      DisplayLabel = 'Grupo'
+      FieldName = 'GRF_COD'
+      Origin = 'TBFORNECEDOR.GRF_COD'
+      Required = True
     end
     object IbDtstTabelaENDER: TIBStringField
       DisplayLabel = 'Logradouro'
@@ -1806,11 +1852,6 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       Origin = 'TBFORNECEDOR.PAIS_ID'
       Size = 5
     end
-    object IbDtstTabelaGRF_COD: TSmallintField
-      DisplayLabel = 'Grupo'
-      FieldName = 'GRF_COD'
-      Origin = 'TBFORNECEDOR.GRF_COD'
-    end
     object IbDtstTabelaTRANSPORTADORA: TSmallintField
       Alignment = taLeftJustify
       FieldName = 'TRANSPORTADORA'
@@ -1851,14 +1892,17 @@ inherited frmGeFornecedor: TfrmGeFornecedor
   end
   inherited DtSrcTabela: TDataSource
     OnDataChange = DtSrcTabelaDataChange
-    Left = 672
+    Left = 704
+    Top = 120
   end
   inherited IbUpdTabela: TIBUpdateSQL
     RefreshSQL.Strings = (
       'Select '
       '  CODFORN,'
+      '  TIPO,'
       '  PESSOA_FISICA,'
       '  NOMEFORN,'
+      '  NOMEFANT,'
       '  CNPJ,'
       '  INSCEST,'
       '  INSCMUN,'
@@ -1882,7 +1926,9 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       '  PAIS_ID,'
       '  GRF_COD,'
       '  TRANSPORTADORA,'
-      '  DTCAD'
+      '  DTCAD,'
+      '  CLIENTE_ORIGEM,'
+      '  CLIENTE_ORIGEM_COD'
       'from TBFORNECEDOR '
       'where'
       '  CODFORN = :CODFORN')
@@ -1908,6 +1954,7 @@ inherited frmGeFornecedor: TfrmGeFornecedor
       '  INSCEST = :INSCEST,'
       '  INSCMUN = :INSCMUN,'
       '  LOG_COD = :LOG_COD,'
+      '  NOMEFANT = :NOMEFANT,'
       '  NOMEFORN = :NOMEFORN,'
       '  NUMERO_END = :NUMERO_END,'
       '  PAIS_ID = :PAIS_ID,'
@@ -1927,9 +1974,9 @@ inherited frmGeFornecedor: TfrmGeFornecedor
         '   DTCAD, EMAIL, ENDER, EST_COD, FONE, FONECEL, FONEFAX, GRF_COD' +
         ', INSCEST, '
       
-        '   INSCMUN, LOG_COD, NOMEFORN, NUMERO_END, PAIS_ID, PESSOA_FISIC' +
-        'A, SITE, '
-      '   TLG_TIPO, TRANSPORTADORA, UF)'
+        '   INSCMUN, LOG_COD, NOMEFANT, NOMEFORN, NUMERO_END, PAIS_ID, PE' +
+        'SSOA_FISICA, '
+      '   SITE, TLG_TIPO, TRANSPORTADORA, UF)'
       'values'
       
         '  (:BAI_COD, :CEP, :CID_COD, :CIDADE, :CNPJ, :CODFORN, :COMPLEME' +
@@ -1938,30 +1985,31 @@ inherited frmGeFornecedor: TfrmGeFornecedor
         '   :DTCAD, :EMAIL, :ENDER, :EST_COD, :FONE, :FONECEL, :FONEFAX, ' +
         ':GRF_COD, '
       
-        '   :INSCEST, :INSCMUN, :LOG_COD, :NOMEFORN, :NUMERO_END, :PAIS_I' +
-        'D, :PESSOA_FISICA, '
-      '   :SITE, :TLG_TIPO, :TRANSPORTADORA, :UF)')
+        '   :INSCEST, :INSCMUN, :LOG_COD, :NOMEFANT, :NOMEFORN, :NUMERO_E' +
+        'ND, :PAIS_ID, '
+      '   :PESSOA_FISICA, :SITE, :TLG_TIPO, :TRANSPORTADORA, :UF)')
     DeleteSQL.Strings = (
       'delete from TBFORNECEDOR'
       'where'
       '  CODFORN = :OLD_CODFORN')
-    Left = 640
-    Top = 40
+    Left = 672
+    Top = 152
   end
   inherited ImgList: TImageList
-    Left = 608
+    Left = 640
+    Top = 120
   end
   object tblGrupo: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     TableName = 'TBFORNECEDOR_GRUPO'
-    Left = 640
-    Top = 72
+    Left = 672
+    Top = 184
   end
   object dtsGrupo: TDataSource
     DataSet = tblGrupo
-    Left = 672
-    Top = 72
+    Left = 704
+    Top = 184
   end
   object ACBrConsultaCNPJ: TACBrConsultaCNPJ
     ProxyPort = '8080'

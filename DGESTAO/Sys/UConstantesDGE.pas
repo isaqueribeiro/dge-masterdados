@@ -100,6 +100,8 @@ const
   LAYOUT_BOLETO_ENTREGA = 'Boleto\Boleto.fr3';
   LAYOUT_BOLETO_CARNE   = 'Boleto\BoletoCarne.fr3';
 
+  FILE_WALLPAPER = 'PapelDeParede.jpg';
+
   CODIGO_BANCO_BRASIL    = 1;
   CODIGO_BANCO_BRADESCO  = 237;
   CODIGO_BANCO_CAIXA     = 104;

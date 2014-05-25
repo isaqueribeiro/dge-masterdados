@@ -470,7 +470,7 @@ object frmGrPadraoCadastro: TfrmGrPadraoCadastro
       object Bevel8: TBevel
         Left = 0
         Top = 121
-        Width = 718
+        Width = 727
         Height = 4
         Align = alTop
         Shape = bsSpacer
@@ -478,7 +478,7 @@ object frmGrPadraoCadastro: TfrmGrPadraoCadastro
       object GrpBxDadosNominais: TGroupBox
         Left = 0
         Top = 0
-        Width = 718
+        Width = 727
         Height = 121
         Align = alTop
         Caption = 'Dados nominais'
