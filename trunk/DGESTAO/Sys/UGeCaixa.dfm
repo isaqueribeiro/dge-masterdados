@@ -3,7 +3,6 @@ inherited frmGeCaixa: TfrmGeCaixa
   Top = 195
   Width = 966
   Height = 542
-  ActiveControl = dbCodigo
   Caption = 'Gerenciar Caixas'
   OldCreateOrder = True
   OnActivate = FormActivate
@@ -182,7 +181,6 @@ inherited frmGeCaixa: TfrmGeCaixa
   inherited pgcGuias: TPageControl
     Width = 950
     Height = 461
-    ActivePage = tbsCadastro
     OnChange = pgcGuiasChange
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel

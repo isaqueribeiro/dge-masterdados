@@ -138,6 +138,7 @@ type
     procedure dbgPagamentosKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure IbDtstTabelaBeforePost(DataSet: TDataSet);
+    procedure DtSrcTabelaStateChange(Sender: TObject);
   private
     { Private declarations }
     SQL_Pagamentos : TStringList;
@@ -522,6 +523,12 @@ begin
   if ( IbDtstTabela.State = dsEdit ) then
     if ( VarToStr(IbDtstTabelaDTVENC.OldValue) <> VarToStr(IbDtstTabelaDTVENC.NewValue) ) then
       DesbloquearCliente(IbDtstTabelaCLIENTE.AsInteger, EmptyStr)
+end;
+
+procedure TfrmGeContasAReceber.DtSrcTabelaStateChange(Sender: TObject);
+begin
+  inherited;
+  dbValorAReceber.ReadOnly := (not cdsPagamentos.IsEmpty);
 end;
 
 initialization

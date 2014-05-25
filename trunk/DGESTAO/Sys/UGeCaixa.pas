@@ -646,7 +646,7 @@ begin
       btbtnIncluir.Click
     else
       ShowWarning('Existe(m) caixa(s) aberto(s) para o usuário logado.' + #13#13 +
-                  'Caso deseje abrir um novo caixa para uma conta corrente diferente, favor clicar no botão ABRIR.');
+                  'Caso deseje abrir um novo caixa para uma conta corrente diferente, favor ir para a guia DADOS e clicar no botão ABRIR.');
   end;
 end;
 

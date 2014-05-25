@@ -285,6 +285,7 @@ type
     procedure ProdutoSelecionado(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure btbtnExcluirClick(Sender: TObject);
   private
     { Private declarations }
     bApenasPossuiEstoque : Boolean;
@@ -839,20 +840,28 @@ end;
 
 procedure TfrmGeCliente.btbtnAlterarClick(Sender: TObject);
 begin
-  inherited;
-  if ( not btbtnAlterar.Enabled ) then
+  if ( IbDtstTabelaCODIGO.AsInteger = CONSUMIDOR_FINAL_CODIGO ) then
   begin
-    if IbDtstTabelaCUSTO_OPER_PERCENTUAL.IsNull then
-      IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := 1;
+    ShowWarning('Este registro não pode ser alterado!');
+    Abort;
+  end
+  else
+  begin
+    inherited;
+    if ( not btbtnAlterar.Enabled ) then
+    begin
+      if IbDtstTabelaCUSTO_OPER_PERCENTUAL.IsNull then
+        IbDtstTabelaCUSTO_OPER_PERCENTUAL.AsInteger := 1;
 
-    if IbDtstTabelaEMITIR_NFE_DEVOLUCAO.IsNull then
-      IbDtstTabelaEMITIR_NFE_DEVOLUCAO.Value := 0;
+      if IbDtstTabelaEMITIR_NFE_DEVOLUCAO.IsNull then
+        IbDtstTabelaEMITIR_NFE_DEVOLUCAO.Value := 0;
 
-    if IbDtstTabelaENTREGA_FRACIONADA_VENDA.IsNull then
-      IbDtstTabelaENTREGA_FRACIONADA_VENDA.Value := 0;
+      if IbDtstTabelaENTREGA_FRACIONADA_VENDA.IsNull then
+        IbDtstTabelaENTREGA_FRACIONADA_VENDA.Value := 0;
 
-    if ( IbDtstTabelaDTCAD.IsNull ) then
-      IbDtstTabelaDTCAD.AsDateTime := GetDateTimeDB;
+      if ( IbDtstTabelaDTCAD.IsNull ) then
+        IbDtstTabelaDTCAD.AsDateTime := GetDateTimeDB;
+    end;
   end;
 end;
 
@@ -1072,7 +1081,8 @@ end;
 
 procedure TfrmGeCliente.btnRecuperarCNPJClick(Sender: TObject);
 var
-  bCPF : Boolean;
+  bCPF  : Boolean;
+  iTipo : Smallint;
 begin
   bCPF := (pgcGuias.ActivePage = tbsConsultarCPF);
   btnVoltar.Click;
@@ -1108,9 +1118,14 @@ begin
       IbDtstTabelaBAI_COD.AsInteger := SetBairro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditBairro.Text), 1, IbDtstTabelaBAIRRO.Size));
       IbDtstTabelaBAIRRO.AsString   := Trim(EditBairro.Text);
 
-      IbDtstTabelaLOG_COD.AsInteger   := SetLogradouro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditEndereco.Text), 1, IbDtstTabelaLOGRADOURO.Size));
+      IbDtstTabelaLOG_COD.AsInteger   := SetLogradouro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditEndereco.Text), 1, IbDtstTabelaLOGRADOURO.Size), iTipo);
       IbDtstTabelaLOGRADOURO.AsString := Trim(GetLogradouroTipo(IbDtstTabelaLOG_COD.AsInteger) + ' ' + GetLogradouroNome(IbDtstTabelaLOG_COD.AsInteger));
       IbDtstTabelaENDER.AsString      := Trim(IbDtstTabelaLOGRADOURO.AsString);
+
+      if (iTipo = 0) then
+        IbDtstTabelaTLG_TIPO.Clear
+      else
+        IbDtstTabelaTLG_TIPO.AsInteger := iTipo;
 
       IbDtstTabelaCOMPLEMENTO.AsString := Copy(Trim(EditComplemento.Text), 1, IbDtstTabelaCOMPLEMENTO.Size);
       IbDtstTabelaNUMERO_END.AsString  := Copy(Trim(EditNumero.Text),      1, IbDtstTabelaNUMERO_END.Size);
@@ -1403,6 +1418,17 @@ begin
 
   inherited;
 
+end;
+
+procedure TfrmGeCliente.btbtnExcluirClick(Sender: TObject);
+begin
+  if ( IbDtstTabelaCODIGO.AsInteger = CONSUMIDOR_FINAL_CODIGO ) then
+  begin
+    ShowWarning('Este registro não pode ser excluído!');
+    Abort;
+  end
+  else
+    inherited;
 end;
 
 initialization

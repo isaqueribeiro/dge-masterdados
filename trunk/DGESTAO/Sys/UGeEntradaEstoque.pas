@@ -566,6 +566,9 @@ begin
       Open;
       if not IsEmpty then
       begin
+        if not qryCFOP.Active then
+          CarregarDadosCFOP( IbDtstTabelaNFCFOP.AsInteger );
+
         cdsTabelaItensCODPROD.AsString     := FieldByName('Cod').AsString;
         cdsTabelaItensDESCRI.AsString      := FieldByName('Descri').AsString;
         cdsTabelaItensUNP_SIGLA.AsString   := FieldByName('Unp_sigla').AsString;
@@ -657,6 +660,12 @@ end;
 
 procedure TfrmGeEntradaEstoque.btnProdutoInserirClick(Sender: TObject);
 begin
+  if ( IbDtstTabelaCODFORN.AsInteger = 0 ) then
+  begin
+    ShowInformation('Favor selecionar o Fornecedor primeiramente!');
+    dbFornecedor.SetFocus;
+  end
+  else
   if ( IbDtstTabelaTOTALPROD.AsCurrency = 0 ) then
   begin
     ShowWarning('Favor informar valor Total de Produtos');
@@ -1227,6 +1236,7 @@ var
   iAno    ,
   iCodigo : Integer;
   sEmpresa : String;
+  dDataInicial : TDateTime;
 {$ENDIF}
 begin
 {$IFNDEF DGE}
@@ -1238,12 +1248,20 @@ begin
       dbFornecedor.SetFocus;
     end
     else
-      if ( SelecionarAutorizacao(Self, IbDtstTabelaCODFORN.AsInteger, iAno, iCodigo, sEmpresa) ) then
+    begin
+      { DONE -oIsaque -cEntrada : 22/05/2014 - Gerar Data Inicial padrão para busca de Autorizações de Compras }
+
+      dDataInicial := StrToDateTime('01/' + FormatDateTime('mm/yyyy', GetDateDB));
+      if ( (GetDateDB - dDataInicial) < 7 ) then
+        dDataInicial := GetDateDB - 7;
+
+      if ( SelecionarAutorizacao(Self, IbDtstTabelaCODFORN.AsInteger, dDataInicial, iAno, iCodigo, sEmpresa) ) then
       begin
         IbDtstTabelaAUTORIZACAO_ANO.AsInteger    := iAno;
         IbDtstTabelaAUTORIZACAO_CODIGO.AsInteger := iCodigo;
         IbDtstTabelaAUTORIZACAO_EMPRESA.AsString := sEmpresa;
       end;
+    end
   end;
 {$ENDIF}
 end;

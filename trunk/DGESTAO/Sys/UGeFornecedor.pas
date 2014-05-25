@@ -139,6 +139,9 @@ type
     lblFoneFax: TLabel;
     IbDtstTabelaFONECEL: TIBStringField;
     IbDtstTabelaFONEFAX: TIBStringField;
+    lblNomeFantasia: TLabel;
+    dbNomeFantasia: TDBEdit;
+    IbDtstTabelaNOMEFANT: TIBStringField;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -158,10 +161,12 @@ type
     procedure btnConsultarCPFClick(Sender: TObject);
     procedure edCNPJKeyPress(Sender: TObject; var Key: Char);
     procedure edCaptchaKeyPress(Sender: TObject; var Key: Char);
+    procedure btnFiltrarClick(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+    procedure FiltarDados(const iTipoPesquisa: Integer); overload;
   end;
 
 var
@@ -253,6 +258,8 @@ begin
   ControlFirstEdit := dbPessoaFisica;
 
   tblGrupo.Open;
+
+  DisplayFormatCodigo := '##0000';
 
   NomeTabela      := 'TBFORNECEDOR';
   CampoCodigo     := 'Codforn';
@@ -568,7 +575,8 @@ end;
 
 procedure TfrmGeFornecedor.btnRecuperarCNPJClick(Sender: TObject);
 var
-  bCPF : Boolean;
+  bCPF  : Boolean;
+  iTipo : Smallint;
 begin
   bCPF := (pgcGuias.ActivePage = tbsConsultarCPF);
   btnVoltar.Click;
@@ -587,6 +595,7 @@ begin
     begin
       IbDtstTabelaCNPJ.AsString       := StrOnlyNumbers(edCNPJ.Text);
       IbDtstTabelaNOMEFORN.AsString   := Copy(Trim(EditRazaoSocial.Text), 1, IbDtstTabelaNOMEFORN.Size);
+      IbDtstTabelaNOMEFANT.AsString   := Copy(Trim(EditFantasia.Text),    1, IbDtstTabelaNOMEFANT.Size);
       IbDtstTabelaEST_COD.AsInteger   := GetEstadoID( Trim(EditUF.Text) );
       IbDtstTabelaEST_NOME.AsString   := GetEstadoNome( Trim(EditUF.Text) );
       IbDtstTabelaUF.AsString         := Trim(EditUF.Text);
@@ -604,9 +613,14 @@ begin
       IbDtstTabelaBAI_COD.AsInteger := SetBairro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditBairro.Text), 1, IbDtstTabelaBAI_NOME.Size));
       IbDtstTabelaBAI_NOME.AsString := Trim(EditBairro.Text);
 
-      IbDtstTabelaLOG_COD.AsInteger   := SetLogradouro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditEndereco.Text), 1, IbDtstTabelaLOGRADOURO.Size));
+      IbDtstTabelaLOG_COD.AsInteger   := SetLogradouro(IbDtstTabelaCID_COD.AsInteger, Copy(Trim(EditEndereco.Text), 1, IbDtstTabelaLOGRADOURO.Size), iTipo);
       IbDtstTabelaLOGRADOURO.AsString := Trim(GetLogradouroTipo(IbDtstTabelaLOG_COD.AsInteger) + ' ' + GetLogradouroNome(IbDtstTabelaLOG_COD.AsInteger));
       IbDtstTabelaENDER.AsString      := Trim(IbDtstTabelaLOGRADOURO.AsString);
+
+      if (iTipo = 0) then
+        IbDtstTabelaTLG_TIPO.Clear
+      else
+        IbDtstTabelaTLG_TIPO.AsInteger := iTipo;
 
       IbDtstTabelaCOMPLEMENTO.AsString := Copy(Trim(EditComplemento.Text), 1, IbDtstTabelaCOMPLEMENTO.Size);
       IbDtstTabelaNUMERO_END.AsString  := Copy(Trim(EditNumero.Text),      1, IbDtstTabelaNUMERO_END.Size);
@@ -686,6 +700,78 @@ begin
     else
     if ( pgcGuias.ActivePage = tbsConsultarCPF ) then
       btnConsultarCPF.Click;
+end;
+
+procedure TfrmGeFornecedor.FiltarDados(const iTipoPesquisa: Integer);
+begin
+  try
+
+    if (Trim(CampoCodigo) = EmptyStr) or ((Trim(CampoDescricao) = EmptyStr)) then
+    begin
+      ShowWarning('O nome do campo chave e/ou de descrição não foram informados');
+      Abort;
+    end;
+
+    with IbDtstTabela, SelectSQL do
+    begin
+      if ( Trim(CampoOrdenacao) = EmptyStr ) then
+        CampoOrdenacao := CampoDescricao;
+
+      Close;
+      Clear;
+      AddStrings( SQLTabela );
+
+      if ( Trim(edtFiltrar.Text) <> EmptyStr ) then
+      begin
+
+        if ( StrToIntDef(Trim(edtFiltrar.Text), 0) > 0 ) then
+          Add( 'where ' + CampoCodigo +  ' = ' + Trim(edtFiltrar.Text) )
+        else
+        begin
+          Add( 'where ((upper(f.Nomeforn) like ' + QuotedStr(UpperCase(Trim(edtFiltrar.Text)) + '%') +
+               '     or upper(f.Nomeforn) like ' + QuotedStr(UpperCase(FuncoesString.StrRemoveAllAccents(Trim(edtFiltrar.Text))) + '%') + '))');
+          Add( '   or ((upper(f.Nomefant) like ' + QuotedStr(UpperCase(Trim(edtFiltrar.Text)) + '%') +
+               '     or upper(f.Nomefant) like ' + QuotedStr(UpperCase(FuncoesString.StrRemoveAllAccents(Trim(edtFiltrar.Text))) + '%') + '))');
+        end;
+      end;
+
+      if ( WhereAdditional <> EmptyStr ) then
+        if ( Pos('where', SelectSQL.Text) > 0 ) then
+          Add( '  and (' + WhereAdditional + ')' )
+        else
+          Add( 'where (' + WhereAdditional + ')' );
+
+      Add( 'order by ' + CampoOrdenacao );  
+
+      Open;
+
+      try
+      
+        if ( not IsEmpty ) then
+          dbgDados.SetFocus
+        else
+        begin
+          ShowWarning('Não existe registros na tabela para este tipo de pesquisa');
+
+          edtFiltrar.SetFocus;
+          edtFiltrar.SelectAll;
+        end;
+
+      except
+      end;
+
+    end;
+  except
+    On E : Exception do
+      ShowWarning('Erro ao tentar filtrar registros na tabela.' + #13#13 + E.Message + #13#13 + 'Script:' + #13 + IbDtstTabela.SelectSQL.Text);
+  end;
+end;
+
+procedure TfrmGeFornecedor.btnFiltrarClick(Sender: TObject);
+begin
+  // inherited;
+  FiltarDados(0);
+  CentralizarCodigo;
 end;
 
 initialization

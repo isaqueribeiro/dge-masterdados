@@ -127,22 +127,31 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
           item
             Expanded = False
             FieldName = 'NOMEFORN'
+            Width = 300
             Visible = True
           end
           item
             Expanded = False
             FieldName = 'VALORPAG'
+            Title.Caption = 'A Pagar (R$)'
+            Width = 85
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'VALORSALDO'
             Font.Charset = ANSI_CHARSET
             Font.Color = clBlue
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
+            Title.Caption = 'Saldo (R$)'
             Title.Font.Charset = ANSI_CHARSET
             Title.Font.Color = clBlue
             Title.Font.Height = -11
             Title.Font.Name = 'Tahoma'
             Title.Font.Style = [fsBold]
-            Width = 110
+            Width = 85
             Visible = True
           end
           item
@@ -593,6 +602,20 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
           Font.Style = [fsBold]
           ParentFont = False
         end
+        object lblSaldoAPagar: TLabel
+          Left = 496
+          Top = 64
+          Width = 109
+          Height = 13
+          Caption = 'Saldo A Pagar (R$):'
+          FocusControl = dbSaldoAPagar
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
         object dbNotaFiscal: TDBEdit
           Left = 16
           Top = 40
@@ -724,6 +747,24 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
           ListSource = dtsTpDespesa
           ParentFont = False
           TabOrder = 5
+        end
+        object dbSaldoAPagar: TDBEdit
+          Left = 496
+          Top = 80
+          Width = 113
+          Height = 21
+          TabStop = False
+          Color = clMoneyGreen
+          DataField = 'VALORSALDO'
+          DataSource = DtSrcTabela
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 8
         end
       end
       object pgcMaisDados: TPageControl
@@ -864,6 +905,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       '  left join TBBANCO_BOLETO b on (b.Bco_cod = p.Banco)')
     GeneratorField.Field = 'NUMLANC'
     GeneratorField.Generator = 'GEN_CONTAPAG_NUM_2013'
+    Top = 72
     object IbDtstTabelaANOLANC: TSmallintField
       FieldName = 'ANOLANC'
       Origin = 'TBCONTPAG.ANOLANC'
@@ -959,8 +1001,11 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       Size = 2
     end
     object IbDtstTabelaVALORSALDO: TIBBCDField
+      DisplayLabel = 'Saldo A Pagar (R$)'
       FieldName = 'VALORSALDO'
       Origin = '"TBCONTPAG"."VALORSALDO"'
+      ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
@@ -1024,6 +1069,9 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       Required = True
       OnGetText = IbDtstTabelaQUITADOGetText
     end
+  end
+  inherited DtSrcTabela: TDataSource
+    Top = 72
   end
   inherited IbUpdTabela: TIBUpdateSQL
     RefreshSQL.Strings = (
@@ -1110,30 +1158,34 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       'where'
       '  ANOLANC = :OLD_ANOLANC and'
       '  NUMLANC = :OLD_NUMLANC')
+    Top = 72
+  end
+  inherited ImgList: TImageList
+    Top = 72
   end
   object tblEmpresa: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     TableName = 'TBEMPRESA'
-    Left = 864
-    Top = 8
+    Left = 848
+    Top = 128
   end
   object dtsEmpresa: TDataSource
     DataSet = tblEmpresa
-    Left = 896
-    Top = 8
+    Left = 880
+    Top = 128
   end
   object tblFormaPagto: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     TableName = 'TBFORMPAGTO'
-    Left = 864
-    Top = 40
+    Left = 848
+    Top = 160
   end
   object dtsFormaPagto: TDataSource
     DataSet = tblFormaPagto
-    Left = 896
-    Top = 40
+    Left = 880
+    Top = 160
   end
   object tblCondicaoPagto: TIBTable
     Database = DMBusiness.ibdtbsBusiness
@@ -1209,13 +1261,13 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
     StoreDefs = True
     TableName = 'VW_CONDICAOPAGTO'
     TableTypes = [ttView]
-    Left = 864
-    Top = 72
+    Left = 848
+    Top = 192
   end
   object dtsCondicaoPagto: TDataSource
     DataSet = tblCondicaoPagto
-    Left = 896
-    Top = 72
+    Left = 880
+    Top = 192
   end
   object cdsPagamentos: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
@@ -1243,7 +1295,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
     ModifySQL.Strings = (
       '')
     Left = 624
-    Top = 40
+    Top = 104
     object cdsPagamentosANOLANC: TSmallintField
       FieldName = 'ANOLANC'
       Origin = 'TBCONTPAG_BAIXA.ANOLANC'
@@ -1320,12 +1372,12 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
     AutoEdit = False
     DataSet = cdsPagamentos
     Left = 688
-    Top = 40
+    Top = 104
   end
   object dtsTpDespesa: TDataSource
     DataSet = qryTpDespesa
-    Left = 896
-    Top = 104
+    Left = 880
+    Top = 224
   end
   object qryTpDespesa: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
@@ -1333,8 +1385,8 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
     SQL.Strings = (
       'select * from TBTPDESPESA'
       'order by tipodesp')
-    Left = 864
-    Top = 104
+    Left = 848
+    Top = 224
   end
   object FrdRecibo: TfrxDBDataset
     UserName = 'FrdRecibo'
@@ -1487,7 +1539,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -1508,7 +1560,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -1527,7 +1579,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -1556,11 +1608,11 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
-            'Site / E-mail: [frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
+            '[frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -1737,7 +1789,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
           DataSetName = 'frdEmpresa'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -16
+          Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           Frame.Width = 0.100000000000000000
@@ -1761,7 +1813,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
           DataSetName = 'frdEmpresa'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -16
+          Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           Frame.Typ = [ftTop]

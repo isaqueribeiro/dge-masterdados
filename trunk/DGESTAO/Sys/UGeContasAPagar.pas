@@ -131,6 +131,8 @@ type
     ACBrExtenso: TACBrExtenso;
     IbDtstTabelaEMPRESA: TIBStringField;
     IbDtstTabelaVALORSALDO: TIBBCDField;
+    lblSaldoAPagar: TLabel;
+    dbSaldoAPagar: TDBEdit;
     procedure FormCreate(Sender: TObject);
     procedure dbFornecedorButtonClick(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
@@ -152,11 +154,13 @@ type
     procedure CdsReciboCalcFields(DataSet: TDataSet);
     procedure FrReciboGetValue(const VarName: String; var Value: Variant);
     procedure IbDtstTabelaBeforePost(DataSet: TDataSet);
+    procedure DtSrcTabelaStateChange(Sender: TObject);
   private
     { Private declarations }
     SQL_Pagamentos : TStringList;
     procedure AbrirPagamentos(const Ano : Smallint; const Numero : Integer);
     procedure HabilitarDesabilitar_Btns;
+    procedure RecarregarRegistro;
   public
     { Public declarations }
   end;
@@ -213,7 +217,7 @@ begin
   SQL_Pagamentos := TStringList.Create;
   SQL_Pagamentos.AddStrings( cdsPagamentos.SelectSQL );
 
-  e1Data.Date     := Date;
+  e1Data.Date     := GetMenorVencimentoAPagar;
   e2Data.Date     := Date;
   AbrirTabelaAuto  := True;
   ControlFirstEdit := dbFornecedor;
@@ -294,7 +298,6 @@ end;
 procedure TfrmGeContasAPagar.btbtnEfetuarPagtoClick(Sender: TObject);
 var
   sSenha   : String;
-  iNumero  ,
   CxAno    ,
   CxNumero ,
   CxContaCorrente : Integer;
@@ -306,6 +309,8 @@ begin
   CxAno    := 0;
   CxNumero := 0;
   CxContaCorrente := 0;
+
+  RecarregarRegistro;
 
   if ( tblCondicaoPagto.Locate('COND_COD', IbDtstTabelaCONDICAO_PAGTO.AsInteger, []) ) then
     if ( tblCondicaoPagto.FieldByName('COND_PRAZO').AsInteger = 0 ) then
@@ -328,12 +333,8 @@ begin
  }
   if PagamentoConfirmado(Self, IbDtstTabelaANOLANC.AsInteger, IbDtstTabelaNUMLANC.AsInteger, IbDtstTabelaFORMA_PAGTO.AsInteger, IbDtstTabelaNOMEFORN.AsString, DataPagto) then
   begin
-    iNumero := IbDtstTabelaNUMLANC.AsInteger;
 
-    IbDtstTabela.Close;
-    IbDtstTabela.Open;
-
-    IbDtstTabela.Locate('NUMLANC', iNumero, []);
+    RecarregarRegistro;
 
     AbrirPagamentos( IbDtstTabelaANOLANC.AsInteger, IbDtstTabelaNUMLANC.AsInteger );
 
@@ -458,9 +459,7 @@ procedure TfrmGeContasAPagar.dbgDadosKeyDown(Sender: TObject;
 var
   CxAno    ,
   CxNumero ,
-  CxContaCorrente,
-  MovAno    ,
-  MovNumero : Integer;
+  CxContaCorrente : Integer;
   DataPagto : TDateTime;
 begin
   if (Shift = [ssCtrl]) and (Key = 46) Then
@@ -487,8 +486,6 @@ begin
             Exit;
           end;
 
-      MovAno    := IbDtstTabelaANOLANC.AsInteger;
-      MovNumero := IbDtstTabelaNUMLANC.AsInteger;
       DataPagto := cdsPagamentosDATA_PAGTO.AsDateTime;
 
       if ShowConfirm('Confirma a exclusão do(s) registro(s) de pagamento(s)?') then
@@ -540,10 +537,7 @@ begin
           CommitTransaction;
         end;
 
-        IbDtstTabela.Close;
-        IbDtstTabela.Open;
-
-        IbDtstTabela.Locate('ANOLANC;NUMLANC', VarArrayOf([MovAno, MovNumero]), []);
+        RecarregarRegistro;
 
         AbrirPagamentos( IbDtstTabelaANOLANC.AsInteger, IbDtstTabelaNUMLANC.AsInteger );
 
@@ -608,6 +602,35 @@ procedure TfrmGeContasAPagar.IbDtstTabelaBeforePost(DataSet: TDataSet);
 begin
   IbDtstTabelaVALORSALDO.AsCurrency := IbDtstTabelaVALORPAG.AsCurrency; 
   inherited;
+end;
+
+procedure TfrmGeContasAPagar.RecarregarRegistro;
+var
+  MovAno    ,
+  MovNumero : Integer;
+begin
+  MovAno    := IbDtstTabelaANOLANC.AsInteger;
+  MovNumero := IbDtstTabelaNUMLANC.AsInteger;
+
+  if ( not IbDtstTabelaDTVENC.IsNull ) then
+  begin
+    if ( IbDtstTabelaDTVENC.AsDateTime < e1Data.Date ) then
+      e1Data.Date := IbDtstTabelaDTVENC.AsDateTime;
+
+    if ( IbDtstTabelaDTVENC.AsDateTime > e2Data.Date ) then
+      e2Data.Date := IbDtstTabelaDTVENC.AsDateTime;
+  end;
+
+  IbDtstTabela.Close;
+  IbDtstTabela.Open;
+  
+  IbDtstTabela.Locate('ANOLANC;NUMLANC', VarArrayOf([MovAno, MovNumero]), []);
+end;
+
+procedure TfrmGeContasAPagar.DtSrcTabelaStateChange(Sender: TObject);
+begin
+  inherited;
+  dbValorAPagar.ReadOnly := (not cdsPagamentos.IsEmpty);
 end;
 
 initialization
