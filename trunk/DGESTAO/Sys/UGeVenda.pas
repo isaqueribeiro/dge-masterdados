@@ -336,6 +336,9 @@ type
     qryProduto: TIBDataSet;
     qryCFOP: TIBDataSet;
     cdsTabelaItensMOVIMENTA_ESTOQUE: TSmallintField;
+    lblCodigoBarra: TLabel;
+    dbCodigoBarra: TRxDBComboEdit;
+    cdsTabelaItensCODBARRA_EAN: TIBStringField;
     procedure ImprimirOpcoesClick(Sender: TObject);
     procedure ImprimirOrcamentoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -407,7 +410,7 @@ type
     procedure AbrirTabelaVolume(const AnoVenda : Smallint; const ControleVenda : Integer);
     procedure AbrirTabelaTitulos(const AnoVenda : Smallint; const ControleVenda : Integer);
     procedure GerarTitulos(const AnoVenda : Smallint; const ControleVenda : Integer);
-    procedure CarregarDadosProduto( Codigo : Integer );
+    procedure CarregarDadosProduto( Codigo : String );
     procedure CarregarDadosCFOP( iCodigo : Integer );
     procedure HabilitarDesabilitar_Btns;
     procedure GetComprasAbertas(iCodigoCliente : Integer);
@@ -549,7 +552,20 @@ begin
   begin
     Self.Caption       := 'Controle de Vendas';
     btbtnLista.OnClick := ImprimirOpcoesClick;
-  end;  
+  end;
+
+  lblCodigoBarra.Visible := GetCarregarProdutoCodigoBarra( GetEmpresaIDDefault );
+  dbCodigoBarra.Visible  := GetCarregarProdutoCodigoBarra( GetEmpresaIDDefault );
+
+  if dbCodigoBarra.Visible then
+  begin
+    lblCodigoBarra.Left := lblProduto.Left;
+    dbCodigoBarra.Left  := dbProduto.Left;
+    dbProdutoNome.Left  := 240;
+    dbProdutoNome.Width := 345;
+    lblProduto.Visible  := False;
+    dbProduto.Visible   := False;
+  end;
 end;
 
 procedure TfrmGeVenda.btnFiltrarClick(Sender: TObject);
@@ -687,8 +703,13 @@ begin
   btnProdutoSalvar.Enabled  := ( cdsTabelaItens.State in [dsEdit, dsInsert] );
 
   if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
+  begin
     if ( dbProduto.Visible and dbProduto.Enabled ) then
-      dbProduto.SetFocus;
+      dbProduto.SetFocus
+    else
+    if ( dbCodigoBarra.Visible and dbCodigoBarra.Enabled ) then
+      dbCodigoBarra.SetFocus;
+  end
 end;
 
 procedure TfrmGeVenda.AbrirTabelaItens(const AnoVenda : Smallint; const ControleVenda : Integer);
@@ -756,9 +777,9 @@ begin
   qryTitulos.Open;
 end;
 
-procedure TfrmGeVenda.CarregarDadosProduto( Codigo : Integer);
+procedure TfrmGeVenda.CarregarDadosProduto( Codigo : String );
 begin
-  if ( Codigo = 0 ) then
+  if ( (Trim(Codigo) = EmptyStr) or (Codigo = '0') ) then
   begin
     ShowWarning('Favor informar o código do produto');
     Exit;
@@ -772,13 +793,26 @@ begin
     with qryProduto do
     begin
       Close;
-      ParamByName('Codigo').AsInteger := Codigo;
+
+      if Length(Trim(Codigo)) > 7 then
+      begin
+        ParamByName('Codigo').AsInteger  := 0;
+        ParamByName('codbarra').AsString := Codigo;
+      end
+      else
+      begin
+        ParamByName('Codigo').AsInteger  := StrToInt(Codigo);
+        ParamByName('codbarra').AsString := EmptyStr;
+      end;
+
       Open;
+
       if not IsEmpty then
       begin
-        cdsTabelaItensCODPROD.AsString     := FieldByName('Cod').AsString;
-        cdsTabelaItensDESCRI.AsString      := FieldByName('Descri').AsString;
-        cdsTabelaItensUNP_SIGLA.AsString   := FieldByName('Unp_sigla').AsString;
+        cdsTabelaItensCODPROD.AsString      := FieldByName('Cod').AsString;
+        cdsTabelaItensCODBARRA_EAN.AsString := FieldByName('Codbarra_ean').AsString;
+        cdsTabelaItensDESCRI.AsString       := FieldByName('Descri').AsString;
+        cdsTabelaItensUNP_SIGLA.AsString    := FieldByName('Unp_sigla').AsString;
 
         if ( FieldByName('Codunidade').AsInteger > 0 ) then
           cdsTabelaItensUNID_COD.AsInteger   := FieldByName('Codunidade').AsInteger;
@@ -821,9 +855,14 @@ begin
       else
       begin
         ShowWarning('Código de produto não cadastrado');
+
         cdsTabelaItensCODPROD.Clear;
+
         if ( dbProduto.Visible and dbProduto.Enabled ) then
-          dbProduto.SetFocus;
+          dbProduto.SetFocus
+        else
+        if ( dbCodigoBarra.Visible and dbCodigoBarra.Enabled ) then
+          dbCodigoBarra.SetFocus;
       end;
     end;
   end;
@@ -987,7 +1026,12 @@ begin
 
     cdsTabelaItens.Append;
     cdsTabelaItensSEQ.Value := Sequencial;
-    dbProduto.SetFocus;
+
+    if ( dbProduto.Visible and dbProduto.Enabled ) then
+      dbProduto.SetFocus
+    else
+    if ( dbCodigoBarra.Visible and dbCodigoBarra.Enabled ) then
+      dbCodigoBarra.SetFocus;
   end;
 end;
 
@@ -996,7 +1040,12 @@ begin
   if ( not cdsTabelaItens.IsEmpty ) then
   begin
     cdsTabelaItens.Edit;
-    dbProduto.SetFocus;
+
+    if ( dbProduto.Visible and dbProduto.Enabled ) then
+      dbProduto.SetFocus
+    else
+    if ( dbCodigoBarra.Visible and dbCodigoBarra.Enabled ) then
+      dbCodigoBarra.SetFocus;
   end;
 end;
 
@@ -1082,7 +1131,12 @@ begin
     if ( Trim(cdsTabelaItensCODPROD.AsString) = EmptyStr ) then
     begin
       ShowWarning('Favor informar o código do produto.');
-      dbProduto.SetFocus;
+
+      if ( dbProduto.Visible and dbProduto.Enabled ) then
+        dbProduto.SetFocus
+      else
+      if ( dbCodigoBarra.Visible and dbCodigoBarra.Enabled ) then
+        dbCodigoBarra.SetFocus;
     end
     else
     if ( Trim(cdsTabelaItensCST.AsString) = EmptyStr ) then
@@ -1252,7 +1306,11 @@ begin
 
   if ( Sender = dbProduto ) then
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
-      CarregarDadosProduto( StrToIntDef(cdsTabelaItensCODPROD.AsString, 0) );
+      CarregarDadosProduto( dbProduto.Text );
+
+  if ( Sender = dbCodigoBarra ) then
+    if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
+      CarregarDadosProduto( dbProduto.Text );
 
   if ( Sender = dbCFOP ) then
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
@@ -1382,6 +1440,8 @@ begin
       cValorVenda, cValorPromocao, cValorIPI, cPercRedBC, iEstoque, iReserva) ) then
     begin
       cdsTabelaItensCODPROD.AsString     := sCodigoAlfa;
+      CarregarDadosProduto( sCodigoAlfa );
+      (*
       cdsTabelaItensDESCRI.AsString      := sDescricao;
       cdsTabelaItensUNP_SIGLA.AsString   := sUnidade;
       cdsTabelaItensCST.AsString         := sCST;
@@ -1410,6 +1470,7 @@ begin
 
       dbDesconto.ReadOnly      := (cValorPromocao > 0);
       dbTotalDesconto.ReadOnly := (cValorPromocao > 0);
+      *)
     end;
 end;
 

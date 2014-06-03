@@ -1278,6 +1278,15 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Style = []
           ParentFont = False
         end
+        object lblCodigoBarra: TLabel
+          Left = 272
+          Top = 24
+          Width = 86
+          Height = 13
+          Caption = 'C'#243'digo de Barras:'
+          FocusControl = dbCodigoBarra
+          Visible = False
+        end
         object dbProduto: TRxDBComboEdit
           Left = 88
           Top = 40
@@ -1369,7 +1378,7 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 2
+          TabOrder = 3
         end
         object dbQuantidade: TDBEdit
           Left = 312
@@ -1385,7 +1394,7 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 9
+          TabOrder = 10
           OnExit = ControlEditExit
         end
         object dbValorUnit: TDBEdit
@@ -1403,7 +1412,7 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 10
+          TabOrder = 11
           OnExit = ControlEditExit
         end
         object dbDesconto: TDBEdit
@@ -1420,7 +1429,7 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 11
+          TabOrder = 12
           OnExit = ControlEditExit
         end
         object dbValorLiq: TDBEdit
@@ -1438,7 +1447,7 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 14
+          TabOrder = 15
           OnExit = ControlEditExit
         end
         object dbUnidade: TDBEdit
@@ -1457,7 +1466,7 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 3
+          TabOrder = 4
         end
         object dbCFOP: TRxDBComboEdit
           Left = 640
@@ -1531,7 +1540,7 @@ inherited frmGeVenda: TfrmGeVenda
           ParentShowHint = False
           ReadOnly = True
           ShowHint = True
-          TabOrder = 4
+          TabOrder = 5
           OnButtonClick = dbCFOPButtonClick
           OnExit = ControlEditExit
         end
@@ -1551,7 +1560,7 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 6
+          TabOrder = 7
         end
         object dbCST: TDBEdit
           Left = 272
@@ -1567,7 +1576,7 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 8
+          TabOrder = 9
         end
         object dbValorIPI: TDBEdit
           Left = 848
@@ -1584,7 +1593,7 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 13
+          TabOrder = 14
           Visible = False
         end
         object dbCFOPDescricao: TDBEdit
@@ -1603,7 +1612,7 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 5
+          TabOrder = 6
         end
         object pnlBotoesProduto: TPanel
           Left = 6
@@ -1953,7 +1962,7 @@ inherited frmGeVenda: TfrmGeVenda
           ParentShowHint = False
           ReadOnly = True
           ShowHint = True
-          TabOrder = 12
+          TabOrder = 13
           OnButtonClick = dbTotalDescontoButtonClick
           OnExit = ControlEditExit
         end
@@ -1972,7 +1981,83 @@ inherited frmGeVenda: TfrmGeVenda
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 7
+          TabOrder = 8
+        end
+        object dbCodigoBarra: TRxDBComboEdit
+          Left = 272
+          Top = 40
+          Width = 145
+          Height = 21
+          ButtonHint = 'Pesquisar Produto (Ctrl+P)'
+          CharCase = ecUpperCase
+          ClickKey = 16464
+          Color = clWhite
+          DataField = 'CODBARRA_EAN'
+          DataSource = DtSrcTabelaItens
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          Glyph.Data = {
+            36060000424D3606000000000000360000002800000020000000100000000100
+            18000000000000060000000000000000000000000000000000001DE6B51DE6B5
+            1DE6B51DE6B51DE6B51DE6B51DE6B51DE6B51DE6B51DE6B51DE6B51DE6B5B1AD
+            AC203040ACA5A21DE6B5C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3
+            C3C3C3C3C3C3C3C3C3C3C3C3C3C37F7F7F7F7F7FACA5A2C3C3C31DE6B5B0A090
+            6048306048306048306048306048306048306048306048306048305048403050
+            604078C0304860B1ACA6C3C3C37F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F
+            7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7FC3C3C3C3C3C3B1ACA61DE6B5B0A090
+            FFFFFFB0A090B0A090B0A090B0A090B0A090B0A090B0A0909088803050703080
+            D04098E050B0F0506870C3C3C37F7F7FFFFFFFC3C3C3C3C3C3C3C3C3C3C3C3C3
+            C3C3C3C3C3C3C3C39088807F7F7FC3C3C3C3C3C3C3C3C37F7F7F1DE6B5B0A090
+            FFFFFFFFFFFFFFF8FFF0F0F0D0D8D090989070686060686050586040709040A0
+            E060C8FF7090A0C5BEB5C3C3C37F7F7FFFFFFFFFFFFFFFF8FFF0F0F0D0D8D07F
+            7F7F7F7F7F7F7F7F505860C3C3C3C3C3C3C3C3C37090A0C5BEB51DE6B5B0A090
+            FFFFFFFFFFFFFFFFFFE0E0E0909090B0A8A0D0C0B0D0B0A08078705058506090
+            B07098B0AEAEAA1DE6B5C3C3C37F7F7FFFFFFFFFFFFFFFFFFFE0E0E07F7F7F7F
+            7F7FD0C0B0D0B0A0807870505850C3C3C37098B0AEAEAAC3C3C31DE6B5B0A090
+            FFFFFFFFFFFFFFFFFFB0B0B0C0B8B0FFF0E0FFE8E0F0D8C0F0D0B08078709D8F
+            8CAEAFAA1DE6B51DE6B5C3C3C37F7F7FFFFFFFFFFFFFFFFFFF7F7F7F7F7F7FFF
+            F0E0FFE8E0F0D8C0F0D0B08078709D8F8CAEAFAAC3C3C3C3C3C31DE6B5C0A890
+            FFFFFFFFFFFFFFFFFFA09890F0E8E0FFF8F0FFF0F0FFE8E0F0D8D0D0B0A06367
+            5E1DE6B51DE6B51DE6B5C3C3C37F7F7FFFFFFFFFFFFFFFFFFF7F7F7F7F7F7FFF
+            F8F0FFF0F0FFE8E0F0D8D0D0B0A063675EC3C3C3C3C3C3C3C3C31DE6B5C0A8A0
+            FFFFFFFFFFFFFFFFFFA0A090F0E8E0FFFFFFFFF8F0FFF0F0FFE8E0E0C0B0716E
+            6C1DE6B51DE6B51DE6B5C3C3C37F7F7FFFFFFFFFFFFFFFFFFF7F7F7F7F7F7FFF
+            FFFFFFF8F0FFF0F0FFE8E0E0C0B0716E6CC3C3C3C3C3C3C3C3C31DE6B5C0B0A0
+            FFFFFFFFFFFFFFFFFFC0C8C0C0C0C0FFFFFFFFFFFFFFF8F0FFF0E0B0A090A69C
+            951DE6B51DE6B51DE6B5C3C3C37F7F7FFFFFFFFFFFFFFFFFFF7F7F7F7F7F7FFF
+            FFFFFFFFFFFFF8F0FFF0E0B0A090A69C95C3C3C3C3C3C3C3C3C31DE6B5D0B0A0
+            FFFFFFFFFFFFFFFFFFF0F8FFC0B8B0C0C0C0F0E8E0F0E8E0B0B0A07070601DE6
+            B51DE6B51DE6B51DE6B5C3C3C37F7F7FFFFFFFFFFFFFFFFFFFF0F8FF7F7F7F7F
+            7F7FF0E8E0F0E8E0B0B0A0707060C3C3C3C3C3C3C3C3C3C3C3C31DE6B5D0B8A0
+            FFFFFFFFFFFFFFFFFFFFFFFFF0F8FFC0C8C0A0A0909090809090906050401DE6
+            B51DE6B51DE6B51DE6B5C3C3C37F7F7FFFFFFFFFFFFFFFFFFFFFFFFFF0F8FF7F
+            7F7FA0A0907F7F7F909090605040C3C3C3C3C3C3C3C3C3C3C3C31DE6B5D0B8B0
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB0A0906048306048306048301DE6
+            B51DE6B51DE6B51DE6B5C3C3C37F7F7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFF7F7F7F604830604830604830C3C3C3C3C3C3C3C3C3C3C3C31DE6B5D0C0B0
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC0A890D0C8C06048301DE6B51DE6
+            B51DE6B51DE6B51DE6B5C3C3C37F7F7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFF7F7F7FC3C3C3604830C3C3C3C3C3C3C3C3C3C3C3C3C3C3C31DE6B5E0C0B0
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC0A8A0604830E0C6B71DE6B51DE6
+            B51DE6B51DE6B51DE6B5C3C3C37F7F7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFF7F7F7F7F7F7F7F7F7FC3C3C3C3C3C3C3C3C3C3C3C3C3C3C31DE6B5E0C0B0
+            E0C0B0E0C0B0E0C0B0E0C0B0D0C0B0D0B8B0D0B0A0E0C7B91DE6B51DE6B51DE6
+            B51DE6B51DE6B51DE6B5C3C3C37F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F
+            7F7F7F7F7F7F7F7FC3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C31DE6B51DE6B5
+            1DE6B51DE6B51DE6B51DE6B51DE6B51DE6B51DE6B51DE6B51DE6B51DE6B51DE6
+            B51DE6B51DE6B51DE6B5C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3
+            C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3}
+          NumGlyphs = 2
+          ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 2
+          Visible = False
+          OnButtonClick = dbProdutoButtonClick
+          OnExit = ControlEditExit
         end
       end
       object pgcMaisDados: TPageControl
@@ -3752,6 +3837,7 @@ inherited frmGeVenda: TfrmGeVenda
       '  , i.Total_bruto'
       '  , i.Total_desconto'
       '  , i.Total_liquido'
+      '  , p.Codbarra_ean'
       '  , p.Descri'
       '  , p.Qtde as Estoque'
       '  , p.Reserva'
@@ -3793,7 +3879,7 @@ inherited frmGeVenda: TfrmGeVenda
       FieldName = 'CODPROD'
       Origin = 'TVENDASITENS.CODPROD'
       Required = True
-      Size = 10
+      Size = 15
     end
     object cdsTabelaItensCODEMP: TIBStringField
       FieldName = 'CODEMP'
@@ -3996,6 +4082,12 @@ inherited frmGeVenda: TfrmGeVenda
       FieldName = 'MOVIMENTA_ESTOQUE'
       Origin = '"TBPRODUTO"."MOVIMENTA_ESTOQUE"'
       ProviderFlags = []
+    end
+    object cdsTabelaItensCODBARRA_EAN: TIBStringField
+      FieldName = 'CODBARRA_EAN'
+      Origin = '"TBPRODUTO"."CODBARRA_EAN"'
+      ProviderFlags = []
+      Size = 15
     end
   end
   object IbUpdTabelaItens: TIBUpdateSQL
@@ -5079,7 +5171,10 @@ inherited frmGeVenda: TfrmGeVenda
       '  left join TBSECAOPROD s on (s.Scp_cod = p.Codsecao)'
       '  left join TBUNIDADEPROD u on (u.Unp_cod = p.Codunidade)'
       '  left join TBCFOP c on (c.Cfop_cod = p.Codcfop)'
-      'where p.Codigo = :Codigo')
+      'where ((p.Codigo = :Codigo)'
+      
+        '  or (trim(p.codbarra_ean) <> '#39#39' and p.codbarra_ean = :codbarra)' +
+        ')')
     ModifySQL.Strings = (
       '')
     Left = 928
