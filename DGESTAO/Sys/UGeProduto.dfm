@@ -1,6 +1,6 @@
 inherited frmGeProduto: TfrmGeProduto
-  Left = 245
-  Top = 129
+  Left = 550
+  Top = 210
   Width = 979
   Height = 648
   ActiveControl = dbCodigo
@@ -3197,6 +3197,15 @@ inherited frmGeProduto: TfrmGeProduto
       '  SITUACAO_HISTORICO_VEICULO,'
       '  PERCENTUAL_REDUCAO_BC,'
       '  USUARIO,'
+      '  MOVIMENTA_ESTOQUE,'
+      '  COMPOR_FATURAMENTO,'
+      '  CUST_DESP_OFIC,'
+      '  CUST_DESP_GERAIS,'
+      '  CUST_DESP_ADM,'
+      '  CUST_COMISSAO,'
+      '  CUST_IMPOSTO,'
+      '  FI_RET_FINANC,'
+      '  FI_RET_PLANO,'
       '  IAT,'
       '  IPPT,'
       '  SITUACAO_TRIB,'
@@ -3221,18 +3230,10 @@ inherited frmGeProduto: TfrmGeProduto
       '  GENERO,'
       '  ALIQUOTA_IPI,'
       '  TPMERCREV,'
-      '  DESCRIUNID,'
-      '  MOVIMENTA_ESTOQUE,'
-      '  CUST_DESP_OFIC,'
-      '  CUST_DESP_GERAIS,'
-      '  CUST_DESP_ADM,'
-      '  CUST_COMISSAO,'
-      '  CUST_IMPOSTO,'
-      '  FI_RET_FINANC,'
-      '  FI_RET_PLANO'
+      '  DESCRIUNID'
       'from TBPRODUTO '
       'where'
-      '  CHASSI_VEICULO = :CHASSI_VEICULO')
+      '  COD = :COD')
     ModifySQL.Strings = (
       'update TBPRODUTO'
       'set'
@@ -3304,7 +3305,7 @@ inherited frmGeProduto: TfrmGeProduto
       '  VALOR_IPI = :VALOR_IPI,'
       '  VENDA_FRACIONADA = :VENDA_FRACIONADA'
       'where'
-      '  CHASSI_VEICULO = :OLD_CHASSI_VEICULO')
+      '  COD = :OLD_COD')
     InsertSQL.Strings = (
       'insert into TBPRODUTO'
       
@@ -3387,7 +3388,7 @@ inherited frmGeProduto: TfrmGeProduto
     DeleteSQL.Strings = (
       'delete from TBPRODUTO'
       'where'
-      '  CHASSI_VEICULO = :OLD_CHASSI_VEICULO')
+      '  COD = :OLD_COD')
     Left = 784
   end
   inherited ImgList: TImageList
