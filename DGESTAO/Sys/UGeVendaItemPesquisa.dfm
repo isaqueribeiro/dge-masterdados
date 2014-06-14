@@ -1,6 +1,6 @@
 inherited FrmGeVendaItemPesquisa: TFrmGeVendaItemPesquisa
-  Left = 126
-  Top = 78
+  Left = 245
+  Top = 61
   Width = 1132
   Height = 724
   ActiveControl = e1Data
@@ -164,8 +164,7 @@ inherited FrmGeVendaItemPesquisa: TFrmGeVendaItemPesquisa
         ' v.codcontrol)'
       '  inner join TBPRODUTO p on (p.cod = i.codprod)'
       '  left join TBUNIDADEPROD u on (u.unp_cod = i.unid_cod)'
-      '  left join TBGRUPOPROD g on (g.cod = p.codgrupo)'
-      '')
+      '  left join TBGRUPOPROD g on (g.cod = p.codgrupo)')
     ParamData = <>
     object QryPesquisaCODPROD: TIBStringField
       FieldName = 'CODPROD'
@@ -186,12 +185,7 @@ inherited FrmGeVendaItemPesquisa: TFrmGeVendaItemPesquisa
     object QryPesquisaUNIDADE: TIBStringField
       FieldName = 'UNIDADE'
       ProviderFlags = []
-      Size = 50
-    end
-    object QryPesquisaQUANTIDADE: TLargeintField
-      FieldName = 'QUANTIDADE'
-      ProviderFlags = []
-      DisplayFormat = ',0.###'
+      Size = 5
     end
     object QryPesquisaTOTAL_BRUTO: TIBBCDField
       FieldName = 'TOTAL_BRUTO'
@@ -228,6 +222,13 @@ inherited FrmGeVendaItemPesquisa: TFrmGeVendaItemPesquisa
       FieldName = 'CLIENTE_NOME'
       ProviderFlags = []
       Size = 60
+    end
+    object QryPesquisaQUANTIDADE: TIBBCDField
+      FieldName = 'QUANTIDADE'
+      ProviderFlags = []
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
   end
 end

@@ -1,7 +1,7 @@
 inherited frmGeProduto: TfrmGeProduto
-  Left = 550
-  Top = 210
-  Width = 979
+  Left = 229
+  Top = 82
+  Width = 980
   Height = 648
   ActiveControl = dbCodigo
   Caption = 'Cadastro de Produtos/Servi'#231'os'
@@ -11,27 +11,27 @@ inherited frmGeProduto: TfrmGeProduto
   TextHeight = 13
   inherited Bevel1: TBevel
     Top = 606
-    Width = 963
+    Width = 964
   end
   inherited Bevel3: TBevel
     Top = 567
-    Width = 963
+    Width = 964
   end
   inherited tlbBotoes: TToolBar
     Top = 571
-    Width = 963
+    Width = 964
   end
   inherited pgcGuias: TPageControl
-    Width = 963
+    Width = 964
     Height = 567
     ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
         Top = 472
-        Width = 955
+        Width = 956
       end
       inherited dbgDados: TDBGrid
-        Width = 955
+        Width = 956
         Height = 472
         Columns = <
           item
@@ -143,7 +143,7 @@ inherited frmGeProduto: TfrmGeProduto
       end
       inherited pnlFiltros: TPanel
         Top = 476
-        Width = 955
+        Width = 956
         object lblProdutoPromocao: TLabel [0]
           Left = 2
           Top = 4
@@ -227,7 +227,7 @@ inherited frmGeProduto: TfrmGeProduto
           Transparent = True
         end
         inherited grpBxFiltro: TGroupBox
-          Left = 394
+          Left = 395
           Width = 557
           Caption = 'Pesquisar    '
           DesignSize = (
@@ -280,18 +280,18 @@ inherited frmGeProduto: TfrmGeProduto
     inherited tbsCadastro: TTabSheet
       inherited Bevel8: TBevel
         Top = 113
-        Width = 955
+        Width = 956
       end
       object Bevel5: TBevel [1]
         Left = 0
         Top = 193
-        Width = 955
+        Width = 956
         Height = 4
         Align = alTop
         Shape = bsSpacer
       end
       inherited GrpBxDadosNominais: TGroupBox
-        Width = 955
+        Width = 956
         Height = 113
         object lblDescricao: TLabel [1]
           Left = 208
@@ -753,9 +753,9 @@ inherited frmGeProduto: TfrmGeProduto
       object pgcMaisDados: TPageControl
         Left = 0
         Top = 197
-        Width = 955
+        Width = 956
         Height = 341
-        ActivePage = tbsValores
+        ActivePage = tbsCustos_FI
         Align = alClient
         TabOrder = 2
         object tbsValores: TTabSheet
@@ -1087,7 +1087,7 @@ inherited frmGeProduto: TfrmGeProduto
           object Bevel6: TBevel
             Left = 0
             Top = 233
-            Width = 947
+            Width = 948
             Height = 4
             Align = alTop
             Shape = bsSpacer
@@ -1095,7 +1095,7 @@ inherited frmGeProduto: TfrmGeProduto
           object Bevel7: TBevel
             Left = 0
             Top = 116
-            Width = 947
+            Width = 948
             Height = 4
             Align = alTop
             Shape = bsSpacer
@@ -1103,7 +1103,7 @@ inherited frmGeProduto: TfrmGeProduto
           object GrpBxDadosTributoICMS: TGroupBox
             Left = 0
             Top = 0
-            Width = 947
+            Width = 948
             Height = 116
             Align = alTop
             Caption = 'Dados fiscais p/ ICMS'
@@ -1465,7 +1465,7 @@ inherited frmGeProduto: TfrmGeProduto
           object GrpBxDadosTributoPIS: TGroupBox
             Left = 0
             Top = 120
-            Width = 947
+            Width = 948
             Height = 113
             Align = alTop
             Caption = 'Dados fiscais p/ PIS e COFINS'
@@ -1580,7 +1580,7 @@ inherited frmGeProduto: TfrmGeProduto
           object pnlVeiculo: TPanel
             Left = 0
             Top = 0
-            Width = 947
+            Width = 948
             Height = 113
             Align = alTop
             BevelOuter = bvNone
@@ -1588,7 +1588,7 @@ inherited frmGeProduto: TfrmGeProduto
             object GrpVeiculo: TGroupBox
               Left = 0
               Top = 0
-              Width = 947
+              Width = 948
               Height = 113
               Align = alClient
               Caption = 'Ve'#237'culo'
@@ -1799,7 +1799,7 @@ inherited frmGeProduto: TfrmGeProduto
           object pnlVolume: TPanel
             Left = 0
             Top = 113
-            Width = 947
+            Width = 948
             Height = 64
             Align = alTop
             BevelOuter = bvNone
@@ -1807,7 +1807,7 @@ inherited frmGeProduto: TfrmGeProduto
             object GrpVolume: TGroupBox
               Left = 0
               Top = 0
-              Width = 947
+              Width = 948
               Height = 64
               Align = alClient
               Caption = 'Peso / Volume'
@@ -1888,7 +1888,7 @@ inherited frmGeProduto: TfrmGeProduto
           Caption = 'Hist'#243'ricos'
           ImageIndex = 1
           DesignSize = (
-            947
+            948
             313)
           object lblSituacaoVeiculo: TLabel
             Left = 16
@@ -1924,7 +1924,7 @@ inherited frmGeProduto: TfrmGeProduto
           object dbHistoricoSituacaoVeiculo: TDBMemo
             Left = 16
             Top = 64
-            Width = 915
+            Width = 916
             Height = 233
             TabStop = False
             Anchors = [akLeft, akTop, akRight, akBottom]
@@ -1947,7 +1947,7 @@ inherited frmGeProduto: TfrmGeProduto
           object grpCustos: TGroupBox
             Left = 0
             Top = 0
-            Width = 947
+            Width = 948
             Height = 121
             Align = alTop
             Caption = 'Custos'
@@ -2136,7 +2136,7 @@ inherited frmGeProduto: TfrmGeProduto
           object grpFI: TGroupBox
             Left = 0
             Top = 121
-            Width = 947
+            Width = 948
             Height = 72
             Align = alTop
             Caption = 'F&&I - Retorno'
@@ -2236,7 +2236,7 @@ inherited frmGeProduto: TfrmGeProduto
       object GrpBxDadosEstoque: TGroupBox
         Left = 0
         Top = 117
-        Width = 955
+        Width = 956
         Height = 76
         Align = alTop
         Caption = 'Dados estoque'
@@ -3058,18 +3058,6 @@ inherited frmGeProduto: TfrmGeProduto
       Precision = 18
       Size = 3
     end
-    object IbDtstTabelaPRECO_FRAC: TFloatField
-      FieldName = 'PRECO_FRAC'
-      DisplayFormat = ',0.00'
-    end
-    object IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField
-      FieldName = 'PRECO_PROMOCAO_FRAC'
-      DisplayFormat = ',0.00'
-    end
-    object IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField
-      FieldName = 'PRECO_SUGERIDO_FRAC'
-      DisplayFormat = ',0.00'
-    end
     object IbDtstTabelaPRECO2: TIBBCDField
       FieldName = 'PRECO2'
       Origin = 'TBPRODUTO.PRECO2'
@@ -3130,6 +3118,27 @@ inherited frmGeProduto: TfrmGeProduto
       Alignment = taLeftJustify
       FieldName = 'MOVIMENTA_ESTOQUE'
       Origin = '"TBPRODUTO"."MOVIMENTA_ESTOQUE"'
+    end
+    object IbDtstTabelaPRECO_FRAC: TFMTBCDField
+      FieldName = 'PRECO_FRAC'
+      ProviderFlags = []
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 5
+    end
+    object IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField
+      FieldName = 'PRECO_PROMOCAO_FRAC'
+      ProviderFlags = []
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 5
+    end
+    object IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField
+      FieldName = 'PRECO_SUGERIDO_FRAC'
+      ProviderFlags = []
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 5
     end
   end
   inherited DtSrcTabela: TDataSource
