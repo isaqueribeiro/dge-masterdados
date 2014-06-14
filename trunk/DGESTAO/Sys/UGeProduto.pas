@@ -236,9 +236,6 @@ type
     IbDtstTabelaDISPONIVEL: TIBBCDField;
     IbDtstTabelaRESERVA: TIBBCDField;
     IbDtstTabelaESTOQMIN: TIBBCDField;
-    IbDtstTabelaPRECO_FRAC: TFloatField;
-    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFloatField;
-    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFloatField;
     tbsCustos_FI: TTabSheet;
     grpCustos: TGroupBox;
     lblValCompra: TLabel;
@@ -270,6 +267,9 @@ type
     IbDtstTabelaFI_RET_PLANO: TIBBCDField;
     dbMovimentaEstoque: TDBCheckBox;
     IbDtstTabelaMOVIMENTA_ESTOQUE: TSmallintField;
+    IbDtstTabelaPRECO_FRAC: TFMTBCDField;
+    IbDtstTabelaPRECO_PROMOCAO_FRAC: TFMTBCDField;
+    IbDtstTabelaPRECO_SUGERIDO_FRAC: TFMTBCDField;
     procedure FormCreate(Sender: TObject);
     procedure dbGrupoButtonClick(Sender: TObject);
     procedure dbSecaoButtonClick(Sender: TObject);
