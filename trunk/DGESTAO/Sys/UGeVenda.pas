@@ -857,6 +857,7 @@ begin
         ShowWarning('Código de produto não cadastrado');
 
         cdsTabelaItensCODPROD.Clear;
+        cdsTabelaItensCODBARRA_EAN.Clear;
 
         if ( dbProduto.Visible and dbProduto.Enabled ) then
           dbProduto.SetFocus
@@ -1310,7 +1311,7 @@ begin
 
   if ( Sender = dbCodigoBarra ) then
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
-      CarregarDadosProduto( dbProduto.Text );
+      CarregarDadosProduto( dbCodigoBarra.Text );
 
   if ( Sender = dbCFOP ) then
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
