@@ -305,7 +305,7 @@ const
   INI_SECAO_VENDA      = 'Venda';
   INI_KEY_CODIGO_EAN   = 'CarregarPeloCodigoEAN';
 
-  SYS_PATH_REGISTER = {$IFDEF DGE}'MasterDados\'{$ELSE}'Ágil Soluções em Softwares\'{$ENDIF};
+  SYS_PATH_REGISTER = 'MasterDados\';
   SYS_PASSWD_KEY    = 'TheLordIsGod';
   
   KEY_REG_VERSAO    = 'Versão';
