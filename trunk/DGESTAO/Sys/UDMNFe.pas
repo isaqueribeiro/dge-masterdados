@@ -64,10 +64,6 @@ type
     frdVenda: TfrxDBDataset;
     frdItens: TfrxDBDataset;
     frdTitulo: TfrxDBDataset;
-    frxPDF: TfrxPDFExport;
-    frxXLS: TfrxXLSExport;
-    frxRTF: TfrxRTFExport;
-    frxMailExport: TfrxMailExport;
     qryEmitente: TIBDataSet;
     qryEmitenteCODIGO: TIntegerField;
     qryEmitentePESSOA_FISICA: TSmallintField;
@@ -429,13 +425,10 @@ type
     SmallintField2: TSmallintField;
     IntegerField3: TIntegerField;
     frrBoletoEntrega: TfrxReport;
-    frxRichObject: TfrxRichObject;
     frrRequisicaoCliente: TfrxReport;
     FrrECFPoolerRequisicaoCliente: TfrxReport;
     qryRequisicaoCliente: TIBQuery;
     frdRequisicaoCliente: TfrxDBDataset;
-    frxCrossObject: TfrxCrossObject;
-    frxChartObject: TfrxChartObject;
     cdsLOG: TIBDataSet;
     cdsLOGUSUARIO: TIBStringField;
     cdsLOGDATA_HORA: TDateTimeField;
@@ -457,7 +450,6 @@ type
     qryNFeEmitidaEntradaXML_FILE: TMemoField;
     qryNFeEmitidaEntradaLOTE_ANO: TSmallintField;
     qryNFeEmitidaEntradaLOTE_NUM: TIntegerField;
-    frxJPEG: TfrxJPEGExport;
     qryDadosProdutoQTDE: TIBBCDField;
     qryDadosProdutoESTOQUE: TIBBCDField;
     qryDadosProdutoRESERVA: TIBBCDField;
@@ -471,6 +463,8 @@ type
     qryAutorizacaoCompra: TIBQuery;
     frdAutorizacaoCompra: TfrxDBDataset;
     frrAutorizacaoCompra: TfrxReport;
+    qryCalculoImportoCFOP_INFORMACAO_FISCO: TIBStringField;
+    qryEntradaCalculoImportoCFOP_INFORMACAO_FISCO: TIBStringField;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);
@@ -1080,8 +1074,18 @@ begin
 end;
 
 function TDMNFe.GetInformacaoFisco : String;
+var
+  sTexto : String;
 begin
-  Result := ( ConfigACBr.edInfoFisco.Text );
+  sTexto := EmptyStr;
+
+  if qryCalculoImporto.Active then
+    sTexto := Trim(qryCalculoImportoCFOP_INFORMACAO_FISCO.AsString)
+  else
+  if qryEntradaCalculoImporto.Active then
+    sTexto := Trim(qryEntradaCalculoImportoCFOP_INFORMACAO_FISCO.AsString);
+
+  Result := IfThen(sTexto = EmptyStr, ConfigACBr.edInfoFisco.Text, sTexto );
 end;
 
 function TDMNFe.GerarNFeOnLineACBr(const sCNPJEmitente : String; iCodigoCliente : Integer; const sDataHoraSaida : String; const iAnoVenda, iNumVenda: Integer;
@@ -3914,26 +3918,7 @@ begin
   CarregarConfiguracoesEmpresa(sCNPJEmitente, sAssunto, sAssinaturaHtml, sAssinaturaTxt);
 
   // Configurar conta de e-mail no Fast Report
-  
-  with frxMailExport do
-  begin
-    SmtpHost := gContaEmail.Servidor_SMTP;
-    SmtpPort := gContaEmail.Porta_SMTP;
-    Login    := gContaEmail.Conta;
-    Password := gContaEmail.Senha;
-
-    FromCompany := GetRazaoSocialEmpresa( sCNPJEmitente );
-    FromMail    := gContaEmail.Conta;
-    FromName    := GetNomeFantasiaEmpresa( sCNPJEmitente );
-    Subject     := Trim(sAssunto);
-    Address     := AnsiLowerCase(Trim(sDestinatario));
-
-    Lines.Clear;
-    Lines.Add( sMensagem );
-
-    Signature.Clear;
-    Signature.Add(sAssinaturaTxt);
-  end;
+  DMBusiness.ConfigurarEmail(sCNPJEmitente, sDestinatario, sAssunto, sMensagem);
 end;
 
 procedure TDMNFe.frrAutorizacaoCompraGetValue(const VarName: String;

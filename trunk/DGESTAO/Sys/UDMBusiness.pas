@@ -7,7 +7,8 @@ uses
   ShellApi, Printers, DateUtils, IBQuery, RpDefine, RpRave,
   frxClass, frxDBSet, EMsgDlg, IdBaseComponent, IdComponent, IdIPWatch, IBStoredProc,
   FuncoesFormulario, UConstantesDGE, IBUpdateSQL, EUserAcs, DBClient,
-  Provider, Dialogs, Registry;
+  Provider, Dialogs, Registry, frxChart, frxCross, frxRich, frxExportMail,
+  frxExportImage, frxExportRTF, frxExportXLS, frxExportPDF;
 
 type
   TSistema = record
@@ -49,6 +50,7 @@ type
 
   TTipoRegime = (trSimplesNacional, trSimplesExcessoReceita, trRegimeNormal);
   TTipoMovimentoCaixa = (tmcxCredito, tmcxDebito);
+  TTipoMovimentoEntrada = (tmeProduto, tmeServico);
   TDMBusiness = class(TDataModule)
     ibdtbsBusiness: TIBDatabase;
     ibtrnsctnBusiness: TIBTransaction;
@@ -111,6 +113,14 @@ type
     cdsLicenca: TIBDataSet;
     cdsLicencaLINHA_CONTROLE: TIBStringField;
     opdLicenca: TOpenDialog;
+    frxPDF: TfrxPDFExport;
+    frxXLS: TfrxXLSExport;
+    frxRTF: TfrxRTFExport;
+    frxJPEG: TfrxJPEGExport;
+    frxMailExport: TfrxMailExport;
+    frxRichObject: TfrxRichObject;
+    frxCrossObject: TfrxCrossObject;
+    frxChartObject: TfrxChartObject;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -135,6 +145,7 @@ type
     procedure CarregarLicenca(const sNomeArquivo : String);
     procedure ValidarLicenca(const sNomeArquivo : String; var CNPJ : String);
     procedure LimparLicenca;
+    procedure ConfigurarEmail(const sCNPJEmitente, sDestinatario, sAssunto, sMensagem: String);
 
     function LiberarUsoLicenca(const dDataMovimento : TDateTime; const Alertar : Boolean = FALSE) : Boolean;
   end;
@@ -252,18 +263,19 @@ var
   function GetClienteNomeDefault : String;
   function GetClienteNome(const iCodigo : Integer) : String;
   function GetClienteEmail(const iCodigo : Integer) : String;
+  function GetFornecedorEmail(const iCodigo : Integer) : String;
   function GetVendedorNomeDefault : String;
   function GetFormaPagtoNomeDefault : String;
   function GetCondicaoPagtoNomeDefault : String;
   function GetSenhaAutorizacao : String;
   function GetDateTimeDB : TDateTime;
   function GetDateDB : TDateTime;
+  function GetDateLastMonth : TDateTime;
   function GetProximoDiaUtil(const Data : TDateTime) : TDateTime;
   function GetTimeDB : TDateTime;
   function GetUserApp : String;
   function GetUserFullName : String;
   function GetUserFunctionID : Integer;
-  function GetUserPermissao(sRotina : String; const Alertar : Boolean = FALSE) : Boolean;
   function GetUserUpdatePassWord : Boolean;
   function GetLimiteDescontoUser : Currency;
   function GetUserPermitirAlterarValorVenda : Boolean;
@@ -274,6 +286,7 @@ var
   function GetMenorVencimentoAPagar : TDateTime;
   function GetCarregarProdutoCodigoBarra(const sCNPJEmitente : String) : Boolean;
   function GetCarregarProdutoCodigoBarraLocal : Boolean;
+  function GetPermissaoRotinaSistema(sRotina : String; const Alertar : Boolean = FALSE) : Boolean;
 
   function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
 
@@ -288,19 +301,6 @@ const
   DB_LC_CTYPE      = 'ISO8859_2';
 
   MODELO_CUPOM_POOLER = 0;
-
-  FUNCTION_USER_ID_DIRETORIA   =  1;
-  FUNCTION_USER_ID_GERENTE_VND =  2;
-  FUNCTION_USER_ID_GERENTE_FIN =  3;
-  FUNCTION_USER_ID_VENDEDOR    =  4;
-  FUNCTION_USER_ID_GERENTE_ADM =  5;
-  FUNCTION_USER_ID_CAIXA       =  6;
-  FUNCTION_USER_ID_AUX_FINANC1 =  7;
-  FUNCTION_USER_ID_AUX_FINANC2 =  8;
-  FUNCTION_USER_ID_SUPERV_CX   =  9;
-  FUNCTION_USER_ID_ESTOQUISTA  = 10;
-  FUNCTION_USER_ID_SUPORTE_TI  = 11;
-  FUNCTION_USER_ID_SYSTEM_ADM  = 12;
 
   BOLETO_ARQUIVO_LOGOTIPO = 'Imagens\Emitente.gif'; //gif
   BOLETO_IMAGENS          = 'Imagens\';
@@ -897,8 +897,9 @@ begin
       or (Trim(FieldByName('email_pop').AsString)   = EmptyStr)
       or (Trim(FieldByName('email_smtp').AsString)  = EmptyStr);
 
-    if bFaltaConfigurado then
-      raise Exception.Create('Configurações da conta de e-mail do sistema não informadas!');
+    if not DelphiIsRunning then
+      if bFaltaConfigurado then
+        raise Exception.Create('Configurações da conta de e-mail do sistema não informadas!');
 
     if (Trim(Mensagem) <> EmptyStr) then
       sMsg := '<p>' + Trim(Mensagem) + '</p>'
@@ -967,9 +968,10 @@ begin
     with DMBusiness, setRotina do
     begin
       Close;
+      ParamByName('Sistema').AsInteger   := gSistema.Codigo;
       ParamByName('Codigo').AsString     := Trim(sCodigo);
       ParamByName('Tipo').AsInteger      := iTipo;
-      ParamByName('Descricao').AsString  := Trim(sDescricao);
+      ParamByName('Descricao').AsString  := StringReplace(Trim(sDescricao), '&', '', [rfReplaceAll]);
       ParamByName('Rotina_Pai').AsString := Trim(sRotinaPai);
       ExecProc;
 
@@ -1506,6 +1508,8 @@ begin
     Case GetSegmentoID(GetEmpresaIDDefault)  of
       SEGMENTO_MERCADO_CARRO_ID:
         S := 'Veículos';
+      SEGMENTO_INDUSTRIA_METAL_ID, SEGMENTO_INDUSTRIA_GERAL_ID:
+        s := 'Produtos/Serviços'  
       else
         S := 'Produtos';
     end;
@@ -1927,6 +1931,21 @@ begin
   end;
 end;
 
+function GetFornecedorEmail(const iCodigo : Integer) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select email from TBFORNECEDOR where Codforn = ' + IntToStr(iCodigo));
+    Open;
+
+    Result := AnsiLowerCase(Trim(FieldByName('email').AsString));
+
+    Close;
+  end;
+end;
+
 function GetVendedorNomeDefault : String;
 begin
   with DMBusiness, qryBusca do
@@ -2016,6 +2035,14 @@ begin
   end;
 end;
 
+function GetDateLastMonth : TDateTime;
+var
+  sData : String;
+begin
+  sData  := FormatFloat('00"/"', DaysInMonth(GetDateDB)) + FormatDateTime('mm/yyyy', GetDateDB);
+  Result := StrToDate(sData);
+end;
+
 function GetProximoDiaUtil(const Data : TDateTime) : TDateTime;
 var
   dData : TDateTime;
@@ -2055,15 +2082,6 @@ function GetUserFunctionID : Integer;
 begin
   with DMBusiness, ibdtstUsers do
     Result := ibdtstUsersCODFUNCAO.AsInteger;
-end;
-
-function GetUserPermissao(sRotina : String; const Alertar : Boolean = FALSE) : Boolean;
-begin
-  Result := True;
-
-  if not Result then
-    if Alertar then
-      ShowWarning(sRotina + ' - Usuário sem permissão de acesso para esta rotina.' + #13 + 'Favor entrar em contato com suporte.');
 end;
 
 function GetUserUpdatePassWord : Boolean;
@@ -2207,6 +2225,41 @@ end;
 function GetCarregarProdutoCodigoBarraLocal : Boolean;
 begin
   Result := FileINI.ReadBool(INI_SECAO_VENDA, INI_KEY_CODIGO_EAN, GetCarregarProdutoCodigoBarra(GetEmpresaIDDefault));
+end;
+
+function GetPermissaoRotinaSistema(sRotina : String; const Alertar : Boolean = FALSE) : Boolean;
+var
+  Return : Boolean;
+begin
+  try
+    Return := (gUsuarioLogado.Funcao = FUNCTION_USER_ID_SYSTEM_ADM);
+
+    if Return then
+      Exit;
+
+    with DMBusiness, qryBusca do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('Select');
+      SQL.Add('  p.acesso');
+      SQL.Add('from SYS_FUNCAO_PERMISSAO p');
+      SQL.Add('where p.sistema = ' + IntToStr(gSistema.Codigo));
+      SQL.Add('  and p.funcao  = ' + IntToStr(gUsuarioLogado.Funcao));
+      SQL.Add('  and p.rotina  = ' + QuotedStr(sRotina));
+      Open;
+
+      Return := (FieldByName('acesso').AsInteger = 1);
+
+      Close;
+    end;
+
+    if not Return then
+      if Alertar then
+        ShowWarning('Controle de Acesso', sRotina + ' - Usuário sem permissão de acesso para esta rotina.' + #13 + 'Favor entrar em contato com suporte.');
+  finally
+    Result := Return;
+  end;
 end;
 
 function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
@@ -2560,9 +2613,40 @@ begin
   _PermissaoPerfilDiretoria.Clear;
 
   _PermissaoPerfilDiretoria.Add( ROTINA_MENU_CADASTRO_ID );
-  _PermissaoPerfilDiretoria.Add( ROTINA_MENU_ESTOQUE_ID );
+  _PermissaoPerfilDiretoria.Add( ROTINA_MENU_ENTRADA_ID );
 
   _PermissaoPerfilDiretoria.EndUpdate;
+end;
+
+procedure TDMBusiness.ConfigurarEmail(const sCNPJEmitente, sDestinatario,
+  sAssunto, sMensagem: String);
+var
+  sAssinaturaHtml,
+  sAssinaturaTxt : String;
+begin
+  CarregarConfiguracoesEmpresa(sCNPJEmitente, sAssunto, sAssinaturaHtml, sAssinaturaTxt);
+
+  // Configurar conta de e-mail no Fast Report
+  
+  with frxMailExport do
+  begin
+    SmtpHost := gContaEmail.Servidor_SMTP;
+    SmtpPort := gContaEmail.Porta_SMTP;
+    Login    := gContaEmail.Conta;
+    Password := gContaEmail.Senha;
+
+    FromCompany := GetRazaoSocialEmpresa( sCNPJEmitente );
+    FromMail    := gContaEmail.Conta;
+    FromName    := GetNomeFantasiaEmpresa( sCNPJEmitente );
+    Subject     := Trim(sAssunto);
+    Address     := AnsiLowerCase(Trim(sDestinatario));
+
+    Lines.Clear;
+    Lines.Add( sMensagem );
+
+    Signature.Clear;
+    Signature.Add(sAssinaturaTxt);
+  end;
 end;
 
 initialization
