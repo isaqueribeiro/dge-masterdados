@@ -2050,67 +2050,6 @@ object DMNFe: TDMNFe
     Left = 180
     Top = 217
   end
-  object frxPDF: TfrxPDFExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    PrintOptimized = False
-    Outline = False
-    Background = False
-    HTMLTags = True
-    Author = 'FastReport'
-    Subject = 'FastReport PDF export'
-    ProtectionFlags = [ePrint, eModify, eCopy, eAnnot]
-    HideToolbar = False
-    HideMenubar = False
-    HideWindowUI = False
-    FitWindow = False
-    CenterWindow = False
-    PrintScaling = False
-    Left = 24
-    Top = 168
-  end
-  object frxXLS: TfrxXLSExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    ExportEMF = True
-    AsText = False
-    Background = True
-    FastExport = True
-    PageBreaks = True
-    EmptyLines = True
-    SuppressPageHeadersFooters = False
-    Left = 24
-    Top = 216
-  end
-  object frxRTF: TfrxRTFExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    ExportEMF = True
-    Wysiwyg = True
-    Creator = 'FastReport'
-    SuppressPageHeadersFooters = False
-    HeaderFooterMode = hfText
-    AutoSize = False
-    Left = 24
-    Top = 264
-  end
-  object frxMailExport: TfrxMailExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    Lines.Strings = (
-      'Teste')
-    ShowExportDialog = True
-    SmtpPort = 587
-    UseIniFile = False
-    TimeOut = 60
-    ConfurmReading = False
-    Left = 24
-    Top = 360
-  end
   object qryEmitente: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
@@ -2390,6 +2329,7 @@ object DMNFe: TDMNFe
       '  , v.Cancel_motivo'
       '  , v.Cfop'
       '  , cf.Cfop_descricao'
+      '  , cf.cfop_informacao_fisco'
       '  , v.Verificador_nfe'
       '  , v.Xml_nfe_filename'
       '  , v.Xml_nfe'
@@ -2578,6 +2518,12 @@ object DMNFe: TDMNFe
     object qryCalculoImportoCFOP_DESCRICAO: TIBStringField
       FieldName = 'CFOP_DESCRICAO'
       Origin = '"TBCFOP"."CFOP_DESCRICAO"'
+      Size = 250
+    end
+    object qryCalculoImportoCFOP_INFORMACAO_FISCO: TIBStringField
+      FieldName = 'CFOP_INFORMACAO_FISCO'
+      Origin = '"TBCFOP"."CFOP_INFORMACAO_FISCO"'
+      ProviderFlags = []
       Size = 250
     end
     object qryCalculoImportoVERIFICADOR_NFE: TIBStringField
@@ -4018,6 +3964,7 @@ object DMNFe: TDMNFe
       '  , c.Cancel_motivo'
       '  , c.nfcfop as Cfop'
       '  , cf.Cfop_descricao'
+      '  , cf.cfop_informacao_fisco'
       '  , c.Verificador_nfe'
       '  , c.Xml_nfe_filename'
       '  , c.Xml_nfe'
@@ -4174,6 +4121,12 @@ object DMNFe: TDMNFe
     object qryEntradaCalculoImportoCFOP_DESCRICAO: TIBStringField
       FieldName = 'CFOP_DESCRICAO'
       Origin = '"TBCFOP"."CFOP_DESCRICAO"'
+      Size = 250
+    end
+    object qryEntradaCalculoImportoCFOP_INFORMACAO_FISCO: TIBStringField
+      FieldName = 'CFOP_INFORMACAO_FISCO'
+      Origin = '"TBCFOP"."CFOP_INFORMACAO_FISCO"'
+      ProviderFlags = []
       Size = 250
     end
     object qryEntradaCalculoImportoVERIFICADOR_NFE: TIBStringField
@@ -8018,10 +7971,6 @@ object DMNFe: TDMNFe
       end
     end
   end
-  object frxRichObject: TfrxRichObject
-    Left = 24
-    Top = 408
-  end
   object frrRequisicaoCliente: TfrxReport
     Version = '4.9.72'
     DotMatrixReport = False
@@ -9731,14 +9680,6 @@ object DMNFe: TDMNFe
     Left = 344
     Top = 448
   end
-  object frxCrossObject: TfrxCrossObject
-    Left = 24
-    Top = 456
-  end
-  object frxChartObject: TfrxChartObject
-    Left = 24
-    Top = 504
-  end
   object cdsLOG: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
@@ -9931,13 +9872,6 @@ object DMNFe: TDMNFe
       Required = True
     end
   end
-  object frxJPEG: TfrxJPEGExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    Left = 24
-    Top = 312
-  end
   object qryAutorizacaoCompra: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
@@ -9946,6 +9880,12 @@ object DMNFe: TDMNFe
       '    a.ano'
       '  , a.codigo'
       '  , a.numero'
+      '  , a.tipo'
+      '  , case a.tipo'
+      '      when 1 then '#39'Compra'#39
+      '      when 2 then '#39'Servi'#231'o'#39
+      '      when 3 then '#39'Compra/Servi'#231'o'#39
+      '    end as tipo_desc'
       '  , a.status'
       '  , case a.status'
       '      when 0 then '#39'Em Edi'#231#227'o'#39
@@ -10036,6 +9976,8 @@ object DMNFe: TDMNFe
       'ANO=ANO'
       'CODIGO=CODIGO'
       'NUMERO=NUMERO'
+      'TIPO=TIPO'
+      'TIPO_DESC=TIPO_DESC'
       'STATUS=STATUS'
       'STATUS_DESC=STATUS_DESC'
       'EMPRESA=EMPRESA'
@@ -10089,7 +10031,7 @@ object DMNFe: TDMNFe
     PrintOptions.Printer = 'Padr'#227'o'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 40928.407150601900000000
-    ReportOptions.LastChange = 41209.028739675920000000
+    ReportOptions.LastChange = 41808.655458333330000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       ''
@@ -10307,7 +10249,7 @@ object DMNFe: TDMNFe
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
-            'Site / E-mail: [frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
+            '[frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -10327,7 +10269,9 @@ object DMNFe: TDMNFe
           Font.Style = [fsBold]
           HAlign = haCenter
           Memo.UTF8 = (
-            'AUTORIZA'#195#8225#195#402'O DE COMPRA')
+            
+              '[Trim('#39'AUTORIZA'#195#8225#195#402'O DE '#39' + Uppercase(<frdAutorizacaoCompra."TIP' +
+              'O_DESC">))]')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -10408,9 +10352,7 @@ object DMNFe: TDMNFe
           Font.Style = []
           HAlign = haRight
           Memo.UTF8 = (
-            
-              '[FormatFloat('#39'###,###,##0'#39',<frdAutorizacaoCompra."QUANTIDADE">)]' +
-              ' ')
+            '[FormatFloat('#39',0.###'#39',<frdAutorizacaoCompra."QUANTIDADE">)] ')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -11056,7 +10998,7 @@ object DMNFe: TDMNFe
           Font.Style = [fsBold]
           HAlign = haRight
           Memo.UTF8 = (
-            ' Total Compra: ')
+            ' Total Bruto: ')
           ParentFont = False
           VAlign = vaCenter
         end
@@ -11173,7 +11115,7 @@ object DMNFe: TDMNFe
           Font.Style = [fsBold]
           Frame.Typ = [ftLeft, ftRight, ftTop]
           Memo.UTF8 = (
-            ' Local de Entrega:')
+            ' Local de Entrega/Realiza'#195#167#195#163'o:')
           ParentFont = False
           VAlign = vaCenter
         end
@@ -11181,7 +11123,7 @@ object DMNFe: TDMNFe
           Left = 37.795300000000000000
           Top = 162.519790000000000000
           Width = 623.622450000000000000
-          Height = 45.354360000000000000
+          Height = 64.252010000000000000
           ShowHint = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -11192,8 +11134,9 @@ object DMNFe: TDMNFe
           Memo.UTF8 = (
             
               '                 Autorizamos a [frdFornecedor."NOME"] executar a' +
-              ' presente autoriza'#195#167#195#163'o de compra, na sua totalidade, e na forma' +
-              '/condi'#195#167#195#163'o de pagamentos estabelecida.')
+              ' presente Autoriza'#195#167#195#163'o de [Trim(<frdAutorizacaoCompra."TIPO_DES' +
+              'C">)], na sua totalidade, e na forma/condi'#195#167#195#163'o de pagamentos es' +
+              'tabelecida.')
           ParentFont = False
         end
         object Memo15: TfrxMemoView
