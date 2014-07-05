@@ -833,6 +833,9 @@ end;
 
 procedure TfrmGrPadraoCadastro.RegistrarRotinaSistema;
 begin
+  {$IFDEF DGE}
+  Exit;
+  {$ENDIF}
   if ( Trim(RotinaID) <> EmptyStr ) then
   begin
     SetRotinaSistema(ROTINA_TIPO_TELA, RotinaID, Trim(Self.Caption), RotinaPaiID);
