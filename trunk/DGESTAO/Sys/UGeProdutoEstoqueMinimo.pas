@@ -97,7 +97,6 @@ type
     CdsProdutoGRUPO: TStringField;
     CdsProdutoCODFABRICANTE: TIntegerField;
     CdsProdutoFABRICANTE: TStringField;
-    CdsProdutoESTOQMIN: TSmallintField;
     CdsProdutoCODUNIDADE: TSmallintField;
     CdsProdutoUNIDADE: TStringField;
     CdsProdutoCOMPRA_QTDE_01: TBCDField;
@@ -169,6 +168,7 @@ type
     CdsGrupoESTOQUE_MINIMO: TLargeintField;
     CdsFabricanteESTOQUE: TBCDField;
     CdsProdutoQTDE: TBCDField;
+    CdsProdutoESTOQMIN: TBCDField;
     procedure NovaPesquisaKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;

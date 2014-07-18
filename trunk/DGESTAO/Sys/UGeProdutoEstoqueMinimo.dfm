@@ -1094,11 +1094,12 @@ inherited FrmGeProdutoEstoqueMinimo: TFrmGeProdutoEstoqueMinimo
       Precision = 18
       Size = 3
     end
-    object CdsProdutoESTOQMIN: TSmallintField
+    object CdsProdutoESTOQMIN: TBCDField
       DisplayLabel = 'M'#237'nimo'
       FieldName = 'ESTOQMIN'
-      Origin = '"TBPRODUTO"."ESTOQMIN"'
       DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object CdsProdutoCODUNIDADE: TSmallintField
       FieldName = 'CODUNIDADE'

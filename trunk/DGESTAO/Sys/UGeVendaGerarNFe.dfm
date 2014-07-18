@@ -1256,19 +1256,15 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       Precision = 18
       Size = 2
     end
-    object cdsVendaVALOR_BASE_ICMS_NORMAL_ENTRADA: TIBBCDField
+    object cdsVendaVALOR_BASE_ICMS_NORMAL_ENTRADA: TFMTBCDField
       FieldName = 'VALOR_BASE_ICMS_NORMAL_ENTRADA'
-      ProviderFlags = [pfInUpdate]
-      DisplayFormat = ',0.00'
+      ProviderFlags = []
       Precision = 18
-      Size = 2
+      Size = 5
     end
-    object cdsVendaVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TIBBCDField
+    object cdsVendaVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TFloatField
       FieldName = 'VALOR_TOTAL_ICMS_NORMAL_ENTRADA'
-      ProviderFlags = [pfInUpdate]
-      DisplayFormat = ',0.00'
-      Precision = 18
-      Size = 4
+      ProviderFlags = []
     end
     object cdsVendaVALOR_BASE_ICMS_NORMAL_SAIDA: TIBBCDField
       FieldName = 'VALOR_BASE_ICMS_NORMAL_SAIDA'

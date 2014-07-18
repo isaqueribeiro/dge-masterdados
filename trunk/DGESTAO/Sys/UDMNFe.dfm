@@ -40,6 +40,7 @@ object DMNFe: TDMNFe
     ImprimirDetalhamentoEspecifico = True
     NFeCancelada = False
     LocalImpCanhoto = 0
+    ImprimeItens = True
     EspessuraBorda = 1
     TamanhoFonte_RazaoSocial = 12
     TamanhoFonte_ANTT = 10
@@ -4512,17 +4513,17 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 2
     end
-    object qryEntradaDadosProdutoDESCONTO: TIBBCDField
+    object qryEntradaDadosProdutoDESCONTO: TFMTBCDField
       FieldName = 'DESCONTO'
       ProviderFlags = []
       Precision = 18
-      Size = 4
+      Size = 10
     end
-    object qryEntradaDadosProdutoDESCONTO_VALOR: TIBBCDField
+    object qryEntradaDadosProdutoDESCONTO_VALOR: TFMTBCDField
       FieldName = 'DESCONTO_VALOR'
       ProviderFlags = []
       Precision = 18
-      Size = 2
+      Size = 5
     end
     object qryEntradaDadosProdutoPFINAL: TIBBCDField
       FieldName = 'PFINAL'
@@ -4596,17 +4597,17 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 4
     end
-    object qryEntradaDadosProdutoTOTAL_BRUTO: TIBBCDField
+    object qryEntradaDadosProdutoTOTAL_BRUTO: TFMTBCDField
       FieldName = 'TOTAL_BRUTO'
       ProviderFlags = []
       Precision = 18
-      Size = 2
+      Size = 5
     end
-    object qryEntradaDadosProdutoTOTAL_LIQUIDO: TIBBCDField
+    object qryEntradaDadosProdutoTOTAL_LIQUIDO: TFMTBCDField
       FieldName = 'TOTAL_LIQUIDO'
       ProviderFlags = []
       Precision = 18
-      Size = 2
+      Size = 5
     end
     object qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField
       FieldName = 'TOTAL_DESCONTO'
