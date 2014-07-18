@@ -1,6 +1,6 @@
 inherited frmGeConsultarLoteNFe: TfrmGeConsultarLoteNFe
-  Left = 540
-  Top = 218
+  Left = 465
+  Top = 150
   BorderStyle = bsDialog
   BorderWidth = 4
   Caption = 'Consultar Recibo/Lote NF-e'

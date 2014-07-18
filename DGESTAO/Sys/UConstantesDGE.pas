@@ -9,7 +9,7 @@ Uses
     TPermissaoLista = Array [0..43] of String;
 
 const
-  VERSION_NUMBER = '1.0.5.2';
+  VERSION_NUMBER = '1.0.5.3';
 
   SISTEMA_GESTAO = 0;
   SISTEMA_PDV    = 1;

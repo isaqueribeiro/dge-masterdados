@@ -90,8 +90,6 @@ type
     cdsVendaVALOR_TOTAL_BRUTO: TIBBCDField;
     cdsVendaVALOR_TOTAL_DESCONTO: TIBBCDField;
     cdsVendaVALOR_TOTAL_LIQUIDO: TIBBCDField;
-    cdsVendaVALOR_BASE_ICMS_NORMAL_ENTRADA: TIBBCDField;
-    cdsVendaVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TIBBCDField;
     cdsVendaVALOR_BASE_ICMS_NORMAL_SAIDA: TIBBCDField;
     cdsVendaVALOR_TOTAL_ICMS_NORMAL_SAIDA: TFloatField;
     cdsVendaVALOR_TOTAL_ICMS_NORMAL_DEVIDO: TFloatField;
@@ -101,6 +99,8 @@ type
     edDataHoraSaida: TMaskEdit;
     lblDataHoraSaida: TLabel;
     cdsVendaCODCLIENTE: TIntegerField;
+    cdsVendaVALOR_BASE_ICMS_NORMAL_ENTRADA: TFMTBCDField;
+    cdsVendaVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TFloatField;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnCalcularClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);

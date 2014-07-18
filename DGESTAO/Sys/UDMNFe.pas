@@ -235,8 +235,6 @@ type
     qryEntradaDadosProdutoCODFORN_CNPJ: TIBStringField;
     qryEntradaDadosProdutoDTENT: TDateField;
     qryEntradaDadosProdutoPUNIT: TIBBCDField;
-    qryEntradaDadosProdutoDESCONTO: TIBBCDField;
-    qryEntradaDadosProdutoDESCONTO_VALOR: TIBBCDField;
     qryEntradaDadosProdutoPFINAL: TIBBCDField;
     qryEntradaDadosProdutoUNID_COD: TSmallintField;
     qryEntradaDadosProdutoUNP_DESCRICAO: TIBStringField;
@@ -249,7 +247,6 @@ type
     qryEntradaDadosProdutoVALOR_IPI: TIBBCDField;
     qryEntradaDadosProdutoPERCENTUAL_REDUCAO_BC: TIBBCDField;
     qryEntradaDadosProdutoVALOR_REDUCAO_BC: TIBBCDField;
-    qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField;
     qryEntradaDadosProdutoPRODUTO_NOVO: TSmallintField;
     qryEntradaDadosProdutoCOR_VEICULO: TIBStringField;
     qryEntradaDadosProdutoCOR_VEICULO_DESCRICAO: TIBStringField;
@@ -273,8 +270,6 @@ type
     qryEntradaDuplicatasVALORPAG: TIBBCDField;
     qryEntradaDuplicatasVALORMULTA: TIBBCDField;
     qryEntradaDuplicatasPERCENTDESCONTO: TIBBCDField;
-    qryEntradaDadosProdutoTOTAL_BRUTO: TIBBCDField;
-    qryEntradaDadosProdutoTOTAL_LIQUIDO: TIBBCDField;
     qryCalculoImportoANO: TSmallintField;
     qryCalculoImportoCODCONTROL: TIntegerField;
     qryCalculoImportoCODEMP: TIBStringField;
@@ -465,6 +460,11 @@ type
     frrAutorizacaoCompra: TfrxReport;
     qryCalculoImportoCFOP_INFORMACAO_FISCO: TIBStringField;
     qryEntradaCalculoImportoCFOP_INFORMACAO_FISCO: TIBStringField;
+    qryEntradaDadosProdutoDESCONTO: TFMTBCDField;
+    qryEntradaDadosProdutoDESCONTO_VALOR: TFMTBCDField;
+    qryEntradaDadosProdutoTOTAL_BRUTO: TFMTBCDField;
+    qryEntradaDadosProdutoTOTAL_LIQUIDO: TFMTBCDField;
+    qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);
