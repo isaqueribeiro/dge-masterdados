@@ -188,7 +188,7 @@ var
   procedure BloquearCliente(iCodigoCliente : Integer; const Motivo : String = '');
   procedure RegistrarSegmentos(Codigo : Integer; Descricao : String);
   {$IFDEF DGE}
-  procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
+  //procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
   {$ENDIF}
   procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
   procedure SetEmpresaIDDefault(CNPJ : String);
@@ -223,7 +223,7 @@ var
   function GetCupomNaoFiscalEmitir : Boolean;
   function GetSegmentoID(const CNPJ : String) : Integer;
   {$IFDEF DGE}
-  function GetControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess) : Boolean;
+  //function GetControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess) : Boolean;
   {$ENDIF}
   function GetEmailEmpresa(const sCNPJEmpresa : String) : String;
   function GetCalcularCustoOperEmpresa(const sCNPJEmpresa : String) : Boolean;
@@ -861,6 +861,7 @@ begin
 end;
 
 {$IFDEF DGE}
+(*
 procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
 begin
   with DMBusiness, qryEvAcessUser do
@@ -883,6 +884,7 @@ begin
     CommitTransaction;
   end;
 end;
+*)
 {$ENDIF}
 
 procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
@@ -1191,6 +1193,7 @@ begin
 end;
 
 {$IFDEF DGE}
+(*
 function GetControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess) : Boolean;
 begin
   with DMBusiness, qryEvAcessUser do
@@ -1209,6 +1212,7 @@ begin
     end;
   end;
 end;
+*)
 {$ENDIF}
 
 function GetEmailEmpresa(const sCNPJEmpresa : String) : String;

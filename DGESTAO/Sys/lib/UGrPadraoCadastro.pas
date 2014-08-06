@@ -749,8 +749,8 @@ begin
   for I := 0 to ComponentCount - 1 do
     if Components[I] is TEvUserAccess then
     begin
-      RegistrarControleAcesso(Self, TEvUserAccess(Components[I]));
-      GetControleAcesso(Self, TEvUserAccess(Components[I]));
+      //RegistrarControleAcesso(Self, TEvUserAccess(Components[I]));
+      //GetControleAcesso(Self, TEvUserAccess(Components[I]));
     end;
 end;
 

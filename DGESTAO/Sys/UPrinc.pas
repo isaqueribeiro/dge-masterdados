@@ -421,8 +421,8 @@ begin
 
   EvAcessUserPrincipal.UserID := GetUserFunctionID;
 
-  RegistrarControleAcesso(Self, EvAcessUserPrincipal);
-  GetControleAcesso(Self, EvAcessUserPrincipal);
+  //RegistrarControleAcesso(Self, EvAcessUserPrincipal);
+  //GetControleAcesso(Self, EvAcessUserPrincipal);
 
   Case GetUserFunctionID of
     FUNCTION_USER_ID_DIRETORIA :
