@@ -6,7 +6,7 @@ uses
   Windows, Forms, SysUtils, Classes, IBDatabase, DB, IBCustomDataSet, IniFIles,
   ShellApi, Printers, DateUtils, IBQuery, RpDefine, RpRave,
   frxClass, frxDBSet, EMsgDlg, IdBaseComponent, IdComponent, IdIPWatch, IBStoredProc,
-  FuncoesFormulario, UConstantesDGE, IBUpdateSQL, EUserAcs, DBClient,
+  FuncoesFormulario, UConstantesDGE, IBUpdateSQL, DBClient,
   Provider, Dialogs, Registry, frxChart, frxCross, frxRich, frxExportMail,
   frxExportImage, frxExportRTF, frxExportXLS, frxExportPDF;
 
@@ -179,13 +179,17 @@ var
 
   procedure GetDataSet(const FDataSet : TClientDataSet; const sNomeTabela, sQuando, sOrdernarPor : String);
 
+  procedure ExportarFR3_ToXSL(const FrrLayout: TfrxReport; var sFileName : String);
+
   procedure Desativar_Promocoes;
   procedure GerarSaldoContaCorrente(const ContaCorrente : Integer; const Data : TDateTime);
   procedure BloquearClientes;
   procedure DesbloquearCliente(iCodigoCliente : Integer; const Motivo : String = '');
   procedure BloquearCliente(iCodigoCliente : Integer; const Motivo : String = '');
   procedure RegistrarSegmentos(Codigo : Integer; Descricao : String);
+  {$IFDEF DGE}
   procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
+  {$ENDIF}
   procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
   procedure SetEmpresaIDDefault(CNPJ : String);
   procedure SetSistema(iCodigo : Smallint; sNome, sVersao : String);
@@ -211,13 +215,21 @@ var
   function GetEstacaoEmitiNFe : Boolean;
   function GetCondicaoPagtoIDBoleto_Descontinuada : Integer;  // Descontinuada
   function GetEmitirCupom : Boolean;
+  function GetEmitirCupomAutomatico : Boolean;
   function GetModeloEmissaoCupom : Integer;
+  function GetCupomNaoFiscalPortaID : Integer;
+  function GetCupomNaoFiscalPortaDS : String;
+  function GetCupomNaoFiscalPortaNM : String;
+  function GetCupomNaoFiscalEmitir : Boolean;
   function GetSegmentoID(const CNPJ : String) : Integer;
+  {$IFDEF DGE}
   function GetControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess) : Boolean;
+  {$ENDIF}
   function GetEmailEmpresa(const sCNPJEmpresa : String) : String;
   function GetCalcularCustoOperEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetPermitirVendaEstoqueInsEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetPermitirDuplicarCNPJCliente(const sCNPJEmpresa : String) : Boolean;
+  function GetAutorizacaoInformarCliente(const sCNPJEmpresa : String) : Boolean;
   function GetSimplesNacionalInsEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetEstoqueUnicoEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetEstoqueSateliteEmpresa(const sCNPJEmpresa : String) : Boolean;
@@ -225,6 +237,7 @@ var
   function GetRazaoSocialEmpresa(const sCNPJEmpresa : String) : String;
   function GetNomeFantasiaEmpresa(const sCNPJEmpresa : String) : String;
   function GetPrazoValidadeAutorizacaoCompra(const sCNPJEmpresa : String) : Integer;
+  function GetPrazoValidadeCotacaoCompra(const sCNPJEmpresa : String) : Integer;
 
   function StrIsCNPJ(const Num: string): Boolean;
   function StrIsCPF(const Num: string): Boolean;
@@ -256,6 +269,7 @@ var
   function GetLogradouroNome(const iLogradouro : Integer) : String;
   function GetLogradouroTipo(const iLogradouro : Integer) : String;
   function GetCfopNomeDefault : String;
+  function GetCfopNome(const iCodigo : Integer) : String;
   function GetCfopEntradaNomeDefault : String;
   function GetEmpresaNomeDefault : String;
   function GetEmpresaEnderecoDefault : String;
@@ -264,9 +278,14 @@ var
   function GetClienteNome(const iCodigo : Integer) : String;
   function GetClienteEmail(const iCodigo : Integer) : String;
   function GetFornecedorEmail(const iCodigo : Integer) : String;
+  function GetFornecedorRazao(const iCodigo : Integer) : String;
+  function GetFornecedorContato(const iCodigo : Integer) : String;
   function GetVendedorNomeDefault : String;
+  function GetVendedorNome(const iCodigo : Integer) : String;
   function GetFormaPagtoNomeDefault : String;
+  function GetFormaPagtoNome(const iCodigo : Integer) : String;
   function GetCondicaoPagtoNomeDefault : String;
+  function GetCondicaoPagtoNome(const iCodigo : Integer) : String;
   function GetSenhaAutorizacao : String;
   function GetDateTimeDB : TDateTime;
   function GetDateDB : TDateTime;
@@ -279,14 +298,17 @@ var
   function GetUserUpdatePassWord : Boolean;
   function GetLimiteDescontoUser : Currency;
   function GetUserPermitirAlterarValorVenda : Boolean;
+  function GetPermititEmissaoNFe(const sCNPJEmitente : String) : Boolean;
   function GetSolicitaDHSaidaNFe(const sCNPJEmitente : String) : Boolean;
   function GetImprimirCodClienteNFe(const sCNPJEmitente : String) : Boolean;
   function GetExisteCPF_CNPJ(iCodigoCliente : Integer; sCpfCnpj : String; var iCodigo : Integer; var sRazao : String) : Boolean;
   function GetExisteNumeroAutorizacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+  function GetExisteNumeroCotacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
   function GetMenorVencimentoAPagar : TDateTime;
   function GetCarregarProdutoCodigoBarra(const sCNPJEmitente : String) : Boolean;
   function GetCarregarProdutoCodigoBarraLocal : Boolean;
   function GetPermissaoRotinaSistema(sRotina : String; const Alertar : Boolean = FALSE) : Boolean;
+  function GetQuantidadeEmpresasEmiteNFe : Integer;
 
   function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
 
@@ -331,6 +353,16 @@ const
   TIPO_AUTORIZACAO_COMPRA         = 1;
   TIPO_AUTORIZACAO_SERVICO        = 2;
   TIPO_AUTORIZACAO_COMPRA_SERVICO = 3;
+
+  TIPO_COTACAO_COMPRA         = TIPO_AUTORIZACAO_COMPRA;
+  TIPO_COTACAO_SERVICO        = TIPO_AUTORIZACAO_SERVICO;
+  TIPO_COTACAO_COMPRA_SERVICO = TIPO_AUTORIZACAO_COMPRA_SERVICO;
+
+  STATUS_COTACAO_EDC = 0;
+  STATUS_COTACAO_ABR = 1;
+  STATUS_COTACAO_COT = 2;
+  STATUS_COTACAO_ENC = 3;
+  STATUS_COTACAO_CAN = 4;
 
   // Mensagens padrões do sistema
   CLIENTE_BLOQUEADO_PORDEBITO = 'Cliente bloqueado, automaticamente, pelo sistema por se encontrar com títulos vencidos. Favor buscar mais informações junto ao FINANCEIRO.';
@@ -688,6 +720,24 @@ begin
   end;
 end;
 
+procedure ExportarFR3_ToXSL(const FrrLayout: TfrxReport; var sFileName : String);
+begin
+  with DMBusiness, FrrLayout, PrintOptions do
+  begin
+    if FileExists(sFileName) then
+      DeleteFile(sFileName);
+
+    ForceDirectories( ExtractFilePath(sFileName) );
+    PrepareReport;
+    frxXLS.FileName := sFileName;
+    frxXLS.Report   := FrrLayout;
+
+    Export(frxXLS);
+
+    sFileName := frxXLS.FileName;
+  end;
+end;
+
 procedure Desativar_Promocoes;
 begin
   with DMBusiness, qryBusca do
@@ -810,6 +860,7 @@ begin
   end;
 end;
 
+{$IFDEF DGE}
 procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
 begin
   with DMBusiness, qryEvAcessUser do
@@ -832,6 +883,7 @@ begin
     CommitTransaction;
   end;
 end;
+{$ENDIF}
 
 procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
 var
@@ -939,7 +991,7 @@ end;
 
 procedure SetEmpresaIDDefault(CNPJ : String);
 begin
-  FileINI.WriteString('Default', 'EmpresaID', CNPJ);
+  FileINI.WriteString(INI_SECAO_DEFAULT, INI_KEY_EMPRESA, CNPJ);
   FileINI.UpdateFile;
 end;
 
@@ -1040,37 +1092,37 @@ end;
 
 function GetCfopIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, 'CfopID', 5102);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_CFOP_SAI, StrToInt(INI_KEY_CFOP_SAI_VALUE));
 end;
 
 function GetCfopEntradaIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, 'CfopEntradaID', GetCfopIDDefault);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_CFOP_ENT, StrToInt(INI_KEY_CFOP_ENT_VALUE));
 end;
 
 function GetEmpresaIDDefault : String;
 begin
-  Result := FileINI.ReadString(INI_SECAO_DEFAULT, 'EmpresaID', EmptyStr);
+  Result := FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_EMPRESA, EmptyStr);
 end;
 
 function GetClienteIDDefault : Integer;
 begin
-  Result := StrToIntDef( FileINI.ReadString(INI_SECAO_DEFAULT, 'ClienteID', EmptyStr), CONSUMIDOR_FINAL_CODIGO);
+  Result := StrToIntDef( FileINI.ReadString(INI_SECAO_DEFAULT, INI_KEY_CLIENTE, EmptyStr), CONSUMIDOR_FINAL_CODIGO);
 end;
 
 function GetVendedorIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, 'VendedorID', 1);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_VENDEDOR, 1);
 end;
 
 function GetFormaPagtoIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, 'FormaPagtoID', 1);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_FORMA_PGTO, 1);
 end;
 
 function GetCondicaoPagtoIDDefault : Integer;
 begin
-  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, 'CondicaoPagtoID', 1);
+  Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_COND_PGTO, 1);
 end;
 
 function GetEstacaoEmitiBoleto : Boolean;
@@ -1080,22 +1132,47 @@ end;
 
 function GetEstacaoEmitiNFe : Boolean;
 begin
-  Result := (Trim(FileINI.ReadString('Certificado', 'NumSerie', EmptyStr)) <> EmptyStr);
+  Result := GetPermititEmissaoNFe(GetEmpresaIDDefault) and (Trim(FileINI.ReadString(INI_SECAO_CERTIFICADO, 'NumSerie', EmptyStr)) <> EmptyStr);
 end;
 
 function GetCondicaoPagtoIDBoleto_Descontinuada : Integer; // Descontinuada
 begin
-  Result := FileINI.ReadInteger('Boleto', 'FormaPagtoID', 1);
+  Result := FileINI.ReadInteger('Boleto', INI_KEY_FORMA_PGTO, 1);
 end;
 
 function GetEmitirCupom : Boolean;
 begin
-  Result := FileINI.ReadBool('Cupom', 'EmitirCupom', False);
+  Result := FileINI.ReadBool(INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_CUPOM, False);
+end;
+
+function GetEmitirCupomAutomatico : Boolean;
+begin
+  Result := FileINI.ReadBool(INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_CUPOM_AUTOMAT, False);
 end;
 
 function GetModeloEmissaoCupom : Integer;
 begin
-  Result := FileINI.ReadInteger('Cupom', 'ModeloEmissaoCupom', 0);
+  Result := FileINI.ReadInteger(INI_SECAO_CUMPO_PDV, INI_KEY_MODELO_CUPOM, 0);
+end;
+
+function GetCupomNaoFiscalPortaID : Integer;
+begin
+  Result := FileINI.ReadInteger(INI_SECAO_CUMPO_PDV, INI_KEY_PORTA_CUPOM_NFISCAL + '_ID', 0)
+end;
+
+function GetCupomNaoFiscalPortaDS : String;
+begin
+  Result := FileINI.ReadString(INI_SECAO_CUMPO_PDV, INI_KEY_PORTA_CUPOM_NFISCAL + '_DS', 'C:\CUPOM.TXT')
+end;
+
+function GetCupomNaoFiscalPortaNM : String;
+begin
+  Result := FileINI.ReadString(INI_SECAO_CUMPO_PDV, INI_KEY_PORTA_CUPOM_NFISCAL + '_NM', Printer.Printers.Strings[Printer.PrinterIndex])
+end;
+
+function GetCupomNaoFiscalEmitir : Boolean;
+begin
+  Result := FileINI.ReadBool(INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_CUPOM_NFISCAL, False);
 end;
 
 function GetSegmentoID(const CNPJ : String) : Integer;
@@ -1113,6 +1190,7 @@ begin
   end;
 end;
 
+{$IFDEF DGE}
 function GetControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess) : Boolean;
 begin
   with DMBusiness, qryEvAcessUser do
@@ -1131,6 +1209,7 @@ begin
     end;
   end;
 end;
+{$ENDIF}
 
 function GetEmailEmpresa(const sCNPJEmpresa : String) : String;
 begin
@@ -1184,6 +1263,21 @@ begin
     Close;
     SQL.Clear;
     SQL.Add('Select cliente_permitir_duplicar_cnpj as permitir from TBCONFIGURACAO where empresa = ' + QuotedStr(sCNPJEmpresa));
+    Open;
+
+    Result := (FieldByName('permitir').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
+function GetAutorizacaoInformarCliente(const sCNPJEmpresa : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select autoriza_informa_cliente as permitir from TBCONFIGURACAO where empresa = ' + QuotedStr(sCNPJEmpresa));
     Open;
 
     Result := (FieldByName('permitir').AsInteger = 1);
@@ -1285,6 +1379,11 @@ end;
 function GetPrazoValidadeAutorizacaoCompra(const sCNPJEmpresa : String) : Integer;
 begin
   Result := 5;
+end;
+
+function GetPrazoValidadeCotacaoCompra(const sCNPJEmpresa : String) : Integer;
+begin
+  Result := 15;
 end;
 
 function StrIsCNPJ(const Num: string): Boolean;
@@ -1627,17 +1726,7 @@ end;
 
 function GetEstadoNomeDefault : String;
 begin
-  with DMBusiness, qryBusca do
-  begin
-    Close;
-    SQL.Clear;
-    SQL.Add('Select est_nome from TBESTADO where est_cod = ' + IntToStr(GetEstadoIDDefault));
-    Open;
-
-    Result := FieldByName('est_nome').AsString;
-
-    Close;
-  end;
+  Result := GetEstadoNome( GetEstadoIDDefault );
 end;
 
 function GetEstadoNome(const iEstado : Integer) : String;
@@ -1702,17 +1791,7 @@ end;
 
 function GetCidadeNomeDefault : String;
 begin
-  with DMBusiness, qryBusca do
-  begin
-    Close;
-    SQL.Clear;
-    SQL.Add('Select cid_nome from TBCIDADE where cid_cod = ' + IntToStr(GetCidadeIDDefault));
-    Open;
-
-    Result := FieldByName('cid_nome').AsString;
-
-    Close;
-  end;
+  Result := GetCidadeNome( GetCidadeIDDefault );
 end;
 
 function GetCidadeNome(const iCidade : Integer) : String;
@@ -1811,11 +1890,16 @@ end;
 
 function GetCfopNomeDefault : String;
 begin
+  Result := GetCfopNome( GetCfopIDDefault );
+end;
+
+function GetCfopNome(const iCodigo : Integer) : String;
+begin
   with DMBusiness, qryBusca do
   begin
     Close;
     SQL.Clear;
-    SQL.Add('Select cfop_descricao from TBCFOP where cfop_cod = ' + IntToStr(GetCfopIDDefault));
+    SQL.Add('Select cfop_descricao from TBCFOP where cfop_cod = ' + IntToStr(iCodigo));
     Open;
 
     Result := FieldByName('cfop_descricao').AsString;
@@ -1888,17 +1972,7 @@ end;
 
 function GetClienteNomeDefault : String;
 begin
-  with DMBusiness, qryBusca do
-  begin
-    Close;
-    SQL.Clear;
-    SQL.Add('Select nome from TBCLIENTE where Codigo = ' + IntToStr(GetClienteIDDefault));
-    Open;
-
-    Result := FieldByName('nome').AsString;
-
-    Close;
-  end;
+  Result := GetClienteNome( GetClienteIDDefault );
 end;
 
 function GetClienteNome(const iCodigo : Integer) : String;
@@ -1946,13 +2020,48 @@ begin
   end;
 end;
 
-function GetVendedorNomeDefault : String;
+function GetFornecedorRazao(const iCodigo : Integer) : String;
 begin
   with DMBusiness, qryBusca do
   begin
     Close;
     SQL.Clear;
-    SQL.Add('Select nome from TBVENDEDOR where cod = ' + IntToStr(GetVendedorIDDefault));
+    SQL.Add('Select nomeforn from TBFORNECEDOR where Codforn = ' + IntToStr(iCodigo));
+    Open;
+
+    Result := AnsiLowerCase(Trim(FieldByName('nomeforn').AsString));
+
+    Close;
+  end;
+end;
+
+function GetFornecedorContato(const iCodigo : Integer) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select contato from TBFORNECEDOR where Codforn = ' + IntToStr(iCodigo));
+    Open;
+
+    Result := AnsiLowerCase(Trim(FieldByName('contato').AsString));
+
+    Close;
+  end;
+end;
+
+function GetVendedorNomeDefault : String;
+begin
+  Result := GetVendedorNome( GetVendedorIDDefault );
+end;
+
+function GetVendedorNome(const iCodigo : Integer) : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select nome from TBVENDEDOR where cod = ' + IntToStr(iCodigo));
     Open;
 
     Result := FieldByName('nome').AsString;
@@ -1963,11 +2072,16 @@ end;
 
 function GetFormaPagtoNomeDefault : String;
 begin
+  Result := GetFormaPagtoNome( GetFormaPagtoIDDefault );
+end;
+
+function GetFormaPagtoNome(const iCodigo : Integer) : String;
+begin
   with DMBusiness, qryBusca do
   begin
     Close;
     SQL.Clear;
-    SQL.Add('Select descri from TBFORMPAGTO where cod = ' + IntToStr(GetFormaPagtoIDDefault));
+    SQL.Add('Select descri from TBFORMPAGTO where cod = ' + IntToStr(iCodigo));
     Open;
 
     Result := FieldByName('descri').AsString;
@@ -1978,11 +2092,16 @@ end;
 
 function GetCondicaoPagtoNomeDefault : String;
 begin
+  Result := GetCondicaoPagtoNome( GetCondicaoPagtoIDDefault );
+end;
+
+function GetCondicaoPagtoNome(const iCodigo : Integer) : String;
+begin
   with DMBusiness, qryBusca do
   begin
     Close;
     SQL.Clear;
-    SQL.Add('Select cond_descricao_full from VW_CONDICAOPAGTO where cond_cod = ' + IntToStr(GetCondicaoPagtoIDDefault));
+    SQL.Add('Select cond_descricao_full from VW_CONDICAOPAGTO where cond_cod = ' + IntToStr(iCodigo));
     Open;
 
     Result := FieldByName('cond_descricao_full').AsString;
@@ -2102,6 +2221,21 @@ begin
     Result := (ibdtstUsersPERM_ALTERAR_VALOR_VENDA.AsInteger = 1);
 end;
 
+function GetPermititEmissaoNFe(const sCNPJEmitente : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select nfe_emitir from TBCONFIGURACAO where empresa = ' + QuotedStr(sCNPJEmitente));
+    Open;
+
+    Result := (FieldByName('nfe_emitir').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
 function GetSolicitaDHSaidaNFe(const sCNPJEmitente : String) : Boolean;
 begin
   with DMBusiness, qryBusca do
@@ -2169,6 +2303,33 @@ begin
     SQL.Add('  , a.codigo');
     SQL.Add('  , a.numero');
     SQL.Add('from TBAUTORIZA_COMPRA a');
+    SQL.Add('where a.Numero  = ' + QuotedStr(Trim(sNumero)));
+    SQL.Add('  and (not (');
+    SQL.Add('           a.ano    = ' + IntToStr(iAno));
+    SQL.Add('       and a.codigo = ' + IntToStr(iCodigo));
+    SQL.Add('  ))');
+    Open;
+
+    Result := (FieldByName('codigo').AsInteger > 0);
+
+    if Result then
+      sControleInterno := Trim(FieldByName('ano').AsString) + '/' + FormatFloat('###0000000', FieldByName('codigo').AsInteger);
+
+    Close;
+  end;
+end;
+
+function GetExisteNumeroCotacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('    a.ano');
+    SQL.Add('  , a.codigo');
+    SQL.Add('  , a.numero');
+    SQL.Add('from TBCOTACAO_COMPRA a');
     SQL.Add('where a.Numero  = ' + QuotedStr(Trim(sNumero)));
     SQL.Add('  and (not (');
     SQL.Add('           a.ano    = ' + IntToStr(iAno));
@@ -2261,6 +2422,32 @@ begin
     Result := Return;
   end;
 end;
+
+function GetQuantidadeEmpresasEmiteNFe : Integer;
+var
+  Return : Integer;
+begin
+  try
+    with DMBusiness, qryBusca do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('Select');
+      SQL.Add('  count(c.empresa) as empresas');
+      SQL.Add('from TBCONFIGURACAO c');
+      SQL.Add('where c.nfe_emitir = 1');
+      Open;
+
+      Return := FieldByName('empresas').AsInteger;
+
+      Close;
+    end;
+
+  finally
+    Result := Return;
+  end;
+end;
+
 
 function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
 begin

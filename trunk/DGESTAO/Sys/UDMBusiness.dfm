@@ -1,18 +1,19 @@
 object DMBusiness: TDMBusiness
   OldCreateOrder = True
   OnCreate = DataModuleCreate
-  Left = 405
-  Top = 223
+  Left = 445
+  Top = 247
   Height = 617
   Width = 812
   object ibdtbsBusiness: TIBDatabase
-    DatabaseName = 'localhost:BUSINESS'
+    DatabaseName = 'localhost:AGIL_COMERCIO'
     Params.Strings = (
       'user_name=SYSDBA'
       'Password=masterkey'
       'lc_ctype=ISO8859_2')
     LoginPrompt = False
     DefaultTransaction = ibtrnsctnBusiness
+    AllowStreamedConnected = False
     Left = 40
     Top = 8
   end
