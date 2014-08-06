@@ -11,7 +11,7 @@ uses
 
   ACBrUtil, pcnConversao, pcnNFeW, pcnNFeRTXT, pcnAuxiliar, ACBrNFeUtil, SHDocVw,
   IBUpdateSQL, IBSQL, frxDesgn, frxRich, frxCross, frxChart, ACBrBase,
-  ACBrBoleto, ACBrBoletoFCFR, frxExportImage;
+  ACBrBoleto, ACBrBoletoFCFR, frxExportImage, ACBrValidador;
 
 type
   TDMNFe = class(TDataModule)
@@ -235,6 +235,8 @@ type
     qryEntradaDadosProdutoCODFORN_CNPJ: TIBStringField;
     qryEntradaDadosProdutoDTENT: TDateField;
     qryEntradaDadosProdutoPUNIT: TIBBCDField;
+    qryEntradaDadosProdutoDESCONTO: TIBBCDField;
+    qryEntradaDadosProdutoDESCONTO_VALOR: TIBBCDField;
     qryEntradaDadosProdutoPFINAL: TIBBCDField;
     qryEntradaDadosProdutoUNID_COD: TSmallintField;
     qryEntradaDadosProdutoUNP_DESCRICAO: TIBStringField;
@@ -247,6 +249,7 @@ type
     qryEntradaDadosProdutoVALOR_IPI: TIBBCDField;
     qryEntradaDadosProdutoPERCENTUAL_REDUCAO_BC: TIBBCDField;
     qryEntradaDadosProdutoVALOR_REDUCAO_BC: TIBBCDField;
+    qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField;
     qryEntradaDadosProdutoPRODUTO_NOVO: TSmallintField;
     qryEntradaDadosProdutoCOR_VEICULO: TIBStringField;
     qryEntradaDadosProdutoCOR_VEICULO_DESCRICAO: TIBStringField;
@@ -270,6 +273,8 @@ type
     qryEntradaDuplicatasVALORPAG: TIBBCDField;
     qryEntradaDuplicatasVALORMULTA: TIBBCDField;
     qryEntradaDuplicatasPERCENTDESCONTO: TIBBCDField;
+    qryEntradaDadosProdutoTOTAL_BRUTO: TIBBCDField;
+    qryEntradaDadosProdutoTOTAL_LIQUIDO: TIBBCDField;
     qryCalculoImportoANO: TSmallintField;
     qryCalculoImportoCODCONTROL: TIntegerField;
     qryCalculoImportoCODEMP: TIBStringField;
@@ -460,11 +465,19 @@ type
     frrAutorizacaoCompra: TfrxReport;
     qryCalculoImportoCFOP_INFORMACAO_FISCO: TIBStringField;
     qryEntradaCalculoImportoCFOP_INFORMACAO_FISCO: TIBStringField;
-    qryEntradaDadosProdutoDESCONTO: TFMTBCDField;
-    qryEntradaDadosProdutoDESCONTO_VALOR: TFMTBCDField;
-    qryEntradaDadosProdutoTOTAL_BRUTO: TFMTBCDField;
-    qryEntradaDadosProdutoTOTAL_LIQUIDO: TFMTBCDField;
-    qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField;
+    qryCotacaoCompra: TIBQuery;
+    frdCotacaoCompra: TfrxDBDataset;
+    frrCotacaoCompra: TfrxReport;
+    qryCotacaoCompraFornecedor: TIBQuery;
+    frdCotacaoCompraFornecedor: TfrxDBDataset;
+    ACBrValidador: TACBrValidador;
+    qryCotacaoCompraFornecedorItem: TIBQuery;
+    frdCotacaoCompraFornecedorItem: TfrxDBDataset;
+    frrCotacaoCompraMapaPreco: TfrxReport;
+    frrNotaEntrega: TfrxReport;
+    qryVendaCartaCredito: TIBQuery;
+    frdVendaCartaCredito: TfrxDBDataset;
+    frrVendaCartaCredito: TfrxReport;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);
@@ -504,6 +517,7 @@ type
     procedure AbrirDestinatario(iCodigo : Integer);
     procedure AbrirDestinatarioFornecedor(iCodigo : Integer);
     procedure AbrirVenda(AnoVenda, NumeroVenda : Integer);
+    procedure AbrirVendaCartaCredito(AnoVenda, NumeroVenda : Integer);
     procedure AbrirCompra(AnoCompra, NumeroCompra : Integer);
     procedure AbrirNFeEmitida(AnoVenda, NumeroVenda : Integer);
     procedure AbrirNFeEmitidaEntrada(AnoCompra, NumeroCompra : Integer);
@@ -551,6 +565,12 @@ type
       var DataEmissao : TDateTime; const Imprimir : Boolean = TRUE) : Boolean;
     function DownloadNFeACBr(const sCNPJEmitente, sCNPJDestinatario, sChaveNFe : String; var FileNameXML : String) : Boolean;
 
+    function EnviarEmail_Generico(const sCNPJEmitente, sNumeroDocumento, sEmailDestinatario : String;
+      const sArquivo : String = '') : Boolean;
+
+    function ImprimirCupomNaoFiscal(const sCNPJEmitente : String; iCodigoCliente : Integer;
+      const sDataHoraSaida : String; const iAnoVenda, iNumVenda : Integer) : Boolean;
+
   end;
 
 var
@@ -582,9 +602,10 @@ const
 
 implementation
 
-uses UDMBusiness, Forms, FileCtrl, ACBrNFeConfiguracoes,
+uses
+  UDMBusiness, Forms, FileCtrl, ACBrNFeConfiguracoes,
   ACBrNFeNotasFiscais, ACBrNFeWebServices, StdCtrls, pcnNFe, UFuncoes,
-  UConstantesDGE, DateUtils, pcnRetConsReciNFe, pcnDownloadNFe;
+  UConstantesDGE, DateUtils, pcnRetConsReciNFe, pcnDownloadNFe, UEcfFactory;
 
 {$R *.dfm}
 
@@ -754,24 +775,36 @@ procedure TDMNFe.GravarConfiguracao(const sCNPJEmitente : String);
 Var
   sPrefixoSecao : String;
   StreamMemo    : TMemoryStream;
+
+  sSecaoCertificado,
+  sSecaoGeral      ,
+  sSecaoEmitente   : String;
 begin
   try
 
-    sPrefixoSecao := Trim(sCNPJEmitente) + '_';
+    AbrirEmitente(sCNPJEmitente);
+    
+    if ( GetQuantidadeEmpresasEmiteNFe > 1 ) then
+      sPrefixoSecao := Trim(sCNPJEmitente) + '_'
+    else
+      sPrefixoSecao := EmptyStr;
+
+    sSecaoCertificado := sPrefixoSecao + INI_SECAO_CERTIFICADO;
+    sSecaoGeral       := sPrefixoSecao + INI_SECAO_GERAL;
+    sSecaoEmitente    := sPrefixoSecao + INI_SECAO_EMITENTE;
 
     with ConfigACBr, FileINI do
     begin
-//      WriteString( sPrefixoSecao + 'Certificado', 'Caminho' , edtCaminho.Text) ;
-      WriteString( 'Certificado', 'Caminho' , edtCaminho.Text) ;
-      WriteString( 'Certificado', 'Senha'   , edtSenha.Text) ;
-      WriteString( 'Certificado', 'NumSerie', edtNumSerie.Text) ;
+      WriteString( sSecaoCertificado, 'Caminho' , edtCaminho.Text) ;
+      WriteString( sSecaoCertificado, 'Senha'   , edtSenha.Text) ;
+      WriteString( sSecaoCertificado, 'NumSerie', edtNumSerie.Text) ;
 
-      WriteInteger( 'Geral', 'DANFE'       , rgTipoDanfe.ItemIndex) ;
-      WriteInteger( 'Geral', 'FormaEmissao', rgFormaEmissao.ItemIndex) ;
-      WriteString ( 'Geral', 'LogoMarca'   , edtLogoMarca.Text) ;
-      WriteBool   ( 'Geral', 'Salvar'      , ckSalvar.Checked) ;
-      WriteString ( 'Geral', 'PathSalvar'  , edtPathLogs.Text) ;
-      WriteInteger( 'Geral', 'ModoGerarNFe', rgModoGerarNFe.ItemIndex) ;
+      WriteInteger( sSecaoGeral, 'DANFE'       , rgTipoDanfe.ItemIndex) ;
+      WriteInteger( sSecaoGeral, 'FormaEmissao', rgFormaEmissao.ItemIndex) ;
+      WriteString ( sSecaoGeral, 'LogoMarca'   , edtLogoMarca.Text) ;
+      WriteBool   ( sSecaoGeral, 'Salvar'      , ckSalvar.Checked) ;
+      WriteString ( sSecaoGeral, 'PathSalvar'  , edtPathLogs.Text) ;
+      WriteInteger( sSecaoGeral, 'ModoGerarNFe', rgModoGerarNFe.ItemIndex) ;
 
       WriteString ( 'WebService', 'UF'        ,cbUF.Text) ;
       WriteInteger( 'WebService', 'Ambiente'  ,rgTipoAmb.ItemIndex) ;
@@ -782,20 +815,20 @@ begin
       WriteString( 'Proxy', 'User'   , edtProxyUser.Text) ;
       WriteString( 'Proxy', 'Pass'   , edtProxySenha.Text) ;
 
-      WriteString( 'Emitente', 'CNPJ'       , edtEmitCNPJ.Text) ;
-      WriteString( 'Emitente', 'IE'         , edtEmitIE.Text) ;
-      WriteString( 'Emitente', 'RazaoSocial', edtEmitRazao.Text) ;
-      WriteString( 'Emitente', 'Fantasia'   , edtEmitFantasia.Text) ;
-      WriteString( 'Emitente', 'Fone'       , edtEmitFone.Text) ;
-      WriteString( 'Emitente', 'CEP'        , edtEmitCEP.Text) ;
-      WriteString( 'Emitente', 'Logradouro' , edtEmitLogradouro.Text) ;
-      WriteString( 'Emitente', 'Numero'     , edtEmitNumero.Text) ;
-      WriteString( 'Emitente', 'Complemento', edtEmitComp.Text) ;
-      WriteString( 'Emitente', 'Bairro'     , edtEmitBairro.Text) ;
-      WriteString( 'Emitente', 'CodCidade'  , edtEmitCodCidade.Text) ;
-      WriteString( 'Emitente', 'Cidade'     , edtEmitCidade.Text) ;
-      WriteString( 'Emitente', 'UF'         , edtEmitUF.Text) ;
-      WriteString( 'Emitente', 'InfoFisco'  , edInfoFisco.Text) ;
+      WriteString( sSecaoEmitente, 'CNPJ'       , edtEmitCNPJ.Text) ;
+      WriteString( sSecaoEmitente, 'IE'         , edtEmitIE.Text) ;
+      WriteString( sSecaoEmitente, 'RazaoSocial', edtEmitRazao.Text) ;
+      WriteString( sSecaoEmitente, 'Fantasia'   , edtEmitFantasia.Text) ;
+      WriteString( sSecaoEmitente, 'Fone'       , edtEmitFone.Text) ;
+      WriteString( sSecaoEmitente, 'CEP'        , edtEmitCEP.Text) ;
+      WriteString( sSecaoEmitente, 'Logradouro' , edtEmitLogradouro.Text) ;
+      WriteString( sSecaoEmitente, 'Numero'     , edtEmitNumero.Text) ;
+      WriteString( sSecaoEmitente, 'Complemento', edtEmitComp.Text) ;
+      WriteString( sSecaoEmitente, 'Bairro'     , edtEmitBairro.Text) ;
+      WriteString( sSecaoEmitente, 'CodCidade'  , edtEmitCodCidade.Text) ;
+      WriteString( sSecaoEmitente, 'Cidade'     , edtEmitCidade.Text) ;
+      WriteString( sSecaoEmitente, 'UF'         , edtEmitUF.Text) ;
+      WriteString( sSecaoEmitente, 'InfoFisco'  , edInfoFisco.Text) ;
 
       WriteString( 'Email', 'Host'    ,edtSmtpHost.Text) ;
       WriteString( 'Email', 'Port'    ,edtSmtpPort.Text) ;
@@ -826,26 +859,37 @@ Var
   sAssinaturaHtml,
   sAssinaturaTxt ,
   sFileNFE       : String;
+
+  sSecaoCertificado,
+  sSecaoGeral      ,
+  sSecaoEmitente   : String;
 begin
   try
 
-    sPrefixoSecao := Trim(sCNPJEmitente) + '_';
+    AbrirEmitente(sCNPJEmitente);
+    
+    if ( GetQuantidadeEmpresasEmiteNFe > 1 ) then
+      sPrefixoSecao := Trim(sCNPJEmitente) + '_'
+    else
+      sPrefixoSecao := EmptyStr;
+
+    sSecaoCertificado := sPrefixoSecao + INI_SECAO_CERTIFICADO;
+    sSecaoGeral       := sPrefixoSecao + INI_SECAO_GERAL;
+    sSecaoEmitente    := sPrefixoSecao + INI_SECAO_EMITENTE;
 
     with ConfigACBr, FileINI do
     begin
 
       {$IFDEF ACBrNFeOpenSSL}
-//         edtCaminho.Text  := ReadString( sPrefixoSecao + 'Certificado', 'Caminho' , '') ;
-         edtCaminho.Text  := ReadString( 'Certificado', 'Caminho' , '') ;
-         edtSenha.Text    := ReadString( 'Certificado', 'Senha'   , '') ;
+         edtCaminho.Text  := ReadString( sSecaoCertificado, 'Caminho' , '') ;
+         edtSenha.Text    := ReadString( sSecaoCertificado, 'Senha'   , '') ;
          ACBrNFe.Configuracoes.Certificados.Certificado  := edtCaminho.Text;
          ACBrNFe.Configuracoes.Certificados.Senha        := edtSenha.Text;
          edtNumSerie.Visible := False;
          Label25.Visible     := False;
          sbtnGetCert.Visible := False;
       {$ELSE}
-//         edtNumSerie.Text := ReadString( sPrefixoSecao + 'Certificado', 'NumSerie', '') ;
-         edtNumSerie.Text := ReadString( 'Certificado', 'NumSerie', '') ;
+         edtNumSerie.Text := ReadString( sSecaoCertificado, 'NumSerie', '') ;
          ACBrNFe.Configuracoes.Certificados.NumeroSerie := edtNumSerie.Text;
          edtNumSerie.Text := ACBrNFe.Configuracoes.Certificados.NumeroSerie;
          lbltCaminho.Caption := 'Informe o número de série do certificado'#13+
@@ -859,17 +903,17 @@ begin
          sbtnCaminhoCert.Visible := False;
       {$ENDIF}
 
-      rgFormaEmissao.ItemIndex := ReadInteger( 'Geral', 'FormaEmissao', 0) ;
+      rgFormaEmissao.ItemIndex := ReadInteger(sSecaoGeral, 'FormaEmissao', 0) ;
       rgModoGerarNFe.ItemIndex := 1; NetWorkActive; // ReadInteger( 'Geral', 'ModoGerarNFe', 1) ;
 
-      ckSalvar.Checked := ReadBool  ( 'Geral', 'Salvar'      ,True) ;
-      edtPathLogs.Text := ReadString( 'Geral', 'PathSalvar'  ,'') ;
+      ckSalvar.Checked := ReadBool  ( sSecaoGeral, 'Salvar'      ,True) ;
+      edtPathLogs.Text := ReadString( sSecaoGeral, 'PathSalvar'  ,'') ;
 
       ACBrNFe.Configuracoes.Geral.FormaEmissao := StrToTpEmis(OK, IntToStr(rgFormaEmissao.ItemIndex + 1));
       ACBrNFe.Configuracoes.Geral.Salvar       := ckSalvar.Checked;
       ACBrNFe.Configuracoes.Geral.PathSalvar   := edtPathLogs.Text;
 
-      cbUF.ItemIndex       := cbUF.Items.IndexOf(ReadString( 'WebService','UF','SP')) ;
+      cbUF.ItemIndex       := cbUF.Items.IndexOf(ReadString( 'WebService', 'UF', 'PA')) ;
       rgTipoAmb.ItemIndex  := ReadInteger( 'WebService', 'Ambiente'  , 0) ;
       ckVisualizar.Checked := ReadBool   ( 'WebService', 'Visualizar', False) ;
 
@@ -887,8 +931,8 @@ begin
       ACBrNFe.Configuracoes.WebServices.ProxyUser := edtProxyUser.Text;
       ACBrNFe.Configuracoes.WebServices.ProxyPass := edtProxySenha.Text;
 
-      rgTipoDanfe.ItemIndex := ReadInteger( 'Geral', 'DANFE'     , 0) ;
-      edtLogoMarca.Text     := ReadString ( 'Geral', 'LogoMarca' , '') ;
+      rgTipoDanfe.ItemIndex := ReadInteger( sSecaoGeral, 'DANFE'     , 0) ;
+      edtLogoMarca.Text     := ReadString ( sSecaoGeral, 'LogoMarca' , '') ;
 
       if ACBrNFe.DANFE <> nil then
       begin
@@ -900,20 +944,20 @@ begin
           ACBrNFe.DANFE.Logo := EmptyStr;
       end;
 
-      edtEmitCNPJ.Text       := ReadString( 'Emitente', 'CNPJ'       , '' ) ;
-      edtEmitIE.Text         := ReadString( 'Emitente', 'IE'         , '' ) ;
-      edtEmitRazao.Text      := ReadString( 'Emitente', 'RazaoSocial', '' ) ;
-      edtEmitFantasia.Text   := ReadString( 'Emitente', 'Fantasia'   , '' ) ;
-      edtEmitFone.Text       := ReadString( 'Emitente', 'Fone'       , '' ) ;
-      edtEmitCEP.Text        := ReadString( 'Emitente', 'CEP'        , '' ) ;
-      edtEmitLogradouro.Text := ReadString( 'Emitente', 'Logradouro' , '' ) ;
-      edtEmitNumero.Text     := ReadString( 'Emitente', 'Numero'     , '' ) ;
-      edtEmitComp.Text       := ReadString( 'Emitente', 'Complemento', '' ) ;
-      edtEmitBairro.Text     := ReadString( 'Emitente', 'Bairro'     , '' ) ;
-      edtEmitCodCidade.Text  := ReadString( 'Emitente', 'CodCidade'  , '' ) ;
-      edtEmitCidade.Text     := ReadString( 'Emitente', 'Cidade'     , '' ) ;
-      edtEmitUF.Text         := ReadString( 'Emitente', 'UF'         , '' ) ;
-      edInfoFisco.Text       := ReadString( 'Emitente', 'InfoFisco'  , 'EMPRESA OPTANTE PELO SIMPLES DE ACORDO COM A LEI COMPLEMENTAR 123, DE DEZEMBRO DE 2006' ) ;
+      edtEmitCNPJ.Text       := ReadString( sSecaoEmitente, 'CNPJ'       , '' ) ;
+      edtEmitIE.Text         := ReadString( sSecaoEmitente, 'IE'         , '' ) ;
+      edtEmitRazao.Text      := ReadString( sSecaoEmitente, 'RazaoSocial', '' ) ;
+      edtEmitFantasia.Text   := ReadString( sSecaoEmitente, 'Fantasia'   , '' ) ;
+      edtEmitFone.Text       := ReadString( sSecaoEmitente, 'Fone'       , '' ) ;
+      edtEmitCEP.Text        := ReadString( sSecaoEmitente, 'CEP'        , '' ) ;
+      edtEmitLogradouro.Text := ReadString( sSecaoEmitente, 'Logradouro' , '' ) ;
+      edtEmitNumero.Text     := ReadString( sSecaoEmitente, 'Numero'     , '' ) ;
+      edtEmitComp.Text       := ReadString( sSecaoEmitente, 'Complemento', '' ) ;
+      edtEmitBairro.Text     := ReadString( sSecaoEmitente, 'Bairro'     , '' ) ;
+      edtEmitCodCidade.Text  := ReadString( sSecaoEmitente, 'CodCidade'  , '' ) ;
+      edtEmitCidade.Text     := ReadString( sSecaoEmitente, 'Cidade'     , '' ) ;
+      edtEmitUF.Text         := ReadString( sSecaoEmitente, 'UF'         , '' ) ;
+      edInfoFisco.Text       := ReadString( sSecaoEmitente, 'InfoFisco'  , 'EMPRESA OPTANTE PELO SIMPLES DE ACORDO COM A LEI COMPLEMENTAR 123, DE DEZEMBRO DE 2006' ) ;
 
       // Configuração para envio de e-mails
 
@@ -1456,7 +1500,7 @@ begin
     DtHoraEmiss := GetDateTimeDB;
 
     ACBrNFe.NotasFiscais.Clear;
-    
+
     with ACBrNFe.NotasFiscais.Add.NFe do
     begin
       Ide.cNF       := iNumeroNFe; // Caso não seja preenchido será gerado um número aleatório pelo componente
@@ -1624,7 +1668,7 @@ begin
           Prod.EXTIPI   := '';
           Prod.CFOP     := qryDadosProdutoCFOP_COD.AsString;
 
-          if EAN13Valido(qryDadosProdutoCODBARRA_EAN.AsString) then
+          if EAN13Valido(qryDadosProdutoCODBARRA_EAN.AsString) then   // Futuramento implementar a função "ACBrValidadorValidarGTIN" em lugar da "EAN13Valido"
             Prod.cEAN   := qryDadosProdutoCODBARRA_EAN.AsString
           else
             Prod.cEAN   := EmptyStr;
@@ -1639,7 +1683,7 @@ begin
 
           Prod.vProd    := qryDadosProdutoTOTAL_BRUTO.AsCurrency;     // I11 - Valor Total Bruto dos Produtos ou Serviços
 
-          if EAN13Valido(qryDadosProdutoCODBARRA_EAN.AsString) then
+          if EAN13Valido(qryDadosProdutoCODBARRA_EAN.AsString) then   // Futuramento implementar a função "ACBrValidadorValidarGTIN" em lugar da "EAN13Valido"
             Prod.cEANTrib := qryDadosProdutoCODBARRA_EAN.AsString
           else
             Prod.cEANTrib := EmptyStr;
@@ -2806,7 +2850,7 @@ begin
           Prod.EXTIPI   := '';
           Prod.CFOP     := qryEntradaDadosProdutoCFOP_COD.AsString;
 
-          if EAN13Valido(qryEntradaDadosProdutoCODBARRA_EAN.AsString) then
+          if EAN13Valido(qryEntradaDadosProdutoCODBARRA_EAN.AsString) then  // Futuramento implementar a função "ACBrValidadorValidarGTIN" em lugar da "EAN13Valido"
             Prod.cEAN   := qryEntradaDadosProdutoCODBARRA_EAN.AsString
           else
             Prod.cEAN   := EmptyStr;
@@ -2818,11 +2862,11 @@ begin
 
           Prod.vProd    := qryEntradaDadosProdutoTOTAL_BRUTO.AsCurrency;     // I11 - Valor Total Bruto dos Produtos ou Serviços
 
-          if EAN13Valido(qryEntradaDadosProdutoCODBARRA_EAN.AsString) then
+          if EAN13Valido(qryEntradaDadosProdutoCODBARRA_EAN.AsString) then   // Futuramento implementar a função "ACBrValidadorValidarGTIN" em lugar da "EAN13Valido"
             Prod.cEANTrib := qryEntradaDadosProdutoCODBARRA_EAN.AsString
           else
             Prod.cEANTrib := EmptyStr;
-            
+              
           Prod.uTrib     := qryEntradaDadosProdutoUNP_SIGLA.AsString;
           Prod.qTrib     := qryEntradaDadosProdutoQTDE.AsCurrency;
 
@@ -3346,7 +3390,6 @@ begin
       ACBrNFe.NotasFiscais.GerarNFe;
       ACBrNFe.NotasFiscais.Assinar;
 
-//      // Executar validação de regra de negócios na NF-e de Entrada
 //      if GetSolicitaDHSaidaNFe( sCNPJEmitente ) then
 //        if not ACBrNFe.NotasFiscais.ValidaRegrasdeNegocios then
 //          raise Exception.Create( ACBrNFe.NotasFiscais.Items[0].RegrasdeNegocios );
@@ -3946,6 +3989,207 @@ begin
 
   if ( VarName = VAR_USER ) then
     Value := GetUserApp;
+end;
+
+function TDMNFe.EnviarEmail_Generico(const sCNPJEmitente, sNumeroDocumento, sEmailDestinatario : String;
+  const sArquivo : String = '') : Boolean;
+var
+  sEmailAssunto     ,
+  sEmailEmpresa     ,
+  sMensagem  ,
+  sDocumento : String;
+  sAssinaturaHtml ,
+  sAssinaturaTxt  : String;
+  sANX,
+  sMSG,
+  sCC : TStringList;
+const
+  MSG_REF = 'Referente a Cotação No. %s';
+begin
+
+  try
+
+    sANX := TStringList.Create;
+    sMSG := TStringList.Create;
+    sCC  := TStringList.Create;
+
+    try
+
+      LerConfiguracao( sCNPJEmitente );
+
+      AbrirEmitente( sCNPJEmitente );
+
+      if Trim(sArquivo) <> EmptyStr then
+        if not FilesExists(sArquivo) then
+          raise Exception.Create(Format('Arquivo %s não encontrado.', [QuotedStr(sArquivo)]));
+
+      with ACBrNFe do
+      begin
+        NotasFiscais.Clear;
+        NotasFiscais.Add;
+
+        // Montar identificação do documento para título de e-mail
+
+        sMensagem  := Format(MSG_REF, [sNumeroDocumento]);
+        sDocumento := 'Cotação No. ' + sNumeroDocumento;
+
+        CarregarConfiguracoesEmpresa(sCNPJEmitente, sEmailAssunto, sAssinaturaHtml, sAssinaturaTxt);
+
+        sEmailEmpresa := GetEmailEmpresa( sCNPJEmitente );
+        sEmailAssunto := GetNomeFantasiaEmpresa( sCNPJEmitente ) + ' - ' + sDocumento;
+
+        sCC.Add( sEmailEmpresa );
+
+        sMSG.Add( sMensagem );
+        sMSG.Add('');
+        sMSG.Add( sAssinaturaTxt );
+        sMSG.Add('--');
+        sMSG.Add('FAVOR NÃO RESPONDER ESTE E-MAIL.');
+        sMSG.Add('Composição automática de e-mail executada pelo sistema ' + GetProductName + ' (Versão ' + GetVersion +
+          '), desenvolvido pela empresa ' + GetCompanyName + '.' + #13#13 + GetCopyright);
+
+        if FileExists( sArquivo ) then
+          sANX.Add( sArquivo );
+
+        NotasFiscais.Items[0].EnviarEmail(
+            gContaEmail.Servidor_SMTP
+          , IntToStr(gContaEmail.Porta_SMTP)
+          , gContaEmail.Conta
+          , gContaEmail.Senha
+          , gContaEmail.Conta
+          , sEmailDestinatario
+          , sEmailAssunto
+          , sMSG
+          , gContaEmail.ConexaoSeguraSSL // SSL - Conexão Segura
+          , False                        // Enviar PDF junto
+          , sCC                          // Lista com emails que serão enviado cópias - TStrings
+          , sANX                         // Lista de anexos - TStrings
+          , False                        // Pede confirmação de leitura do email
+          , False                        // Aguarda Envio do Email(não usa thread)
+          , GetNomeFantasiaEmpresa( sCNPJEmitente ) // Nome do Rementente
+          , gContaEmail.ConexaoSeguraSSL );         // Auto TLS
+
+        Result := True;
+      end;
+
+    except
+      On E : Exception do
+      begin
+        ShowError(Format('Erro ao tentar enviar para e-mail para ''%s''.', [sEmailDestinatario]) + #13#13 +
+          'EnviarEmail_Generico() --> ' + e.Message);
+        Result := False;
+      end;
+    end;
+
+  finally
+    sANX.Free;
+    sMSG.Free;
+    sCC.Free;
+  end;
+
+end;
+
+function TDMNFe.ImprimirCupomNaoFiscal(const sCNPJEmitente: String;
+  iCodigoCliente: Integer; const sDataHoraSaida: String; const iAnoVenda,
+  iNumVenda: Integer): Boolean;
+var
+  aEcfTipo   : TEcfTipo;
+  aEcfConfig : TEcfConfiguracao;
+  aEcf : TEcfFactory;
+begin
+  if GetCupomNaoFiscalPortaID = -1 then
+    aEcfTipo := ecfTEXTO
+  else
+    aEcfTipo := TEcfTipo(GetCupomNaoFiscalPortaID);
+
+  AbrirEmitente(sCNPJEmitente);
+  AbrirDestinatario(iCodigoCliente);
+  AbrirVenda(iAnoVenda, iNumVenda);
+
+  aEcfConfig.Impressora := GetCupomNaoFiscalPortaNM;
+  aEcfConfig.Porta      := GetCupomNaoFiscalPortaDS;
+  aEcfConfig.Empresa  := AnsiUpperCase( qryEmitenteNMFANT.AsString );
+  aEcfConfig.Endereco := Trim(qryEmitenteTLG_SIGLA.AsString + ' ' + qryEmitenteLOG_NOME.AsString + ', ' + qryEmitenteNUMERO_END.AsString);
+  aEcfConfig.Bairro   := Trim(qryEmitenteBAI_NOME.AsString);
+  aEcfConfig.Fone     := StrFormatarFONE(qryEmitenteFONE.AsString);
+  aEcfConfig.Cep      := StrFormatarCEP(qryEmitenteCEP.AsString);
+  aEcfConfig.Cidade   := qryEmitenteCID_NOME.AsString + '/' + qryEmitenteEST_SIGLA.AsString;
+  aEcfConfig.Cnpj     := StrFormatarCnpj( sCNPJEmitente );
+  aEcfConfig.InscEstadual   := qryEmitenteIE.AsString;
+  aEcfConfig.ID             := FormatFloat('###0000000', iNumVenda);
+  aEcfConfig.ImprimirGliche := True;
+
+  aEcf := TEcfFactory.CriarEcf(aEcfTipo, aEcfConfig);
+  try
+  
+    with aEcf do
+    begin
+      Ecf.Identifica_Cupom(Now, FormatFloat('###0000000', iNumVenda), qryCalculoImportoVENDEDOR_NOME.AsString);
+
+      if ( qryDestinatarioCODIGO.AsInteger <> CONSUMIDOR_FINAL_CODIGO ) then
+        Ecf.Identifica_Consumidor( IfThen(StrIsCPF(qryDestinatarioCNPJ.AsString), StrFormatarCpf(qryDestinatarioCNPJ.AsString), StrFormatarCnpj(qryDestinatarioCNPJ.AsString))
+          , AnsiUpperCase(qryDestinatarioNOME.AsString)
+          , Trim(qryDestinatarioTLG_SIGLA.AsString + ' ' + qryDestinatarioLOG_NOME.AsString + ', ' +
+            qryDestinatarioNUMERO_END.AsString + ' - ' + qryDestinatarioBAI_NOME.AsString) + ' (' + qryDestinatarioCID_NOME.AsString + ')' 
+        );
+
+      Ecf.Titulo_Cupom('CUPOM NAO FISCAL');
+
+      qryDadosProduto.First;
+
+      while not qryDadosProduto.Eof do
+      begin
+        Ecf.Incluir_Item(FormatFloat('00', qryDadosProdutoSEQ.AsInteger)
+          , qryDadosProdutoCODPROD.AsString
+          , AnsiUpperCase(qryDadosProdutoDESCRI_APRESENTACAO.AsString)
+          , FormatFloat(',0.###', qryDadosProdutoQTDE.AsCurrency)
+          , FormatFloat(',0.00',  qryDadosProdutoPFINAL.AsCurrency)
+          , 'T0'
+          , FormatFloat(',0.00',  (qryDadosProdutoQTDE.AsCurrency * qryDadosProdutoPFINAL.AsCurrency))
+        );
+
+        qryDadosProduto.Next;
+      end;
+
+      Ecf.SubTotalVenda( FormatFloat(',0.00',  qryCalculoImportoTOTALVENDABRUTA.AsCurrency) );
+      Ecf.Desconto( FormatFloat(',0.00',  qryCalculoImportoDESCONTO.AsCurrency) );
+      Ecf.Linha;
+      Ecf.TotalVenda( FormatFloat(',0.00',  qryCalculoImportoTOTALVENDA.AsCurrency)  );
+
+      qryFormaPagtos.First;
+
+      while not qryFormaPagtos.Eof do
+      begin
+        Ecf.Incluir_Forma_Pgto(qryFormaPagtosDESCRI.AsString, FormatFloat(',0.00',  qryFormaPagtosVALOR_FPAGTO.AsCurrency));
+        qryFormaPagtos.Next;
+      end;
+      Ecf.Pular_Linha(5);
+    end;
+
+  finally
+    aEcf.Ecf.Finalizar;
+    aEcf.Free;
+  end;
+end;
+
+procedure TDMNFe.AbrirVendaCartaCredito(AnoVenda, NumeroVenda: Integer);
+begin
+  if (not qryCalculoImporto.Active) or qryCalculoImporto.IsEmpty then
+    with qryCalculoImporto do
+    begin
+      Close;
+      ParamByName('anovenda').AsInteger := AnoVenda;
+      ParamByName('numvenda').AsInteger := NumeroVenda;
+      Open;
+    end;
+
+  with qryVendaCartaCredito do
+  begin
+    Close;
+    ParamByName('anovenda').AsInteger := AnoVenda;
+    ParamByName('numvenda').AsInteger := NumeroVenda;
+    Open;
+  end;
 end;
 
 end.

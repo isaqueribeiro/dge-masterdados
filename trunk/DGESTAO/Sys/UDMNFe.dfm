@@ -40,7 +40,6 @@ object DMNFe: TDMNFe
     ImprimirDetalhamentoEspecifico = True
     NFeCancelada = False
     LocalImpCanhoto = 0
-    ImprimeItens = True
     EspessuraBorda = 1
     TamanhoFonte_RazaoSocial = 12
     TamanhoFonte_ANTT = 10
@@ -825,7 +824,7 @@ object DMNFe: TDMNFe
     PrintOptions.Printer = 'Padr'#227'o'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 40928.407150601900000000
-    ReportOptions.LastChange = 41209.028739675920000000
+    ReportOptions.LastChange = 41856.560478368050000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       ''
@@ -985,7 +984,7 @@ object DMNFe: TDMNFe
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -1006,7 +1005,7 @@ object DMNFe: TDMNFe
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -1025,7 +1024,7 @@ object DMNFe: TDMNFe
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -1054,11 +1053,11 @@ object DMNFe: TDMNFe
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
-            'Site / E-mail: [frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
+            '[frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -1376,44 +1375,6 @@ object DMNFe: TDMNFe
           WordWrap = False
           VAlign = vaCenter
         end
-        object Memo17: TfrxMemoView
-          Left = 642.520100000000000000
-          Top = 64.252010000000000000
-          Width = 75.590600000000000000
-          Height = 15.118120000000000000
-          ShowHint = False
-          Color = 14211288
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -8
-          Font.Name = 'Lucida Console'
-          Font.Style = [fsBold]
-          HAlign = haRight
-          Memo.UTF8 = (
-            'T O T A L ')
-          ParentFont = False
-          WordWrap = False
-          VAlign = vaCenter
-        end
-        object Memo22: TfrxMemoView
-          Left = 366.614410000000000000
-          Top = 64.252010000000000000
-          Width = 45.354323390000000000
-          Height = 15.118120000000000000
-          ShowHint = False
-          Color = 14211288
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -8
-          Font.Name = 'Lucida Console'
-          Font.Style = [fsBold]
-          HAlign = haRight
-          Memo.UTF8 = (
-            'Qtde.')
-          ParentFont = False
-          WordWrap = False
-          VAlign = vaCenter
-        end
         object Line2: TfrxLineView
           Top = 79.370130000000000000
           Width = 718.110700000000000000
@@ -1488,9 +1449,9 @@ object DMNFe: TDMNFe
           Font.Style = []
           Memo.UTF8 = (
             
-              ' [frdCliente."TLG_SIGLA"] [frdCliente."LOG_NOME"], [frdCliente."' +
-              'NUMERO_END"], [frdCliente."BAI_NOME"] - [frdCliente."CID_NOME"]/' +
-              '[frdCliente."EST_SIGLA"]')
+              ' [Trim(<frdCliente."TLG_SIGLA"> + '#39' '#39' + <frdCliente."LOG_NOME">)' +
+              '], [frdCliente."NUMERO_END"], [frdCliente."BAI_NOME"] - [frdClie' +
+              'nte."CID_NOME"]/[frdCliente."EST_SIGLA"]')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -1581,6 +1542,44 @@ object DMNFe: TDMNFe
           HAlign = haRight
           Memo.UTF8 = (
             'V. L'#195#173'quido ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo17: TfrxMemoView
+          Left = 642.520100000000000000
+          Top = 64.252010000000000000
+          Width = 75.590600000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T O T A L ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo22: TfrxMemoView
+          Left = 366.614410000000000000
+          Top = 64.252010000000000000
+          Width = 45.354323390000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Qtde.')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -2727,8 +2726,8 @@ object DMNFe: TDMNFe
   object IBSQL: TIBSQL
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    Left = 56
-    Top = 360
+    Left = 40
+    Top = 328
   end
   object FrECFPooler: TfrxReport
     Version = '4.9.72'
@@ -4513,17 +4512,17 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 2
     end
-    object qryEntradaDadosProdutoDESCONTO: TFMTBCDField
+    object qryEntradaDadosProdutoDESCONTO: TIBBCDField
       FieldName = 'DESCONTO'
       ProviderFlags = []
       Precision = 18
-      Size = 10
+      Size = 4
     end
-    object qryEntradaDadosProdutoDESCONTO_VALOR: TFMTBCDField
+    object qryEntradaDadosProdutoDESCONTO_VALOR: TIBBCDField
       FieldName = 'DESCONTO_VALOR'
       ProviderFlags = []
       Precision = 18
-      Size = 5
+      Size = 2
     end
     object qryEntradaDadosProdutoPFINAL: TIBBCDField
       FieldName = 'PFINAL'
@@ -4597,17 +4596,17 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 4
     end
-    object qryEntradaDadosProdutoTOTAL_BRUTO: TFMTBCDField
+    object qryEntradaDadosProdutoTOTAL_BRUTO: TIBBCDField
       FieldName = 'TOTAL_BRUTO'
       ProviderFlags = []
       Precision = 18
-      Size = 5
+      Size = 2
     end
-    object qryEntradaDadosProdutoTOTAL_LIQUIDO: TFMTBCDField
+    object qryEntradaDadosProdutoTOTAL_LIQUIDO: TIBBCDField
       FieldName = 'TOTAL_LIQUIDO'
       ProviderFlags = []
       Precision = 18
-      Size = 5
+      Size = 2
     end
     object qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField
       FieldName = 'TOTAL_DESCONTO'
@@ -7978,10 +7977,11 @@ object DMNFe: TDMNFe
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
     PreviewOptions.Zoom = 1.000000000000000000
+    PreviewOptions.ZoomMode = zmPageWidth
     PrintOptions.Printer = 'Padr'#227'o'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 40928.407150601900000000
-    ReportOptions.LastChange = 41209.028739675920000000
+    ReportOptions.LastChange = 41856.560272638890000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       ''
@@ -8009,7 +8009,7 @@ object DMNFe: TDMNFe
       Height = 1000.000000000000000000
       Width = 1000.000000000000000000
     end
-    object Page1: TfrxReportPage
+    object Requisicao: TfrxReportPage
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -8127,7 +8127,7 @@ object DMNFe: TDMNFe
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -8148,7 +8148,7 @@ object DMNFe: TDMNFe
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -8167,7 +8167,7 @@ object DMNFe: TDMNFe
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -8196,11 +8196,11 @@ object DMNFe: TDMNFe
           DataSetName = 'frdCliente'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
-            'Site / E-mail: [frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
+            '[frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -8220,7 +8220,7 @@ object DMNFe: TDMNFe
           Font.Style = [fsBold]
           HAlign = haCenter
           Memo.UTF8 = (
-            'REQUISI'#195#8225#195#402'O DE PRODUTOS')
+            'REQUISI'#195#8225#195#402'O/MANIFESTO DE PRODUTOS')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -8506,44 +8506,6 @@ object DMNFe: TDMNFe
           WordWrap = False
           VAlign = vaCenter
         end
-        object Memo17: TfrxMemoView
-          Left = 642.520100000000000000
-          Top = 64.252010000000000000
-          Width = 75.590600000000000000
-          Height = 15.118120000000000000
-          ShowHint = False
-          Color = 14211288
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -8
-          Font.Name = 'Lucida Console'
-          Font.Style = [fsBold]
-          HAlign = haRight
-          Memo.UTF8 = (
-            'T O T A L ')
-          ParentFont = False
-          WordWrap = False
-          VAlign = vaCenter
-        end
-        object Memo22: TfrxMemoView
-          Left = 495.118430000000000000
-          Top = 64.252010000000000000
-          Width = 45.354323390000000000
-          Height = 15.118120000000000000
-          ShowHint = False
-          Color = 14211288
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -8
-          Font.Name = 'Lucida Console'
-          Font.Style = [fsBold]
-          HAlign = haRight
-          Memo.UTF8 = (
-            'Qtde.')
-          ParentFont = False
-          WordWrap = False
-          VAlign = vaCenter
-        end
         object Line2: TfrxLineView
           Top = 79.370130000000000000
           Width = 718.110700000000000000
@@ -8618,9 +8580,9 @@ object DMNFe: TDMNFe
           Font.Style = []
           Memo.UTF8 = (
             
-              ' [frdCliente."TLG_SIGLA"] [frdCliente."LOG_NOME"], [frdCliente."' +
-              'NUMERO_END"], [frdCliente."BAI_NOME"] - [frdCliente."CID_NOME"]/' +
-              '[frdCliente."EST_SIGLA"]')
+              ' [Trim(<frdCliente."TLG_SIGLA"> + '#39' '#39' + <frdCliente."LOG_NOME">)' +
+              '], [frdCliente."NUMERO_END"], [frdCliente."BAI_NOME"] - [frdClie' +
+              'nte."CID_NOME"]/[frdCliente."EST_SIGLA"]')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -8673,6 +8635,44 @@ object DMNFe: TDMNFe
           HAlign = haRight
           Memo.UTF8 = (
             'V. M'#195#169'dio ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo22: TfrxMemoView
+          Left = 495.118430000000000000
+          Top = 64.252010000000000000
+          Width = 45.354323390000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Qtde.')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo17: TfrxMemoView
+          Left = 642.520100000000000000
+          Top = 64.252010000000000000
+          Width = 75.590600000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T O T A L ')
           ParentFont = False
           WordWrap = False
           VAlign = vaCenter
@@ -9913,6 +9913,9 @@ object DMNFe: TDMNFe
       '  , a.recebedor_funcao'
       '  , a.recebedor_cpf'
       '  , a.movito'
+      '  , a.cliente  as cliente_codigo'
+      '  , ci.nome     as cliente_nome'
+      '  , ci.cnpj     as cliente_cnpf'
       '  , a.observacao'
       '  , a.endereco_entrega'
       '  , a.forma_pagto'
@@ -9949,13 +9952,14 @@ object DMNFe: TDMNFe
       
         '  left join VW_CONDICAOPAGTO c on (c.cond_cod = a.condicao_pagto' +
         ')'
+      '  left join TBCLIENTE ci on (ci.codigo = a.cliente)'
       ''
       'where a.ano    = :ano'
       '  and a.codigo = :cod'
       ''
       '')
-    Left = 440
-    Top = 456
+    Left = 536
+    Top = 176
     ParamData = <
       item
         DataType = ftInteger
@@ -9995,6 +9999,9 @@ object DMNFe: TDMNFe
       'RECEBEDOR_FUNCAO=RECEBEDOR_FUNCAO'
       'RECEBEDOR_CPF=RECEBEDOR_CPF'
       'MOVITO=MOVITO'
+      'CLIENTE_CODIGO=CLIENTE_CODIGO'
+      'CLIENTE_NOME=CLIENTE_NOME'
+      'CLIENTE_CNPF=CLIENTE_CNPF'
       'OBSERVACAO=OBSERVACAO'
       'ENDERECO_ENTREGA=ENDERECO_ENTREGA'
       'FORMA_PAGTO=FORMA_PAGTO'
@@ -10020,8 +10027,8 @@ object DMNFe: TDMNFe
       'VALOR_TOTAL=VALOR_TOTAL')
     DataSet = qryAutorizacaoCompra
     BCDToCurrency = False
-    Left = 472
-    Top = 456
+    Left = 568
+    Top = 176
   end
   object frrAutorizacaoCompra: TfrxReport
     Version = '4.9.72'
@@ -10032,7 +10039,7 @@ object DMNFe: TDMNFe
     PrintOptions.Printer = 'Padr'#227'o'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 40928.407150601900000000
-    ReportOptions.LastChange = 41808.655458333330000000
+    ReportOptions.LastChange = 41856.455205057870000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       ''
@@ -10040,8 +10047,8 @@ object DMNFe: TDMNFe
       ''
       'end.')
     OnGetValue = frrAutorizacaoCompraGetValue
-    Left = 472
-    Top = 408
+    Left = 600
+    Top = 176
     Datasets = <
       item
         DataSet = frdAutorizacaoCompra
@@ -10417,7 +10424,7 @@ object DMNFe: TDMNFe
       end
       object bndPageFooter: TfrxPageFooter
         Height = 30.236240000000000000
-        Top = 797.480830000000000000
+        Top = 805.039890000000000000
         Width = 718.110700000000000000
         object Memo1: TfrxMemoView
           Left = 589.606680000000000000
@@ -10592,44 +10599,6 @@ object DMNFe: TDMNFe
           WordWrap = False
           VAlign = vaCenter
         end
-        object Memo17: TfrxMemoView
-          Left = 642.520100000000000000
-          Top = 94.488250000000000000
-          Width = 75.590600000000000000
-          Height = 15.118120000000000000
-          ShowHint = False
-          Color = 14211288
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -8
-          Font.Name = 'Lucida Console'
-          Font.Style = [fsBold]
-          HAlign = haRight
-          Memo.UTF8 = (
-            'T O T A L ')
-          ParentFont = False
-          WordWrap = False
-          VAlign = vaCenter
-        end
-        object Memo22: TfrxMemoView
-          Left = 495.118430000000000000
-          Top = 94.488250000000000000
-          Width = 45.354323390000000000
-          Height = 15.118120000000000000
-          ShowHint = False
-          Color = 14211288
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -8
-          Font.Name = 'Lucida Console'
-          Font.Style = [fsBold]
-          HAlign = haRight
-          Memo.UTF8 = (
-            'Qtde.')
-          ParentFont = False
-          WordWrap = False
-          VAlign = vaCenter
-        end
         object Line2: TfrxLineView
           Top = 109.606370000000000000
           Width = 718.110700000000000000
@@ -10795,9 +10764,47 @@ object DMNFe: TDMNFe
           ParentFont = False
           VAlign = vaCenter
         end
+        object Memo17: TfrxMemoView
+          Left = 642.520100000000000000
+          Top = 94.488250000000000000
+          Width = 75.590600000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T O T A L ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo22: TfrxMemoView
+          Left = 495.118430000000000000
+          Top = 94.488250000000000000
+          Width = 45.354323390000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Qtde.')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
       end
       object bndReportSummary: TfrxReportSummary
-        Height = 362.834880000000000000
+        Height = 370.393940000000000000
         Top = 411.968770000000000000
         Width = 718.110700000000000000
         Stretched = True
@@ -11143,7 +11150,7 @@ object DMNFe: TDMNFe
         object Memo15: TfrxMemoView
           Top = 317.480520000000000000
           Width = 718.110700000000000000
-          Height = 45.354360000000000000
+          Height = 52.913420000000000000
           ShowHint = False
           StretchMode = smMaxHeight
           DataSet = frdVenda
@@ -11160,7 +11167,11 @@ object DMNFe: TDMNFe
               'Material a ser retirado por: [frdAutorizacaoCompra."RECEBEDOR_NO' +
               'ME"] [IIF(Trim(<frdAutorizacaoCompra."RECEBEDOR_FUNCAO">)='#39#39','#39#39',' +
               #39'('#39'+<frdAutorizacaoCompra."RECEBEDOR_FUNCAO">+'#39')'#39')]'
-            '[frdAutorizacaoCompra."OBSERVACAO"]')
+            '[frdAutorizacaoCompra."OBSERVACAO"]'
+            
+              '[IIF(<frdAutorizacaoCompra."CLIENTE_CODIGO">=0,'#39#39','#39'* * * Cliente' +
+              ' : '#39' + FormatFloat('#39'00000'#39', <frdAutorizacaoCompra."CLIENTE_CODIG' +
+              'O">)) ]')
           ParentFont = False
           VAlign = vaCenter
         end
@@ -11215,6 +11226,5090 @@ object DMNFe: TDMNFe
           Memo.UTF8 = (
             ' Total IPI: ')
           ParentFont = False
+          VAlign = vaCenter
+        end
+      end
+    end
+  end
+  object qryCotacaoCompra: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'Select'
+      '    c.ano'
+      '  , c.codigo'
+      '  , c.numero'
+      '  , c.tipo'
+      '  , case c.tipo'
+      '      when 1 then '#39'Compra'#39
+      '      when 2 then '#39'Servi'#231'o'#39
+      '      when 3 then '#39'Compra/Servi'#231'o'#39
+      '    end as tipo_desc'
+      '  , c.status'
+      '  , case c.status'
+      '      when 0 then '#39'Em Edi'#231#227'o'#39
+      '      when 1 then '#39'Aberta'#39
+      '      when 2 then '#39'Em Cota'#231#227'o'#39
+      '      when 3 then '#39'Autorizada/Encerrada'#39
+      '      when 4 then '#39'Cancelada'#39
+      '    end as status_desc'
+      '  , c.empresa'
+      '  , c.emissao_data'
+      
+        '  , (Select first 1 us.nomecompleto from TBUSERS us where us.nom' +
+        'e = c.emissao_usuario)    as usuario_emissor'
+      '  , c.autorizada_data'
+      
+        '  , (Select first 1 us.nomecompleto from TBUSERS us where us.nom' +
+        'e = c.autorizada_usuario) as usuario_autorizador'
+      '  , c.descricao_resumo'
+      '  , c.nome_contato_int'
+      '  , c.movito'
+      '  , c.observacao'
+      '  , c.log_evento'
+      '  , c.valor_ref_total'
+      '  , c.valor_max_bruto'
+      '  , c.valor_max_desconto'
+      '  , c.valor_max_total'
+      '  , c.valor_min_bruto'
+      '  , c.valor_min_desconto'
+      '  , c.valor_min_total'
+      '  , c.valor_media_bruto'
+      '  , c.valor_media_desconto'
+      '  , c.valor_media_total'
+      ''
+      '  , i.seq'
+      '  , i.produto'
+      '  , p.descri'
+      '  , p.descri_apresentacao'
+      '  , p.referencia'
+      '  , i.quantidade'
+      
+        '  , coalesce(nullif(Trim(u.unp_sigla), '#39#39'), u.unp_descricao) as ' +
+        'unidade'
+      '  , i.valor_unitario_ref'
+      '  , i.valor_total_ref'
+      '  , i.valor_unitario_max'
+      '  , i.valor_total_max'
+      '  , i.valor_unitario_min'
+      '  , i.valor_total_min'
+      '  , i.valor_unitario_media'
+      '  , i.valor_total_media'
+      'from TBCOTACAO_COMPRA c'
+      
+        '  inner join TBCOTACAO_COMPRAITEM i on (i.ano = c.ano and i.codi' +
+        'go = c.codigo and i.empresa = c.empresa)'
+      '  inner join TBPRODUTO p on (p.cod = i.produto)'
+      '  left join TBUNIDADEPROD u on (u.unp_cod = i.unidade)'
+      ''
+      'where c.ano    = :ano'
+      '  and c.codigo = :cod'
+      '  and c.empresa    = :emp')
+    Left = 536
+    Top = 224
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'ano'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftInteger
+        Name = 'cod'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftUnknown
+        Name = 'emp'
+        ParamType = ptUnknown
+      end>
+  end
+  object frdCotacaoCompra: TfrxDBDataset
+    UserName = 'frdCotacaoCompra'
+    CloseDataSource = False
+    FieldAliases.Strings = (
+      'ANO=ANO'
+      'CODIGO=CODIGO'
+      'NUMERO=NUMERO'
+      'TIPO=TIPO'
+      'TIPO_DESC=TIPO_DESC'
+      'STATUS=STATUS'
+      'STATUS_DESC=STATUS_DESC'
+      'EMPRESA=EMPRESA'
+      'EMISSAO_DATA=EMISSAO_DATA'
+      'USUARIO_EMISSOR=USUARIO_EMISSOR'
+      'AUTORIZADA_DATA=AUTORIZADA_DATA'
+      'USUARIO_AUTORIZADOR=USUARIO_AUTORIZADOR'
+      'DESCRICAO_RESUMO=DESCRICAO_RESUMO'
+      'NOME_CONTATO_INT=NOME_CONTATO_INT'
+      'MOVITO=MOVITO'
+      'OBSERVACAO=OBSERVACAO'
+      'LOG_EVENTO=LOG_EVENTO'
+      'VALOR_REF_TOTAL=VALOR_REF_TOTAL'
+      'VALOR_MAX_BRUTO=VALOR_MAX_BRUTO'
+      'VALOR_MAX_DESCONTO=VALOR_MAX_DESCONTO'
+      'VALOR_MAX_TOTAL=VALOR_MAX_TOTAL'
+      'VALOR_MIN_BRUTO=VALOR_MIN_BRUTO'
+      'VALOR_MIN_DESCONTO=VALOR_MIN_DESCONTO'
+      'VALOR_MIN_TOTAL=VALOR_MIN_TOTAL'
+      'VALOR_MEDIA_BRUTO=VALOR_MEDIA_BRUTO'
+      'VALOR_MEDIA_DESCONTO=VALOR_MEDIA_DESCONTO'
+      'VALOR_MEDIA_TOTAL=VALOR_MEDIA_TOTAL'
+      'SEQ=SEQ'
+      'PRODUTO=PRODUTO'
+      'DESCRI=DESCRI'
+      'DESCRI_APRESENTACAO=DESCRI_APRESENTACAO'
+      'REFERENCIA=REFERENCIA'
+      'QUANTIDADE=QUANTIDADE'
+      'UNIDADE=UNIDADE'
+      'VALOR_UNITARIO_REF=VALOR_UNITARIO_REF'
+      'VALOR_TOTAL_REF=VALOR_TOTAL_REF'
+      'VALOR_UNITARIO_MAX=VALOR_UNITARIO_MAX'
+      'VALOR_TOTAL_MAX=VALOR_TOTAL_MAX'
+      'VALOR_UNITARIO_MIN=VALOR_UNITARIO_MIN'
+      'VALOR_TOTAL_MIN=VALOR_TOTAL_MIN'
+      'VALOR_UNITARIO_MEDIA=VALOR_UNITARIO_MEDIA'
+      'VALOR_TOTAL_MEDIA=VALOR_TOTAL_MEDIA')
+    DataSet = qryCotacaoCompra
+    BCDToCurrency = False
+    Left = 568
+    Top = 224
+  end
+  object frrCotacaoCompra: TfrxReport
+    Version = '4.9.72'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PrintOptions.Printer = 'Padr'#227'o'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 40928.407150601900000000
+    ReportOptions.LastChange = 41821.992115636570000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      ''
+      'begin'
+      ''
+      'end.')
+    OnGetValue = frrAutorizacaoCompraGetValue
+    Left = 600
+    Top = 224
+    Datasets = <
+      item
+        DataSet = frdCotacaoCompra
+        DataSetName = 'frdCotacaoCompra'
+      end
+      item
+        DataSet = frdCotacaoCompraFornecedor
+        DataSetName = 'frdCotacaoCompraFornecedor'
+      end
+      item
+        DataSet = frdEmpresa
+        DataSetName = 'frdEmpresa'
+      end>
+    Variables = <>
+    Style = <>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Page1: TfrxReportPage
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Lucida Console'
+      Font.Style = []
+      PaperWidth = 210.000000000000000000
+      PaperHeight = 297.000000000000000000
+      PaperSize = 9
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
+      TopMargin = 10.000000000000000000
+      BottomMargin = 10.000000000000000000
+      object bndReportTitle: TfrxReportTitle
+        Height = 116.858380000000000000
+        Top = 18.897650000000000000
+        Width = 718.110700000000000000
+        object frdVendaCODCONTROL: TfrxMemoView
+          Left = 559.370440000000000000
+          Top = 18.897650000000000000
+          Width = 158.740260000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[frdCotacaoCompra."NUMERO"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo3: TfrxMemoView
+          Left = 559.370440000000000000
+          Width = 158.740260000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            'N '#195#186' m e r o   C o n t r o l e :')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo10: TfrxMemoView
+          Left = 559.370440000000000000
+          Top = 37.795300000000000000
+          Width = 158.740260000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[Trim(<frdCotacaoCompra."STATUS_DESC">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Picture1: TfrxPictureView
+          Left = 3.779530000000000000
+          Width = 139.842610000000000000
+          Height = 79.370130000000000000
+          ShowHint = False
+          DataField = 'LOGO'
+          DataSet = frdEmpresa
+          DataSetName = 'frdEmpresa'
+          Frame.Width = 0.100000000000000000
+          HightQuality = False
+          Transparent = False
+          TransparentColor = clWhite
+        end
+        object frdEmpresaRZSOC: TfrxMemoView
+          Left = 143.622140000000000000
+          Width = 411.968770000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            '[frdEmpresa."RZSOC"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object frdEmpresaNMFANT: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 18.897650000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            
+              'CNPJ.: [FormatMaskText('#39'##.###.###/####-##;0;'#39',<frdEmpresa."CNPJ' +
+              '">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdFone: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 34.015770000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            'FONE: [FormatMaskText('#39'(##)####.####;0;'#39',<frdEmpresa."FONE">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo11: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 49.133890000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            
+              '[frdEmpresa."TLG_SIGLA"] [frdEmpresa."LOG_NOME"], [frdEmpresa."N' +
+              'UMERO_END"], [frdEmpresa."BAI_NOME"] - [frdEmpresa."CID_NOME"]/[' +
+              'frdEmpresa."EST_SIGLA"] CEP.: [FormatMaskText('#39'##.###-###;0;'#39',<f' +
+              'rdEmpresa."CEP">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Line1: TfrxLineView
+          Top = 83.149660000000000000
+          Width = 718.110700000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+        end
+        object Memo44: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 64.252010000000000000
+          Width = 574.488560000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            '[frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo45: TfrxMemoView
+          Top = 90.708720000000000000
+          Width = 721.890230000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          CharSpacing = 4.000000000000000000
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            
+              '[Trim('#39'COTA'#195#8225#195#402'O DE '#39' + Uppercase(<frdCotacaoCompra."TIPO_DESC">' +
+              '))]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndMasterData: TfrxMasterData
+        Height = 18.897650000000000000
+        Top = 362.834880000000000000
+        Width = 718.110700000000000000
+        DataSet = frdCotacaoCompra
+        DataSetName = 'frdCotacaoCompra'
+        RowCount = 0
+        object frdItensCODPROD: TfrxMemoView
+          Left = 22.677180000000000000
+          Width = 52.913420000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [frdCotacaoCompra."PRODUTO"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdItensSEQ: TfrxMemoView
+          Width = 22.677180000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[Line]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdItensDESCRI: TfrxMemoView
+          Left = 75.590600000000000000
+          Width = 419.527659130000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [frdCotacaoCompra."DESCRI_APRESENTACAO"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo4: TfrxMemoView
+          Left = 495.118430000000000000
+          Width = 45.354360000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.###'#39',<frdCotacaoCompra."QUANTIDADE">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo7: TfrxMemoView
+          Left = 642.520100000000000000
+          Width = 75.590600000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo5: TfrxMemoView
+          Left = 540.472790000000000000
+          Width = 37.795300000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [frdCotacaoCompra."UNIDADE"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo6: TfrxMemoView
+          Left = 578.268090000000000000
+          Width = 64.252010000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndPageFooter: TfrxPageFooter
+        Height = 30.236240000000000000
+        Top = 710.551640000000000000
+        Width = 718.110700000000000000
+        object Memo1: TfrxMemoView
+          Left = 589.606680000000000000
+          Width = 128.504020000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'P'#195#161'gina :  [Page#]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo18: TfrxMemoView
+          Width = 589.606680000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [Sistema]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaBottom
+        end
+        object Memo19: TfrxMemoView
+          Top = 15.118120000000000000
+          Width = 589.606680000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Impresso em [Date] '#195#160's [Time] por [Usuario]')
+          ParentFont = False
+          WordWrap = False
+        end
+      end
+      object bndHeader: TfrxHeader
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Lucida Console'
+        Font.Style = []
+        Height = 143.622140000000000000
+        ParentFont = False
+        Top = 196.535560000000000000
+        Width = 718.110700000000000000
+        object frdVendaNOME: TfrxMemoView
+          Top = 79.370130000000000000
+          Width = 415.748300000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [frdCotacaoCompraFornecedor."NOMEFORN"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo2: TfrxMemoView
+          Top = 68.031540000000000000
+          Width = 415.748300000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Fornecedor:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo8: TfrxMemoView
+          Left = 415.748300000000000000
+          Top = 68.031540000000000000
+          Width = 207.874150000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' CPF/CNPJ.:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo9: TfrxMemoView
+          Left = 415.748300000000000000
+          Top = 79.370130000000000000
+          Width = 207.874150000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            
+              ' [IIF(<frdCotacaoCompraFornecedor."CNPJ">='#39#39','#39#39',IIF(<frdCotacaoC' +
+              'ompraFornecedor."PESSOA_FISICA">=1,FormatMaskText('#39'###.###.###-#' +
+              '#;0;'#39',<frdCotacaoCompraFornecedor."CNPJ">),FormatMaskText('#39'##.##' +
+              '#.###/####-##;0;'#39',<frdCotacaoCompraFornecedor."CNPJ">)))]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo12: TfrxMemoView
+          Left = 623.622450000000000000
+          Top = 68.031540000000000000
+          Width = 94.488250000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Data: ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo13: TfrxMemoView
+          Left = 623.622450000000000000
+          Top = 79.370130000000000000
+          Width = 94.488250000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            
+              ' [FormatDateTime('#39'dd/mm/yyyy'#39',<frdCotacaoCompra."EMISSAO_DATA">)' +
+              '] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo17: TfrxMemoView
+          Left = 642.520100000000000000
+          Top = 128.504020000000000000
+          Width = 75.590600000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T O T A L ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo22: TfrxMemoView
+          Left = 495.118430000000000000
+          Top = 128.504020000000000000
+          Width = 45.354323390000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Qtde.')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Line2: TfrxLineView
+          Top = 143.622140000000000000
+          Width = 718.110700000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+        end
+        object Memo23: TfrxMemoView
+          Top = 128.504020000000000000
+          Width = 22.677180000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '#')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo24: TfrxMemoView
+          Left = 22.677180000000000000
+          Top = 128.504020000000000000
+          Width = 52.913420000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' C'#195#179'digo')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo25: TfrxMemoView
+          Left = 75.590600000000000000
+          Top = 128.504020000000000000
+          Width = 419.527659130000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Descri'#195#167#195#163'o')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo26: TfrxMemoView
+          Top = 109.606370000000000000
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo27: TfrxMemoView
+          Top = 98.267780000000000000
+          Width = 718.110700000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Endere'#195#167'o:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo21: TfrxMemoView
+          Left = 540.472790000000000000
+          Top = 128.504020000000000000
+          Width = 37.795300000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Und.')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo20: TfrxMemoView
+          Left = 578.268090000000000000
+          Top = 128.504020000000000000
+          Width = 64.252010000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'V. Un. ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo48: TfrxMemoView
+          Top = 49.133890000000000000
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [frdCotacaoCompraFornecedor."NOME_CONTATO"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo49: TfrxMemoView
+          Top = 37.795300000000000000
+          Width = 718.110700000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Att.:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo40: TfrxMemoView
+          Top = 15.118120000000000000
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftBottom]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [frdCotacaoCompra."DESCRICAO_RESUMO"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo41: TfrxMemoView
+          Top = 3.779530000000000000
+          Width = 718.110700000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Color = clBtnFace
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            ' Descri'#195#167#195#163'o resumo')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+      end
+      object bndReportSummary: TfrxReportSummary
+        Height = 245.669450000000000000
+        Top = 442.205010000000000000
+        Width = 718.110700000000000000
+        Stretched = True
+        object SysMemo1: TfrxSysMemoView
+          Left = 623.622450000000000000
+          Width = 94.488250000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          ParentFont = False
+          VAlign = vaCenter
+          WordWrap = False
+        end
+        object Memo14: TfrxMemoView
+          Left = 480.000310000000000000
+          Width = 143.622140000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T O T A L    G E R A L :')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo42: TfrxMemoView
+          Left = 226.771800000000000000
+          Top = 139.842610000000000000
+          Width = 264.567100000000000000
+          Height = 37.795300000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            
+              '[IIF(<frdCotacaoCompraFornecedor."NOMEFORN">='#39#39','#39'Fornecedor'#39',<fr' +
+              'dCotacaoCompraFornecedor."NOMEFORN">)]'
+            
+              '[IIF(<frdCotacaoCompraFornecedor."CNPJ">='#39#39','#39'CPF/CNPJ:'#39',IIF(<frd' +
+              'CotacaoCompraFornecedor."PESSOA_FISICA">=1,FormatMaskText('#39'###.#' +
+              '##.###-##;0;'#39',<frdCotacaoCompraFornecedor."CNPJ">),FormatMaskTex' +
+              't('#39'##.###.###/####-##;0;'#39',<frdCotacaoCompraFornecedor."CNPJ">)))' +
+              ']')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo28: TfrxMemoView
+          Top = 68.031540000000000000
+          Width = 302.362400000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [frdCotacaoCompra."USUARIO_AUTORIZADOR"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo29: TfrxMemoView
+          Top = 56.692950000000000000
+          Width = 302.362400000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Autorizador:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Line3: TfrxLineView
+          Top = 22.677180000000000000
+          Width = 718.110700000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+        end
+        object Memo30: TfrxMemoView
+          Top = 37.795300000000000000
+          Width = 302.362400000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [frdCotacaoCompraFornecedor."FORMA_PAGTO_DESC"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo31: TfrxMemoView
+          Top = 26.456710000000000000
+          Width = 302.362400000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Forma de Pagamento:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo32: TfrxMemoView
+          Left = 302.362400000000000000
+          Top = 37.795300000000000000
+          Width = 415.748300000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [frdCotacaoCompraFornecedor."CONDICAP_PAGTO_DESC"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo33: TfrxMemoView
+          Left = 302.362400000000000000
+          Top = 26.456710000000000000
+          Width = 415.748300000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Condi'#195#167#195#163'o de Pagamento:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo34: TfrxMemoView
+          Left = 400.630180000000000000
+          Top = 68.031540000000000000
+          Width = 102.047248980000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo35: TfrxMemoView
+          Left = 400.630180000000000000
+          Top = 56.692950000000000000
+          Width = 102.047248980000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            ' Total Bruto: ')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo36: TfrxMemoView
+          Left = 502.677490000000000000
+          Top = 68.031540000000000000
+          Width = 98.267780000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo37: TfrxMemoView
+          Left = 502.677490000000000000
+          Top = 56.692950000000000000
+          Width = 98.267780000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            ' Desconto: ')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo38: TfrxMemoView
+          Left = 600.945270000000000000
+          Top = 68.031540000000000000
+          Width = 117.165430000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Color = clBtnFace
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo39: TfrxMemoView
+          Left = 600.945270000000000000
+          Top = 56.692950000000000000
+          Width = 117.165430000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Color = 13421772
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            ' Total L'#195#173'quido: ')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo15: TfrxMemoView
+          Top = 192.756030000000000000
+          Width = 718.110700000000000000
+          Height = 52.913420000000000000
+          ShowHint = False
+          StretchMode = smMaxHeight
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            
+              '[IIF(<frdCotacaoCompraFornecedor."OBSERVACAO">='#39#39',<frdCotacaoCom' +
+              'pra."OBSERVACAO">,<frdCotacaoCompraFornecedor."OBSERVACAO">)]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo16: TfrxMemoView
+          Top = 177.637910000000000000
+          Width = 718.110700000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Observa'#195#167#195#181'es Gerais:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+      end
+    end
+  end
+  object qryCotacaoCompraFornecedor: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'Select'
+      '    c.ano'
+      '  , c.codigo'
+      '  , c.empresa'
+      '  , c.fornecedor'
+      '  , c.nome_contato'
+      '  , c.email_envio'
+      '  , c.forma_pagto'
+      '  , c.condicao_pagto'
+      '  , c.prazo_entrega_data'
+      '  , c.prazo_entreda_dia'
+      '  , c.observacao'
+      '  , c.ativo'
+      '  , c.usuario'
+      '  , c.valor_total_bruto'
+      '  , c.valor_total_desconto'
+      '  , c.valor_total_liquido'
+      '  , c.vencedor'
+      '  , f.nomeforn'
+      '  , f.cnpj'
+      '  , f.pessoa_fisica'
+      '  , f.email'
+      '  , fp.descri as forma_pagto_desc'
+      '  , cp.cond_descricao as condicap_pagto_desc'
+      
+        '  , (Select count(x.item) from TBCOTACAO_COMPRAFORN_ITEM x where' +
+        ' x.ano = c.ano and x.codigo = c.codigo and x.empresa = c.empresa' +
+        ' and x.fornecedor = c.fornecedor) as Itens'
+      'from TBCOTACAO_COMPRAFORN c'
+      '  left join TBFORNECEDOR f on (f.codforn = c.fornecedor)'
+      '  left join TBFORMPAGTO fp on (fp.cod = c.forma_pagto)'
+      
+        '  left join VW_CONDICAOPAGTO cp on (cp.cond_cod = c.condicao_pag' +
+        'to)'
+      ''
+      'where c.ano        = :ano'
+      '  and c.codigo     = :cod'
+      '  and c.empresa    = :emp'
+      '  and ((c.fornecedor = :frn) or (:todos = 1))'
+      ''
+      'order by'
+      '    c.ano'
+      '  , c.codigo'
+      '  , c.empresa'
+      '  , c.fornecedor')
+    Left = 536
+    Top = 272
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'ano'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftInteger
+        Name = 'cod'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftUnknown
+        Name = 'emp'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'frn'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'todos'
+        ParamType = ptUnknown
+      end>
+  end
+  object frdCotacaoCompraFornecedor: TfrxDBDataset
+    UserName = 'frdCotacaoCompraFornecedor'
+    CloseDataSource = False
+    FieldAliases.Strings = (
+      'ANO=ANO'
+      'CODIGO=CODIGO'
+      'EMPRESA=EMPRESA'
+      'FORNECEDOR=FORNECEDOR'
+      'NOME_CONTATO=NOME_CONTATO'
+      'EMAIL_ENVIO=EMAIL_ENVIO'
+      'FORMA_PAGTO=FORMA_PAGTO'
+      'CONDICAO_PAGTO=CONDICAO_PAGTO'
+      'PRAZO_ENTREGA_DATA=PRAZO_ENTREGA_DATA'
+      'PRAZO_ENTREDA_DIA=PRAZO_ENTREDA_DIA'
+      'OBSERVACAO=OBSERVACAO'
+      'ATIVO=ATIVO'
+      'USUARIO=USUARIO'
+      'VALOR_TOTAL_BRUTO=VALOR_TOTAL_BRUTO'
+      'VALOR_TOTAL_DESCONTO=VALOR_TOTAL_DESCONTO'
+      'VALOR_TOTAL_LIQUIDO=VALOR_TOTAL_LIQUIDO'
+      'VENCEDOR=VENCEDOR'
+      'NOMEFORN=NOMEFORN'
+      'CNPJ=CNPJ'
+      'PESSOA_FISICA=PESSOA_FISICA'
+      'EMAIL=EMAIL'
+      'FORMA_PAGTO_DESC=FORMA_PAGTO_DESC'
+      'CONDICAP_PAGTO_DESC=CONDICAP_PAGTO_DESC'
+      'ITENS=ITENS')
+    DataSet = qryCotacaoCompraFornecedor
+    BCDToCurrency = False
+    Left = 568
+    Top = 272
+  end
+  object ACBrValidador: TACBrValidador
+    IgnorarChar = './-'
+    Left = 40
+    Top = 384
+  end
+  object qryCotacaoCompraFornecedorItem: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'Select'
+      '    right('#39'00000'#39' || fi.fornecedor, 5) as fornecedor'
+      '  , fi.item'
+      '  , ci.produto'
+      '  , pr.descri_apresentacao'
+      '  , ci.quantidade'
+      '  , ci.unidade'
+      '  , un.unp_descricao'
+      '  , un.unp_sigla'
+      ''
+      '  , ci.valor_unitario_ref'
+      '  , ci.valor_total_ref'
+      '  , ci.valor_unitario_max'
+      '  , ci.valor_total_max'
+      '  , ci.valor_unitario_min'
+      '  , ci.valor_total_min'
+      '  , ci.valor_unitario_media'
+      '  , ci.valor_total_media'
+      ''
+      '  , fi.valor_unitario'
+      '  , fi.valor_total'
+      'from TBCOTACAO_COMPRAFORN_ITEM fi'
+      
+        '  left join TBCOTACAO_COMPRAITEM ci on (ci.ano = fi.ano and ci.c' +
+        'odigo = fi.codigo and ci.empresa = fi.empresa and ci.seq = fi.it' +
+        'em)'
+      '  left join TBPRODUTO pr on (pr.cod = ci.produto)'
+      '  left join TBUNIDADEPROD un on (un.unp_cod = ci.unidade)'
+      ''
+      'where fi.ano        = :ano'
+      '  and fi.codigo     = :cod'
+      '  and fi.empresa    = :emp'
+      '  and ((fi.fornecedor = :frn) or (:todos = 1))'
+      ''
+      'order by'
+      '    fi.fornecedor'
+      '  , pr.descri_apresentacao')
+    Left = 536
+    Top = 320
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'ano'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftInteger
+        Name = 'cod'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftUnknown
+        Name = 'emp'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'frn'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'todos'
+        ParamType = ptUnknown
+      end>
+  end
+  object frdCotacaoCompraFornecedorItem: TfrxDBDataset
+    UserName = 'frdCotacaoCompraFornecedorItem'
+    CloseDataSource = False
+    FieldAliases.Strings = (
+      'FORNECEDOR=FORNECEDOR'
+      'ITEM=ITEM'
+      'PRODUTO=PRODUTO'
+      'DESCRI_APRESENTACAO=DESCRI_APRESENTACAO'
+      'QUANTIDADE=QUANTIDADE'
+      'UNIDADE=UNIDADE'
+      'UNP_DESCRICAO=UNP_DESCRICAO'
+      'UNP_SIGLA=UNP_SIGLA'
+      'VALOR_UNITARIO_REF=VALOR_UNITARIO_REF'
+      'VALOR_TOTAL_REF=VALOR_TOTAL_REF'
+      'VALOR_UNITARIO_MAX=VALOR_UNITARIO_MAX'
+      'VALOR_TOTAL_MAX=VALOR_TOTAL_MAX'
+      'VALOR_UNITARIO_MIN=VALOR_UNITARIO_MIN'
+      'VALOR_TOTAL_MIN=VALOR_TOTAL_MIN'
+      'VALOR_UNITARIO_MEDIA=VALOR_UNITARIO_MEDIA'
+      'VALOR_TOTAL_MEDIA=VALOR_TOTAL_MEDIA'
+      'VALOR_UNITARIO=VALOR_UNITARIO'
+      'VALOR_TOTAL=VALOR_TOTAL')
+    DataSet = qryCotacaoCompraFornecedorItem
+    BCDToCurrency = False
+    Left = 568
+    Top = 320
+  end
+  object frrCotacaoCompraMapaPreco: TfrxReport
+    Version = '4.9.72'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PreviewOptions.ZoomMode = zmPageWidth
+    PrintOptions.Printer = 'Padr'#227'o'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 40928.407150601900000000
+    ReportOptions.LastChange = 41828.581609050930000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      ''
+      'begin'
+      ''
+      'end.')
+    OnGetValue = frrAutorizacaoCompraGetValue
+    Left = 632
+    Top = 224
+    Datasets = <
+      item
+        DataSet = frdCotacaoCompra
+        DataSetName = 'frdCotacaoCompra'
+      end
+      item
+        DataSet = frdCotacaoCompraFornecedor
+        DataSetName = 'frdCotacaoCompraFornecedor'
+      end
+      item
+        DataSet = frdCotacaoCompraFornecedorItem
+        DataSetName = 'frdCotacaoCompraFornecedorItem'
+      end
+      item
+        DataSet = frdEmpresa
+        DataSetName = 'frdEmpresa'
+      end>
+    Variables = <>
+    Style = <>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Page1: TfrxReportPage
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Lucida Console'
+      Font.Style = []
+      Orientation = poLandscape
+      PaperWidth = 297.000000000000000000
+      PaperHeight = 210.000000000000000000
+      PaperSize = 9
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
+      TopMargin = 10.000000000000000000
+      BottomMargin = 10.000000000000000000
+      object bndReportTitle: TfrxReportTitle
+        Height = 116.858380000000000000
+        Top = 18.897650000000000000
+        Width = 1046.929810000000000000
+        object frdVendaCODCONTROL: TfrxMemoView
+          Left = 888.189550000000000000
+          Top = 18.897650000000000000
+          Width = 158.740260000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[frdCotacaoCompra."NUMERO"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo3: TfrxMemoView
+          Left = 888.189550000000000000
+          Width = 158.740260000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            'N '#195#186' m e r o   C o n t r o l e :')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo10: TfrxMemoView
+          Left = 888.189550000000000000
+          Top = 37.795300000000000000
+          Width = 158.740260000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[Trim(<frdCotacaoCompra."STATUS_DESC">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Picture1: TfrxPictureView
+          Left = 3.779530000000000000
+          Width = 139.842610000000000000
+          Height = 79.370130000000000000
+          ShowHint = False
+          DataField = 'LOGO'
+          DataSet = frdEmpresa
+          DataSetName = 'frdEmpresa'
+          Frame.Width = 0.100000000000000000
+          HightQuality = False
+          Transparent = False
+          TransparentColor = clWhite
+        end
+        object frdEmpresaRZSOC: TfrxMemoView
+          Left = 143.622140000000000000
+          Width = 411.968770000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            '[frdEmpresa."RZSOC"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object frdEmpresaNMFANT: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 18.897650000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            
+              'CNPJ.: [FormatMaskText('#39'##.###.###/####-##;0;'#39',<frdEmpresa."CNPJ' +
+              '">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdFone: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 34.015770000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            'FONE: [FormatMaskText('#39'(##)####.####;0;'#39',<frdEmpresa."FONE">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo11: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 49.133890000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            
+              '[frdEmpresa."TLG_SIGLA"] [frdEmpresa."LOG_NOME"], [frdEmpresa."N' +
+              'UMERO_END"], [frdEmpresa."BAI_NOME"] - [frdEmpresa."CID_NOME"]/[' +
+              'frdEmpresa."EST_SIGLA"] CEP.: [FormatMaskText('#39'##.###-###;0;'#39',<f' +
+              'rdEmpresa."CEP">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Line1: TfrxLineView
+          Top = 83.149660000000000000
+          Width = 1046.929810000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+        end
+        object Memo44: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 64.252010000000000000
+          Width = 574.488560000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            '[frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo45: TfrxMemoView
+          Top = 90.708720000000000000
+          Width = 1046.929810000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          CharSpacing = 4.000000000000000000
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            
+              '[Trim('#39'COTA'#195#8225#195#402'O DE '#39' + Uppercase(<frdCotacaoCompra."TIPO_DESC">' +
+              '))]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndMasterData: TfrxMasterData
+        Height = 18.897650000000000000
+        Top = 268.346630000000000000
+        Width = 1046.929810000000000000
+        DataSet = frdCotacaoCompraFornecedor
+        DataSetName = 'frdCotacaoCompraFornecedor'
+        RowCount = 0
+        object frdItensCODPROD: TfrxMemoView
+          Width = 52.913420000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = 10485760
+          Highlight.Font.Height = -11
+          Highlight.Font.Name = 'Calibri'
+          Highlight.Font.Style = [fsBold]
+          Highlight.Condition = '<frdCotacaoCompraFornecedor."VENCEDOR">=1'
+          Memo.UTF8 = (
+            
+              ' [FormatFloat('#39'00000'#39', <frdCotacaoCompraFornecedor."FORNECEDOR">' +
+              ')]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdItensDESCRI: TfrxMemoView
+          Left = 52.913420000000000000
+          Width = 321.259879130000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = 10485760
+          Highlight.Font.Height = -11
+          Highlight.Font.Name = 'Calibri'
+          Highlight.Font.Style = [fsBold]
+          Highlight.Condition = '<frdCotacaoCompraFornecedor."VENCEDOR">=1'
+          Memo.UTF8 = (
+            ' [frdCotacaoCompraFornecedor."NOMEFORN"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo7: TfrxMemoView
+          Left = 963.780150000000000000
+          Width = 83.149660000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = 10485760
+          Highlight.Font.Height = -11
+          Highlight.Font.Name = 'Calibri'
+          Highlight.Font.Style = [fsBold]
+          Highlight.Condition = '<frdCotacaoCompraFornecedor."VENCEDOR">=1'
+          Memo.UTF8 = (
+            
+              '[FormatFloat('#39',0.00'#39',<frdCotacaoCompraFornecedor."VALOR_TOTAL_LI' +
+              'QUIDO">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo43: TfrxMemoView
+          Left = 374.173470000000000000
+          Width = 139.842610000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = 10485760
+          Highlight.Font.Height = -11
+          Highlight.Font.Name = 'Calibri'
+          Highlight.Font.Style = [fsBold]
+          Highlight.Condition = '<frdCotacaoCompraFornecedor."VENCEDOR">=1'
+          Memo.UTF8 = (
+            
+              ' [IIF(<frdCotacaoCompraFornecedor."CNPJ">='#39#39','#39#39',IIF(<frdCotacaoC' +
+              'ompraFornecedor."PESSOA_FISICA">=1,FormatMaskText('#39'###.###.###-#' +
+              '#;0;'#39',<frdCotacaoCompraFornecedor."CNPJ">),FormatMaskText('#39'##.##' +
+              '#.###/####-##;0;'#39',<frdCotacaoCompraFornecedor."CNPJ">)))]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo6: TfrxMemoView
+          Left = 808.819420000000000000
+          Width = 79.370130000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = 10485760
+          Highlight.Font.Height = -11
+          Highlight.Font.Name = 'Calibri'
+          Highlight.Font.Style = [fsBold]
+          Highlight.Condition = '<frdCotacaoCompraFornecedor."VENCEDOR">=1'
+          Memo.UTF8 = (
+            
+              '[FormatFloat('#39',0.00'#39',<frdCotacaoCompraFornecedor."VALOR_TOTAL_BR' +
+              'UTO">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo20: TfrxMemoView
+          Left = 888.189550000000000000
+          Width = 75.590600000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = 10485760
+          Highlight.Font.Height = -11
+          Highlight.Font.Name = 'Calibri'
+          Highlight.Font.Style = [fsBold]
+          Highlight.Condition = '<frdCotacaoCompraFornecedor."VENCEDOR">=1'
+          Memo.UTF8 = (
+            
+              '[FormatFloat('#39',0.00'#39',<frdCotacaoCompraFornecedor."VALOR_TOTAL_DE' +
+              'SCONTO">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo8: TfrxMemoView
+          Left = 514.016080000000000000
+          Width = 139.842610000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = 10485760
+          Highlight.Font.Height = -11
+          Highlight.Font.Name = 'Calibri'
+          Highlight.Font.Style = [fsBold]
+          Highlight.Condition = '<frdCotacaoCompraFornecedor."VENCEDOR">=1'
+          Memo.UTF8 = (
+            ' [frdCotacaoCompraFornecedor."FORMA_PAGTO_DESC"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo12: TfrxMemoView
+          Left = 653.858690000000000000
+          Width = 154.960730000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Frame.Width = 0.100000000000000000
+          Highlight.Font.Charset = DEFAULT_CHARSET
+          Highlight.Font.Color = 10485760
+          Highlight.Font.Height = -11
+          Highlight.Font.Name = 'Calibri'
+          Highlight.Font.Style = [fsBold]
+          Highlight.Condition = '<frdCotacaoCompraFornecedor."VENCEDOR">=1'
+          Memo.UTF8 = (
+            ' [frdCotacaoCompraFornecedor."CONDICAP_PAGTO_DESC"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndPageFooter: TfrxPageFooter
+        Height = 30.236240000000000000
+        Top = 532.913730000000000000
+        Width = 1046.929810000000000000
+        object Memo1: TfrxMemoView
+          Left = 918.425790000000000000
+          Width = 128.504020000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'P'#195#161'gina :  [Page#]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo18: TfrxMemoView
+          Width = 918.425790000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [Sistema]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaBottom
+        end
+        object Memo19: TfrxMemoView
+          Top = 15.118120000000000000
+          Width = 918.425790000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Impresso em [Date] '#195#160's [Time] por [Usuario]')
+          ParentFont = False
+          WordWrap = False
+        end
+      end
+      object bndHeader: TfrxHeader
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Lucida Console'
+        Font.Style = []
+        Height = 49.133890000000000000
+        ParentFont = False
+        Top = 196.535560000000000000
+        Width = 1046.929810000000000000
+        object Memo17: TfrxMemoView
+          Left = 963.780150000000000000
+          Top = 34.015770000000000000
+          Width = 83.149660000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftRight, ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T. L'#195#173'quido ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Line2: TfrxLineView
+          Top = 49.133890000000000000
+          Width = 1046.929810000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+        end
+        object Memo24: TfrxMemoView
+          Top = 34.015770000000000000
+          Width = 52.913420000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftTop]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' C'#195#179'digo')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo25: TfrxMemoView
+          Left = 52.913420000000000000
+          Top = 34.015770000000000000
+          Width = 321.259879130000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Nome / Raz'#195#163'o Social')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo40: TfrxMemoView
+          Top = 11.338590000000000000
+          Width = 1046.929810000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftBottom]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' [frdCotacaoCompra."DESCRICAO_RESUMO"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo41: TfrxMemoView
+          Width = 1046.929810000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Color = clBtnFace
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haCenter
+          Memo.UTF8 = (
+            ' Descri'#195#167#195#163'o resumo')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo23: TfrxMemoView
+          Left = 374.173470000000000000
+          Top = 34.015770000000000000
+          Width = 139.842610000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' CPF/CNPJ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo4: TfrxMemoView
+          Left = 888.189550000000000000
+          Top = 34.015770000000000000
+          Width = 75.590600000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Desconto ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo5: TfrxMemoView
+          Left = 808.819420000000000000
+          Top = 34.015770000000000000
+          Width = 79.370130000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T. Bruto ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo2: TfrxMemoView
+          Left = 514.016080000000000000
+          Top = 34.015770000000000000
+          Width = 139.842610000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Forma de Pagamento')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo9: TfrxMemoView
+          Left = 653.858690000000000000
+          Top = 34.015770000000000000
+          Width = 154.960730000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          Frame.Width = 0.100000000000000000
+          Memo.UTF8 = (
+            ' Condi'#195#167#195#163'o de Pagamento')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndMasterDataMapa: TfrxMasterData
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Calibri'
+        Font.Style = []
+        Height = 129.000000000000000000
+        ParentFont = False
+        Top = 343.937230000000000000
+        Width = 1046.929810000000000000
+        DataSet = frdEmpresa
+        DataSetName = 'frdEmpresa'
+        RowCount = 0
+        object dbCrossMapa: TfrxDBCrossView
+          Width = 764.000000000000000000
+          Height = 125.000000000000000000
+          ShowHint = False
+          CellLevels = 2
+          DownThenAcross = False
+          PlainCells = True
+          RowLevels = 6
+          ShowColumnTotal = False
+          ShowRowTotal = False
+          CellFields.Strings = (
+            'VALOR_UNITARIO'
+            'VALOR_TOTAL')
+          ColumnFields.Strings = (
+            'FORNECEDOR')
+          DataSet = frdCotacaoCompraFornecedorItem
+          DataSetName = 'frdCotacaoCompraFornecedorItem'
+          RowFields.Strings = (
+            'ITEM'
+            'DESCRI_APRESENTACAO'
+            'QUANTIDADE'
+            'UNP_SIGLA'
+            'VALOR_UNITARIO_MIN'
+            'VALOR_UNITARIO_MAX')
+          Memos = {
+            3C3F786D6C2076657273696F6E3D22312E302220656E636F64696E673D227574
+            662D38223F3E3C63726F73733E3C63656C6C6D656D6F733E3C546672784D656D
+            6F56696577204C6566743D223534342220546F703D223433302C393337323322
+            2057696474683D22353822204865696768743D22313822205265737472696374
+            696F6E733D223234222053686F7748696E743D2246616C73652220416C6C6F77
+            45787072657373696F6E733D2246616C73652220446973706C6179466F726D61
+            742E466F726D61745374723D2225322E326E2220446973706C6179466F726D61
+            742E4B696E643D22666B4E756D657269632220466F6E742E436861727365743D
+            22312220466F6E742E436F6C6F723D22302220466F6E742E4865696768743D22
+            2D31312220466F6E742E4E616D653D2243616C696272692220466F6E742E5374
+            796C653D223022204672616D652E5479703D22313522204672616D652E576964
+            74683D22302C312220476170583D22332220476170593D2233222048416C6967
+            6E3D22686152696768742220506172656E74466F6E743D2246616C7365222056
+            416C69676E3D22766143656E7465722220546578743D22302C3030222F3E3C54
+            6672784D656D6F56696577204C6566743D223630322220546F703D223433302C
+            3933373233222057696474683D2231343222204865696768743D223138222052
+            65737472696374696F6E733D223234222053686F7748696E743D2246616C7365
+            2220416C6C6F7745787072657373696F6E733D2246616C73652220446973706C
+            6179466F726D61742E466F726D61745374723D2225322E326E2220446973706C
+            6179466F726D61742E4B696E643D22666B4E756D657269632220466F6E742E43
+            6861727365743D22312220466F6E742E436F6C6F723D22302220466F6E742E48
+            65696768743D222D31312220466F6E742E4E616D653D2243616C696272692220
+            466F6E742E5374796C653D223022204672616D652E5479703D22313522204672
+            616D652E57696474683D22302C312220476170583D22332220476170593D2233
+            222048416C69676E3D22686152696768742220506172656E74466F6E743D2246
+            616C7365222056416C69676E3D22766143656E7465722220546578743D22302C
+            3030222F3E3C546672784D656D6F56696577204C6566743D223632302220546F
+            703D223739222057696474683D22383522204865696768743D22323222205265
+            737472696374696F6E733D223234222053686F7748696E743D2246616C736522
+            20416C6C6F7745787072657373696F6E733D2246616C736522204672616D652E
+            5479703D2231352220476170583D22332220476170593D2233222048416C6967
+            6E3D2268615269676874222056416C69676E3D22766143656E74657222205465
+            78743D22222F3E3C546672784D656D6F56696577204C6566743D223730352220
+            546F703D223739222057696474683D22373022204865696768743D2232322220
+            5265737472696374696F6E733D223234222053686F7748696E743D2246616C73
+            652220416C6C6F7745787072657373696F6E733D2246616C736522204672616D
+            652E5479703D2231352220476170583D22332220476170593D2233222048416C
+            69676E3D2268615269676874222056416C69676E3D22766143656E7465722220
+            546578743D22222F3E3C546672784D656D6F56696577204C6566743D22333438
+            2220546F703D223838222057696474683D2231303822204865696768743D2232
+            3222205265737472696374696F6E733D223234222053686F7748696E743D2246
+            616C73652220416C6C6F7745787072657373696F6E733D2246616C7365222046
+            72616D652E5479703D2231352220476170583D22332220476170593D22332220
+            48416C69676E3D2268615269676874222056416C69676E3D22766143656E7465
+            722220546578743D22222F3E3C546672784D656D6F56696577204C6566743D22
+            3334382220546F703D22313130222057696474683D2231303822204865696768
+            743D22323222205265737472696374696F6E733D223234222053686F7748696E
+            743D2246616C73652220416C6C6F7745787072657373696F6E733D2246616C73
+            6522204672616D652E5479703D2231352220476170583D22332220476170593D
+            2233222048416C69676E3D2268615269676874222056416C69676E3D22766143
+            656E7465722220546578743D22222F3E3C546672784D656D6F56696577204C65
+            66743D223434392220546F703D223838222057696474683D2231303822204865
+            696768743D22323222205265737472696374696F6E733D223234222053686F77
+            48696E743D2246616C73652220416C6C6F7745787072657373696F6E733D2246
+            616C736522204672616D652E5479703D2231352220476170583D223322204761
+            70593D2233222048416C69676E3D2268615269676874222056416C69676E3D22
+            766143656E7465722220546578743D22222F3E3C546672784D656D6F56696577
+            204C6566743D223434392220546F703D22313130222057696474683D22313038
+            22204865696768743D22323222205265737472696374696F6E733D2232342220
+            53686F7748696E743D2246616C73652220416C6C6F7745787072657373696F6E
+            733D2246616C736522204672616D652E5479703D2231352220476170583D2233
+            2220476170593D2233222048416C69676E3D2268615269676874222056416C69
+            676E3D22766143656E7465722220546578743D22222F3E3C546672784D656D6F
+            56696577204C6566743D223239332220546F703D223736222057696474683D22
+            363722204865696768743D22313922205265737472696374696F6E733D223234
+            222053686F7748696E743D2246616C73652220416C6C6F774578707265737369
+            6F6E733D2246616C73652220466F6E742E436861727365743D22312220466F6E
+            742E436F6C6F723D22302220466F6E742E4865696768743D222D31312220466F
+            6E742E4E616D653D2243616C696272692220466F6E742E5374796C653D223022
+            204672616D652E5479703D2231352220476170583D22332220476170593D2233
+            222048416C69676E3D22686152696768742220506172656E74466F6E743D2246
+            616C7365222056416C69676E3D22766143656E7465722220546578743D22222F
+            3E3C546672784D656D6F56696577204C6566743D223336302220546F703D2237
+            36222057696474683D22373422204865696768743D2231392220526573747269
+            6374696F6E733D223234222053686F7748696E743D2246616C73652220416C6C
+            6F7745787072657373696F6E733D2246616C73652220466F6E742E4368617273
+            65743D22312220466F6E742E436F6C6F723D22302220466F6E742E4865696768
+            743D222D31312220466F6E742E4E616D653D2243616C696272692220466F6E74
+            2E5374796C653D223022204672616D652E5479703D2231352220476170583D22
+            332220476170593D2233222048416C69676E3D22686152696768742220506172
+            656E74466F6E743D2246616C7365222056416C69676E3D22766143656E746572
+            2220546578743D22222F3E3C546672784D656D6F56696577204C6566743D2234
+            33342220546F703D223537222057696474683D22383522204865696768743D22
+            313922205265737472696374696F6E733D223234222053686F7748696E743D22
+            46616C73652220416C6C6F7745787072657373696F6E733D2246616C73652220
+            466F6E742E436861727365743D22312220466F6E742E436F6C6F723D22302220
+            466F6E742E4865696768743D222D31312220466F6E742E4E616D653D2243616C
+            696272692220466F6E742E5374796C653D223022204672616D652E5479703D22
+            31352220476170583D22332220476170593D2233222048416C69676E3D226861
+            52696768742220506172656E74466F6E743D2246616C7365222056416C69676E
+            3D22766143656E7465722220546578743D22222F3E3C546672784D656D6F5669
+            6577204C6566743D223531392220546F703D223537222057696474683D223730
+            22204865696768743D22313922205265737472696374696F6E733D2232342220
+            53686F7748696E743D2246616C73652220416C6C6F7745787072657373696F6E
+            733D2246616C73652220466F6E742E436861727365743D22312220466F6E742E
+            436F6C6F723D22302220466F6E742E4865696768743D222D31312220466F6E74
+            2E4E616D653D2243616C696272692220466F6E742E5374796C653D2230222046
+            72616D652E5479703D2231352220476170583D22332220476170593D22332220
+            48416C69676E3D22686152696768742220506172656E74466F6E743D2246616C
+            7365222056416C69676E3D22766143656E7465722220546578743D22222F3E3C
+            546672784D656D6F56696577204C6566743D223634352220546F703D22383822
+            2057696474683D22383122204865696768743D22323222205265737472696374
+            696F6E733D223234222053686F7748696E743D2246616C73652220416C6C6F77
+            45787072657373696F6E733D2246616C736522204672616D652E5479703D2231
+            352220476170583D22332220476170593D2233222048416C69676E3D22686152
+            69676874222056416C69676E3D22766143656E7465722220546578743D22222F
+            3E3C546672784D656D6F56696577204C6566743D223634352220546F703D2231
+            3130222057696474683D22383122204865696768743D22323222205265737472
+            696374696F6E733D223234222053686F7748696E743D2246616C73652220416C
+            6C6F7745787072657373696F6E733D2246616C736522204672616D652E547970
+            3D2231352220476170583D22332220476170593D2233222048416C69676E3D22
+            68615269676874222056416C69676E3D22766143656E7465722220546578743D
+            22222F3E3C546672784D656D6F56696577204C6566743D223535372220546F70
+            3D223838222057696474683D22383122204865696768743D2232322220526573
+            7472696374696F6E733D223234222053686F7748696E743D2246616C73652220
+            416C6C6F7745787072657373696F6E733D2246616C736522204672616D652E54
+            79703D2231352220476170583D22332220476170593D2233222048416C69676E
+            3D2268615269676874222056416C69676E3D22766143656E7465722220546578
+            743D22222F3E3C546672784D656D6F56696577204C6566743D22353537222054
+            6F703D22313130222057696474683D22383122204865696768743D2232322220
+            5265737472696374696F6E733D223234222053686F7748696E743D2246616C73
+            652220416C6C6F7745787072657373696F6E733D2246616C736522204672616D
+            652E5479703D2231352220476170583D22332220476170593D2233222048416C
+            69676E3D2268615269676874222056416C69676E3D22766143656E7465722220
+            546578743D22222F3E3C546672784D656D6F56696577204C6566743D22302220
+            546F703D2230222057696474683D223022204865696768743D22302220526573
+            7472696374696F6E733D2238222053686F7748696E743D2246616C7365222041
+            6C6C6F7745787072657373696F6E733D2246616C736522204672616D652E5479
+            703D2231352220476170583D22332220476170593D2233222048416C69676E3D
+            2268615269676874222056416C69676E3D22766143656E746572222054657874
+            3D22222F3E3C546672784D656D6F56696577204C6566743D22302220546F703D
+            2230222057696474683D223022204865696768743D2230222052657374726963
+            74696F6E733D2238222053686F7748696E743D2246616C73652220416C6C6F77
+            45787072657373696F6E733D2246616C736522204672616D652E5479703D2231
+            352220476170583D22332220476170593D2233222048416C69676E3D22686152
+            69676874222056416C69676E3D22766143656E7465722220546578743D22222F
+            3E3C546672784D656D6F56696577204C6566743D223433342220546F703D2237
+            36222057696474683D22383522204865696768743D2231392220526573747269
+            6374696F6E733D223234222053686F7748696E743D2246616C73652220416C6C
+            6F7745787072657373696F6E733D2246616C73652220466F6E742E4368617273
+            65743D22312220466F6E742E436F6C6F723D22302220466F6E742E4865696768
+            743D222D31312220466F6E742E4E616D653D2243616C696272692220466F6E74
+            2E5374796C653D223022204672616D652E5479703D2231352220476170583D22
+            332220476170593D2233222048416C69676E3D22686152696768742220506172
+            656E74466F6E743D2246616C7365222056416C69676E3D22766143656E746572
+            2220546578743D22222F3E3C546672784D656D6F56696577204C6566743D2235
+            31392220546F703D223736222057696474683D22373022204865696768743D22
+            313922205265737472696374696F6E733D223234222053686F7748696E743D22
+            46616C73652220416C6C6F7745787072657373696F6E733D2246616C73652220
+            466F6E742E436861727365743D22312220466F6E742E436F6C6F723D22302220
+            466F6E742E4865696768743D222D31312220466F6E742E4E616D653D2243616C
+            696272692220466F6E742E5374796C653D223022204672616D652E5479703D22
+            31352220476170583D22332220476170593D2233222048416C69676E3D226861
+            52696768742220506172656E74466F6E743D2246616C7365222056416C69676E
+            3D22766143656E7465722220546578743D22222F3E3C546672784D656D6F5669
+            6577204C6566743D22302220546F703D2230222057696474683D223022204865
+            696768743D223022205265737472696374696F6E733D2238222053686F774869
+            6E743D2246616C73652220416C6C6F7745787072657373696F6E733D2246616C
+            736522204672616D652E5479703D2231352220476170583D2233222047617059
+            3D2233222048416C69676E3D2268615269676874222056416C69676E3D227661
+            43656E7465722220546578743D22222F3E3C546672784D656D6F56696577204C
+            6566743D22302220546F703D2230222057696474683D22302220486569676874
+            3D223022205265737472696374696F6E733D2238222053686F7748696E743D22
+            46616C73652220416C6C6F7745787072657373696F6E733D2246616C73652220
+            4672616D652E5479703D2231352220476170583D22332220476170593D223322
+            2048416C69676E3D2268615269676874222056416C69676E3D22766143656E74
+            65722220546578743D22222F3E3C546672784D656D6F56696577204C6566743D
+            22302220546F703D2230222057696474683D223022204865696768743D223022
+            205265737472696374696F6E733D2238222053686F7748696E743D2246616C73
+            652220416C6C6F7745787072657373696F6E733D2246616C736522204672616D
+            652E5479703D2231352220476170583D22332220476170593D2233222048416C
+            69676E3D2268615269676874222056416C69676E3D22766143656E7465722220
+            546578743D22222F3E3C546672784D656D6F56696577204C6566743D22302220
+            546F703D2230222057696474683D223022204865696768743D22302220526573
+            7472696374696F6E733D2238222053686F7748696E743D2246616C7365222041
+            6C6C6F7745787072657373696F6E733D2246616C736522204672616D652E5479
+            703D2231352220476170583D22332220476170593D2233222048416C69676E3D
+            2268615269676874222056416C69676E3D22766143656E746572222054657874
+            3D22222F3E3C546672784D656D6F56696577204C6566743D22302220546F703D
+            2230222057696474683D223022204865696768743D2230222052657374726963
+            74696F6E733D2238222053686F7748696E743D2246616C73652220416C6C6F77
+            45787072657373696F6E733D2246616C736522204672616D652E5479703D2231
+            352220476170583D22332220476170593D2233222048416C69676E3D22686152
+            69676874222056416C69676E3D22766143656E7465722220546578743D22222F
+            3E3C546672784D656D6F56696577204C6566743D22302220546F703D22302220
+            57696474683D223022204865696768743D223022205265737472696374696F6E
+            733D2238222053686F7748696E743D2246616C73652220416C6C6F7745787072
+            657373696F6E733D2246616C736522204672616D652E5479703D223135222047
+            6170583D22332220476170593D2233222048416C69676E3D2268615269676874
+            222056416C69676E3D22766143656E7465722220546578743D22222F3E3C5466
+            72784D656D6F56696577204C6566743D22302220546F703D2230222057696474
+            683D223022204865696768743D223022205265737472696374696F6E733D2238
+            222053686F7748696E743D2246616C73652220416C6C6F774578707265737369
+            6F6E733D2246616C736522204672616D652E5479703D2231352220476170583D
+            22332220476170593D2233222048416C69676E3D226861526967687422205641
+            6C69676E3D22766143656E7465722220546578743D22222F3E3C546672784D65
+            6D6F56696577204C6566743D22302220546F703D2230222057696474683D2230
+            22204865696768743D223022205265737472696374696F6E733D223822205368
+            6F7748696E743D2246616C73652220416C6C6F7745787072657373696F6E733D
+            2246616C736522204672616D652E5479703D2231352220476170583D22332220
+            476170593D2233222048416C69676E3D2268615269676874222056416C69676E
+            3D22766143656E7465722220546578743D22222F3E3C2F63656C6C6D656D6F73
+            3E3C63656C6C6865616465726D656D6F733E3C546672784D656D6F5669657720
+            4C6566743D223534342220546F703D223431322C393337323322205769647468
+            3D22353822204865696768743D22313822205265737472696374696F6E733D22
+            38222053686F7748696E743D2246616C73652220416C6C6F7745787072657373
+            696F6E733D2246616C73652220436F6C6F723D222D3136373737323031222046
+            6F6E742E436861727365743D22312220466F6E742E436F6C6F723D2230222046
+            6F6E742E4865696768743D222D31312220466F6E742E4E616D653D2243616C69
+            6272692220466F6E742E5374796C653D223122204672616D652E5479703D2231
+            3522204672616D652E57696474683D22302C312220476170583D223322204761
+            70593D2233222048416C69676E3D22686152696768742220506172656E74466F
+            6E743D2246616C7365222056416C69676E3D22766143656E7465722220546578
+            743D2220562E20556E2E202852242920222F3E3C546672784D656D6F56696577
+            204C6566743D223630322220546F703D223431322C3933373233222057696474
+            683D2231343222204865696768743D22313822205265737472696374696F6E73
+            3D2238222053686F7748696E743D2246616C73652220416C6C6F774578707265
+            7373696F6E733D2246616C73652220436F6C6F723D222D313637373732303122
+            20466F6E742E436861727365743D22312220466F6E742E436F6C6F723D223022
+            20466F6E742E4865696768743D222D31312220466F6E742E4E616D653D224361
+            6C696272692220466F6E742E5374796C653D223122204672616D652E5479703D
+            22313522204672616D652E57696474683D22302C312220476170583D22332220
+            476170593D2233222048416C69676E3D22686152696768742220506172656E74
+            466F6E743D2246616C7365222056416C69676E3D22766143656E746572222054
+            6578743D2220562E20546F74616C202852242920222F3E3C546672784D656D6F
+            56696577204C6566743D223433342220546F703D223338222057696474683D22
+            383522204865696768743D22313922205265737472696374696F6E733D223822
+            2053686F7748696E743D2246616C73652220416C6C6F7745787072657373696F
+            6E733D2246616C73652220436F6C6F723D222D31363737373230312220466F6E
+            742E436861727365743D22312220466F6E742E436F6C6F723D22302220466F6E
+            742E4865696768743D222D31312220466F6E742E4E616D653D2243616C696272
+            692220466F6E742E5374796C653D223022204672616D652E5479703D22313522
+            20476170583D22332220476170593D22332220506172656E74466F6E743D2246
+            616C7365222056416C69676E3D22766143656E7465722220546578743D225641
+            4C4F525F554E49544152494F222F3E3C546672784D656D6F56696577204C6566
+            743D223531392220546F703D223338222057696474683D223730222048656967
+            68743D22313922205265737472696374696F6E733D2238222053686F7748696E
+            743D2246616C73652220416C6C6F7745787072657373696F6E733D2246616C73
+            652220436F6C6F723D222D31363737373230312220466F6E742E436861727365
+            743D22312220466F6E742E436F6C6F723D22302220466F6E742E486569676874
+            3D222D31312220466F6E742E4E616D653D2243616C696272692220466F6E742E
+            5374796C653D223022204672616D652E5479703D2231352220476170583D2233
+            2220476170593D22332220506172656E74466F6E743D2246616C736522205641
+            6C69676E3D22766143656E7465722220546578743D2256414C4F525F544F5441
+            4C222F3E3C546672784D656D6F56696577204C6566743D223232362220546F70
+            3D223838222057696474683D2231323222204865696768743D22323222205265
+            737472696374696F6E733D2238222053686F7748696E743D2246616C73652220
+            416C6C6F7745787072657373696F6E733D2246616C736522204672616D652E54
+            79703D2231352220476170583D22332220476170593D2233222056416C69676E
+            3D22766143656E7465722220546578743D2256414C4F525F554E49544152494F
+            222F3E3C546672784D656D6F56696577204C6566743D223232362220546F703D
+            22313130222057696474683D2231323222204865696768743D22323222205265
+            737472696374696F6E733D2238222053686F7748696E743D2246616C73652220
+            416C6C6F7745787072657373696F6E733D2246616C736522204672616D652E54
+            79703D2231352220476170583D22332220476170593D2233222056416C69676E
+            3D22766143656E7465722220546578743D2256414C4F525F544F54414C222F3E
+            3C546672784D656D6F56696577204C6566743D223332372220546F703D223838
+            222057696474683D2231323222204865696768743D2232322220526573747269
+            6374696F6E733D2238222053686F7748696E743D2246616C73652220416C6C6F
+            7745787072657373696F6E733D2246616C736522204672616D652E5479703D22
+            31352220476170583D22332220476170593D2233222056416C69676E3D227661
+            43656E7465722220546578743D2256414C4F525F554E49544152494F222F3E3C
+            546672784D656D6F56696577204C6566743D223332372220546F703D22313130
+            222057696474683D2231323222204865696768743D2232322220526573747269
+            6374696F6E733D2238222053686F7748696E743D2246616C73652220416C6C6F
+            7745787072657373696F6E733D2246616C736522204672616D652E5479703D22
+            31352220476170583D22332220476170593D2233222056416C69676E3D227661
+            43656E7465722220546578743D2256414C4F525F544F54414C222F3E3C546672
+            784D656D6F56696577204C6566743D223239322220546F703D22373622205769
+            6474683D22383522204865696768743D22313922205265737472696374696F6E
+            733D2238222053686F7748696E743D2246616C73652220416C6C6F7745787072
+            657373696F6E733D2246616C73652220466F6E742E436861727365743D223122
+            20466F6E742E436F6C6F723D22302220466F6E742E4865696768743D222D3131
+            2220466F6E742E4E616D653D2243616C696272692220466F6E742E5374796C65
+            3D223022204672616D652E5479703D2231352220476170583D22332220476170
+            593D22332220506172656E74466F6E743D2246616C7365222056416C69676E3D
+            22766143656E7465722220546578743D2256414C4F525F554E49544152494F22
+            2F3E3C546672784D656D6F56696577204C6566743D223239322220546F703D22
+            3935222057696474683D22383522204865696768743D22313922205265737472
+            696374696F6E733D2238222053686F7748696E743D2246616C73652220416C6C
+            6F7745787072657373696F6E733D2246616C73652220466F6E742E4368617273
+            65743D22312220466F6E742E436F6C6F723D22302220466F6E742E4865696768
+            743D222D31312220466F6E742E4E616D653D2243616C696272692220466F6E74
+            2E5374796C653D223022204672616D652E5479703D2231352220476170583D22
+            332220476170593D22332220506172656E74466F6E743D2246616C7365222056
+            416C69676E3D22766143656E7465722220546578743D2256414C4F525F544F54
+            414C222F3E3C546672784D656D6F56696577204C6566743D22302220546F703D
+            2230222057696474683D223022204865696768743D2230222052657374726963
+            74696F6E733D2238222053686F7748696E743D2246616C73652220416C6C6F77
+            45787072657373696F6E733D2246616C736522204672616D652E5479703D2231
+            352220476170583D22332220476170593D2233222056416C69676E3D22766143
+            656E7465722220546578743D2256414C4F525F554E49544152494F222F3E3C54
+            6672784D656D6F56696577204C6566743D22302220546F703D22302220576964
+            74683D223022204865696768743D223022205265737472696374696F6E733D22
+            38222053686F7748696E743D2246616C73652220416C6C6F7745787072657373
+            696F6E733D2246616C736522204672616D652E5479703D223135222047617058
+            3D22332220476170593D2233222056416C69676E3D22766143656E7465722220
+            546578743D2256414C4F525F544F54414C222F3E3C546672784D656D6F566965
+            77204C6566743D22302220546F703D2230222057696474683D22302220486569
+            6768743D223022205265737472696374696F6E733D2238222053686F7748696E
+            743D2246616C73652220416C6C6F7745787072657373696F6E733D2246616C73
+            6522204672616D652E5479703D2231352220476170583D22332220476170593D
+            2233222056416C69676E3D22766143656E7465722220546578743D2256414C4F
+            525F554E49544152494F222F3E3C546672784D656D6F56696577204C6566743D
+            22302220546F703D2230222057696474683D223022204865696768743D223022
+            205265737472696374696F6E733D2238222053686F7748696E743D2246616C73
+            652220416C6C6F7745787072657373696F6E733D2246616C736522204672616D
+            652E5479703D2231352220476170583D22332220476170593D2233222056416C
+            69676E3D22766143656E7465722220546578743D2256414C4F525F544F54414C
+            222F3E3C2F63656C6C6865616465726D656D6F733E3C636F6C756D6E6D656D6F
+            733E3C546672784D656D6F56696577204C6566743D223534342220546F703D22
+            3339342C3933373233222057696474683D2232303022204865696768743D2231
+            3822205265737472696374696F6E733D223234222053686F7748696E743D2246
+            616C73652220416C6C6F7745787072657373696F6E733D2246616C7365222043
+            6F6C6F723D222D31363737373230312220466F6E742E436861727365743D2231
+            2220466F6E742E436F6C6F723D22302220466F6E742E4865696768743D222D31
+            312220466F6E742E4E616D653D2243616C696272692220466F6E742E5374796C
+            653D223122204672616D652E5479703D22313522204672616D652E5769647468
+            3D22302C312220476170583D22332220476170593D2233222048416C69676E3D
+            22686143656E7465722220506172656E74466F6E743D2246616C736522205641
+            6C69676E3D22766143656E7465722220546578743D22222F3E3C2F636F6C756D
+            6E6D656D6F733E3C636F6C756D6E746F74616C6D656D6F733E3C546672784D65
+            6D6F56696577204C6566743D223433342220546F703D22313922205769647468
+            3D2231353522204865696768743D22313922205265737472696374696F6E733D
+            2238222056697369626C653D2246616C7365222053686F7748696E743D224661
+            6C73652220416C6C6F7745787072657373696F6E733D2246616C73652220436F
+            6C6F723D222D31363737373230312220466F6E742E436861727365743D223122
+            20466F6E742E436F6C6F723D22302220466F6E742E4865696768743D222D3131
+            2220466F6E742E4E616D653D2243616C696272692220466F6E742E5374796C65
+            3D223122204672616D652E5479703D2231352220476170583D22332220476170
+            593D2233222048416C69676E3D22686143656E7465722220506172656E74466F
+            6E743D2246616C7365222056416C69676E3D22766143656E7465722220546578
+            743D22436F6E736F6C696461646F222F3E3C2F636F6C756D6E746F74616C6D65
+            6D6F733E3C636F726E65726D656D6F733E3C546672784D656D6F56696577204C
+            6566743D2232302220546F703D223336332C3933373233222057696474683D22
+            35323422204865696768743D22333122205265737472696374696F6E733D2238
+            222053686F7748696E743D2246616C73652220416C6C6F774578707265737369
+            6F6E733D2246616C736522204368617253706163696E673D22322220436F6C6F
+            723D2231343231313238382220466F6E742E436861727365743D22312220466F
+            6E742E436F6C6F723D22302220466F6E742E4865696768743D222D3131222046
+            6F6E742E4E616D653D2243616C696272692220466F6E742E5374796C653D2231
+            22204672616D652E5479703D22313522204672616D652E57696474683D22302C
+            312220476170583D22332220476170593D2233222048416C69676E3D22686143
+            656E7465722220506172656E74466F6E743D2246616C7365222056416C69676E
+            3D22766143656E7465722220546578743D2250726F6475746F202F2053657276
+            69C3A76F222F3E3C546672784D656D6F56696577204C6566743D223534342220
+            546F703D223336332C3933373233222057696474683D22323030222048656967
+            68743D22333122205265737472696374696F6E733D2238222053686F7748696E
+            743D2246616C73652220416C6C6F7745787072657373696F6E733D2246616C73
+            6522204368617253706163696E673D22322220436F6C6F723D22313432313132
+            38382220466F6E742E436861727365743D22312220466F6E742E436F6C6F723D
+            22302220466F6E742E4865696768743D222D31312220466F6E742E4E616D653D
+            2243616C696272692220466F6E742E5374796C653D223122204672616D652E54
+            79703D22313522204672616D652E57696474683D22302C312220476170583D22
+            332220476170593D2233222048416C69676E3D22686143656E74657222205061
+            72656E74466F6E743D2246616C7365222056416C69676E3D22766143656E7465
+            722220546578743D224D61706120646520507265C3A76F7320656E7472652046
+            6F726E656365646F726573222F3E3C546672784D656D6F56696577204C656674
+            3D223239322220546F703D223139222057696474683D22383522204865696768
+            743D22313922205265737472696374696F6E733D2238222056697369626C653D
+            2246616C7365222053686F7748696E743D2246616C73652220416C6C6F774578
+            7072657373696F6E733D2246616C73652220466F6E742E436861727365743D22
+            312220466F6E742E436F6C6F723D22302220466F6E742E4865696768743D222D
+            31312220466F6E742E4E616D653D2243616C696272692220466F6E742E537479
+            6C653D223022204672616D652E5479703D2231352220476170583D2233222047
+            6170593D2233222048416C69676E3D22686143656E7465722220506172656E74
+            466F6E743D2246616C7365222056416C69676E3D22766143656E746572222054
+            6578743D22222F3E3C546672784D656D6F56696577204C6566743D2232302220
+            546F703D223339342C3933373233222057696474683D22333522204865696768
+            743D22333622205265737472696374696F6E733D2238222053686F7748696E74
+            3D2246616C73652220416C6C6F7745787072657373696F6E733D2246616C7365
+            2220436F6C6F723D222D31363737373230312220466F6E742E43686172736574
+            3D22312220466F6E742E436F6C6F723D22302220466F6E742E4865696768743D
+            222D31312220466F6E742E4E616D653D2243616C696272692220466F6E742E53
+            74796C653D223122204672616D652E5479703D22313522204672616D652E5769
+            6474683D22302C312220476170583D22332220476170593D2233222048416C69
+            676E3D22686143656E7465722220506172656E74466F6E743D2246616C736522
+            2056416C69676E3D22766143656E7465722220546578743D22204974656D2022
+            2F3E3C546672784D656D6F56696577204C6566743D2235352220546F703D2233
+            39342C3933373233222057696474683D2231323322204865696768743D223336
+            22205265737472696374696F6E733D2238222053686F7748696E743D2246616C
+            73652220416C6C6F7745787072657373696F6E733D2246616C73652220436F6C
+            6F723D222D31363737373230312220466F6E742E436861727365743D22312220
+            466F6E742E436F6C6F723D22302220466F6E742E4865696768743D222D313122
+            20466F6E742E4E616D653D2243616C696272692220466F6E742E5374796C653D
+            223122204672616D652E5479703D22313522204672616D652E57696474683D22
+            302C312220476170583D22332220476170593D22332220506172656E74466F6E
+            743D2246616C7365222056416C69676E3D22766143656E746572222054657874
+            3D2220446573637269C3A7C3A36F202B204170726573656E7461C3A7C3A36F22
+            2F3E3C546672784D656D6F56696577204C6566743D223137382220546F703D22
+            3339342C3933373233222057696474683D22373222204865696768743D223336
+            22205265737472696374696F6E733D2238222053686F7748696E743D2246616C
+            73652220416C6C6F7745787072657373696F6E733D2246616C73652220436F6C
+            6F723D222D31363737373230312220466F6E742E436861727365743D22312220
+            466F6E742E436F6C6F723D22302220466F6E742E4865696768743D222D313122
+            20466F6E742E4E616D653D2243616C696272692220466F6E742E5374796C653D
+            223122204672616D652E5479703D22313522204672616D652E57696474683D22
+            302C312220476170583D22332220476170593D2233222048416C69676E3D2268
+            6143656E7465722220506172656E74466F6E743D2246616C7365222056416C69
+            676E3D22766143656E7465722220546578743D2220517464652E20222F3E3C54
+            6672784D656D6F56696577204C6566743D223235302220546F703D223339342C
+            3933373233222057696474683D22363222204865696768743D22333622205265
+            737472696374696F6E733D2238222053686F7748696E743D2246616C73652220
+            416C6C6F7745787072657373696F6E733D2246616C73652220436F6C6F723D22
+            2D31363737373230312220466F6E742E436861727365743D22312220466F6E74
+            2E436F6C6F723D22302220466F6E742E4865696768743D222D31312220466F6E
+            742E4E616D653D2243616C696272692220466F6E742E5374796C653D22312220
+            4672616D652E5479703D22313522204672616D652E57696474683D22302C3122
+            20476170583D22332220476170593D2233222048416C69676E3D22686143656E
+            7465722220506172656E74466F6E743D2246616C7365222056416C69676E3D22
+            766143656E7465722220546578743D2220556E642E20222F3E3C546672784D65
+            6D6F56696577204C6566743D223331322220546F703D223339342C3933373233
+            222057696474683D2231313522204865696768743D2233362220526573747269
+            6374696F6E733D2238222053686F7748696E743D2246616C73652220416C6C6F
+            7745787072657373696F6E733D2246616C73652220436F6C6F723D222D313637
+            37373230312220466F6E742E436861727365743D22312220466F6E742E436F6C
+            6F723D2231363731313638302220466F6E742E4865696768743D222D31312220
+            466F6E742E4E616D653D2243616C696272692220466F6E742E5374796C653D22
+            3122204672616D652E5479703D22313522204672616D652E57696474683D2230
+            2C312220476170583D22332220476170593D2233222048416C69676E3D226861
+            52696768742220506172656E74466F6E743D2246616C7365222056416C69676E
+            3D22766143656E7465722220546578743D224DC3AD6E2E2028522429222F3E3C
+            546672784D656D6F56696577204C6566743D223432372220546F703D22333934
+            2C3933373233222057696474683D2231313722204865696768743D2233362220
+            5265737472696374696F6E733D2238222053686F7748696E743D2246616C7365
+            2220416C6C6F7745787072657373696F6E733D2246616C73652220436F6C6F72
+            3D222D31363737373230312220466F6E742E436861727365743D22312220466F
+            6E742E436F6C6F723D223235352220466F6E742E4865696768743D222D313122
+            20466F6E742E4E616D653D2243616C696272692220466F6E742E5374796C653D
+            223122204672616D652E5479703D22313522204672616D652E57696474683D22
+            302C312220476170583D22332220476170593D2233222048416C69676E3D2268
+            6152696768742220506172656E74466F6E743D2246616C7365222056416C6967
+            6E3D22766143656E7465722220546578743D224DC3A1782E2028522429222F3E
+            3C2F636F726E65726D656D6F733E3C726F776D656D6F733E3C546672784D656D
+            6F56696577204C6566743D2232302220546F703D223433302C39333732332220
+            57696474683D22333522204865696768743D2231382220526573747269637469
+            6F6E733D223234222053686F7748696E743D2246616C73652220416C6C6F7745
+            787072657373696F6E733D2246616C73652220466F6E742E436861727365743D
+            22312220466F6E742E436F6C6F723D22302220466F6E742E4865696768743D22
+            2D31312220466F6E742E4E616D653D2243616C696272692220466F6E742E5374
+            796C653D223022204672616D652E5479703D22313522204672616D652E576964
+            74683D22302C312220476170583D22332220476170593D2233222048416C6967
+            6E3D22686143656E7465722220506172656E74466F6E743D2246616C73652220
+            56416C69676E3D22766143656E7465722220546578743D22222F3E3C54667278
+            4D656D6F56696577204C6566743D2235352220546F703D223433302C39333732
+            33222057696474683D2231323322204865696768743D22313822205265737472
+            696374696F6E733D223234222053686F7748696E743D2246616C73652220416C
+            6C6F7745787072657373696F6E733D2246616C73652220466F6E742E43686172
+            7365743D22312220466F6E742E436F6C6F723D22302220466F6E742E48656967
+            68743D222D31312220466F6E742E4E616D653D2243616C696272692220466F6E
+            742E5374796C653D223022204672616D652E5479703D22313522204672616D65
+            2E57696474683D22302C312220476170583D22332220476170593D2233222050
+            6172656E74466F6E743D2246616C7365222056416C69676E3D22766143656E74
+            65722220546578743D22222F3E3C546672784D656D6F56696577204C6566743D
+            223137382220546F703D223433302C3933373233222057696474683D22373222
+            204865696768743D22313822205265737472696374696F6E733D223234222053
+            686F7748696E743D2246616C73652220416C6C6F7745787072657373696F6E73
+            3D2246616C73652220466F6E742E436861727365743D22312220466F6E742E43
+            6F6C6F723D22302220466F6E742E4865696768743D222D31312220466F6E742E
+            4E616D653D2243616C696272692220466F6E742E5374796C653D223022204672
+            616D652E5479703D22313522204672616D652E57696474683D22302C31222047
+            6170583D22332220476170593D2233222048416C69676E3D22686143656E7465
+            722220506172656E74466F6E743D2246616C7365222056416C69676E3D227661
+            43656E7465722220546578743D22222F3E3C546672784D656D6F56696577204C
+            6566743D223235302220546F703D223433302C3933373233222057696474683D
+            22363222204865696768743D22313822205265737472696374696F6E733D2232
+            34222053686F7748696E743D2246616C73652220416C6C6F7745787072657373
+            696F6E733D2246616C73652220466F6E742E436861727365743D22312220466F
+            6E742E436F6C6F723D22302220466F6E742E4865696768743D222D3131222046
+            6F6E742E4E616D653D2243616C696272692220466F6E742E5374796C653D2230
+            22204672616D652E5479703D22313522204672616D652E57696474683D22302C
+            312220476170583D22332220476170593D2233222048416C69676E3D22686143
+            656E7465722220506172656E74466F6E743D2246616C7365222056416C69676E
+            3D22766143656E7465722220546578743D22222F3E3C546672784D656D6F5669
+            6577204C6566743D223331322220546F703D223433302C393337323322205769
+            6474683D2231313522204865696768743D22313822205265737472696374696F
+            6E733D223234222053686F7748696E743D2246616C73652220416C6C6F774578
+            7072657373696F6E733D2246616C73652220446973706C6179466F726D61742E
+            466F726D61745374723D2225322E326E2220446973706C6179466F726D61742E
+            4B696E643D22666B4E756D657269632220466F6E742E436861727365743D2231
+            2220466F6E742E436F6C6F723D2231363731313638302220466F6E742E486569
+            6768743D222D31312220466F6E742E4E616D653D2243616C696272692220466F
+            6E742E5374796C653D223022204672616D652E5479703D22313522204672616D
+            652E57696474683D22302C312220476170583D22332220476170593D22332220
+            48416C69676E3D22686152696768742220506172656E74466F6E743D2246616C
+            7365222056416C69676E3D22766143656E7465722220546578743D22222F3E3C
+            546672784D656D6F56696577204C6566743D223432372220546F703D22343330
+            2C3933373233222057696474683D2231313722204865696768743D2231382220
+            5265737472696374696F6E733D223234222053686F7748696E743D2246616C73
+            652220416C6C6F7745787072657373696F6E733D2246616C7365222044697370
+            6C6179466F726D61742E466F726D61745374723D2225322E326E222044697370
+            6C6179466F726D61742E4B696E643D22666B4E756D657269632220466F6E742E
+            436861727365743D22312220466F6E742E436F6C6F723D223235352220466F6E
+            742E4865696768743D222D31312220466F6E742E4E616D653D2243616C696272
+            692220466F6E742E5374796C653D223022204672616D652E5479703D22313522
+            204672616D652E57696474683D22302C312220476170583D2233222047617059
+            3D2233222048416C69676E3D22686152696768742220506172656E74466F6E74
+            3D2246616C7365222056416C69676E3D22766143656E7465722220546578743D
+            22222F3E3C2F726F776D656D6F733E3C726F77746F74616C6D656D6F733E3C54
+            6672784D656D6F56696577204C6566743D22302220546F703D22373622205769
+            6474683D2232393322204865696768743D22313922205265737472696374696F
+            6E733D2238222056697369626C653D2246616C7365222053686F7748696E743D
+            2246616C73652220416C6C6F7745787072657373696F6E733D2246616C736522
+            20466F6E742E436861727365743D22312220466F6E742E436F6C6F723D223022
+            20466F6E742E4865696768743D222D31312220466F6E742E4E616D653D224361
+            6C696272692220466F6E742E5374796C653D223122204672616D652E5479703D
+            2231352220476170583D22332220476170593D2233222048416C69676E3D2268
+            6143656E7465722220506172656E74466F6E743D2246616C7365222056416C69
+            676E3D22766143656E7465722220546578743D224772616E6420546F74616C22
+            2F3E3C546672784D656D6F56696577204C6566743D2234362220546F703D2238
+            38222057696474683D2231383022204865696768743D22343422205265737472
+            696374696F6E733D2238222056697369626C653D2246616C7365222053686F77
+            48696E743D2246616C73652220416C6C6F7745787072657373696F6E733D2246
+            616C73652220466F6E742E436861727365743D22312220466F6E742E436F6C6F
+            723D22302220466F6E742E4865696768743D222D31332220466F6E742E4E616D
+            653D22417269616C2220466F6E742E5374796C653D223122204672616D652E54
+            79703D2231352220476170583D22332220476170593D2233222048416C69676E
+            3D22686143656E7465722220506172656E74466F6E743D2246616C7365222056
+            416C69676E3D22766143656E7465722220546578743D22546F74616C222F3E3C
+            546672784D656D6F56696577204C6566743D223232362220546F703D22383822
+            2057696474683D2231303122204865696768743D223434222052657374726963
+            74696F6E733D2238222056697369626C653D2246616C7365222053686F774869
+            6E743D2246616C73652220416C6C6F7745787072657373696F6E733D2246616C
+            73652220466F6E742E436861727365743D22312220466F6E742E436F6C6F723D
+            22302220466F6E742E4865696768743D222D31332220466F6E742E4E616D653D
+            22417269616C2220466F6E742E5374796C653D223122204672616D652E547970
+            3D2231352220476170583D22332220476170593D2233222048416C69676E3D22
+            686143656E7465722220506172656E74466F6E743D2246616C7365222056416C
+            69676E3D22766143656E7465722220546578743D22546F74616C222F3E3C5466
+            72784D656D6F56696577204C6566743D223332372220546F703D223838222057
+            696474683D22383822204865696768743D22343422205265737472696374696F
+            6E733D2238222056697369626C653D2246616C7365222053686F7748696E743D
+            2246616C73652220416C6C6F7745787072657373696F6E733D2246616C736522
+            20466F6E742E436861727365743D22312220466F6E742E436F6C6F723D223022
+            20466F6E742E4865696768743D222D31332220466F6E742E4E616D653D224172
+            69616C2220466F6E742E5374796C653D223122204672616D652E5479703D2231
+            352220476170583D22332220476170593D2233222048416C69676E3D22686143
+            656E7465722220506172656E74466F6E743D2246616C7365222056416C69676E
+            3D22766143656E7465722220546578743D22546F74616C222F3E3C546672784D
+            656D6F56696577204C6566743D223239322220546F703D223739222057696474
+            683D2231363222204865696768743D22323222205265737472696374696F6E73
+            3D2238222056697369626C653D2246616C7365222053686F7748696E743D2246
+            616C73652220416C6C6F7745787072657373696F6E733D2246616C7365222046
+            6F6E742E436861727365743D22312220466F6E742E436F6C6F723D2230222046
+            6F6E742E4865696768743D222D31332220466F6E742E4E616D653D2241726961
+            6C2220466F6E742E5374796C653D223122204672616D652E5479703D22313522
+            20476170583D22332220476170593D2233222048416C69676E3D22686143656E
+            7465722220506172656E74466F6E743D2246616C7365222056416C69676E3D22
+            766143656E7465722220546578743D22546F74616C222F3E3C546672784D656D
+            6F56696577204C6566743D223435342220546F703D223739222057696474683D
+            2231363622204865696768743D22323222205265737472696374696F6E733D22
+            38222056697369626C653D2246616C7365222053686F7748696E743D2246616C
+            73652220416C6C6F7745787072657373696F6E733D2246616C73652220466F6E
+            742E436861727365743D22312220466F6E742E436F6C6F723D22302220466F6E
+            742E4865696768743D222D31332220466F6E742E4E616D653D22417269616C22
+            20466F6E742E5374796C653D223122204672616D652E5479703D223135222047
+            6170583D22332220476170593D2233222048416C69676E3D22686143656E7465
+            722220506172656E74466F6E743D2246616C7365222056416C69676E3D227661
+            43656E7465722220546578743D22546F74616C222F3E3C2F726F77746F74616C
+            6D656D6F733E3C63656C6C66756E6374696F6E733E3C6974656D20302F3E3C69
+            74656D20302F3E3C2F63656C6C66756E6374696F6E733E3C636F6C756D6E736F
+            72743E3C6974656D20302F3E3C2F636F6C756D6E736F72743E3C726F77736F72
+            743E3C6974656D20302F3E3C6974656D20302F3E3C6974656D20302F3E3C6974
+            656D20302F3E3C6974656D20302F3E3C6974656D20302F3E3C2F726F77736F72
+            743E3C2F63726F73733E}
+        end
+      end
+      object bndFooter: TfrxFooter
+        Height = 11.338590000000000000
+        Top = 309.921460000000000000
+        Width = 1046.929810000000000000
+      end
+    end
+  end
+  object frrNotaEntrega: TfrxReport
+    Version = '4.9.72'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PrintOptions.Printer = 'Padr'#227'o'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 40928.407150601900000000
+    ReportOptions.LastChange = 41856.560776539350000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      ''
+      'begin'
+      ''
+      'end.')
+    Left = 20
+    Top = 169
+    Datasets = <
+      item
+        DataSet = frdCliente
+        DataSetName = 'frdCliente'
+      end
+      item
+        DataSet = frdEmpresa
+        DataSetName = 'frdEmpresa'
+      end
+      item
+        DataSet = frdFormaPagtos
+        DataSetName = 'frdFormaPagtos'
+      end
+      item
+        DataSet = frdItens
+        DataSetName = 'frdItens'
+      end
+      item
+        DataSet = frdTitulo
+        DataSetName = 'frdTitulo'
+      end
+      item
+        DataSet = frdVenda
+        DataSetName = 'frdVenda'
+      end>
+    Variables = <>
+    Style = <>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Page1: TfrxReportPage
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Lucida Console'
+      Font.Style = []
+      PaperWidth = 210.000000000000000000
+      PaperHeight = 297.000000000000000000
+      PaperSize = 9
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
+      TopMargin = 10.000000000000000000
+      BottomMargin = 10.000000000000000000
+      object bndReportTitle: TfrxReportTitle
+        Height = 90.401670000000000000
+        Top = 18.897650000000000000
+        Width = 718.110700000000000000
+        object frdVendaCODCONTROL: TfrxMemoView
+          Left = 559.370440000000000000
+          Top = 18.897650000000000000
+          Width = 158.740260000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Color = clBtnFace
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            
+              '[IIF(<frdVenda."NFE">=0,FormatFloat('#39'0000'#39',<frdVenda."ANO">)+'#39'/'#39 +
+              '+FormatFloat('#39'###0000000'#39',<frdVenda."CODCONTROL">),FormatFloat('#39 +
+              '###0000000'#39',<frdVenda."NFE">)+'#39'-'#39'+<frdVenda."SERIE">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo3: TfrxMemoView
+          Left = 559.370440000000000000
+          Width = 158.740260000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          CharSpacing = 4.000000000000000000
+          Color = clBtnFace
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[IIF(<frdVenda."NFE">=0,'#39'N'#195#186'mero Controle'#39', '#39'N'#195#186'mero NF-e'#39')]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo10: TfrxMemoView
+          Left = 559.370440000000000000
+          Top = 37.795300000000000000
+          Width = 158.740260000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = clBtnFace
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftBottom]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            
+              '[IIF(<frdVenda."STATUS">=1,'#39'Or'#195#167'amento'#39',IIF(<frdVenda."STATUS">=' +
+              '2,'#39'Or'#195#167'amento'#39',IIF(<frdVenda."STATUS">=3,'#39'Finalizada'#39',IIF(<frdVe' +
+              'nda."STATUS">=4,'#39'Gerada NF-e'#39','#39'Cancelada'#39'))))]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Picture1: TfrxPictureView
+          Left = 3.779530000000000000
+          Width = 139.842610000000000000
+          Height = 79.370130000000000000
+          ShowHint = False
+          DataField = 'LOGO'
+          DataSet = frdEmpresa
+          DataSetName = 'frdEmpresa'
+          HightQuality = False
+          Transparent = False
+          TransparentColor = clWhite
+        end
+        object frdEmpresaRZSOC: TfrxMemoView
+          Left = 143.622140000000000000
+          Width = 411.968770000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            '[frdEmpresa."RZSOC"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object frdEmpresaNMFANT: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 18.897650000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              'CNPJ.: [FormatMaskText('#39'##.###.###/####-##;0;'#39',<frdEmpresa."CNPJ' +
+              '">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdFone: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 34.015770000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            'FONE: [FormatMaskText('#39'(##)####.####;0;'#39',<frdEmpresa."FONE">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo11: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 49.133890000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              '[frdEmpresa."TLG_SIGLA"] [frdEmpresa."LOG_NOME"], [frdEmpresa."N' +
+              'UMERO_END"], [frdEmpresa."BAI_NOME"] - [frdEmpresa."CID_NOME"]/[' +
+              'frdEmpresa."EST_SIGLA"] CEP.: [FormatMaskText('#39'##.###-###;0;'#39',<f' +
+              'rdEmpresa."CEP">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Line1: TfrxLineView
+          Top = 83.149660000000000000
+          Width = 718.110700000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+        end
+        object Memo44: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 64.252010000000000000
+          Width = 574.488560000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            '[frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndMasterData: TfrxMasterData
+        Height = 18.897650000000000000
+        Top = 302.362400000000000000
+        Width = 718.110700000000000000
+        DataSet = frdItens
+        DataSetName = 'frdItens'
+        RowCount = 0
+        object frdItensCODPROD: TfrxMemoView
+          Left = 22.677180000000000000
+          Width = 52.913420000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdItens."CODPROD"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdItensSEQ: TfrxMemoView
+          Width = 22.677180000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[Line]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdItensDESCRI: TfrxMemoView
+          Left = 75.590600000000000000
+          Width = 291.023639130000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdItens."DESCRI"] (Ref.: [frdItens."REFERENCIA"])')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo4: TfrxMemoView
+          Left = 366.614410000000000000
+          Width = 45.354360000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39'###,###,##0'#39',<frdItens."QTDE">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo7: TfrxMemoView
+          Left = 642.520100000000000000
+          Width = 75.590600000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.00'#39',<frdItens."TOTAL_LIQUIDO">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo5: TfrxMemoView
+          Left = 411.968770000000000000
+          Width = 37.795300000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdItens."UNP_SIGLA"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo6: TfrxMemoView
+          Left = 449.764070000000000000
+          Width = 64.252010000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.00'#39',<frdItens."PUNIT">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo15: TfrxMemoView
+          Left = 514.016080000000000000
+          Width = 64.252010000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.00'#39',<frdItens."DESCONTO_VALOR">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo18: TfrxMemoView
+          Left = 578.268090000000000000
+          Width = 64.252010000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.00'#39',<frdItens."PFINAL">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndPageFooter: TfrxPageFooter
+        Height = 22.677180000000000000
+        Top = 737.008350000000000000
+        Width = 718.110700000000000000
+        object Memo1: TfrxMemoView
+          Left = 566.929500000000000000
+          Width = 151.181200000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            'P '#195#161' g i n a :  [Page#]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndHeader: TfrxHeader
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Lucida Console'
+        Font.Style = []
+        Height = 109.606370000000000000
+        ParentFont = False
+        Top = 170.078850000000000000
+        Width = 718.110700000000000000
+        object frdVendaNOME: TfrxMemoView
+          Top = 37.795300000000000000
+          Width = 415.748300000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdCliente."NOME"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo2: TfrxMemoView
+          Top = 26.456710000000000000
+          Width = 415.748300000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Cliente:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo8: TfrxMemoView
+          Left = 415.748300000000000000
+          Top = 26.456710000000000000
+          Width = 207.874150000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' CPF/CNPJ.:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo9: TfrxMemoView
+          Left = 415.748300000000000000
+          Top = 37.795300000000000000
+          Width = 207.874150000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              ' [IIF(<frdCliente."PESSOA_FISICA">=1,FormatMaskText('#39'###.###.###' +
+              '-##;0;'#39',<frdCliente."CNPJ">),FormatMaskText('#39'##.###.###/####-##;' +
+              '0;'#39',<frdCliente."CNPJ">))]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo12: TfrxMemoView
+          Left = 623.622450000000000000
+          Top = 26.456710000000000000
+          Width = 94.488250000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Data: ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo13: TfrxMemoView
+          Left = 623.622450000000000000
+          Top = 37.795300000000000000
+          Width = 94.488250000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            ' [FormatDateTime('#39'dd/mm/yyyy'#39',<frdVenda."DTVENDA">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Line2: TfrxLineView
+          Top = 105.826840000000000000
+          Width = 718.110700000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+        end
+        object Memo23: TfrxMemoView
+          Top = 90.708720000000000000
+          Width = 22.677180000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '#')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo24: TfrxMemoView
+          Left = 22.677180000000000000
+          Top = 90.708720000000000000
+          Width = 52.913420000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' C'#195#179'digo')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo25: TfrxMemoView
+          Left = 75.590600000000000000
+          Top = 90.708720000000000000
+          Width = 291.023639130000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Descri'#195#167#195#163'o')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo26: TfrxMemoView
+          Top = 68.031540000000000000
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              ' [Trim(<frdCliente."TLG_SIGLA"> + '#39' '#39' + <frdCliente."LOG_NOME">)' +
+              '], [frdCliente."NUMERO_END"], [frdCliente."BAI_NOME"] - [frdClie' +
+              'nte."CID_NOME"]/[frdCliente."EST_SIGLA"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo27: TfrxMemoView
+          Top = 56.692950000000000000
+          Width = 718.110700000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Endere'#195#167'o:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo21: TfrxMemoView
+          Left = 411.968770000000000000
+          Top = 90.708720000000000000
+          Width = 37.795300000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Und.')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo20: TfrxMemoView
+          Left = 449.764070000000000000
+          Top = 90.708720000000000000
+          Width = 64.252010000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'V. Bruto ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo19: TfrxMemoView
+          Left = 514.016080000000000000
+          Top = 90.708720000000000000
+          Width = 64.252010000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'V. Desc. ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo16: TfrxMemoView
+          Left = 578.268090000000000000
+          Top = 90.708720000000000000
+          Width = 64.252010000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'V. L'#195#173'quido ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo45: TfrxMemoView
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          CharSpacing = 4.000000000000000000
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            'TERMO DE RECEBIMENTO DE MERCADORIAS/PRODUTOS')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo22: TfrxMemoView
+          Left = 366.614410000000000000
+          Top = 90.708720000000000000
+          Width = 45.354323390000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Qtde.')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo17: TfrxMemoView
+          Left = 642.520100000000000000
+          Top = 90.708720000000000000
+          Width = 75.590600000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T O T A L ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndReportSummary: TfrxReportSummary
+        Height = 332.598640000000000000
+        Top = 381.732530000000000000
+        Width = 718.110700000000000000
+        object SysMemo1: TfrxSysMemoView
+          Left = 623.622450000000000000
+          Width = 94.488250000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          HAlign = haRight
+          Memo.UTF8 = (
+            
+              '[FormatFloat('#39',0.00'#39',SUM(<frdItens."TOTAL_LIQUIDO">,bndMasterDat' +
+              'a,2))] ')
+          ParentFont = False
+          VAlign = vaCenter
+          WordWrap = False
+        end
+        object Memo14: TfrxMemoView
+          Left = 480.000310000000000000
+          Width = 143.622140000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T O T A L    G E R A L :')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo28: TfrxMemoView
+          Top = 98.267780000000000000
+          Width = 366.614410000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdVenda."VENDEDOR_NOME"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo29: TfrxMemoView
+          Top = 86.929190000000000000
+          Width = 366.614410000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Vendedor:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Line3: TfrxLineView
+          Top = 22.677180000000000000
+          Width = 718.110700000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+        end
+        object Memo30: TfrxMemoView
+          Top = 37.795300000000000000
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdVenda."LISTA_FORMA_PAGO"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo31: TfrxMemoView
+          Top = 26.456710000000000000
+          Width = 718.110700000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Forma de Pagamento:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo32: TfrxMemoView
+          Top = 68.031540000000000000
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdVenda."LISTA_COND_PAGO"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo33: TfrxMemoView
+          Top = 56.692950000000000000
+          Width = 718.110700000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Condi'#195#167#195#163'o de Pagamento:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo34: TfrxMemoView
+          Left = 366.614410000000000000
+          Top = 98.267780000000000000
+          Width = 128.504020000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.00'#39',<frdVenda."TOTALVENDABRUTA">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo35: TfrxMemoView
+          Left = 366.614410000000000000
+          Top = 86.929190000000000000
+          Width = 128.504020000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            ' Total Venda: ')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo36: TfrxMemoView
+          Left = 495.118430000000000000
+          Top = 98.267780000000000000
+          Width = 94.488250000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.00'#39',<frdVenda."DESCONTO">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo37: TfrxMemoView
+          Left = 495.118430000000000000
+          Top = 86.929190000000000000
+          Width = 94.488250000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            ' Desconto: ')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo38: TfrxMemoView
+          Left = 589.606680000000000000
+          Top = 98.267780000000000000
+          Width = 128.504020000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.00'#39',<frdVenda."TOTALVENDA">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo39: TfrxMemoView
+          Left = 589.606680000000000000
+          Top = 86.929190000000000000
+          Width = 128.504020000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            ' Total L'#195#173'quido: ')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo40: TfrxMemoView
+          Top = 132.283550000000000000
+          Width = 718.110700000000000000
+          Height = 45.354360000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftBottom]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[frdVenda."OBS"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo41: TfrxMemoView
+          Top = 117.165430000000000000
+          Width = 718.110700000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Sans Typewriter'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop]
+          Memo.UTF8 = (
+            ' Observa'#195#167#195#163'o:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo42: TfrxMemoView
+          Left = 234.330860000000000000
+          Top = 301.362400000000000000
+          Width = 249.448980000000000000
+          Height = 26.456710000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            'Assinatura do Recebedor'
+            'CPF/RG')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo43: TfrxMemoView
+          Left = 37.795300000000000000
+          Top = 192.756030000000000000
+          Width = 623.622450000000000000
+          Height = 45.354360000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Arial Narrow'
+          Font.Style = []
+          HAlign = haBlock
+          Memo.UTF8 = (
+            
+              '                 Declaro, sob penas da lei, que recebi os produt' +
+              'os e/ou mercadorias, constante da nota fiscal acima.')
+          ParentFont = False
+        end
+      end
+    end
+  end
+  object qryVendaCartaCredito: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'Select'
+      '    e.cod_cliente'
+      '  , e.cod_produto'
+      '  , e.quantidade'
+      '  , e.valor_medio'
+      '  , e.quantidade * e.valor_medio as total_medio'
+      '  , e.usuario'
+      '  , e.ano_venda_ult'
+      '  , e.cod_venda_ult'
+      ''
+      '  , p.Descri'
+      '  , p.Apresentacao'
+      '  , p.Descri_apresentacao'
+      '  , p.Modelo'
+      '  , p.Referencia'
+      '  , p.Secao'
+      '  , p.Preco'
+      '  , p.Unidade'
+      '  , g.Descri as Descricao_Grupo'
+      '  , f.Nome   as Nome_Fabricante'
+      '  , coalesce(s.Scp_descricao, p.Secao) as Descricao_Secao'
+      '  , coalesce(u.Unp_descricao, p.Unidade) as Descricao_Unidade'
+      '  , u.Unp_sigla'
+      'from TBCLIENTE_ESTOQUE e'
+      '  inner join TBPRODUTO p on (p.cod = e.cod_produto)'
+      '  left join TBGRUPOPROD g on (g.Cod = p.Codgrupo)'
+      '  left join TBSECAOPROD s on (s.Scp_cod = p.Codsecao)'
+      '  left join TBUNIDADEPROD u on (u.Unp_cod = p.Codunidade)'
+      '  left join TBFABRICANTE f on (f.Cod = p.Codfabricante)'
+      ''
+      'where e.ano_venda_ult = :anovenda'
+      '  and e.cod_venda_ult = :numvenda'
+      '  and e.quantidade > 0'
+      ''
+      'order by'
+      '    p.Descri'
+      '  , p.Apresentacao'
+      '  , p.Descri_apresentacao')
+    Left = 312
+    Top = 496
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'anovenda'
+        ParamType = ptInput
+        Value = 0
+      end
+      item
+        DataType = ftInteger
+        Name = 'numvenda'
+        ParamType = ptInput
+        Value = 0
+      end>
+  end
+  object frdVendaCartaCredito: TfrxDBDataset
+    UserName = 'frdVendaCartaCredito'
+    CloseDataSource = False
+    FieldAliases.Strings = (
+      'COD_CLIENTE=COD_CLIENTE'
+      'COD_PRODUTO=COD_PRODUTO'
+      'QUANTIDADE=QUANTIDADE'
+      'VALOR_MEDIO=VALOR_MEDIO'
+      'TOTAL_MEDIO=TOTAL_MEDIO'
+      'USUARIO=USUARIO'
+      'ANO_VENDA_ULT=ANO_VENDA_ULT'
+      'COD_VENDA_ULT=COD_VENDA_ULT'
+      'DESCRI=DESCRI'
+      'APRESENTACAO=APRESENTACAO'
+      'DESCRI_APRESENTACAO=DESCRI_APRESENTACAO'
+      'MODELO=MODELO'
+      'REFERENCIA=REFERENCIA'
+      'SECAO=SECAO'
+      'PRECO=PRECO'
+      'UNIDADE=UNIDADE'
+      'DESCRICAO_GRUPO=DESCRICAO_GRUPO'
+      'NOME_FABRICANTE=NOME_FABRICANTE'
+      'DESCRICAO_SECAO=DESCRICAO_SECAO'
+      'DESCRICAO_UNIDADE=DESCRICAO_UNIDADE'
+      'UNP_SIGLA=UNP_SIGLA')
+    DataSet = qryVendaCartaCredito
+    BCDToCurrency = False
+    Left = 344
+    Top = 496
+  end
+  object frrVendaCartaCredito: TfrxReport
+    Version = '4.9.72'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PreviewOptions.ZoomMode = zmPageWidth
+    PrintOptions.Printer = 'Padr'#227'o'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 40928.407150601900000000
+    ReportOptions.LastChange = 41856.558647511570000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      ''
+      'begin'
+      ''
+      'end.')
+    Left = 376
+    Top = 496
+    Datasets = <
+      item
+        DataSet = frdCliente
+        DataSetName = 'frdCliente'
+      end
+      item
+        DataSet = frdEmpresa
+        DataSetName = 'frdEmpresa'
+      end
+      item
+        DataSet = frdVenda
+        DataSetName = 'frdVenda'
+      end
+      item
+        DataSet = frdVendaCartaCredito
+        DataSetName = 'frdVendaCartaCredito'
+      end>
+    Variables = <>
+    Style = <>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Requisicao: TfrxReportPage
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Lucida Console'
+      Font.Style = []
+      PaperWidth = 210.000000000000000000
+      PaperHeight = 297.000000000000000000
+      PaperSize = 9
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
+      TopMargin = 10.000000000000000000
+      BottomMargin = 10.000000000000000000
+      object bndReportTitle: TfrxReportTitle
+        Height = 116.858380000000000000
+        Top = 18.897650000000000000
+        Width = 718.110700000000000000
+        object Picture1: TfrxPictureView
+          Left = 3.779530000000000000
+          Width = 139.842610000000000000
+          Height = 79.370130000000000000
+          ShowHint = False
+          DataField = 'LOGO'
+          DataSet = frdEmpresa
+          DataSetName = 'frdEmpresa'
+          HightQuality = False
+          Transparent = False
+          TransparentColor = clWhite
+        end
+        object frdEmpresaRZSOC: TfrxMemoView
+          Left = 143.622140000000000000
+          Width = 411.968770000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            '[frdEmpresa."RZSOC"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object frdEmpresaNMFANT: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 18.897650000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              'CNPJ.: [FormatMaskText('#39'##.###.###/####-##;0;'#39',<frdEmpresa."CNPJ' +
+              '">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdFone: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 34.015770000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            'FONE: [FormatMaskText('#39'(##)####.####;0;'#39',<frdEmpresa."FONE">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo11: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 49.133890000000000000
+          Width = 411.968770000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              '[frdEmpresa."TLG_SIGLA"] [frdEmpresa."LOG_NOME"], [frdEmpresa."N' +
+              'UMERO_END"], [frdEmpresa."BAI_NOME"] - [frdEmpresa."CID_NOME"]/[' +
+              'frdEmpresa."EST_SIGLA"] CEP.: [FormatMaskText('#39'##.###-###;0;'#39',<f' +
+              'rdEmpresa."CEP">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Line1: TfrxLineView
+          Top = 83.149660000000000000
+          Width = 718.110700000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+        end
+        object Memo44: TfrxMemoView
+          Left = 143.622140000000000000
+          Top = 64.252010000000000000
+          Width = 574.488560000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          DataSet = frdCliente
+          DataSetName = 'frdCliente'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            '[frdEmpresa."HOME_PAGE"] / [frdEmpresa."EMAIL"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo45: TfrxMemoView
+          Top = 90.708720000000000000
+          Width = 721.890230000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          CharSpacing = 4.000000000000000000
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            'CARTA DE CR'#195#8240'DITO')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdVendaCODCONTROL: TfrxMemoView
+          Left = 559.370440000000000000
+          Top = 18.897650000000000000
+          Width = 158.740260000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Color = clBtnFace
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            
+              '[IIF(<frdVenda."NFE">=0,FormatFloat('#39'0000'#39',<frdVenda."ANO">)+'#39'/'#39 +
+              '+FormatFloat('#39'###0000000'#39',<frdVenda."CODCONTROL">),FormatFloat('#39 +
+              '###0000000'#39',<frdVenda."NFE">)+'#39'-'#39'+<frdVenda."SERIE">)]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo3: TfrxMemoView
+          Left = 559.370440000000000000
+          Width = 158.740260000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          CharSpacing = 4.000000000000000000
+          Color = clBtnFace
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[IIF(<frdVenda."NFE">=0,'#39'N'#195#186'mero Controle'#39', '#39'N'#195#186'mero NF-e'#39')]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo10: TfrxMemoView
+          Left = 559.370440000000000000
+          Top = 37.795300000000000000
+          Width = 158.740260000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = clBtnFace
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftBottom]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            
+              '[IIF(<frdVenda."STATUS">=1,'#39'Or'#195#167'amento'#39',IIF(<frdVenda."STATUS">=' +
+              '2,'#39'Or'#195#167'amento'#39',IIF(<frdVenda."STATUS">=3,'#39'Finalizada'#39',IIF(<frdVe' +
+              'nda."STATUS">=4,'#39'Gerada NF-e'#39','#39'Cancelada'#39'))))]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndMasterData: TfrxMasterData
+        Height = 18.897650000000000000
+        Top = 302.362400000000000000
+        Width = 718.110700000000000000
+        DataSet = frdVendaCartaCredito
+        DataSetName = 'frdVendaCartaCredito'
+        RowCount = 0
+        object frdItensCODPROD: TfrxMemoView
+          Left = 22.677180000000000000
+          Width = 52.913420000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdVendaCartaCredito."COD_PRODUTO"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdItensSEQ: TfrxMemoView
+          Width = 22.677180000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[Line]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object frdItensDESCRI: TfrxMemoView
+          Left = 75.590600000000000000
+          Width = 419.527659130000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              ' [frdVendaCartaCredito."DESCRI_APRESENTACAO"] (Ref.: [frdVendaCa' +
+              'rtaCredito."REFERENCIA"])')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo4: TfrxMemoView
+          Left = 495.118430000000000000
+          Width = 45.354360000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.###'#39',<frdVendaCartaCredito."QUANTIDADE">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo7: TfrxMemoView
+          Left = 642.520100000000000000
+          Width = 75.590600000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.00'#39',<frdVendaCartaCredito."TOTAL_MEDIO">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo5: TfrxMemoView
+          Left = 540.472790000000000000
+          Width = 37.795300000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdVendaCartaCredito."UNIDADE"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo6: TfrxMemoView
+          Left = 578.268090000000000000
+          Width = 64.252010000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdItens
+          DataSetName = 'frdItens'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            '[FormatFloat('#39',0.00'#39',<frdVendaCartaCredito."VALOR_MEDIO">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndPageFooter: TfrxPageFooter
+        Height = 22.677180000000000000
+        Top = 737.008350000000000000
+        Width = 718.110700000000000000
+        object Memo1: TfrxMemoView
+          Left = 566.929500000000000000
+          Width = 151.181200000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            'P '#195#161' g i n a :  [Page#]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndHeader: TfrxHeader
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Lucida Console'
+        Font.Style = []
+        Height = 83.149660000000000000
+        ParentFont = False
+        Top = 196.535560000000000000
+        Width = 718.110700000000000000
+        object frdVendaNOME: TfrxMemoView
+          Top = 11.338590000000000000
+          Width = 415.748300000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdCliente."NOME"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo2: TfrxMemoView
+          Width = 415.748300000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Cliente:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo8: TfrxMemoView
+          Left = 415.748300000000000000
+          Width = 207.874150000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' CPF/CNPJ.:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo9: TfrxMemoView
+          Left = 415.748300000000000000
+          Top = 11.338590000000000000
+          Width = 207.874150000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              ' [IIF(<frdCliente."PESSOA_FISICA">=1,FormatMaskText('#39'###.###.###' +
+              '-##;0;'#39',<frdCliente."CNPJ">),FormatMaskText('#39'##.###.###/####-##;' +
+              '0;'#39',<frdCliente."CNPJ">))]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo12: TfrxMemoView
+          Left = 623.622450000000000000
+          Width = 94.488250000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Data Venda: ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo13: TfrxMemoView
+          Left = 623.622450000000000000
+          Top = 11.338590000000000000
+          Width = 94.488250000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          HAlign = haRight
+          Memo.UTF8 = (
+            ' [FormatDateTime('#39'dd/mm/yyyy'#39',<frdVenda."DTVENDA">)] ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Line2: TfrxLineView
+          Top = 79.370130000000000000
+          Width = 718.110700000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+        end
+        object Memo23: TfrxMemoView
+          Top = 64.252010000000000000
+          Width = 22.677180000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '#')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo24: TfrxMemoView
+          Left = 22.677180000000000000
+          Top = 64.252010000000000000
+          Width = 52.913420000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' C'#195#179'digo')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo25: TfrxMemoView
+          Left = 75.590600000000000000
+          Top = 64.252010000000000000
+          Width = 419.527659130000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Descri'#195#167#195#163'o')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo26: TfrxMemoView
+          Top = 41.574830000000000000
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            
+              ' [Trim(<frdCliente."TLG_SIGLA"> + '#39' '#39' + <frdCliente."LOG_NOME">)' +
+              '], [frdCliente."NUMERO_END"], [frdCliente."BAI_NOME"] - [frdClie' +
+              'nte."CID_NOME"]/[frdCliente."EST_SIGLA"]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo27: TfrxMemoView
+          Top = 30.236240000000000000
+          Width = 718.110700000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Endere'#195#167'o:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo21: TfrxMemoView
+          Left = 540.472790000000000000
+          Top = 64.252010000000000000
+          Width = 37.795300000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Und.')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo20: TfrxMemoView
+          Left = 578.268090000000000000
+          Top = 64.252010000000000000
+          Width = 64.252010000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'V. M'#195#169'dio ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo22: TfrxMemoView
+          Left = 495.118430000000000000
+          Top = 64.252010000000000000
+          Width = 45.354323390000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'Qtde.')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo17: TfrxMemoView
+          Left = 642.520100000000000000
+          Top = 64.252010000000000000
+          Width = 75.590600000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T O T A L ')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+      end
+      object bndReportSummary: TfrxReportSummary
+        Height = 332.598640000000000000
+        Top = 381.732530000000000000
+        Width = 718.110700000000000000
+        object SysMemo1: TfrxSysMemoView
+          Left = 623.622450000000000000
+          Width = 94.488250000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          HAlign = haRight
+          Memo.UTF8 = (
+            
+              '[FormatFloat('#39',0.00'#39',SUM(<frdVendaCartaCredito."TOTAL_MEDIO">,bn' +
+              'dMasterData,2))] ')
+          ParentFont = False
+          VAlign = vaCenter
+          WordWrap = False
+        end
+        object Memo14: TfrxMemoView
+          Left = 480.000310000000000000
+          Width = 143.622140000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          Color = 14211288
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          HAlign = haRight
+          Memo.UTF8 = (
+            'T O T A L    G E R A L :')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Line3: TfrxLineView
+          Top = 22.677180000000000000
+          Width = 718.110700000000000000
+          ShowHint = False
+          Frame.Typ = [ftTop]
+        end
+        object Memo30: TfrxMemoView
+          Top = 37.795300000000000000
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdVenda."VENDEDOR_NOME"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo31: TfrxMemoView
+          Top = 26.456710000000000000
+          Width = 718.110700000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Venda realizada por:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo32: TfrxMemoView
+          Top = 68.031540000000000000
+          Width = 718.110700000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = []
+          Memo.UTF8 = (
+            ' [frdVenda."USUARIO"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo33: TfrxMemoView
+          Top = 56.692950000000000000
+          Width = 718.110700000000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Memo.UTF8 = (
+            ' Autorizada/Finalizada por:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo40: TfrxMemoView
+          Top = 102.047310000000000000
+          Width = 718.110700000000000000
+          Height = 52.913420000000000000
+          ShowHint = False
+          DataSet = frdVenda
+          DataSetName = 'frdVenda'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftBottom]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[frdVenda."OBS"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo41: TfrxMemoView
+          Top = 86.929190000000000000
+          Width = 718.110700000000000000
+          Height = 15.118120000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop]
+          Memo.UTF8 = (
+            ' Observa'#195#167#195#163'o da venda:')
+          ParentFont = False
+          VAlign = vaCenter
+        end
+        object Memo43: TfrxMemoView
+          Left = 37.795300000000000000
+          Top = 166.299320000000000000
+          Width = 623.622450000000000000
+          Height = 71.811070000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Arial Narrow'
+          Font.Style = []
+          HAlign = haBlock
+          Memo.UTF8 = (
+            
+              '                 Asseguramos que o(s) produto(s) acima relaciona' +
+              'do(s) para o cliente [frdCliente."NOME"], [IIF(<frdCliente."PESS' +
+              'OA_FISICA">=1,'#39'CPF'#39','#39'CNPJ'#39')] [IIF(<frdCliente."PESSOA_FISICA">=1' +
+              ',FormatMaskText('#39'###.###.###-##;0;'#39',<frdCliente."CNPJ">),FormatM' +
+              'askText('#39'##.###.###/####-##;0;'#39',<frdCliente."CNPJ">))], consta(m' +
+              ') como cr'#195#169'dito para que possa(m) ser retirado(s) por ele atrav'#195 +
+              #169's de requisi'#195#167#195#181'es de materiais/produtos.')
+          ParentFont = False
+        end
+        object Memo15: TfrxMemoView
+          Left = 411.968770000000000000
+          Top = 294.803340000000000000
+          Width = 249.448980000000000000
+          Height = 37.795300000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[frdCliente."NOME"]'
+            
+              '[IIF(<frdCliente."PESSOA_FISICA">=1,FormatMaskText('#39'###.###.###-' +
+              '##;0;'#39',<frdCliente."CNPJ">),FormatMaskText('#39'##.###.###/####-##;0' +
+              ';'#39',<frdCliente."CNPJ">))]')
+          ParentFont = False
+          WordWrap = False
+          VAlign = vaCenter
+        end
+        object Memo42: TfrxMemoView
+          Left = 37.795300000000000000
+          Top = 294.803340000000000000
+          Width = 249.448980000000000000
+          Height = 37.795300000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Lucida Console'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftTop]
+          HAlign = haCenter
+          Memo.UTF8 = (
+            '[frdEmpresa."RZSOC"]'
+            '[FormatMaskText('#39'##.###.###/####-##;0;'#39',<frdEmpresa."CNPJ">)]')
+          ParentFont = False
+          WordWrap = False
           VAlign = vaCenter
         end
       end
