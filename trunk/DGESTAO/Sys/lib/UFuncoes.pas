@@ -18,6 +18,13 @@ uses
   function GetConectedInternet : Boolean;
   function GetEmailValido(email : String; bShowMsg : Boolean) : Boolean;
 
+  function Path_MeusDocumentos : String;
+  function Path_Windows : String;
+  function Path_Temporario : String;
+  function Path_Comando : String;
+  function Path_DiretorioWindows : String;
+  function RemoveAcentos(Str : String) : String;
+
 implementation
 
 uses
@@ -305,15 +312,65 @@ begin
        end 
     end; 
 
-  //VerificaÁ„o final 
-  if ( not Result ) and ( bShowMsg ) then 
+  //VerificaÁ„o final
+  if ( not Result ) and ( bShowMsg ) then
    begin 
-     msg:= msg +#10+ 'Formato de E-mail n„o aceit·vel!!'; 
-     //MessageDlg(msg,mtWarning,[mbRetry],0);
+     msg:= msg + #10 + 'Formato de E-mail n„o aceit·vel!!'; 
+     //MessageDlg(msg, mtWarning, [mbRetry], 0);
    end;
 
 end;
 
+end;
+
+function Path_MeusDocumentos : String;
+begin
+  Result := GetEnvironmentVariable('USERPROFILE');
+
+  if Pos('Documents', Result) = 0 then
+    Result := GetEnvironmentVariable('USERPROFILE') + '\Documents';
+
+  if not DirectoryExists(Result) then
+    Result := GetEnvironmentVariable('USERPROFILE') + '\Documentos';
+
+  if not DirectoryExists(Result) then
+    Result := GetEnvironmentVariable('USERPROFILE') + '\Meus Documentos';
+end;
+
+function Path_Windows : String;
+begin
+  Result := GetEnvironmentVariable('PATH');
+end;
+
+function Path_Temporario : String;
+begin
+  Result := GetEnvironmentVariable('TMP');
+  if Trim(Result) = EmptyStr then
+    Result := GetEnvironmentVariable('TEMP');
+end;
+
+function Path_Comando : String;
+begin
+  Result := GetEnvironmentVariable('COMSPEC');
+end;
+
+function Path_DiretorioWindows : String;
+begin
+  Result := GetEnvironmentVariable('Windir');
+end;
+
+function RemoveAcentos(Str : String) : String;
+const
+  COM_ACENTO = '‡‚ÍÙ˚„ı·ÈÌÛ˙Á¸¿¬ ‘€√’¡…Õ”⁄«‹';
+  SEM_ACENTO = 'aaeouaoaeioucuAAEOUAOAEIOUCU';
+var
+  X : Integer;
+begin
+  for x := 1 to Length(Str) do
+    if Pos(Str[x],COM_ACENTO) <> 0 then
+      Str[x] := SEM_ACENTO[Pos(Str[x], COM_ACENTO)];
+      
+  Result := Str;
 end;
 
 end.

@@ -98,7 +98,11 @@ uses
   UGeConsultarLoteNFe in 'UGeConsultarLoteNFe.pas' {frmGeConsultarLoteNFe},
   UGrConfigurarAmbiente in 'lib\UGrConfigurarAmbiente.pas' {frmGrConfigurarAmbiente},
   UfrmMovVeic in 'UfrmMovVeic.pas' {frmMovVeic},
-  URelEstoqVeic in 'URelEstoqVeic.pas' {frmRelEstoqVeic};
+  URelEstoqVeic in 'URelEstoqVeic.pas' {frmRelEstoqVeic},
+  UEcfAgil in 'lib\UEcfAgil.pas',
+  UEcfFactory in 'lib\UEcfFactory.pas',
+  UEcfGenerico in 'lib\UEcfGenerico.pas',
+  UEcfWindowsPrinter in 'lib\UEcfWindowsPrinter.pas';
 
 {$R *.res}
 

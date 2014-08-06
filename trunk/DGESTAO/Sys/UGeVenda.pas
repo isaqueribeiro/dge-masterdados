@@ -1687,6 +1687,18 @@ begin
       GerarSaldoContaCorrente(CxContaCorrente, GetDateDB);
 
     RdgStatusVenda.ItemIndex := 0;
+
+    // Imprimir Cupom
+
+    if GetEmitirCupom then
+      if GetEmitirCupomAutomatico then
+        if GetCupomNaoFiscalEmitir then
+          DMNFe.ImprimirCupomNaoFiscal(IbDtstTabelaCODEMP.AsString
+            , IbDtstTabelaCODCLIENTE.AsInteger
+            , FormatDateTime('dd/mm/yy hh:mm', Now)
+            , IbDtstTabelaANO.Value, IbDtstTabelaCODCONTROL.Value)
+        else
+          ; // Emitir Cupom Fiscal
   end;
 end;
 
@@ -2537,46 +2549,28 @@ begin
   with DMNFe do
   begin
 
-    with qryEmitente do
-    begin
-      Close;
-      ParamByName('Cnpj').AsString := IbDtstTabelaCODEMP.AsString;
-      Open;
-    end;
+    AbrirEmitente( IbDtstTabelaCODEMP.AsString );
+    AbrirDestinatario( IbDtstTabelaCODCLIENTE.AsInteger );
+    AbrirVenda( IbDtstTabelaANO.AsInteger, IbDtstTabelaCODCONTROL.AsInteger );
 
-    with qryDestinatario do
-    begin
-      Close;
-      ParamByName('codigo').AsInteger := IbDtstTabelaCODCLIENTE.AsInteger;
-      Open;
-    end;
-
-    with qryCalculoImporto do
-    begin
-      Close;
-      ParamByName('anovenda').AsInteger := IbDtstTabelaANO.AsInteger;
-      ParamByName('numvenda').AsInteger := IbDtstTabelaCODCONTROL.AsInteger;
-      Open;
-    end;
-
-    with qryDadosProduto do
-    begin
-      Close;
-      ParamByName('anovenda').AsInteger := IbDtstTabelaANO.AsInteger;
-      ParamByName('numvenda').AsInteger := IbDtstTabelaCODCONTROL.AsInteger;
-      Open;
-    end;
-
-    if ( ShowConfirm('Deseja imprimir em formato CUPOM?', 'Impressão', MB_DEFBUTTON1) ) then
-    begin
-      if ( GetModeloEmissaoCupom = MODELO_CUPOM_POOLER ) then
+    if GetEmitirCupom then
+      if ( ShowConfirm('Deseja imprimir em formato CUPOM?', 'Impressão', MB_DEFBUTTON1) ) then
       begin
-        FrECFPooler.PrepareReport;
-        FrECFPooler.Print;
+        if GetCupomNaoFiscalEmitir then
+          ImprimirCupomNaoFiscal(IbDtstTabelaCODEMP.AsString
+            , IbDtstTabelaCODCLIENTE.AsInteger
+            , FormatDateTime('dd/mm/yy hh:mm', Now)
+            , IbDtstTabelaANO.Value, IbDtstTabelaCODCONTROL.Value)
+        else
+        if ( GetModeloEmissaoCupom = MODELO_CUPOM_POOLER ) then
+        begin
+          FrECFPooler.PrepareReport;
+          FrECFPooler.Print;
+        end;
+        Exit;
       end;
-    end
-    else
-      frrVenda.ShowReport;
+
+    frrVenda.ShowReport;
 
   end;
 end;
