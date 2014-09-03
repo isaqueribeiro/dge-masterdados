@@ -3,12 +3,12 @@ unit UDMBusiness;
 interface
 
 uses
-  Windows, Forms, SysUtils, Classes, IBDatabase, DB, IBCustomDataSet, IniFIles,
+  Windows, Forms, SysUtils, Classes, Controls, IBDatabase, DB, IBCustomDataSet, IniFIles,
   ShellApi, Printers, DateUtils, IBQuery, RpDefine, RpRave,
   frxClass, frxDBSet, EMsgDlg, IdBaseComponent, IdComponent, IdIPWatch, IBStoredProc,
   FuncoesFormulario, UConstantesDGE, IBUpdateSQL, DBClient,
   Provider, Dialogs, Registry, frxChart, frxCross, frxRich, frxExportMail,
-  frxExportImage, frxExportRTF, frxExportXLS, frxExportPDF;
+  frxExportImage, frxExportRTF, frxExportXLS, frxExportPDF, EUserAcs;
 
 type
   TSistema = record
@@ -17,10 +17,11 @@ type
   end;
 
   TUsuarioLogado = record
-    Login  : String;
-    Nome   : String;
-    Funcao : Integer;
-    Empresa: String;
+    Login    : String;
+    Nome     : String;
+    Funcao   : Integer;
+    Empresa  : String;
+    Vendedor : Integer;
   end;
 
   TContaEmail = record
@@ -121,6 +122,7 @@ type
     frxRichObject: TfrxRichObject;
     frxCrossObject: TfrxCrossObject;
     frxChartObject: TfrxChartObject;
+    ibdtstUsersVENDEDOR: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -167,6 +169,9 @@ var
   function IfThen(AValue: Boolean; const ATrue: TDateTime; AFalse: TDateTime = 0): TDateTime; overload;
   function NetWorkActive(const Alertar : Boolean = FALSE) : Boolean;
 
+  function ShowConfirmation(sTitle, sMsg : String) : Boolean; overload;
+  function ShowConfirmation(sMsg : String) : Boolean; overload;
+
   procedure ShowInformation(sTitle, sMsg : String); overload;
   procedure ShowInformation(sMsg : String); overload;
   procedure ShowWarning(sMsg : String); overload;
@@ -188,7 +193,7 @@ var
   procedure BloquearCliente(iCodigoCliente : Integer; const Motivo : String = '');
   procedure RegistrarSegmentos(Codigo : Integer; Descricao : String);
   {$IFDEF DGE}
-  //procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
+  procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
   {$ENDIF}
   procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
   procedure SetEmpresaIDDefault(CNPJ : String);
@@ -223,7 +228,7 @@ var
   function GetCupomNaoFiscalEmitir : Boolean;
   function GetSegmentoID(const CNPJ : String) : Integer;
   {$IFDEF DGE}
-  //function GetControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess) : Boolean;
+  function GetControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess) : Boolean;
   {$ENDIF}
   function GetEmailEmpresa(const sCNPJEmpresa : String) : String;
   function GetCalcularCustoOperEmpresa(const sCNPJEmpresa : String) : Boolean;
@@ -295,6 +300,7 @@ var
   function GetUserApp : String;
   function GetUserFullName : String;
   function GetUserFunctionID : Integer;
+  function GetUserCodigoVendedorID : Integer;
   function GetUserUpdatePassWord : Boolean;
   function GetLimiteDescontoUser : Currency;
   function GetUserPermitirAlterarValorVenda : Boolean;
@@ -309,6 +315,8 @@ var
   function GetCarregarProdutoCodigoBarraLocal : Boolean;
   function GetPermissaoRotinaSistema(sRotina : String; const Alertar : Boolean = FALSE) : Boolean;
   function GetQuantidadeEmpresasEmiteNFe : Integer;
+
+  function SetAcessoEstacao(const sHostName : String) : Boolean;
 
   function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
 
@@ -528,6 +536,28 @@ begin
 
     Result := Return;
   end;
+end;
+
+function ShowConfirmation(sTitle, sMsg : String) : Boolean;
+var
+  fMsg : TfrmGeMessage;
+begin
+  if (gSistema.Codigo = SISTEMA_PDV) then
+    try
+      fMsg := TfrmGeMessage.Create(Application);
+      fMsg.Confirmar(sTitle, sMsg);
+      
+      Result := (fMsg.ShowModal = mrYes);
+    finally
+      fMsg.Free;
+    end
+  else
+    Result := (Application.MessageBox(PChar(sMsg), PChar(sTitle), MB_ICONQUESTION + MB_YESNO + MB_DEFBUTTON2) = ID_YES);
+end;
+
+function ShowConfirmation(sMsg : String) : Boolean;
+begin
+  Result := ShowConfirmation('Confirmar', sMsg);
 end;
 
 procedure ShowInformation(sTitle, sMsg : String);
@@ -861,7 +891,6 @@ begin
 end;
 
 {$IFDEF DGE}
-(*
 procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
 begin
   with DMBusiness, qryEvAcessUser do
@@ -884,7 +913,6 @@ begin
     CommitTransaction;
   end;
 end;
-*)
 {$ENDIF}
 
 procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
@@ -1133,8 +1161,18 @@ begin
 end;
 
 function GetEstacaoEmitiNFe : Boolean;
+Var
+  sPrefixoSecao     ,
+  sSecaoCertificado : String;
 begin
-  Result := GetPermititEmissaoNFe(GetEmpresaIDDefault) and (Trim(FileINI.ReadString(INI_SECAO_CERTIFICADO, 'NumSerie', EmptyStr)) <> EmptyStr);
+  if ( GetQuantidadeEmpresasEmiteNFe > 1 ) then
+    sPrefixoSecao := Trim(GetEmpresaIDDefault) + '_'
+  else
+    sPrefixoSecao := EmptyStr;
+
+  sSecaoCertificado := sPrefixoSecao + INI_SECAO_CERTIFICADO;
+
+  Result := GetPermititEmissaoNFe(GetEmpresaIDDefault) and (Trim(FileINI.ReadString(sSecaoCertificado, 'NumSerie', EmptyStr)) <> EmptyStr);
 end;
 
 function GetCondicaoPagtoIDBoleto_Descontinuada : Integer; // Descontinuada
@@ -1193,7 +1231,6 @@ begin
 end;
 
 {$IFDEF DGE}
-(*
 function GetControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess) : Boolean;
 begin
   with DMBusiness, qryEvAcessUser do
@@ -1212,7 +1249,6 @@ begin
     end;
   end;
 end;
-*)
 {$ENDIF}
 
 function GetEmailEmpresa(const sCNPJEmpresa : String) : String;
@@ -2207,6 +2243,12 @@ begin
     Result := ibdtstUsersCODFUNCAO.AsInteger;
 end;
 
+function GetUserCodigoVendedorID : Integer;
+begin
+  with DMBusiness, ibdtstUsers do
+    Result := ibdtstUsersVENDEDOR.AsInteger;
+end;
+
 function GetUserUpdatePassWord : Boolean;
 begin
   with DMBusiness, ibdtstUsers do
@@ -2452,6 +2494,43 @@ begin
   end;
 end;
 
+function SetAcessoEstacao(const sHostName : String) : Boolean;
+var
+  Return : Boolean;
+begin
+  try
+    Return := False;
+
+    with DMBusiness, qryBusca do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('Select');
+      SQL.Add('  e.est_registro');
+      SQL.Add('from SYS_ESTACAO e');
+      SQL.Add('where coalesce(e.est_nome, e.est_ip) = ' + QuotedStr(Trim(sHostName)));
+      Open;
+
+      Return := (FieldByName('est_registro').AsString <> EmptyStr);
+
+      Close;
+
+      if Return then
+      begin
+        SQL.Clear;
+        SQL.Add('Update SYS_ESTACAO e Set');
+        SQL.Add('  e.est_ultimo_acesso = ' + QuotedStr(FormatDateTime('dd.mm.yyyy hh:mm:ss', Now)));
+        SQL.Add('where coalesce(e.est_nome, e.est_ip) = ' + QuotedStr(Trim(sHostName)));
+        ExecSQL;
+
+        CommitTransaction;
+      end;
+    end;
+
+  finally
+    Result := Return;
+  end;
+end;
 
 function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
 begin
