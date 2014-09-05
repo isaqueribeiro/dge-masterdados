@@ -147,10 +147,17 @@ type
     updVendaVolume: TIBUpdateSQL;
     qryCFOP: TIBDataSet;
     qryProduto: TIBDataSet;
+    cdsVendaDESCONTO_CUPOM: TIBBCDField;
+    cdsVendaDESCONTO_TOTAL: TCurrencyField;
+    qryUltimoVenda: TIBDataSet;
+    cdsVendaNFE_DENEGADA: TSmallintField;
+    cdsVendaNFE_DENEGADA_MOTIVO: TIBStringField;
+    procedure cdsVendaCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
   public
     { Public declarations }
+    function GetUltimaVenda(const Empresa, Usuario : String; const Ano, Status : Smallint) : Integer;
   end;
 
 var
@@ -162,5 +169,25 @@ uses
   UDMBusiness, UDMNFe;
 
 {$R *.dfm}
+
+procedure TDMCupom.cdsVendaCalcFields(DataSet: TDataSet);
+begin
+  cdsVendaDESCONTO_TOTAL.AsCurrency := cdsVendaDESCONTO.AsCurrency + (cdsVendaDESCONTO_CUPOM.AsCurrency * -1);
+end;
+
+function TDMCupom.GetUltimaVenda(const Empresa, Usuario : String; const Ano, Status: Smallint): Integer;
+begin
+  with qryUltimoVenda do
+  begin
+    Close;
+    ParamByName('empresa').AsString := Empresa;
+    ParamByName('usuario').AsString := Usuario;
+    ParamByName('ano').AsInteger    := Ano;
+    ParamByName('status').AsInteger := Status;
+    Open;
+
+    Result := FieldByName('orcamento').AsInteger;
+  end;
+end;
 
 end.
