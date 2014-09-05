@@ -128,7 +128,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
         Top = 85
         Width = 743
         Height = 300
-        ActivePage = TabSheet1
+        ActivePage = TbsNFe
         Align = alClient
         TabOrder = 1
         object tbsContaEmail: TTabSheet
@@ -282,7 +282,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
           ImageIndex = 1
           object chkNFE_SolicitaDHSaida: TDBCheckBox
             Left = 16
-            Top = 16
+            Top = 64
             Width = 377
             Height = 17
             Caption = 'Solicitar Data/Hora de sa'#237'da da NF-e para impress'#227'o no DANFE'
@@ -294,19 +294,55 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 0
+            TabOrder = 2
             ValueChecked = '1'
             ValueUnchecked = '0'
           end
           object chkImprimirCodCliente: TDBCheckBox
             Left = 16
-            Top = 40
+            Top = 88
             Width = 377
             Height = 17
             Caption = 'Imprimir C'#243'digo Interno do Cliente no DANFE da NF-e'
             DataField = 'NFE_IMPRIMIR_COD_CLIENTE'
             DataSource = DtSrcTabela
             Enabled = False
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 3
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
+          object chkNFE_Emitir: TDBCheckBox
+            Left = 16
+            Top = 16
+            Width = 169
+            Height = 17
+            Caption = 'Permitir Emiss'#227'o de NF-e'
+            DataField = 'NFE_EMITIR'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
+          object chkNFE_SalvarNotaDenegada: TDBCheckBox
+            Left = 16
+            Top = 40
+            Width = 193
+            Height = 17
+            Caption = 'Aceitar/Salvar NF-e Denegada'
+            DataField = 'NFE_ACEITAR_NOTA_DENEGADA'
+            DataSource = DtSrcTabela
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
@@ -411,6 +447,24 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
             ValueChecked = '1'
             ValueUnchecked = '0'
           end
+          object dbAutorizacaoInformaCliente: TDBCheckBox
+            Left = 16
+            Top = 136
+            Width = 321
+            Height = 17
+            Caption = 'Informar Cliente nas Autoriza'#231#245'es de Compras/Servi'#231'os'
+            DataField = 'AUTORIZA_INFORMA_CLIENTE'
+            DataSource = DtSrcTabela
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 5
+            ValueChecked = '1'
+            ValueUnchecked = '0'
+          end
         end
       end
     end
@@ -429,6 +483,8 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  , c.email_conexao_ssl'
       '  , c.email_assunto_padrao'
       '  , c.email_mensagem_padrao'
+      '  , c.nfe_emitir'
+      '  , c.nfe_aceitar_nota_denegada'
       '  , c.nfe_solicita_dh_saida'
       '  , c.nfe_imprimir_cod_cliente'
       '  , c.cliente_permitir_duplicar_cnpj'
@@ -436,6 +492,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  , c.permitir_venda_estoque_ins'
       '  , c.estoque_unico_empresas'
       '  , c.estoque_satelite_cliente'
+      '  , c.autoriza_informa_cliente'
       '  , c.usuario'
       '  , e.rzsoc'
       '  , e.nmfant'
@@ -507,6 +564,18 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       ProviderFlags = [pfInUpdate]
       Size = 250
     end
+    object IbDtstTabelaNFE_EMITIR: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'NFE_EMITIR'
+      Origin = '"TBCONFIGURACAO"."NFE_EMITIR"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object IbDtstTabelaNFE_ACEITAR_NOTA_DENEGADA: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'NFE_ACEITAR_NOTA_DENEGADA'
+      Origin = '"TBCONFIGURACAO"."NFE_ACEITAR_NOTA_DENEGADA"'
+      ProviderFlags = [pfInUpdate]
+    end
     object IbDtstTabelaNFE_SOLICITA_DH_SAIDA: TSmallintField
       Alignment = taLeftJustify
       FieldName = 'NFE_SOLICITA_DH_SAIDA'
@@ -549,6 +618,11 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       Origin = '"TBCONFIGURACAO"."ESTOQUE_SATELITE_CLIENTE"'
       ProviderFlags = [pfInUpdate]
     end
+    object IbDtstTabelaAUTORIZA_INFORMA_CLIENTE: TSmallintField
+      Alignment = taLeftJustify
+      FieldName = 'AUTORIZA_INFORMA_CLIENTE'
+      Origin = '"TBCONFIGURACAO"."AUTORIZA_INFORMA_CLIENTE"'
+    end
     object IbDtstTabelaUSUARIO: TIBStringField
       FieldName = 'USUARIO'
       Origin = '"TBCONFIGURACAO"."USUARIO"'
@@ -581,13 +655,17 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  EMAIL_CONEXAO_SSL,'
       '  EMAIL_ASSUNTO_PADRAO,'
       '  EMAIL_MENSAGEM_PADRAO,'
+      '  NFE_EMITIR,'
+      '  NFE_ACEITAR_NOTA_DENEGADA,'
       '  NFE_SOLICITA_DH_SAIDA,'
       '  NFE_IMPRIMIR_COD_CLIENTE,'
       '  CLIENTE_PERMITIR_DUPLICAR_CNPJ,'
       '  CUSTO_OPER_CALCULAR,'
       '  PERMITIR_VENDA_ESTOQUE_INS,'
+      '  VENDA_CARREGA_PRODUTO_EAN,'
       '  ESTOQUE_UNICO_EMPRESAS,'
       '  ESTOQUE_SATELITE_CLIENTE,'
+      '  AUTORIZA_INFORMA_CLIENTE,'
       '  USUARIO'
       'from TBCONFIGURACAO '
       'where'
@@ -595,6 +673,7 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
     ModifySQL.Strings = (
       'update TBCONFIGURACAO'
       'set'
+      '  AUTORIZA_INFORMA_CLIENTE = :AUTORIZA_INFORMA_CLIENTE,'
       
         '  CLIENTE_PERMITIR_DUPLICAR_CNPJ = :CLIENTE_PERMITIR_DUPLICAR_CN' +
         'PJ,'
@@ -611,6 +690,8 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
       '  EMPRESA = :EMPRESA,'
       '  ESTOQUE_SATELITE_CLIENTE = :ESTOQUE_SATELITE_CLIENTE,'
       '  ESTOQUE_UNICO_EMPRESAS = :ESTOQUE_UNICO_EMPRESAS,'
+      '  NFE_ACEITAR_NOTA_DENEGADA = :NFE_ACEITAR_NOTA_DENEGADA,'
+      '  NFE_EMITIR = :NFE_EMITIR,'
       '  NFE_IMPRIMIR_COD_CLIENTE = :NFE_IMPRIMIR_COD_CLIENTE,'
       '  NFE_SOLICITA_DH_SAIDA = :NFE_SOLICITA_DH_SAIDA,'
       '  PERMITIR_VENDA_ESTOQUE_INS = :PERMITIR_VENDA_ESTOQUE_INS,'
@@ -620,34 +701,38 @@ inherited frmGeConfiguracaoEmpresa: TfrmGeConfiguracaoEmpresa
     InsertSQL.Strings = (
       'insert into TBCONFIGURACAO'
       
-        '  (CLIENTE_PERMITIR_DUPLICAR_CNPJ, CUSTO_OPER_CALCULAR, EMAIL_AS' +
-        'SUNTO_PADRAO, '
+        '  (AUTORIZA_INFORMA_CLIENTE, CLIENTE_PERMITIR_DUPLICAR_CNPJ, CUS' +
+        'TO_OPER_CALCULAR, '
       
-        '   EMAIL_CONEXAO_SSL, EMAIL_CONTA, EMAIL_MENSAGEM_PADRAO, EMAIL_' +
-        'POP, EMAIL_REQUER_AUTENTICACAO, '
+        '   EMAIL_ASSUNTO_PADRAO, EMAIL_CONEXAO_SSL, EMAIL_CONTA, EMAIL_M' +
+        'ENSAGEM_PADRAO, '
       
-        '   EMAIL_SENHA, EMAIL_SMTP, EMAIL_SMTP_PORTA, EMPRESA, ESTOQUE_S' +
-        'ATELITE_CLIENTE, '
+        '   EMAIL_POP, EMAIL_REQUER_AUTENTICACAO, EMAIL_SENHA, EMAIL_SMTP' +
+        ', EMAIL_SMTP_PORTA, '
       
-        '   ESTOQUE_UNICO_EMPRESAS, NFE_IMPRIMIR_COD_CLIENTE, NFE_SOLICIT' +
-        'A_DH_SAIDA, '
-      '   PERMITIR_VENDA_ESTOQUE_INS, USUARIO)'
+        '   EMPRESA, ESTOQUE_SATELITE_CLIENTE, ESTOQUE_UNICO_EMPRESAS, NF' +
+        'E_ACEITAR_NOTA_DENEGADA, '
+      
+        '   NFE_EMITIR, NFE_IMPRIMIR_COD_CLIENTE, NFE_SOLICITA_DH_SAIDA, ' +
+        'PERMITIR_VENDA_ESTOQUE_INS, '
+      '   USUARIO)'
       'values'
       
-        '  (:CLIENTE_PERMITIR_DUPLICAR_CNPJ, :CUSTO_OPER_CALCULAR, :EMAIL' +
-        '_ASSUNTO_PADRAO, '
+        '  (:AUTORIZA_INFORMA_CLIENTE, :CLIENTE_PERMITIR_DUPLICAR_CNPJ, :' +
+        'CUSTO_OPER_CALCULAR, '
       
-        '   :EMAIL_CONEXAO_SSL, :EMAIL_CONTA, :EMAIL_MENSAGEM_PADRAO, :EM' +
-        'AIL_POP, '
+        '   :EMAIL_ASSUNTO_PADRAO, :EMAIL_CONEXAO_SSL, :EMAIL_CONTA, :EMA' +
+        'IL_MENSAGEM_PADRAO, '
       
-        '   :EMAIL_REQUER_AUTENTICACAO, :EMAIL_SENHA, :EMAIL_SMTP, :EMAIL' +
-        '_SMTP_PORTA, '
+        '   :EMAIL_POP, :EMAIL_REQUER_AUTENTICACAO, :EMAIL_SENHA, :EMAIL_' +
+        'SMTP, :EMAIL_SMTP_PORTA, '
       
         '   :EMPRESA, :ESTOQUE_SATELITE_CLIENTE, :ESTOQUE_UNICO_EMPRESAS,' +
-        ' :NFE_IMPRIMIR_COD_CLIENTE, '
+        ' :NFE_ACEITAR_NOTA_DENEGADA, '
       
-        '   :NFE_SOLICITA_DH_SAIDA, :PERMITIR_VENDA_ESTOQUE_INS, :USUARIO' +
-        ')')
+        '   :NFE_EMITIR, :NFE_IMPRIMIR_COD_CLIENTE, :NFE_SOLICITA_DH_SAID' +
+        'A, :PERMITIR_VENDA_ESTOQUE_INS, '
+      '   :USUARIO)')
     DeleteSQL.Strings = (
       'delete from TBCONFIGURACAO'
       'where'
