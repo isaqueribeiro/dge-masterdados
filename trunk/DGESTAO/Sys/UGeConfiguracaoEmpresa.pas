@@ -58,6 +58,12 @@ type
     DBCheckBox2: TDBCheckBox;
     IbDtstTabelaCLIENTE_PERMITIR_DUPLICAR_CNPJ: TSmallintField;
     DBCheckBox3: TDBCheckBox;
+    IbDtstTabelaAUTORIZA_INFORMA_CLIENTE: TSmallintField;
+    dbAutorizacaoInformaCliente: TDBCheckBox;
+    chkNFE_Emitir: TDBCheckBox;
+    IbDtstTabelaNFE_EMITIR: TSmallintField;
+    chkNFE_SalvarNotaDenegada: TDBCheckBox;
+    IbDtstTabelaNFE_ACEITAR_NOTA_DENEGADA: TSmallintField;
     procedure FormCreate(Sender: TObject);
     procedure DtSrcTabelaStateChange(Sender: TObject);
     procedure IbDtstTabelaEMPRESAGetText(Sender: TField; var Text: String;
@@ -85,6 +91,8 @@ begin
   inherited;
   ControlFirstEdit := dbEmpresa;
 
+  DisplayFormatCodigo := EmptyStr;
+  
   NomeTabela      := 'TBCONFIGURACAO';
   CampoCodigo     := 'EMPRESA';
   CampoDescricao  := 'e.RZSOC';
@@ -93,6 +101,8 @@ begin
   tblEmpresa.Open;
 
   pgcConfigurar.ActivePage := tbsContaEmail;
+
+  dbAutorizacaoInformaCliente.Visible := (GetSegmentoID(GetEmpresaIDDefault) in [SEGMENTO_INDUSTRIA_METAL_ID, SEGMENTO_INDUSTRIA_GERAL_ID]);
 end;
 
 procedure TfrmGeConfiguracaoEmpresa.DtSrcTabelaStateChange(
@@ -163,13 +173,15 @@ begin
   IbDtstTabelaEMAIL_REQUER_AUTENTICACAO.AsInteger := 0;
   IbDtstTabelaEMAIL_CONEXAO_SSL.AsInteger         := 0;
 
-  IbDtstTabelaNFE_SOLICITA_DH_SAIDA.AsInteger    := 0;
-  IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE.AsInteger := 0;
+  IbDtstTabelaNFE_ACEITAR_NOTA_DENEGADA.AsInteger := 0;
+  IbDtstTabelaNFE_SOLICITA_DH_SAIDA.AsInteger     := 0;
+  IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE.AsInteger  := 0;
   IbDtstTabelaCLIENTE_PERMITIR_DUPLICAR_CNPJ.AsInteger := 0;
   IbDtstTabelaCUSTO_OPER_CALCULAR.AsInteger            := 0;
   IbDtstTabelaPERMITIR_VENDA_ESTOQUE_INS.AsInteger := 0;
   IbDtstTabelaESTOQUE_UNICO_EMPRESAS.AsInteger     := 0;
   IbDtstTabelaESTOQUE_SATELITE_CLIENTE.AsInteger   := 0;
+  IbDtstTabelaAUTORIZA_INFORMA_CLIENTE.AsInteger   := 0;
 end;
 
 procedure TfrmGeConfiguracaoEmpresa.btbtnAlterarClick(Sender: TObject);
@@ -193,6 +205,11 @@ end;
 
 procedure TfrmGeConfiguracaoEmpresa.Aplicar_ModeloEstoque;
 begin
+(*
+  IMR - 23/07/2014 :
+    Rotina descontinuada por entender que outras empresas podem são ser habilitadas para ver o estoque desta empresa,
+    mas esta empresa está habilitada para visualizar o estoque de todas.
+
   with DMBusiness, qryBusca do
   begin
     Close;
@@ -203,6 +220,7 @@ begin
 
     CommitTransaction;
   end;
+*)
 end;
 
 initialization
