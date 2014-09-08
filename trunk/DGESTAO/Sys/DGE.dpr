@@ -102,7 +102,8 @@ uses
   UEcfAgil in 'lib\UEcfAgil.pas',
   UEcfFactory in 'lib\UEcfFactory.pas',
   UEcfGenerico in 'lib\UEcfGenerico.pas',
-  UEcfWindowsPrinter in 'lib\UEcfWindowsPrinter.pas';
+  UEcfWindowsPrinter in 'lib\UEcfWindowsPrinter.pas',
+  UDMCupom in 'UDMCupom.pas' {DMCupom: TDataModule};
 
 {$R *.res}
 
@@ -115,5 +116,6 @@ begin
   Application.CreateForm(TDMNFe, DMNFe);
   Application.CreateForm(TfrmPrinc, frmPrinc);
   Application.CreateForm(TfrmPesq, frmPesq);
+  Application.CreateForm(TDMCupom, DMCupom);
   Application.Run;
 end.
