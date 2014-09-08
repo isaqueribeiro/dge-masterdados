@@ -1,7 +1,7 @@
 object DMCupom: TDMCupom
   OldCreateOrder = False
-  Left = 544
-  Top = 307
+  Left = 338
+  Top = 195
   Height = 414
   Width = 793
   object cdsVenda: TIBDataSet
