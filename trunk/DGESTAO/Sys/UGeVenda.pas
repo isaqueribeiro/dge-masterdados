@@ -364,6 +364,8 @@ type
     lblLogNFeCancelMotivo: TLabel;
     dbLogNFeCancelMotivo: TDBMemo;
     IbDtstTabelaCANCEL_USUARIO: TIBStringField;
+    lblLogNFeDenegada: TLabel;
+    dbLogNFeDenegada: TDBEdit;
     procedure ImprimirOpcoesClick(Sender: TObject);
     procedure ImprimirOrcamentoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1751,7 +1753,8 @@ var
   sFileNameXML ,
   sChaveNFE    ,
   sProtocoloNFE,
-  sReciboNFE   : String;
+  sReciboNFE   ,
+  sMensagem    : String;
   iNumeroLote  : Int64;
 begin
   if ( IbDtstTabela.IsEmpty ) then
@@ -1776,7 +1779,7 @@ begin
   end;
 
   if ( GerarNFe(Self, IbDtstTabelaANO.Value, IbDtstTabelaCODCONTROL.Value,
-                iSerieNFe, iNumeroNFe, sFileNameXML, sChaveNFE, sProtocoloNFE, sReciboNFE, iNumeroLote
+                iSerieNFe, iNumeroNFe, sFileNameXML, sChaveNFE, sProtocoloNFE, sReciboNFE, iNumeroLote, sMensagem
   ) ) then
     with IbDtstTabela do
     begin
@@ -1820,7 +1823,9 @@ begin
 
       IbDtstTabela.Locate(CampoCodigo, iNumero, []);
 
-      ShowInformation('Nota Fiscal de Saída gerada com sucesso.' + #13#13 + 'Série/Número: ' + IbDtstTabelaSERIE.AsString + '/' + FormatFloat('##0000000', IbDtstTabelaNFE.Value));
+      ShowInformation('Nota Fiscal de Saída gerada com sucesso.' + #13#13 +
+        'Série/Número: ' + IbDtstTabelaSERIE.AsString + '/' + FormatFloat('##0000000', IbDtstTabelaNFE.Value) +
+        IfThen(Trim(sMensagem) = EmptyStr, EmptyStr, #13#13 + 'Alerta:' + #13 + sMensagem));
 
       HabilitarDesabilitar_Btns;
 

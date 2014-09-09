@@ -915,6 +915,8 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       '  , v.Totalvenda'
       '  , v.Serie'
       '  , v.Nfe'
+      '  , v.Nfe_denegada'
+      '  , v.Nfe_denegada_motivo'
       '  , v.Status'
       '  , v.Nfe_valor_base_icms'
       '  , v.Nfe_valor_icms'
@@ -997,6 +999,8 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       '  , v.Totalvenda'
       '  , v.Serie'
       '  , v.Nfe'
+      '  , v.Nfe_denegada'
+      '  , v.Nfe_denegada_motivo'
       '  , v.Status'
       '  , v.Nfe_valor_base_icms'
       '  , v.Nfe_valor_icms'
@@ -1109,6 +1113,17 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
       FieldName = 'NFE'
       Origin = 'TBVENDAS.NFE'
       ProviderFlags = [pfInUpdate]
+    end
+    object cdsVendaNFE_DENEGADA: TSmallintField
+      FieldName = 'NFE_DENEGADA'
+      Origin = '"TBVENDAS"."NFE_DENEGADA"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object cdsVendaNFE_DENEGADA_MOTIVO: TIBStringField
+      FieldName = 'NFE_DENEGADA_MOTIVO'
+      Origin = '"TBVENDAS"."NFE_DENEGADA_MOTIVO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 100
     end
     object cdsVendaSTATUS: TSmallintField
       FieldName = 'STATUS'
@@ -1230,28 +1245,28 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
     end
     object cdsVendaVALOR_TOTAL_IPI: TIBBCDField
       FieldName = 'VALOR_TOTAL_IPI'
-      ProviderFlags = [pfInUpdate]
+      ProviderFlags = []
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaVALOR_TOTAL_BRUTO: TIBBCDField
       FieldName = 'VALOR_TOTAL_BRUTO'
-      ProviderFlags = [pfInUpdate]
+      ProviderFlags = []
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaVALOR_TOTAL_DESCONTO: TIBBCDField
       FieldName = 'VALOR_TOTAL_DESCONTO'
-      ProviderFlags = [pfInUpdate]
+      ProviderFlags = []
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
     end
     object cdsVendaVALOR_TOTAL_LIQUIDO: TIBBCDField
       FieldName = 'VALOR_TOTAL_LIQUIDO'
-      ProviderFlags = [pfInUpdate]
+      ProviderFlags = []
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 2
@@ -1259,40 +1274,48 @@ inherited frmGeVendaGerarNFe: TfrmGeVendaGerarNFe
     object cdsVendaVALOR_BASE_ICMS_NORMAL_ENTRADA: TFMTBCDField
       FieldName = 'VALOR_BASE_ICMS_NORMAL_ENTRADA'
       ProviderFlags = []
+      DisplayFormat = ',0.00'
       Precision = 18
       Size = 5
     end
-    object cdsVendaVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TFloatField
+    object cdsVendaVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TFMTBCDField
       FieldName = 'VALOR_TOTAL_ICMS_NORMAL_ENTRADA'
       ProviderFlags = []
+      DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 7
     end
     object cdsVendaVALOR_BASE_ICMS_NORMAL_SAIDA: TIBBCDField
       FieldName = 'VALOR_BASE_ICMS_NORMAL_SAIDA'
-      ProviderFlags = [pfInUpdate]
+      ProviderFlags = []
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 4
     end
-    object cdsVendaVALOR_TOTAL_ICMS_NORMAL_SAIDA: TFloatField
+    object cdsVendaVALOR_TOTAL_ICMS_NORMAL_SAIDA: TFMTBCDField
       FieldName = 'VALOR_TOTAL_ICMS_NORMAL_SAIDA'
-      ProviderFlags = [pfInUpdate]
+      ProviderFlags = []
       DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 6
     end
-    object cdsVendaVALOR_TOTAL_ICMS_NORMAL_DEVIDO: TFloatField
+    object cdsVendaVALOR_TOTAL_ICMS_NORMAL_DEVIDO: TFMTBCDField
       FieldName = 'VALOR_TOTAL_ICMS_NORMAL_DEVIDO'
-      ProviderFlags = [pfInUpdate]
+      ProviderFlags = []
       DisplayFormat = ',0.00'
+      Precision = 18
+      Size = 7
     end
     object cdsVendaVALOR_TOTAL_PIS: TIBBCDField
       FieldName = 'VALOR_TOTAL_PIS'
-      ProviderFlags = [pfInUpdate]
+      ProviderFlags = []
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 4
     end
     object cdsVendaVALOR_TOTAL_COFINS: TIBBCDField
       FieldName = 'VALOR_TOTAL_COFINS'
-      ProviderFlags = [pfInUpdate]
+      ProviderFlags = []
       DisplayFormat = ',0.00'
       Precision = 18
       Size = 4
