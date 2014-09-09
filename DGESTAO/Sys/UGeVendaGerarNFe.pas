@@ -72,6 +72,10 @@ type
     lblInforme: TLabel;
     cdsVendaDESCONTO: TIBBCDField;
     cdsVendaTOTALVENDA_BRUTA: TIBBCDField;
+    TmrAlerta: TTimer;
+    edDataHoraSaida: TMaskEdit;
+    lblDataHoraSaida: TLabel;
+    cdsVendaCODCLIENTE: TIntegerField;
     cdsVendaNFE_VALOR_BASE_ICMS: TIBBCDField;
     cdsVendaNFE_VALOR_ICMS: TIBBCDField;
     cdsVendaNFE_VALOR_BASE_ICMS_SUBST: TIBBCDField;
@@ -90,17 +94,15 @@ type
     cdsVendaVALOR_TOTAL_BRUTO: TIBBCDField;
     cdsVendaVALOR_TOTAL_DESCONTO: TIBBCDField;
     cdsVendaVALOR_TOTAL_LIQUIDO: TIBBCDField;
+    cdsVendaVALOR_BASE_ICMS_NORMAL_ENTRADA: TFMTBCDField;
+    cdsVendaVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TFMTBCDField;
     cdsVendaVALOR_BASE_ICMS_NORMAL_SAIDA: TIBBCDField;
-    cdsVendaVALOR_TOTAL_ICMS_NORMAL_SAIDA: TFloatField;
-    cdsVendaVALOR_TOTAL_ICMS_NORMAL_DEVIDO: TFloatField;
+    cdsVendaVALOR_TOTAL_ICMS_NORMAL_SAIDA: TFMTBCDField;
+    cdsVendaVALOR_TOTAL_ICMS_NORMAL_DEVIDO: TFMTBCDField;
     cdsVendaVALOR_TOTAL_PIS: TIBBCDField;
     cdsVendaVALOR_TOTAL_COFINS: TIBBCDField;
-    TmrAlerta: TTimer;
-    edDataHoraSaida: TMaskEdit;
-    lblDataHoraSaida: TLabel;
-    cdsVendaCODCLIENTE: TIntegerField;
-    cdsVendaVALOR_BASE_ICMS_NORMAL_ENTRADA: TFMTBCDField;
-    cdsVendaVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TFloatField;
+    cdsVendaNFE_DENEGADA: TSmallintField;
+    cdsVendaNFE_DENEGADA_MOTIVO: TIBStringField;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnCalcularClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
@@ -116,6 +118,8 @@ type
     sProtocoloNFE,
     sReciboNFE   : String;
     iNumeroLote  : Int64;
+    bDenegada    : Boolean;
+    sDenegadaMotivo : String;
     procedure RecalcularTotalNota;
   public
     { Public declarations }
@@ -126,7 +130,8 @@ var
   frmGeVendaGerarNFe: TfrmGeVendaGerarNFe;
 
   function GerarNFe(const AOwer : TComponent; Ano : Smallint; Numero : Integer;
-    var SerieNFe, NumeroNFe  : Integer; var FileNameXML, ChaveNFE, ProtocoloNFE, ReciboNFE   : String; var NumeroLote  : Int64) : Boolean;
+    var SerieNFe, NumeroNFe  : Integer; var FileNameXML, ChaveNFE, ProtocoloNFE, ReciboNFE   : String; var NumeroLote  : Int64;
+    var Mensagem : String) : Boolean;
 
 implementation
 
@@ -135,7 +140,8 @@ uses UDMBusiness, UDMNFe, UFuncoes;
 {$R *.dfm}
 
 function GerarNFe(const AOwer : TComponent; Ano : Smallint; Numero : Integer;
-  var SerieNFe, NumeroNFe  : Integer; var FileNameXML, ChaveNFE, ProtocoloNFE, ReciboNFE   : String; var NumeroLote  : Int64) : Boolean;
+  var SerieNFe, NumeroNFe  : Integer; var FileNameXML, ChaveNFE, ProtocoloNFE, ReciboNFE   : String; var NumeroLote  : Int64;
+  var Mensagem : String) : Boolean;
 var
   frm : TfrmGeVendaGerarNFe;
 begin
@@ -189,6 +195,7 @@ begin
         ProtocoloNFE := sProtocoloNFE;
         ReciboNFE    := sReciboNFE;
         NumeroLote   := iNumeroLote;
+        Mensagem     := Trim(sDenegadaMotivo);
       end;
     end;
   finally
@@ -267,7 +274,7 @@ begin
     lblInforme.Visible := True;
     lblInforme.Caption := 'Gerando NF-e junto a SEFA. Aguarde . . . ';
     TmrAlerta.Enabled  := True;
-    
+
     Application.ProcessMessages;
 
     if edDataHoraSaida.Visible then
@@ -275,14 +282,36 @@ begin
     else
       sDH := EmptyStr;
 
+    (*
+      IMR - 09/09/2014 :
+        Declaração dos campos referidos a NF-e DENEGADA para que estas informações possam ser gravadas na tabela de venda a apartir dela
+        bloquear o cancelamento da venda/nota.
+    *)
+
+    bDenegada       := False;
+    sDenegadaMotivo := EmptyStr;
+
     if ( DMNFe.GerarNFeOnLine ) then
       bOK := DMNFe.GerarNFeOnLineACBr ( cdsVendaCODEMP.AsString, cdsVendaCODCLIENTE.AsInteger, sDH,
                cdsVendaANO.AsInteger, cdsVendaCODCONTROL.AsInteger,
-               iSerieNFe, iNumeroNFe, sFileNameXML, sChaveNFE, sProtocoloNFE, sReciboNFE, iNumeroLote, False)
+               iSerieNFe, iNumeroNFe, sFileNameXML, sChaveNFE, sProtocoloNFE, sReciboNFE, iNumeroLote, bDenegada, sDenegadaMotivo, False)
     else
       bOK := DMNFe.GerarNFeOffLineACBr( cdsVendaCODEMP.AsString, cdsVendaCODCLIENTE.AsInteger, sDH,
                cdsVendaANO.AsInteger, cdsVendaCODCONTROL.AsInteger,
                iSerieNFe, iNumeroNFe, sFileNameXML, sChaveNFE, False);
+
+
+    if bDenegada then
+    begin
+      cdsVenda.Edit;
+
+      cdsVendaNFE_DENEGADA.AsInteger       := 1;
+      cdsVendaNFE_DENEGADA_MOTIVO.AsString := AnsiUpperCase(Trim(sDenegadaMotivo));
+
+      cdsVenda.Post;
+      cdsVenda.ApplyUpdates;
+      CommitTransaction;
+    end;
 
     TmrAlerta.Enabled  := False;
     lblInforme.Visible := False;
