@@ -6,7 +6,7 @@ object DMBusiness: TDMBusiness
   Height = 617
   Width = 812
   object ibdtbsBusiness: TIBDatabase
-    DatabaseName = 'localhost:BUISINESS'
+    DatabaseName = 'localhost:BUSINESS'
     Params.Strings = (
       'user_name=SYSDBA'
       'Password=masterkey'
