@@ -4258,6 +4258,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  , n.horaemissao'
       '  , n.serie'
       '  , n.numero'
+      '  , n.modelo'
+      '  , n.versao'
       '  , n.chave'
       '  , n.protocolo'
       '  , n.recibo'
@@ -4306,6 +4308,16 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
+    object qryNFEMODELO: TSmallintField
+      FieldName = 'MODELO'
+      Origin = '"TBNFE_ENVIADA"."MODELO"'
+      ProviderFlags = [pfInUpdate]
+    end
+    object qryNFEVERSAO: TSmallintField
+      FieldName = 'VERSAO'
+      Origin = '"TBNFE_ENVIADA"."VERSAO"'
+      ProviderFlags = [pfInUpdate]
+    end
     object qryNFECHAVE: TIBStringField
       FieldName = 'CHAVE'
       Origin = '"TBNFE_ENVIADA"."CHAVE"'
@@ -4349,6 +4361,8 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  EMPRESA,'
       '  SERIE,'
       '  NUMERO,'
+      '  MODELO,'
+      '  VERSAO,'
       '  ANOVENDA,'
       '  NUMVENDA,'
       '  ANOCOMPRA,'
@@ -4377,11 +4391,13 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  HORAEMISSAO = :HORAEMISSAO,'
       '  LOTE_ANO = :LOTE_ANO,'
       '  LOTE_NUM = :LOTE_NUM,'
+      '  MODELO = :MODELO,'
       '  NUMCOMPRA = :NUMCOMPRA,'
       '  NUMERO = :NUMERO,'
       '  PROTOCOLO = :PROTOCOLO,'
       '  RECIBO = :RECIBO,'
       '  SERIE = :SERIE,'
+      '  VERSAO = :VERSAO,'
       '  XML_FILE = :XML_FILE,'
       '  XML_FILENAME = :XML_FILENAME'
       'where'
@@ -4394,16 +4410,17 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
         '  (ANOCOMPRA, CHAVE, DATAEMISSAO, EMPRESA, HORAEMISSAO, LOTE_ANO' +
         ', LOTE_NUM, '
       
-        '   NUMCOMPRA, NUMERO, PROTOCOLO, RECIBO, SERIE, XML_FILE, XML_FI' +
-        'LENAME)'
+        '   MODELO, NUMCOMPRA, NUMERO, PROTOCOLO, RECIBO, SERIE, VERSAO, ' +
+        'XML_FILE, '
+      '   XML_FILENAME)'
       'values'
       
         '  (:ANOCOMPRA, :CHAVE, :DATAEMISSAO, :EMPRESA, :HORAEMISSAO, :LO' +
         'TE_ANO, '
       
-        '   :LOTE_NUM, :NUMCOMPRA, :NUMERO, :PROTOCOLO, :RECIBO, :SERIE, ' +
-        ':XML_FILE, '
-      '   :XML_FILENAME)')
+        '   :LOTE_NUM, :MODELO, :NUMCOMPRA, :NUMERO, :PROTOCOLO, :RECIBO,' +
+        ' :SERIE, '
+      '   :VERSAO, :XML_FILE, :XML_FILENAME)')
     DeleteSQL.Strings = (
       'delete from TBNFE_ENVIADA'
       'where'

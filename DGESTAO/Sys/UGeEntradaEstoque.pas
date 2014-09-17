@@ -286,6 +286,8 @@ type
     Bevel13: TBevel;
     lblTipoDespesa: TLabel;
     dbTipoDespesa: TDBLookupComboBox;
+    qryNFEMODELO: TSmallintField;
+    qryNFEVERSAO: TSmallintField;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -1156,6 +1158,8 @@ begin
         qryNFENUMCOMPRA.Value   := IbDtstTabelaCODCONTROL.Value;
         qryNFESERIE.Value       := FormatFloat('#00', iSerieNFe);
         qryNFENUMERO.Value      := iNumeroNFe;
+        qryNFEMODELO.Value      := DMNFe.GetModeloDF;
+        qryNFEVERSAO.Value      := DMNFe.GetVersaoDF;
         qryNFEDATAEMISSAO.Value := GetDateDB;
         qryNFEHORAEMISSAO.Value := GetTimeDB;
         qryNFECHAVE.Value     := sChaveNFE;

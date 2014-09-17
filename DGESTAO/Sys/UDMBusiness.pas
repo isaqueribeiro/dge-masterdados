@@ -123,6 +123,7 @@ type
     frxCrossObject: TfrxCrossObject;
     frxChartObject: TfrxChartObject;
     ibdtstUsersVENDEDOR: TIntegerField;
+    EvAcessUserPrincipal: TEvUserAccess;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -277,6 +278,7 @@ var
   function GetCfopNome(const iCodigo : Integer) : String;
   function GetCfopEntradaNomeDefault : String;
   function GetEmpresaNomeDefault : String;
+  function GetEmpresaNome(const sCNPJEmpresa : String) : String;
   function GetEmpresaEnderecoDefault : String;
   function GetEmpresaEndereco(const sCNPJEmitente : String) : String;
   function GetClienteNomeDefault : String;
@@ -305,6 +307,7 @@ var
   function GetLimiteDescontoUser : Currency;
   function GetUserPermitirAlterarValorVenda : Boolean;
   function GetPermititEmissaoNFe(const sCNPJEmitente : String) : Boolean;
+  function GetPermititNFeDenegada(const sCNPJEmitente : String) : Boolean;
   function GetSolicitaDHSaidaNFe(const sCNPJEmitente : String) : Boolean;
   function GetImprimirCodClienteNFe(const sCNPJEmitente : String) : Boolean;
   function GetExisteCPF_CNPJ(iCodigoCliente : Integer; sCpfCnpj : String; var iCodigo : Integer; var sRazao : String) : Boolean;
@@ -1963,19 +1966,24 @@ begin
   end;
 end;
 
-function GetEmpresaNomeDefault : String;
+function GetEmpresaNome(const sCNPJEmpresa : String) : String;
 begin
   with DMBusiness, qryBusca do
   begin
     Close;
     SQL.Clear;
-    SQL.Add('Select rzsoc from TBEMPRESA where Cnpj = ' + QuotedStr(GetEmpresaIDDefault));
+    SQL.Add('Select rzsoc from TBEMPRESA where Cnpj = ' + QuotedStr(sCNPJEmpresa));
     Open;
 
     Result := FieldByName('rzsoc').AsString;
 
     Close;
   end;
+end;
+
+function GetEmpresaNomeDefault : String;
+begin
+  Result := GetEmpresaNome(GetEmpresaIDDefault);
 end;
 
 function GetEmpresaEnderecoDefault : String;
@@ -2277,6 +2285,21 @@ begin
     Open;
 
     Result := (FieldByName('nfe_emitir').AsInteger = 1);
+
+    Close;
+  end;
+end;
+
+function GetPermititNFeDenegada(const sCNPJEmitente : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select nfe_aceitar_nota_denegada from TBCONFIGURACAO where empresa = ' + QuotedStr(sCNPJEmitente));
+    Open;
+
+    Result := (FieldByName('nfe_aceitar_nota_denegada').AsInteger = 1);
 
     Close;
   end;

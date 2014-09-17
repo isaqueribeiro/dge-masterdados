@@ -827,4 +827,27 @@ object DMBusiness: TDMBusiness
     Left = 40
     Top = 504
   end
+  object EvAcessUserPrincipal: TEvUserAccess
+    Consents.Strings = (
+      'Cadastro1=D1,2,3,5,6,8,9,11,12'
+      'Faturamento1=D'
+      'Financeiro1=D1,3,5,7,8,11,12'
+      'Relatrio1=D'
+      'nmConfigurarNFeACBr=D1,2,3,5,11,12'
+      'Estoque1=D1,2,3,5,6,11,12'
+      'Entradas1=D1,2,3,5,6,11,12'
+      'AjusteEstoque1=D1,2,3,5,6,11,12'
+      'Kardex2=D1,2,3,5,6,11,12'
+      'menuCadastro=D1,2,3,5,7,8,11,12'
+      'menuEstoque=D1,2,3,5,7,8,11,12'
+      'menuFaturamento=D1,2,3,4,5,6,7,8,11,12'
+      'menuFinanceiro=D1,3,7,8,11,12'
+      'popAjusteEstoque=D1,2,3,5,7,8,11,12'
+      'popEntrada=D1,2,3,5,7,8,11,12'
+      'popKardex=D1,2,3,5,7,8,11,12'
+      'nmRelatorioFinanceiro=D1,3,7,8,11,12'
+      'mnRelatorioFinanceiro=D')
+    Left = 328
+    Top = 440
+  end
 end
