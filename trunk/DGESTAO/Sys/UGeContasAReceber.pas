@@ -139,13 +139,23 @@ type
       Shift: TShiftState);
     procedure IbDtstTabelaBeforePost(DataSet: TDataSet);
     procedure DtSrcTabelaStateChange(Sender: TObject);
+    procedure btbtnCancelarClick(Sender: TObject);
+    procedure btbtnIncluirClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     SQL_Pagamentos : TStringList;
     procedure AbrirPagamentos(const Ano : Smallint; const Numero : Integer);
     procedure HabilitarDesabilitar_Btns;
+
+    function GetRotinaEfetuarPagtoID : String;
+    function GetRotinaCancelarPagtosID : String;
+
+    procedure RegistrarNovaRotinaSistema;
   public
     { Public declarations }
+    property RotinaEfetuarPagtoID : String read GetRotinaEfetuarPagtoID;
+    property RotinaCancelarPagtosID : String read GetRotinaCancelarPagtosID;
   end;
 
 var
@@ -157,7 +167,8 @@ var
 
 implementation
 
-uses UDMBusiness, UGeCliente, DateUtils, UGeEfetuarPagtoREC, UConstantesDGE;
+uses
+  UConstantesDGE, UDMBusiness, UGeCliente, DateUtils, UGeEfetuarPagtoREC;
 
 {$R *.dfm}
 
@@ -207,7 +218,9 @@ begin
   tblCondicaoPagto.Open;
   tblBanco.Open;
 
+  RotinaID            := ROTINA_FIN_CONTA_ARECEBER_ID;
   DisplayFormatCodigo := '###0000000';
+
   NomeTabela     := 'TBCONTREC';
   CampoCodigo    := 'numlanc';
   CampoDescricao := 'Nome';
@@ -280,12 +293,21 @@ begin
   if ( IbDtstTabela.IsEmpty ) then
     Exit;
 
+  if not GetPermissaoRotinaInterna(Sender, True) then
+    Abort;
+
   CxAno    := 0;
   CxNumero := 0;
   CxContaCorrente := 0;
 
+  if ( IbDtstTabelaBAIXADO.AsInteger = 1 ) then
+  begin
+    ShowWarning('Registro de recebimento selecionado já se encontra baixado!' + #13 + 'Favor pesquisar novamente.');
+    Abort;
+  end;
+
   if ( tblFormaPagto.FieldByName('Conta_corrente').AsInteger > 0 ) then
-    if ( not CaixaAberto(GetUserApp, GetDateDB, IbDtstTabelaFORMA_PAGTO.AsInteger, CxAno, CxNumero, CxContaCorrente) ) then
+    if ( not CaixaAberto(IbDtstTabelaEMPRESA.AsString, GetUserApp, GetDateDB, IbDtstTabelaFORMA_PAGTO.AsInteger, CxAno, CxNumero, CxContaCorrente) ) then
     begin
       ShowWarning('Não existe caixa aberto para o usuário na forma de pagamento deste movimento.');
       Exit;
@@ -304,6 +326,9 @@ begin
 
   if PagamentoConfirmado(Self, IbDtstTabelaANOLANC.AsInteger, IbDtstTabelaNUMLANC.AsInteger, IbDtstTabelaFORMA_PAGTO.AsInteger, IbDtstTabelaNOMECLIENTE.AsString, DataPagto) then
   begin
+    if ( CxContaCorrente > 0 ) then
+      GerarSaldoContaCorrente(CxContaCorrente, DataPagto);
+
     iNumero := IbDtstTabelaNUMLANC.AsInteger;
 
     IbDtstTabela.Close;
@@ -313,9 +338,6 @@ begin
 
     AbrirPagamentos( IbDtstTabelaANOLANC.AsInteger, IbDtstTabelaNUMLANC.AsInteger );
 
-    if ( CxContaCorrente > 0 ) then
-      GerarSaldoContaCorrente(CxContaCorrente, DataPagto);
-
     DesbloquearCliente(IbDtstTabelaCLIENTE.AsInteger, EmptyStr);
   end;
 end;
@@ -323,7 +345,7 @@ end;
 procedure TfrmGeContasAReceber.HabilitarDesabilitar_Btns;
 begin
   if ( pgcGuias.ActivePage = tbsCadastro ) then
-    btbtnEfetuarPagto.Enabled := (IbDtstTabelaBAIXADO.AsInteger = 0) and (not IbDtstTabela.IsEmpty)
+    btbtnEfetuarPagto.Enabled := (IbDtstTabelaBAIXADO.AsInteger = 0) and (not IbDtstTabela.IsEmpty) and (IbDtstTabela.State = dsBrowse)
   else
     btbtnEfetuarPagto.Enabled := False;
 end;
@@ -383,7 +405,27 @@ begin
   end
   else
   begin
+    // Eliminar Movimento do Caixa quando o lançamento for excluído pelo SYSTEM ADM
+
+    if (gUsuarioLogado.Funcao in [FUNCTION_USER_ID_DIRETORIA, FUNCTION_USER_ID_SYSTEM_ADM]) then
+    begin
+
+      with DMBusiness, qryBusca do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Add('Delete from TBCAIXA_MOVIMENTO');
+        SQL.Add('where ARECEBER_ANO = ' + IbDtstTabelaANOLANC.AsString);
+        SQL.Add('  and ARECEBER_NUM = ' + IbDtstTabelaNUMLANC.AsString);
+        ExecSQL;
+
+        CommitTransaction;
+      end;
+
+    end;
+
     inherited;
+
     if ( not OcorreuErro ) then
       AbrirPagamentos( IbDtstTabelaANOLANC.AsInteger, IbDtstTabelaNUMLANC.AsInteger );
   end;
@@ -429,13 +471,9 @@ var
 begin
   if (Shift = [ssCtrl]) and (Key = 46) Then
   begin
-    // Diretoria, Gerente Financeiro, Gerente ADM, Masterdados
 
-    if (not (DMBusiness.ibdtstUsersCODFUNCAO.AsInteger in [
-        FUNCTION_USER_ID_DIRETORIA
-      , FUNCTION_USER_ID_GERENTE_ADM
-      , FUNCTION_USER_ID_GERENTE_FIN
-      , FUNCTION_USER_ID_SYSTEM_ADM])) then Exit;
+    if not GetPermissaoRotinaInterna(Sender, True) then
+      Abort;
 
     if ( not cdsPagamentos.IsEmpty ) then
     begin
@@ -445,7 +483,7 @@ begin
 
       if ( tblFormaPagto.Locate('cod', IbDtstTabelaFORMA_PAGTO.AsInteger, []) ) then
         if ( tblFormaPagto.FieldByName('Conta_corrente').AsInteger > 0 ) then
-          if ( not CaixaAberto(GetUserApp, GetDateDB, IbDtstTabelaFORMA_PAGTO.AsInteger, CxAno, CxNumero, CxContaCorrente) ) then
+          if ( not CaixaAberto(IbDtstTabelaEMPRESA.AsString, GetUserApp, GetDateDB, IbDtstTabelaFORMA_PAGTO.AsInteger, CxAno, CxNumero, CxContaCorrente) ) then
           begin
             ShowWarning('Não existe caixa aberto para o usuário na forma de pagamento deste movimento.');
             Exit;
@@ -454,6 +492,17 @@ begin
       MovAno    := IbDtstTabelaANOLANC.AsInteger;
       MovNumero := IbDtstTabelaNUMLANC.AsInteger;
       DataPagto := cdsPagamentosDATA_PAGTO.AsDateTime;
+
+//    sSenha := InputBox('Favor informar a senha de autorização', 'Senha de Autorização:', '');
+//
+//    if ( Trim(sSenha) = EmptyStr ) then
+//      Exit;
+//
+//    if ( sSenha <> GetSenhaAutorizacao ) then
+//    begin
+//      ShowWarning('Senha de autorização inválida');
+//      Exit;
+//    end;
 
       if ShowConfirm('Confirma a exclusão do(s) registro(s) de pagamento(s)?') then
       begin
@@ -496,7 +545,15 @@ begin
         begin
           Close;
           SQL.Clear;
-          SQL.Add('Update TBCONTREC Set Baixado = 0, Historic = '''', Dtrec = null, Docbaix = null, Tippag = null, Valorrectot = null');
+          SQL.Add('Update TBCONTREC Set');
+          SQL.Add('    BAIXADO      = 0');
+          SQL.Add('  , VALORMULTA   = Null');
+          SQL.Add('  , VALORRECTOT  = Null');
+          SQL.Add('  , VALORSALDO   = VALORREC');
+          SQL.Add('  , HISTORIC = ''''');
+          SQL.Add('  , DTREC    = null');
+          SQL.Add('  , DOCBAIX  = null');
+          SQL.Add('  , TIPPAG   = null');
           SQL.Add('where ANOLANC = ' + cdsPagamentosANOLANC.AsString);
           SQL.Add('  and NUMLANC = ' + cdsPagamentosNUMLANC.AsString);
           ExecSQL;
@@ -504,15 +561,15 @@ begin
           CommitTransaction;
         end;
 
+        if ( CxContaCorrente > 0 ) then
+          GerarSaldoContaCorrente(CxContaCorrente, DataPagto);
+
         IbDtstTabela.Close;
         IbDtstTabela.Open;
 
         IbDtstTabela.Locate('ANOLANC;NUMLANC', VarArrayOf([MovAno, MovNumero]), []);
 
         AbrirPagamentos( IbDtstTabelaANOLANC.AsInteger, IbDtstTabelaNUMLANC.AsInteger );
-
-        if ( CxContaCorrente > 0 ) then
-          GerarSaldoContaCorrente(CxContaCorrente, DataPagto);
       end;
     end;
   end;
@@ -529,6 +586,52 @@ procedure TfrmGeContasAReceber.DtSrcTabelaStateChange(Sender: TObject);
 begin
   inherited;
   dbValorAReceber.ReadOnly := (not cdsPagamentos.IsEmpty);
+  HabilitarDesabilitar_Btns;
+end;
+
+procedure TfrmGeContasAReceber.btbtnCancelarClick(Sender: TObject);
+begin
+  inherited;
+  if ( not OcorreuErro ) then
+    AbrirPagamentos( IbDtstTabelaANOLANC.AsInteger, IbDtstTabelaNUMLANC.AsInteger );
+end;
+
+procedure TfrmGeContasAReceber.btbtnIncluirClick(Sender: TObject);
+begin
+  inherited;
+  if ( not OcorreuErro ) then
+  begin
+    AbrirPagamentos( IbDtstTabelaANOLANC.AsInteger, IbDtstTabelaNUMLANC.AsInteger );
+    DtSrcTabelaStateChange( DtSrcTabela );
+  end;
+end;
+
+function TfrmGeContasAReceber.GetRotinaCancelarPagtosID: String;
+begin
+  Result := GetRotinaInternaID(dbgPagamentos);
+end;
+
+function TfrmGeContasAReceber.GetRotinaEfetuarPagtoID: String;
+begin
+  Result := GetRotinaInternaID(btbtnEfetuarPagto);
+end;
+
+procedure TfrmGeContasAReceber.RegistrarNovaRotinaSistema;
+begin
+  if ( Trim(RotinaID) <> EmptyStr ) then
+  begin
+    if btbtnEfetuarPagto.Visible then
+      SetRotinaSistema(ROTINA_TIPO_FUNCAO, RotinaEfetuarPagtoID, btbtnEfetuarPagto.Hint, RotinaID);
+
+    if dbgPagamentos.Visible then
+      SetRotinaSistema(ROTINA_TIPO_FUNCAO, RotinaCancelarPagtosID, 'Cancelar Pagamentos', RotinaID);
+  end;
+end;
+
+procedure TfrmGeContasAReceber.FormShow(Sender: TObject);
+begin
+  inherited;
+  RegistrarNovaRotinaSistema;
 end;
 
 initialization

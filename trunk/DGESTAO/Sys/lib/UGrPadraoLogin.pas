@@ -27,12 +27,14 @@ type
     edEmpresa: TComboBox;
     pnlMensagem: TLabel;
     BtnFechar: TSpeedButton;
+    ImgBackgroud: TImage;
     procedure FormCreate(Sender: TObject);
     procedure BtnFecharClick(Sender: TObject);
     procedure BtnEntrarClick(Sender: TObject);
     procedure edNomeChange(Sender: TObject);
   private
     { Private declarations }
+    fFinalizarAplicacao : Boolean;
     fCNPJ : Array of String;
     fContador : Integer;
     procedure CarregarEmpresa;
@@ -45,6 +47,7 @@ type
     function GetEmpresa : String;
   public
     { Public declarations }
+    property FinalizarAplicacao : Boolean read fFinalizarAplicacao write fFinalizarAplicacao;
     property Usuario : String read GetUsuario write SetUsuario;
     property Senha   : String read GetSenha write SetSenha;
     property Empresa : String read GetEmpresa write SetEmpresa;
@@ -89,6 +92,8 @@ end;
 procedure TfrmGrPadraoLogin.FormCreate(Sender: TObject);
 begin
   inherited;
+  fFinalizarAplicacao := False;
+
   lblSystemName.Caption        := GetInternalName;
   lblSystemDescription.Caption := GetFileDescription;
   lblSystemVersion.Caption     := 'Versão ' + GetExeVersion;
@@ -140,7 +145,10 @@ end;
 
 procedure TfrmGrPadraoLogin.BtnFecharClick(Sender: TObject);
 begin
-  Application.Terminate;
+  if fFinalizarAplicacao then
+    Application.Terminate
+  else
+    Self.Close;  
 end;
 
 procedure TfrmGrPadraoLogin.BtnEntrarClick(Sender: TObject);
@@ -149,10 +157,11 @@ begin
   begin
     SetEmpresaIDDefault( Empresa );
 
-    gUsuarioLogado.Login   := GetUserApp;
-    gUsuarioLogado.Nome    := GetUserFullName;
-    gUsuarioLogado.Funcao  := GetUserFunctionID;
-    gUsuarioLogado.Empresa := Empresa;
+    gUsuarioLogado.Login    := GetUserApp;
+    gUsuarioLogado.Nome     := GetUserFullName;
+    gUsuarioLogado.Funcao   := GetUserFunctionID;
+    gUsuarioLogado.Empresa  := Empresa;
+    gUsuarioLogado.Vendedor := GetUserCodigoVendedorID;
 
     ModalResult := mrOk;
   end

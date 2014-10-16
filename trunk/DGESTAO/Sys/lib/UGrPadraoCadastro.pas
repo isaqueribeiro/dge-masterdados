@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DB, UGrPadrao, UInfoVersao, IBCustomDataSet, StdCtrls, Buttons, ExtCtrls, Grids,
   DBGrids, ComCtrls, ToolWin, Mask, DBCtrls, IBUpdateSQL, ImgList, TypInfo,
-  DBClient, EUserAcs, frxClass;
+  DBClient, frxClass;
 
 type
   TfrmGrPadraoCadastro = class(TfrmGrPadrao)
@@ -71,6 +71,7 @@ type
       Shift: TShiftState);
     procedure IbDtstTabelaUpdateError(DataSet: TDataSet; E: EDatabaseError;
       UpdateKind: TUpdateKind; var UpdateAction: TIBUpdateAction);
+    procedure btbtnListaClick(Sender: TObject);
   private
     { Private declarations }
     fDisplayFormat  ,
@@ -131,6 +132,9 @@ type
     procedure FecharAbrirTabela(const Tabela : TIBDataSet; const Vazia : Boolean = FALSE); overload;
 
     function SelecionarRegistro(var Codigo : Integer; var Descricao : String; const FiltroAdicional : String = '') : Boolean; overload;
+    function GetRotinaInternaID(const Sender : TObject) : String;
+    function GetPermissaoRotinaInterna(const Sender : TObject; const Alertar : Boolean = FALSE) : Boolean;
+    function GetCampoCodigoLimpo : String;
   end;
 
 var
@@ -282,6 +286,9 @@ end;
 
 procedure TfrmGrPadraoCadastro.btbtnIncluirClick(Sender: TObject);
 begin
+  if not GetPermissaoRotinaInterna(Sender, True) then
+    Abort;
+    
   if not TBitBtn(Sender).Visible then
     Exit;
 
@@ -296,6 +303,9 @@ end;
 
 procedure TfrmGrPadraoCadastro.btbtnAlterarClick(Sender: TObject);
 begin
+  if not GetPermissaoRotinaInterna(Sender, True) then
+    Abort;
+    
   if not TBitBtn(Sender).Visible then
     Exit;
 
@@ -310,6 +320,9 @@ end;
 
 procedure TfrmGrPadraoCadastro.btbtnExcluirClick(Sender: TObject);
 begin
+  if not GetPermissaoRotinaInterna(Sender, True) then
+    Abort;
+    
   if not TBitBtn(Sender).Visible then
     Exit;
 
@@ -357,7 +370,7 @@ begin
       end;
 
       fOcorreuErro := False;
-      if ( Application.MessageBox('Deseja salvar a inserção/edição do registro?', 'Salvar', MB_YESNO + MB_ICONQUESTION + MB_DEFBUTTON2) = ID_YES ) then
+      if ShowConfirmation('Salvar', 'Deseja salvar a inserção/edição do registro?') then
       begin
         if Assigned( IbDtstTabela.Fields.FindField(CAMPO_USUARIO) ) then
           IbDtstTabela.FieldByName(CAMPO_USUARIO).AsString := GetUserApp;
@@ -437,6 +450,9 @@ end;
 
 procedure TfrmGrPadraoCadastro.btnFiltrarClick(Sender: TObject);
 begin
+  if not GetPermissaoRotinaInterna(Sender, True) then
+    Abort;
+
   FiltarDados;
   CentralizarCodigo;  
 end;
@@ -643,6 +659,9 @@ procedure TfrmGrPadraoCadastro.CentralizarCodigo;
 var
   sCampoCodigo : String;
 begin
+  if (Trim(DisplayFormatCodigo) = EmptyStr) then
+    Exit;
+
   if ( Trim(CampoCodigo) = EmptyStr ) then
     Exit;
     
@@ -661,7 +680,9 @@ begin
 
     IbDtstTabela.FieldByName(sCampoCodigo).Alignment := taCenter;
     IbDtstTabela.FieldByName(sCampoCodigo).Required  := False;
-    TCurrencyField(IbDtstTabela.FieldByName(sCampoCodigo)).DisplayFormat := DisplayFormatCodigo;
+
+    if (IbDtstTabela.FieldByName(sCampoCodigo).Size < 10) then
+      TCurrencyField(IbDtstTabela.FieldByName(sCampoCodigo)).DisplayFormat := DisplayFormatCodigo;
   end;
 end;
 
@@ -672,6 +693,9 @@ end;
 
 procedure TfrmGrPadraoCadastro.btbtnSelecionarClick(Sender: TObject);
 begin
+  if not GetPermissaoRotinaInterna(Sender, True) then
+    Abort;
+
   if not TBitBtn(Sender).Visible then
     Exit;
 
@@ -746,12 +770,14 @@ procedure TfrmGrPadraoCadastro.CarregarControleAcesso;
 var
   I : Integer;
 begin
+{$IFDEF DGE}
   for I := 0 to ComponentCount - 1 do
     if Components[I] is TEvUserAccess then
     begin
-      //RegistrarControleAcesso(Self, TEvUserAccess(Components[I]));
-      //GetControleAcesso(Self, TEvUserAccess(Components[I]));
+      RegistrarControleAcesso(Self, TEvUserAccess(Components[I]));
+      GetControleAcesso(Self, TEvUserAccess(Components[I]));
     end;
+{$ENDIF}    
 end;
 
 procedure TfrmGrPadraoCadastro.SetVariablesDefault(
@@ -833,9 +859,6 @@ end;
 
 procedure TfrmGrPadraoCadastro.RegistrarRotinaSistema;
 begin
-  {$IFDEF DGE}
-  Exit;
-  {$ENDIF}
   if ( Trim(RotinaID) <> EmptyStr ) then
   begin
     SetRotinaSistema(ROTINA_TIPO_TELA, RotinaID, Trim(Self.Caption), RotinaPaiID);
@@ -858,54 +881,50 @@ begin
 end;
 
 function TfrmGrPadraoCadastro.GetRotinaEditarID: String;
-var
-  sComplemento : String;
 begin
-  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
-
-  if ( Trim(RotinaID) = EmptyStr ) then
-    Result := EmptyStr
-  else
-    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', btbtnAlterar.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+  Result := GetRotinaInternaID(btbtnAlterar);
 end;
 
 function TfrmGrPadraoCadastro.GetRotinaExcluirID: String;
-var
-  sComplemento : String;
 begin
-  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
-
-  if ( Trim(RotinaID) = EmptyStr ) then
-    Result := EmptyStr
-  else
-    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', btbtnExcluir.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+  Result := GetRotinaInternaID(btbtnExcluir);
 end;
 
 function TfrmGrPadraoCadastro.GetRotinaImprimirID: String;
-var
-  sComplemento : String;
 begin
-  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
-
-  if ( Trim(RotinaID) = EmptyStr ) then
-    Result := EmptyStr
-  else
-    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', btbtnLista.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+  Result := GetRotinaInternaID(btbtnLista);
 end;
 
 function TfrmGrPadraoCadastro.GetRotinaInserirID: String;
-var
-  sComplemento : String;
 begin
-  sComplemento := StringOfChar('0', ROTINA_LENGTH_ID);
-
-  if ( Trim(RotinaID) = EmptyStr ) then
-    Result := EmptyStr
-  else
-    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', btbtnIncluir.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+  Result := GetRotinaInternaID(btbtnIncluir);
 end;
 
 function TfrmGrPadraoCadastro.GetRotinaPesquisarID: String;
+begin
+  Result := GetRotinaInternaID(btnFiltrar);
+end;
+
+function TfrmGrPadraoCadastro.GetPermissaoRotinaInterna(
+  const Sender: TObject; const Alertar : Boolean = FALSE): Boolean;
+var
+  sRotinaInternaID : String;
+begin
+  sRotinaInternaID := GetRotinaInternaID(Sender);
+
+  if Trim(sRotinaInternaID) = EmptyStr then
+    Result := True
+  else
+    Result := GetPermissaoRotinaSistema(sRotinaInternaID, Alertar);
+end;
+
+procedure TfrmGrPadraoCadastro.btbtnListaClick(Sender: TObject);
+begin
+  if not GetPermissaoRotinaInterna(Sender, True) then
+    Abort;
+end;
+
+function TfrmGrPadraoCadastro.GetRotinaInternaID(const Sender : TObject): String;
 var
   sComplemento : String;
 begin
@@ -914,7 +933,15 @@ begin
   if ( Trim(RotinaID) = EmptyStr ) then
     Result := EmptyStr
   else
-    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', btnFiltrar.Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+    Result := Copy(Copy(RotinaID, 1, 6) + FormatFloat('00', TComponent(Sender).Tag) + sComplemento, 1, ROTINA_LENGTH_ID);
+end;
+
+function TfrmGrPadraoCadastro.GetCampoCodigoLimpo: String;
+begin
+  if ( pos('.', CampoCodigo) > 0 ) then
+    Result := Copy(CampoCodigo, pos('.', CampoCodigo) + 1, Length(CampoCodigo))
+  else
+    Result := Trim(CampoCodigo);
 end;
 
 end.

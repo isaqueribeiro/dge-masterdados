@@ -484,6 +484,10 @@ type
     qryNFeEmitidaEntradaEMPRESA: TIBStringField;
     qryNFeEmitidaEntradaMODELO: TSmallintField;
     qryNFeEmitidaEntradaVERSAO: TSmallintField;
+    qryDadosProdutoNCM_ALIQUOTA_NAC: TIBBCDField;
+    qryDadosProdutoNCM_ALIQUOTA_IMP: TIBBCDField;
+    qryEntradaDadosProdutoNCM_ALIQUOTA_NAC: TIBBCDField;
+    qryEntradaDadosProdutoNCM_ALIQUOTA_IMP: TIBBCDField;
     procedure SelecionarCertificado(Sender : TObject);
     procedure TestarServico(Sender : TObject);
     procedure DataModuleCreate(Sender: TObject);
@@ -885,10 +889,18 @@ Var
   sSecaoEmitente   ,
   sSecaoWebService : String;
 begin
+(*
+  IMR - 30/09/2014 :
+    Retorno a versão 2.0 da NF-e por a versão 3.10 ainda apresentar inconsistências segundo a SEFA em determinados processos. A reativação
+    da versão 3.10 e sua liberação para uso está agora para 30/10/2014.
+
+    Atenção: Prazo final de uso da Versão 2.00, até 30/11/2014. Sendo, até esta data, recepcionado as duas versões. A desativação da versão
+    "2.00" será no dia 01/12/2014. (Fonte: http://portalnfe.fazenda.mg.gov.br/)
+*)
   try
 
     AbrirEmitente(sCNPJEmitente);
-    
+
     if ( GetQuantidadeEmpresasEmiteNFe > 1 ) then
       sPrefixoSecao := Trim(sCNPJEmitente) + '_'
     else
@@ -936,7 +948,7 @@ begin
       ACBrNFe.Configuracoes.Geral.PathSalvar   := edtPathLogs.Text;
 
       ACBrNFe.Configuracoes.Geral.ModeloDF := moNFe;
-      ACBrNFe.Configuracoes.Geral.VersaoDF := ve310;
+      ACBrNFe.Configuracoes.Geral.VersaoDF := ve310; // ve200;
 
       cbUF.ItemIndex       := cbUF.Items.IndexOf(ReadString( sSecaoWebService, 'UF', 'PA')) ;
       rgTipoAmb.ItemIndex  := ReadInteger( sSecaoWebService, 'Ambiente'  , 0) ;
@@ -1567,7 +1579,19 @@ end;
 procedure TDMNFe.GerarNFEACBr(const sCNPJEmitente : String; iCodigoCliente : Integer; const sDataHoraSaida : String;
   const iAnoVenda, iNumVenda : Integer;
   var DtHoraEmiss : TDateTime; var iSerieNFe, iNumeroNFe : Integer; var FileNameXML : String);
+var
+  cPercentualTributoAprox,
+  vTotalTributoAprox     : Currency;
 begin
+(*
+  IMR - 20/09/2014 :
+    Inseção de nova TAG na Nota Fiscal referente a IE do destinatário para informa se este é Isento, Contribuinte ou Não-contribuinte de acordo
+    com as regras estabelecidas pela SEFA para a versão 3.10 da NF-e.
+
+  IMR - 10/10/2014 :
+    Implementação da Lei "Transparência de Impostos" que visa informar ao consumidos o valor e o percentual pago de impostos sobre os itens e
+    o total geral da nota fiscal.
+*)
 
   try
 
@@ -1691,11 +1715,17 @@ begin
 
       if ( qryDestinatarioPESSOA_FISICA.AsInteger = 0 ) then
       begin
+        if (AnsiUpperCase(Trim(qryDestinatarioINSCEST.AsString)) = 'ISENTO') or (Trim(qryDestinatarioINSCEST.AsString) = EmptyStr) then
+          Dest.indIEDest     := inIsento
+        else
+          Dest.indIEDest     := inContribuinte;
+          
         Dest.IE              := Trim(qryDestinatarioINSCEST.AsString);
         Dest.ISUF            := EmptyStr;
       end
       else
       begin
+        Dest.indIEDest       := inNaoContribuinte;
         Dest.IE              := EmptyStr;
         Dest.ISUF            := EmptyStr;
       end;
@@ -1733,7 +1763,9 @@ begin
         Entrega.UF      := '';}
 
       // Adicionando Produtos
-  
+
+      vTotalTributoAprox := 0.0;
+
       qryDadosProduto.First;
       
       while not qryDadosProduto.Eof do
@@ -1772,7 +1804,7 @@ begin
             Prod.cEANTrib := qryDadosProdutoCODBARRA_EAN.AsString
           else
             Prod.cEANTrib := EmptyStr;
-            
+
           Prod.uTrib     := qryDadosProdutoUNP_SIGLA.AsString;
           Prod.qTrib     := qryDadosProdutoQTDE.AsCurrency;
 
@@ -1795,7 +1827,7 @@ begin
           Prod.vDesc     := qryDadosProdutoTOTAL_DESCONTO.AsCurrency; // I17 - Valor do Desconto
 
           // Informação Adicional do Produto
-          
+
           if ( GetSegmentoID(qryEmitenteCNPJ.AsString) <> SEGMENTO_MERCADO_CARRO_ID ) then
             if ( Trim(qryDadosProdutoREFERENCIA.AsString) <> EmptyStr ) then
               infAdProd    := 'Ref.: ' + qryDadosProdutoREFERENCIA.AsString
@@ -1808,7 +1840,7 @@ begin
                               'Combustivel: ' + qryDadosProdutoCOMBUSTIVEL_VEICULO_DESCRICAO.AsString;
 
   //Declaração de Importação. Pode ser adicionada várias através do comando Prod.DI.Add
-  
+
   {         with Prod.DI.Add do
             begin
               nDi         := '';
@@ -1946,7 +1978,7 @@ begin
               begin
 
                 // csosnVazio, csosn101, csosn102, csosn103, csosn201, csosn202, csosn203, csosn300, csosn400, csosn500, csosn900
-                
+
                 Case qryDadosProdutoCSOSN.AsInteger of
                   101 : CSOSN := csosn101;
                   102 : CSOSN := csosn102;
@@ -2078,7 +2110,7 @@ begin
 
                 COFINS.qBCProd   := 0;
                 COFINS.vAliqProd := 0;
-                
+
               end;
             end;
 
@@ -2135,26 +2167,48 @@ begin
                  cListServ := 0; // Preencha este campo usando a tabela disponível
                                  // em http://www.planalto.gov.br/Ccivil_03/LEIS/LCP/Lcp116.htm
                end;}
+
+            // Lei da Transparência de Impostos
+
+            if ( Trim(Prod.NCM) <> EmptyStr ) then
+            begin
+              cPercentualTributoAprox := qryDadosProdutoNCM_ALIQUOTA_NAC.AsCurrency;
+
+              if ( cPercentualTributoAprox > 0.0 ) then
+              begin
+                vTotTrib  := Prod.vProd * cPercentualTributoAprox / 100;
+                infAdProd := Trim(Trim(infAdProd) + Format(' * Valor Aprox. Trib. R$ %s (%s). Fonte IBPT', [
+                  FormatFloat(',0.00', vTotTrib),
+                  FormatFloat(',0.##"%"', cPercentualTributoAprox)
+                  ]));
+                  
+                vTotalTributoAprox := vTotalTributoAprox + vTotTrib;
+              end;
+            end;
+
           end;
         end ;
 
         qryDadosProduto.Next;
       end;
 
-      Total.ICMSTot.vBC     := qryCalculoImportoNFE_VALOR_BASE_ICMS.AsCurrency;
-      Total.ICMSTot.vICMS   := qryCalculoImportoNFE_VALOR_ICMS.AsCurrency;
-      Total.ICMSTot.vBCST   := qryCalculoImportoNFE_VALOR_BASE_ICMS_SUBST.AsCurrency;
-      Total.ICMSTot.vST     := qryCalculoImportoNFE_VALOR_ICMS_SUBST.AsCurrency;
-      Total.ICMSTot.vProd   := qryCalculoImportoNFE_VALOR_TOTAL_PRODUTO.AsCurrency;
-      Total.ICMSTot.vFrete  := qryCalculoImportoNFE_VALOR_FRETE.AsCurrency;
-      Total.ICMSTot.vSeg    := qryCalculoImportoNFE_VALOR_SEGURO.AsCurrency;
-      Total.ICMSTot.vDesc   := qryCalculoImportoNFE_VALOR_DESCONTO.AsCurrency;
-      Total.ICMSTot.vII     := qryCalculoImportoNFE_VALOR_TOTAL_II.AsCurrency;
-      Total.ICMSTot.vIPI    := qryCalculoImportoNFE_VALOR_TOTAL_IPI.AsCurrency;
-      Total.ICMSTot.vPIS    := qryCalculoImportoNFE_VALOR_PIS.AsCurrency;
-      Total.ICMSTot.vCOFINS := qryCalculoImportoNFE_VALOR_COFINS.AsCurrency;
-      Total.ICMSTot.vOutro  := qryCalculoImportoNFE_VALOR_OUTROS.AsCurrency;
-      Total.ICMSTot.vNF     := qryCalculoImportoNFE_VALOR_TOTAL_NOTA.AsCurrency;
+      Total.ICMSTot.vBC      := qryCalculoImportoNFE_VALOR_BASE_ICMS.AsCurrency;
+      Total.ICMSTot.vICMS    := qryCalculoImportoNFE_VALOR_ICMS.AsCurrency;
+      Total.ICMSTot.vBCST    := qryCalculoImportoNFE_VALOR_BASE_ICMS_SUBST.AsCurrency;
+      Total.ICMSTot.vST      := qryCalculoImportoNFE_VALOR_ICMS_SUBST.AsCurrency;
+      Total.ICMSTot.vProd    := qryCalculoImportoNFE_VALOR_TOTAL_PRODUTO.AsCurrency;
+      Total.ICMSTot.vFrete   := qryCalculoImportoNFE_VALOR_FRETE.AsCurrency;
+      Total.ICMSTot.vSeg     := qryCalculoImportoNFE_VALOR_SEGURO.AsCurrency;
+      Total.ICMSTot.vDesc    := qryCalculoImportoNFE_VALOR_DESCONTO.AsCurrency;
+      Total.ICMSTot.vII      := qryCalculoImportoNFE_VALOR_TOTAL_II.AsCurrency;
+      Total.ICMSTot.vIPI     := qryCalculoImportoNFE_VALOR_TOTAL_IPI.AsCurrency;
+      Total.ICMSTot.vPIS     := qryCalculoImportoNFE_VALOR_PIS.AsCurrency;
+      Total.ICMSTot.vCOFINS  := qryCalculoImportoNFE_VALOR_COFINS.AsCurrency;
+      Total.ICMSTot.vOutro   := qryCalculoImportoNFE_VALOR_OUTROS.AsCurrency;
+      Total.ICMSTot.vNF      := qryCalculoImportoNFE_VALOR_TOTAL_NOTA.AsCurrency;
+
+      if ( vTotalTributoAprox > 0.0 ) then
+        Total.ICMSTot.vTotTrib := vTotalTributoAprox;
 
   {      Total.ISSQNtot.vServ   := 0;
         Total.ISSQNTot.vBC     := 0;
@@ -2262,7 +2316,10 @@ begin
                             'Venda: ' + qryCalculoImportoANO.AsString + '/' + FormatFloat('###0000000', qryCalculoImportoCODCONTROL.AsInteger)  +
                             ' - Forma/Cond. Pgto.: ' + qryCalculoImportoLISTA_FORMA_PAGO.AsString + '/' + qryCalculoImportoLISTA_COND_PAGO_FULL.AsString + ' * * * ' + #13 +
                             'Vendedor: ' + qryCalculoImportoVENDEDOR_NOME.AsString + ' * * * ' + #13 +
-                            'Observações : ' + qryCalculoImportoOBS.AsString;
+                            'Observações: ' + qryCalculoImportoOBS.AsString +
+                            IfThen(vTotalTributoAprox = 0, EmptyStr, #13 + Format('* Valor Total Aprox. Trib. R$ %s (%s). Fonte IBPT', [
+                              FormatFloat(',0.00', Total.ICMSTot.vTotTrib),
+                              FormatFloat(',0.##"%"', Total.ICMSTot.vTotTrib / Total.ICMSTot.vNF * 100)]));
 
       InfAdic.infAdFisco := 'Info. Fisco: ' + GetInformacaoFisco;
 
@@ -2766,7 +2823,19 @@ end;
 
 procedure TDMNFe.GerarNFEEntradaACBr(const sCNPJEmitente : String; const iCodFornecedor : Integer; const iAnoCompra, iNumCompra : Integer;
   var DtHoraEmiss : TDateTime; var iSerieNFe, iNumeroNFe : Integer; var FileNameXML : String);
+var
+  cPercentualTributoAprox,
+  vTotalTributoAprox     : Currency;
 begin
+(*
+  IMR - 20/09/2014 :
+    Inseção de nova TAG na Nota Fiscal referente a IE do destinatário para informa se este é Isento, Contribuinte ou Não-contribuinte de acordo
+    com as regras estabelecidas pela SEFA para a versão 3.10 da NF-e.
+
+  IMR - 10/10/2014 :
+    Implementação da Lei "Transparência de Impostos" que visa informar ao consumidos o valor e o percentual pago de impostos sobre os itens e
+    o total geral da nota fiscal.
+*)
 
   try
 
@@ -2882,11 +2951,17 @@ begin
 
       if ( qryFornecedorDestinatarioPESSOA_FISICA.AsInteger = 0 ) then
       begin
+        if (AnsiUpperCase(Trim(qryFornecedorDestinatarioINSCEST.AsString)) = 'ISENTO') or (Trim(qryFornecedorDestinatarioINSCEST.AsString) = EmptyStr) then
+          Dest.indIEDest     := inIsento
+        else
+          Dest.indIEDest     := inContribuinte;
+
         Dest.IE              := Trim(qryFornecedorDestinatarioINSCEST.AsString);
         Dest.ISUF            := EmptyStr;
       end
       else
       begin
+        Dest.indIEDest       := inNaoContribuinte; 
         Dest.IE              := EmptyStr;
         Dest.ISUF            := EmptyStr;
       end;
@@ -2924,7 +2999,9 @@ begin
         Entrega.UF      := '';}
 
   //Adicionando Produtos
-  
+
+      vTotalTributoAprox := 0.0;
+      
       qryEntradaDadosProduto.First;
       
       while not qryEntradaDadosProduto.Eof do
@@ -3322,6 +3399,25 @@ begin
                  cListServ := 0; // Preencha este campo usando a tabela disponível
                                  // em http://www.planalto.gov.br/Ccivil_03/LEIS/LCP/Lcp116.htm
                end;}
+
+            // Lei da Transparência de Impostos
+
+            if ( Trim(Prod.NCM) <> EmptyStr ) then
+            begin
+              cPercentualTributoAprox := qryEntradaDadosProdutoNCM_ALIQUOTA_NAC.AsCurrency;
+
+              if ( cPercentualTributoAprox > 0.0 ) then
+              begin
+                vTotTrib  := Prod.vProd * cPercentualTributoAprox / 100;
+                infAdProd := Trim(Trim(infAdProd) + Format(' * Valor Aprox. Trib. R$ %s (%s). Fonte IBPT', [
+                  FormatFloat(',0.00', vTotTrib),
+                  FormatFloat(',0.##"%"', cPercentualTributoAprox)
+                  ]));
+
+                vTotalTributoAprox := vTotalTributoAprox + vTotTrib;
+              end;
+            end;
+
           end;
         end ;
 
@@ -3342,6 +3438,9 @@ begin
       Total.ICMSTot.vCOFINS := qryEntradaCalculoImportoNFE_VALOR_COFINS.AsCurrency;
       Total.ICMSTot.vOutro  := qryEntradaCalculoImportoNFE_VALOR_OUTROS.AsCurrency;
       Total.ICMSTot.vNF     := qryEntradaCalculoImportoNFE_VALOR_TOTAL_NOTA.AsCurrency;
+
+      if ( vTotalTributoAprox > 0.0 ) then
+        Total.ICMSTot.vTotTrib := vTotalTributoAprox;
 
   {      Total.ISSQNtot.vServ   := 0;
         Total.ISSQNTot.vBC     := 0;
@@ -3431,7 +3530,10 @@ begin
                             'Compra: ' + qryEntradaCalculoImportoANO.AsString + '/' + FormatFloat('###0000000', qryEntradaCalculoImportoCODCONTROL.AsInteger)  +
                             ' - Forma/Cond. Pgto.: ' + qryEntradaCalculoImportoFORMA_PAGO.AsString + '/' + qryEntradaCalculoImportoCOND_PAGO_FULL.AsString + ' * * * ' + #13 +
                             'Usuário: ' + qryEntradaCalculoImportoUSUARIO_NOME_COMPLETO.AsString + ' * * * ' + #13 +
-                            'Observações : ' + qryEntradaCalculoImportoOBS.AsString;
+                            'Observações: ' + qryEntradaCalculoImportoOBS.AsString + 
+                            IfThen(vTotalTributoAprox = 0, EmptyStr, #13 + Format('* Valor Total Aprox. Trib. R$ %s (%s). Fonte IBPT', [
+                              FormatFloat(',0.00', Total.ICMSTot.vTotTrib),
+                              FormatFloat(',0.##"%"', Total.ICMSTot.vTotTrib / Total.ICMSTot.vNF * 100)]));
 
       InfAdic.infAdFisco := 'Info. Fisco: ' + GetInformacaoFisco;
 
@@ -4305,12 +4407,12 @@ end;
 
 function TDMNFe.GetModeloDF: Integer;
 begin
-  Result := Ord(moNFe);
+  Result := Ord(ACBrNFe.Configuracoes.Geral.ModeloDF);
 end;
 
 function TDMNFe.GetVersaoDF: Integer;
 begin
-  Result := Ord(ve310);
+  Result := Ord(ACBrNFe.Configuracoes.Geral.VersaoDF);
 end;
 
 end.
