@@ -8,7 +8,7 @@ uses
   frxClass, frxDBSet, EMsgDlg, IdBaseComponent, IdComponent, IdIPWatch, IBStoredProc,
   FuncoesFormulario, UConstantesDGE, IBUpdateSQL, DBClient,
   Provider, Dialogs, Registry, frxChart, frxCross, frxRich, frxExportMail,
-  frxExportImage, frxExportRTF, frxExportXLS, frxExportPDF;
+  frxExportImage, frxExportRTF, frxExportXLS, frxExportPDF, EUserAcs;
 
 type
   TSistema = record
@@ -123,6 +123,7 @@ type
     frxCrossObject: TfrxCrossObject;
     frxChartObject: TfrxChartObject;
     ibdtstUsersVENDEDOR: TIntegerField;
+    EvUserAccess: TEvUserAccess;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
