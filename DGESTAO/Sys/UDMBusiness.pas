@@ -8,7 +8,7 @@ uses
   frxClass, frxDBSet, EMsgDlg, IdBaseComponent, IdComponent, IdIPWatch, IBStoredProc,
   FuncoesFormulario, UConstantesDGE, IBUpdateSQL, DBClient,
   Provider, Dialogs, Registry, frxChart, frxCross, frxRich, frxExportMail,
-  frxExportImage, frxExportRTF, frxExportXLS, frxExportPDF, EUserAcs;
+  frxExportImage, frxExportRTF, frxExportXLS, frxExportPDF;
 
 type
   TSistema = record
@@ -123,7 +123,6 @@ type
     frxCrossObject: TfrxCrossObject;
     frxChartObject: TfrxChartObject;
     ibdtstUsersVENDEDOR: TIntegerField;
-    EvAcessUserPrincipal: TEvUserAccess;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -321,7 +320,7 @@ var
 
   function SetAcessoEstacao(const sHostName : String) : Boolean;
 
-  function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
+  function CaixaAberto(const Empresa, Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
 
   function SetMovimentoCaixa(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint;
     const AnoLancamento, NumLancamento, SeqPagto : Integer; const Valor : Currency; const TipoMov : TTipoMovimentoCaixa) : Boolean;
@@ -2555,11 +2554,17 @@ begin
   end;
 end;
 
-function CaixaAberto(const Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
+function CaixaAberto(const Empresa, Usuario : String; const Data : TDateTime; const FormaPagto : Smallint; var CxAno, CxNumero, CxContaCorrente : Integer) : Boolean;
 begin
+(*
+  IMR - 14/10/2014 :
+    Inserção do Parâmetro EMPRESA para que o número do caixa encontrado possa corresponder exatamente a conta correte pertecente à empresa
+    informada.
+*)
   with DMBusiness, qryCaixaAberto do
   begin
     Close;
+    ParamByName('Empresa').AsString   := Empresa;
     ParamByName('Usuario').AsString   := Usuario;
     ParamByName('Data').AsDate        := Data;
     ParamByName('FormaPagto').AsShort := FormaPagto;

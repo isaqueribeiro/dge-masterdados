@@ -337,6 +337,8 @@ object DMNFe: TDMNFe
       '  , p.Modelo'
       '  , p.Referencia'
       '  , p.Ncm_sh'
+      '  , ib.aliqnacional_ibpt as Ncm_aliquota_nac'
+      '  , ib.aliqinternacional_ibpt as Ncm_aliquota_imp'
       '  , p.Codorigem'
       '  , p.Codtributacao'
       '  , p.Cst_pis'
@@ -403,10 +405,14 @@ object DMNFe: TDMNFe
         'o)'
       '  left join TBCST_PIS ps on (ps.Codigo = p.Cst_pis)'
       '  left join TBCST_COFINS cs on (cs.Codigo = p.Cst_cofins)'
+      
+        '  left join SYS_IBPT ib on (ib.ncm_ibpt = coalesce(p.ncm_sh, '#39'10' +
+        '203000'#39'))'
+      ''
       'where i.Ano = :anovenda'
       '  and i.Codcontrol = :numvenda'
       ''
-      'order by '
+      'order by'
       '    i.Ano'
       '  , i.Codcontrol'
       '  , i.Seq')
@@ -480,6 +486,18 @@ object DMNFe: TDMNFe
       FieldName = 'NCM_SH'
       Origin = '"TBPRODUTO"."NCM_SH"'
       Size = 10
+    end
+    object qryDadosProdutoNCM_ALIQUOTA_NAC: TIBBCDField
+      FieldName = 'NCM_ALIQUOTA_NAC'
+      Origin = '"SYS_IBPT"."ALIQNACIONAL_IBPT"'
+      Precision = 18
+      Size = 2
+    end
+    object qryDadosProdutoNCM_ALIQUOTA_IMP: TIBBCDField
+      FieldName = 'NCM_ALIQUOTA_IMP'
+      Origin = '"SYS_IBPT"."ALIQINTERNACIONAL_IBPT"'
+      Precision = 18
+      Size = 2
     end
     object qryDadosProdutoCODORIGEM: TIBStringField
       FieldName = 'CODORIGEM'
@@ -1281,12 +1299,15 @@ object DMNFe: TDMNFe
           DataSetName = 'frdVenda'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
-            ' [frdCliente."NOME"]')
+            
+              ' [FormatFloat('#39'##0000'#39',<frdCliente."CODIGO">)] - [frdCliente."NO' +
+              'ME"]')
           ParentFont = False
+          WordWrap = False
           VAlign = vaCenter
         end
         object Memo2: TfrxMemoView
@@ -1301,6 +1322,7 @@ object DMNFe: TDMNFe
           Memo.UTF8 = (
             ' Cliente:')
           ParentFont = False
+          WordWrap = False
           VAlign = vaCenter
         end
         object Memo8: TfrxMemoView
@@ -1316,6 +1338,7 @@ object DMNFe: TDMNFe
           Memo.UTF8 = (
             ' CPF/CNPJ.:')
           ParentFont = False
+          WordWrap = False
           VAlign = vaCenter
         end
         object Memo9: TfrxMemoView
@@ -1328,7 +1351,7 @@ object DMNFe: TDMNFe
           DataSetName = 'frdVenda'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -1367,7 +1390,7 @@ object DMNFe: TDMNFe
           DataSetName = 'frdVenda'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'Lucida Console'
           Font.Style = []
           HAlign = haRight
@@ -1446,7 +1469,7 @@ object DMNFe: TDMNFe
           DataSetName = 'frdVenda'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'Lucida Console'
           Font.Style = []
           Memo.UTF8 = (
@@ -1471,6 +1494,7 @@ object DMNFe: TDMNFe
           Memo.UTF8 = (
             ' Endere'#195#167'o:')
           ParentFont = False
+          WordWrap = False
           VAlign = vaCenter
         end
         object Memo21: TfrxMemoView
@@ -1990,10 +2014,16 @@ object DMNFe: TDMNFe
       'MODELO=MODELO'
       'REFERENCIA=REFERENCIA'
       'NCM_SH=NCM_SH'
+      'NCM_ALIQUOTA_NAC=NCM_ALIQUOTA_NAC'
+      'NCM_ALIQUOTA_IMP=NCM_ALIQUOTA_IMP'
       'CODORIGEM=CODORIGEM'
       'CODTRIBUTACAO=CODTRIBUTACAO'
       'CST=CST'
       'CSOSN=CSOSN'
+      'CST_PIS=CST_PIS'
+      'CST_COFINS=CST_COFINS'
+      'CST_PIS_INDICE_ACBR=CST_PIS_INDICE_ACBR'
+      'CST_COFINS_INDICE_ACBR=CST_COFINS_INDICE_ACBR'
       'CODEMP=CODEMP'
       'CODCLI=CODCLI'
       'DTVENDA=DTVENDA'
@@ -2010,14 +2040,15 @@ object DMNFe: TDMNFe
       'CFOP_COD=CFOP_COD'
       'ALIQUOTA=ALIQUOTA'
       'ALIQUOTA_CSOSN=ALIQUOTA_CSOSN'
+      'ALIQUOTA_PIS=ALIQUOTA_PIS'
+      'ALIQUOTA_COFINS=ALIQUOTA_COFINS'
       'VALOR_IPI=VALOR_IPI'
+      'PERCENTUAL_REDUCAO_BC=PERCENTUAL_REDUCAO_BC'
+      'VALOR_REDUCAO_BC=VALOR_REDUCAO_BC'
       'TOTAL_BRUTO=TOTAL_BRUTO'
-      'TOTAL_LIQUIDO=TOTAL_LIQUIDO'
       'TOTAL_DESCONTO=TOTAL_DESCONTO'
-      'ESTOQUE=ESTOQUE'
-      'RESERVA=RESERVA'
+      'TOTAL_LIQUIDO=TOTAL_LIQUIDO'
       'PRODUTO_NOVO=PRODUTO_NOVO'
-      'DISPONIVEL=DISPONIVEL'
       'COR_VEICULO=COR_VEICULO'
       'COR_VEICULO_DESCRICAO=COR_VEICULO_DESCRICAO'
       'COMBUSTIVEL_VEICULO=COMBUSTIVEL_VEICULO'
@@ -2029,7 +2060,10 @@ object DMNFe: TDMNFe
       'TIPO_VEICULO_DESCRICAO=TIPO_VEICULO_DESCRICAO'
       'RENAVAM_VEICULO=RENAVAM_VEICULO'
       'CHASSI_VEICULO=CHASSI_VEICULO'
-      'KILOMETRAGEM_VEICULO=KILOMETRAGEM_VEICULO')
+      'KILOMETRAGEM_VEICULO=KILOMETRAGEM_VEICULO'
+      'ESTOQUE=ESTOQUE'
+      'RESERVA=RESERVA'
+      'DISPONIVEL=DISPONIVEL')
     DataSet = qryDadosProduto
     BCDToCurrency = False
     Left = 180
@@ -4287,6 +4321,8 @@ object DMNFe: TDMNFe
       '  , p.Modelo'
       '  , p.Referencia'
       '  , p.Ncm_sh'
+      '  , ib.aliqnacional_ibpt as Ncm_aliquota_nac'
+      '  , ib.aliqinternacional_ibpt as Ncm_aliquota_imp'
       '  , p.Codorigem'
       '  , p.Codtributacao'
       '  , p.Cst'
@@ -4365,6 +4401,8 @@ object DMNFe: TDMNFe
         'o)'
       '  left join TBCST_PIS ps on (ps.Codigo = p.Cst_pis)'
       '  left join TBCST_COFINS cs on (cs.Codigo = p.Cst_cofins)'
+      '  left join SYS_IBPT ib on (ib.ncm_ibpt = p.ncm_sh)'
+      ''
       'where i.Ano = :anoCompra'
       '  and i.Codcontrol = :numCompra'
       ''
@@ -4442,6 +4480,18 @@ object DMNFe: TDMNFe
       FieldName = 'NCM_SH'
       Origin = '"TBPRODUTO"."NCM_SH"'
       Size = 10
+    end
+    object qryEntradaDadosProdutoNCM_ALIQUOTA_NAC: TIBBCDField
+      FieldName = 'NCM_ALIQUOTA_NAC'
+      Origin = '"SYS_IBPT"."ALIQNACIONAL_IBPT"'
+      Precision = 18
+      Size = 2
+    end
+    object qryEntradaDadosProdutoNCM_ALIQUOTA_IMP: TIBBCDField
+      FieldName = 'NCM_ALIQUOTA_IMP'
+      Origin = '"SYS_IBPT"."ALIQINTERNACIONAL_IBPT"'
+      Precision = 18
+      Size = 2
     end
     object qryEntradaDadosProdutoCODORIGEM: TIBStringField
       FieldName = 'CODORIGEM'
