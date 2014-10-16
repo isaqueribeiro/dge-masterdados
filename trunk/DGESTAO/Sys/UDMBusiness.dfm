@@ -829,4 +829,8 @@ object DMBusiness: TDMBusiness
     Left = 40
     Top = 504
   end
+  object EvUserAccess: TEvUserAccess
+    Left = 600
+    Top = 312
+  end
 end
