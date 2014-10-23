@@ -27966,3 +27966,1521 @@ COMMENT ON TRIGGER TG_CONTA_CORRENTE_EMPRESA IS 'Trigger Integridade Conta Corre
 Trigger responsavel por manter a relacao "Conta Corrente x Empresa" coerente com a relacao "Banco Boleto x Empresa" para
 toda conta corrente do tipo Banco (2).';
 
+
+
+/*------ 16/10/2014 13:52:33 --------*/
+
+CREATE GENERATOR GEN_REQUISITA_COMPRA_2014;
+
+/*------ 16/10/2014 13:52:33 --------*/
+
+CREATE GENERATOR GEN_REQUISITA_COMPRA_2015;
+
+/*------ 16/10/2014 13:52:33 --------*/
+
+CREATE GENERATOR GEN_REQUISITA_COMPRA_2016;
+
+/*------ 16/10/2014 13:52:33 --------*/
+
+CREATE GENERATOR GEN_REQUISITA_COMPRA_2017;
+
+/*------ 16/10/2014 13:52:33 --------*/
+
+CREATE GENERATOR GEN_REQUISITA_COMPRA_2018;
+
+/*------ 16/10/2014 13:52:33 --------*/
+
+CREATE GENERATOR GEN_REQUISITA_COMPRA_2019;
+
+/*------ 16/10/2014 13:52:33 --------*/
+
+CREATE GENERATOR GEN_REQUISITA_COMPRA_2020;
+
+/*------ 16/10/2014 13:52:34 --------*/
+
+CREATE TABLE TBREQUISITA_COMPRA (
+    ANO                 DMN_SMALLINT_NN NOT NULL /* DMN_SMALLINT_NN = SMALLINT DEFAULT 0 */,
+    CODIGO              DMN_BIGINT_NN NOT NULL /* DMN_BIGINT_NN = INTEGER NOT NULL */,
+    EMPRESA             DMN_CNPJ_NN NOT NULL /* DMN_CNPJ_NN = VARCHAR(18) NOT NULL */,
+    NUMERO              DMN_VCHAR_20_NN /* DMN_VCHAR_20_NN = VARCHAR(20) NOT NULL */,
+    FORNECEDOR          DMN_INTEGER_NN /* DMN_INTEGER_NN = INTEGER NOT NULL */,
+    NOME_CONTATO        DMN_VCHAR_100 /* DMN_VCHAR_100 = VARCHAR(100) */,
+    TIPO                DMN_SMALLINT_NN DEFAULT 0 /* DMN_SMALLINT_NN = SMALLINT DEFAULT 0 */,
+    INSERCAO_DATA       DMN_DATETIME /* DMN_DATETIME = TIMESTAMP */,
+    EMISSAO_DATA        DMN_DATE_NN /* DMN_DATE_NN = DATE NOT NULL */,
+    EMISSAO_USUARIO     DMN_USUARIO /* DMN_USUARIO = VARCHAR(12) */,
+    VALIDADE            DMN_DATE /* DMN_DATE = DATE */,
+    COMPETENCIA         DMN_INTEGER_N /* DMN_INTEGER_N = INTEGER */,
+    DATA_FATURA         DMN_DATE /* DMN_DATE = DATE */,
+    MOVITO              DMN_TEXTO /* DMN_TEXTO = BLOB SUB_TYPE 1 SEGMENT SIZE 80 */,
+    OBSERVACAO          DMN_TEXTO /* DMN_TEXTO = BLOB SUB_TYPE 1 SEGMENT SIZE 80 */,
+    CLIENTE             DMN_INTEGER_N /* DMN_INTEGER_N = INTEGER */,
+    ENDERECO_ENTREGA    DMN_TEXTO /* DMN_TEXTO = BLOB SUB_TYPE 1 SEGMENT SIZE 80 */,
+    STATUS              DMN_SMALLINT_NN DEFAULT 0 /* DMN_SMALLINT_NN = SMALLINT DEFAULT 0 */,
+    REQUISITADO_DATA     DMN_DATE /* DMN_DATE = DATE */,
+    REQUISITADO_USUARIO  DMN_USUARIO /* DMN_USUARIO = VARCHAR(12) */,
+    CANCELADO_DATA      DMN_DATE /* DMN_DATE = DATE */,
+    CANCELADO_USUARIO   DMN_USUARIO /* DMN_USUARIO = VARCHAR(12) */,
+    CANCELADO_MOTIVO    DMN_TEXTO /* DMN_TEXTO = BLOB SUB_TYPE 1 SEGMENT SIZE 80 */,
+    RECEBEDOR_NOME      DMN_VCHAR_100 /* DMN_VCHAR_100 = VARCHAR(100) */,
+    RECEBEDOR_CPF       DMN_CNPJ /* DMN_CNPJ = VARCHAR(18) */,
+    RECEBEDOR_FUNCAO    DMN_VCHAR_50 /* DMN_VCHAR_50 = VARCHAR(50) */,
+    FORMA_PAGTO         DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+    CONDICAO_PAGTO      DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+    TRANSPORTADOR       DMN_INTEGER_N /* DMN_INTEGER_N = INTEGER */,
+    VALOR_BRUTO         DMN_MONEY /* DMN_MONEY = NUMERIC(15,2) */,
+    VALOR_DESCONTO      DMN_MONEY /* DMN_MONEY = NUMERIC(15,2) */,
+    VALOR_TOTAL_FRETE   DMN_MONEY /* DMN_MONEY = NUMERIC(15,2) */,
+    VALOR_TOTAL_IPI     DMN_MONEY /* DMN_MONEY = NUMERIC(15,2) */,
+    VALOR_TOTAL         DMN_MONEY /* DMN_MONEY = NUMERIC(15,2) */
+);
+
+/*------ 16/10/2014 13:52:34 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT PK_TBREQUISITA_COMPRA PRIMARY KEY (ANO, CODIGO, EMPRESA);
+
+/*------ 16/10/2014 13:52:34 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT FK_TBREQUISITA_COMPRA_CLIENTE FOREIGN KEY (CLIENTE) REFERENCES TBCLIENTE (CODIGO);
+
+/*------ 16/10/2014 13:52:34 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT FK_TBREQUISITA_COMPRA_COMPET FOREIGN KEY (COMPETENCIA) REFERENCES TBCOMPETENCIA (CMP_NUM);
+
+/*------ 16/10/2014 13:52:34 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT FK_TBREQUISITA_COMPRA_CPAGTO FOREIGN KEY (CONDICAO_PAGTO) REFERENCES TBCONDICAOPAGTO (COND_COD);
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT FK_TBREQUISITA_COMPRA_EMPRESA FOREIGN KEY (EMPRESA) REFERENCES TBEMPRESA (CNPJ);
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT FK_TBREQUISITA_COMPRA_FPAGTO FOREIGN KEY (FORMA_PAGTO) REFERENCES TBFORMPAGTO (COD);
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT FK_TBREQUISITA_COMPRA_FRN FOREIGN KEY (FORNECEDOR) REFERENCES TBFORNECEDOR (CODFORN);
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT FK_TBREQUISITA_COMPRA_TRANSP FOREIGN KEY (TRANSPORTADOR) REFERENCES TBFORNECEDOR (CODFORN);
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT FK_TBREQUISITA_COMPRA_USR_AUT FOREIGN KEY (REQUISITADO_USUARIO) REFERENCES TBUSERS (NOME);
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT FK_TBREQUISITA_COMPRA_USR_EMISS FOREIGN KEY (EMISSAO_USUARIO) REFERENCES TBUSERS (NOME)
+  USING INDEX FK_TBREQUISITA_COMPRA_EMISSOR;
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+CREATE INDEX IDX_TBREQUISITA_COMPRA_NUMERO ON TBREQUISITA_COMPRA (NUMERO);
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER TRIGGER TG_REQUISITA_COMPRA_CODIGO FOR TBREQUISITA_COMPRA
+ACTIVE BEFORE INSERT POSITION 0
+AS
+begin
+  if (new.codigo is null) then
+    if ( new.ano = 2014 ) then
+      new.codigo = gen_id(GEN_REQUISITA_COMPRA_2014, 1);
+    else
+    if ( new.ano = 2015 ) then
+      new.codigo = gen_id(GEN_REQUISITA_COMPRA_2015, 1);
+    else
+    if ( new.ano = 2016 ) then
+      new.codigo = gen_id(GEN_REQUISITA_COMPRA_2016, 1);
+    else
+    if ( new.ano = 2017 ) then
+      new.codigo = gen_id(GEN_REQUISITA_COMPRA_2017, 1);
+    else
+    if ( new.ano = 2018 ) then
+      new.codigo = gen_id(GEN_REQUISITA_COMPRA_2018, 1);
+    else
+    if ( new.ano = 2019 ) then
+      new.codigo = gen_id(GEN_REQUISITA_COMPRA_2019, 1);
+    else
+    if ( new.ano = 2020 ) then
+      new.codigo = gen_id(GEN_REQUISITA_COMPRA_2020, 1);
+end^
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+CREATE OR ALTER TRIGGER TG_REQUISITA_COMPRA_COMPETENCIA FOR TBREQUISITA_COMPRA
+ACTIVE BEFORE INSERT OR UPDATE POSITION 1
+AS
+  declare variable competencia Integer;
+begin
+  if ( coalesce(new.competencia, 0) = 0 ) then
+  begin
+    competencia = right('0000' || extract(year from new.emissao_data), 4) || right('00' || extract(month from new.emissao_data), 2);
+    execute procedure SET_COMPETENCIA(:competencia, null);
+    new.competencia = :competencia;
+  end
+end^
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+SET TERM ; ^
+
+COMMENT ON TABLE TBREQUISITA_COMPRA IS 
+'Tabela Requisicao de Compras/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2014
+
+Tabela responsavel por armazenar as requisicoes de compras/servicos da empresa.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON TRIGGER TG_REQUISITA_COMPRA_CODIGO IS 
+'Trigger Nova Requisicao de Compra.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2014
+
+Trigger responsavel por gerar um sequencial unico para cada novo registro de Requisicao de compra no ano.';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON TRIGGER TG_REQUISITA_COMPRA_COMPETENCIA IS 
+'Trigger Competencia Requisicao
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2014
+
+Trigger responsavel por identificar a competencia da Requisicao quando esta nao for informada, baseando-se na data de
+emissao.';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.ANO IS 
+'Ano';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.CODIGO IS 
+'Codigo';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.EMPRESA IS 
+'Empresa';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.NUMERO IS 
+'Numero da Requisicao (Livre)';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.FORNECEDOR IS 
+'Fornecedor';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.NOME_CONTATO IS 
+'Nome do Contato';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.TIPO IS 
+'Tipo:
+0 - A Definir
+1 - Compra
+2 - Servico
+3 - Compra/Servico';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.INSERCAO_DATA IS 
+'Data/hora de insercao';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.EMISSAO_DATA IS 
+'Data de Emissao';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.EMISSAO_USUARIO IS 
+'Usuario de Emissao';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.VALIDADE IS 
+'Data de Validade';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.COMPETENCIA IS 
+'Competencia';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.DATA_FATURA IS 
+'Data de faturamento (Entrada)';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.MOVITO IS 
+'Motivo';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.OBSERVACAO IS 
+'Observacoes';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.CLIENTE IS 
+'Cliente';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.ENDERECO_ENTREGA IS 
+'Endereco de Entrega';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.STATUS IS 
+'Status:
+0 - Em edicao
+1 - Aberta
+2 - Requisitada
+3 - Faturada (NF/NFS registrada no sistema referente a Autorizacao/Requisicao)
+4 - Cancelada';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.REQUISITADO_DATA IS 
+'Data de Requisicao';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.REQUISITADO_USUARIO IS 
+'Usuario de Requisicao';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.CANCELADO_DATA IS 
+'Data de Cancelamento';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.CANCELADO_USUARIO IS 
+'Usuario de Cancelamento';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.CANCELADO_MOTIVO IS 
+'Motivo de Cancelamento';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.RECEBEDOR_NOME IS 
+'Recebedor (Nome)';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.RECEBEDOR_CPF IS 
+'Recebedor (CPF)';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.RECEBEDOR_FUNCAO IS 
+'Recebedor (Funcao)';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.FORMA_PAGTO IS 
+'Forma de Pagamento';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.CONDICAO_PAGTO IS 
+'Condicao de Pagamento';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.TRANSPORTADOR IS 
+'Transportador';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.VALOR_BRUTO IS 
+'Valor Total Bruto';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.VALOR_DESCONTO IS 
+'Valor Total de Descontos';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.VALOR_TOTAL_FRETE IS 
+'Valor Total Frete';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.VALOR_TOTAL_IPI IS 
+'Valor Total IPI';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.VALOR_TOTAL IS 
+'Valor Total = (Valor Bruto - Valor Desconto) + Valor Total IPI';
+
+/*------ 16/10/2014 13:52:35 --------*/
+
+GRANT ALL ON TBREQUISITA_COMPRA TO PUBLIC;
+
+/*------ 16/10/2014 13:53:00 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA ADD CONSTRAINT FK_TBREQUISITA_COMPRA_USR_CNL FOREIGN KEY (CANCELADO_USUARIO) REFERENCES TBUSERS (NOME);
+
+
+/*------ SYSDBA 16/10/2014 13:57:36 --------*/
+
+CREATE TABLE TBAUTORIZA_REQUISITA (
+    AUTORIZACAO_ANO DMN_SMALLINT_NN NOT NULL,
+    AUTORIZACAO_COD DMN_BIGINT_NN NOT NULL,
+    REQUISICAO_ANO DMN_SMALLINT_NN NOT NULL,
+    REQUISICAO_COD DMN_BIGINT_NN NOT NULL);
+
+ALTER TABLE TBAUTORIZA_REQUISITA
+ADD CONSTRAINT PK_TBAUTORIZA_REQUISITA
+PRIMARY KEY (AUTORIZACAO_ANO,AUTORIZACAO_COD,REQUISICAO_ANO,REQUISICAO_COD);
+
+
+
+
+/*------ SYSDBA 16/10/2014 13:57:37 --------*/
+
+COMMENT ON TABLE TBAUTORIZA_REQUISITA IS 'Tabela Autorizacao x Requisicao de Compras/Servicos.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2014
+
+Tabela responsavel por fazer a associacao entre as autorizacoes de compras/servicos e as requisicoes de compras/servidor
+utilizadas para gerar essas autorizacoes.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco';
+
+GRANT ALL ON TBAUTORIZA_REQUISITA TO "PUBLIC";
+
+
+
+/*------ SYSDBA 16/10/2014 13:59:42 --------*/
+
+ALTER TABLE TBAUTORIZA_REQUISITA
+    ADD AUTORIZACAO_EMP DMN_CNPJ_NN,
+    ADD REQUISICAO_EMP DMN_CNPJ_NN;
+
+alter table TBAUTORIZA_REQUISITA
+alter AUTORIZACAO_ANO position 1;
+
+alter table TBAUTORIZA_REQUISITA
+alter AUTORIZACAO_COD position 2;
+
+alter table TBAUTORIZA_REQUISITA
+alter AUTORIZACAO_EMP position 3;
+
+alter table TBAUTORIZA_REQUISITA
+alter REQUISICAO_ANO position 4;
+
+alter table TBAUTORIZA_REQUISITA
+alter REQUISICAO_COD position 5;
+
+alter table TBAUTORIZA_REQUISITA
+alter REQUISICAO_EMP position 6;
+
+
+
+
+/*------ SYSDBA 16/10/2014 13:59:49 --------*/
+
+ALTER TABLE TBAUTORIZA_REQUISITA DROP CONSTRAINT PK_TBAUTORIZA_REQUISITA;
+
+
+
+
+/*------ SYSDBA 16/10/2014 13:59:59 --------*/
+
+ALTER TABLE TBAUTORIZA_REQUISITA
+ADD CONSTRAINT PK_TBAUTORIZA_REQUISITA
+PRIMARY KEY (AUTORIZACAO_ANO,AUTORIZACAO_COD,AUTORIZACAO_EMP,REQUISICAO_ANO,REQUISICAO_COD,REQUISICAO_EMP);
+
+
+
+
+/*------ SYSDBA 16/10/2014 14:00:39 --------*/
+
+ALTER TABLE TBAUTORIZA_REQUISITA
+ADD CONSTRAINT FK_TBAUTORIZA_REQUISITA_AUT
+FOREIGN KEY (AUTORIZACAO_ANO,AUTORIZACAO_COD,AUTORIZACAO_EMP)
+REFERENCES TBAUTORIZA_COMPRA(ANO,CODIGO,EMPRESA)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE TBAUTORIZA_REQUISITA
+ADD CONSTRAINT FK_TBAUTORIZA_REQUISITA_REC
+FOREIGN KEY (REQUISICAO_ANO,REQUISICAO_COD,REQUISICAO_EMP)
+REFERENCES TBREQUISITA_COMPRA(ANO,CODIGO,EMPRESA)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+CREATE TABLE TBREQUISITA_COMPRAITEM (
+    ANO                     DMN_SMALLINT_NN NOT NULL /* DMN_SMALLINT_NN = SMALLINT DEFAULT 0 */,
+    CODIGO                  DMN_BIGINT_NN NOT NULL /* DMN_BIGINT_NN = INTEGER NOT NULL */,
+    EMPRESA                 DMN_CNPJ_NN NOT NULL /* DMN_CNPJ_NN = VARCHAR(18) NOT NULL */,
+    SEQ                     DMN_SMALLINT_NN NOT NULL /* DMN_SMALLINT_NN = SMALLINT DEFAULT 0 */,
+    FORNECEDOR              DMN_INTEGER_N /* DMN_INTEGER_N = INTEGER */,
+    PRODUTO                 DMN_VCHAR_10 /* DMN_VCHAR_10 = VARCHAR(10) */,
+    QUANTIDADE              DMN_QUANTIDADE_D3 /* DMN_QUANTIDADE_D3 = NUMERIC(18,3) DEFAULT 0 NOT NULL */,
+    UNIDADE                 DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+    VALOR_UNITARIO          DMN_MONEY /* DMN_MONEY = NUMERIC(15,2) */,
+    IPI_PERCENTUAL          DMN_PERCENTUAL /* DMN_PERCENTUAL = DECIMAL(10,2) DEFAULT 0 */,
+    IPI_VALOR_TOTAL         DMN_MONEY /* DMN_MONEY = NUMERIC(15,2) */,
+    VALOR_TOTAL             DMN_MONEY /* DMN_MONEY = NUMERIC(15,2) */,
+    CONFIRMADO_RECEBIMENTO  DMN_LOGICO DEFAULT 0 /* DMN_LOGICO = SMALLINT DEFAULT 0 NOT NULL CHECK (value between 0 and 1) */,
+    USUARIO                 DMN_USUARIO /* DMN_USUARIO = VARCHAR(12) */
+);
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRAITEM ADD CONSTRAINT PK_TBREQUISITA_COMPRAITEM PRIMARY KEY (ANO, CODIGO, EMPRESA, SEQ);
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRAITEM ADD CONSTRAINT FK_TBREQUISITA_COMPRAITEM_AUT FOREIGN KEY (ANO, CODIGO, EMPRESA) REFERENCES TBREQUISITA_COMPRA (ANO, CODIGO, EMPRESA) ON DELETE CASCADE ON UPDATE CASCADE;
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRAITEM ADD CONSTRAINT FK_TBREQUISITA_COMPRAITEM_EMP FOREIGN KEY (EMPRESA) REFERENCES TBEMPRESA (CNPJ);
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRAITEM ADD CONSTRAINT FK_TBREQUISITA_COMPRAITEM_FRN FOREIGN KEY (FORNECEDOR) REFERENCES TBFORNECEDOR (CODFORN);
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRAITEM ADD CONSTRAINT FK_TBREQUISITA_COMPRAITEM_PRD FOREIGN KEY (PRODUTO) REFERENCES TBPRODUTO (COD);
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRAITEM ADD CONSTRAINT FK_TBREQUISITA_COMPRAITEM_UND FOREIGN KEY (UNIDADE) REFERENCES TBUNIDADEPROD (UNP_COD);
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+CREATE INDEX IDX_TBREQUISITA_COMPRAITEM_REC ON TBREQUISITA_COMPRAITEM (CONFIRMADO_RECEBIMENTO);
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON TABLE TBREQUISITA_COMPRAITEM IS 
+'Tabela de Produtos/Servicos da REQUISITAcao de Compra/Servico.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Tabela responsavel por armazenar os itens (produtos eou servicos) das REQUISITAcoes de compras/servicos.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    20/05/2014 - IMR :
+        + Criacao dos campos IPI_PERCENTUAL e IPI_VALOR_TOTAL, uma vez que nos processos
+        de REQUISITAcao de Compra essas informacoes sao necessarias.';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.ANO IS 
+'Ano da Requisicao';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.CODIGO IS 
+'Codigo da Requisicao';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.EMPRESA IS 
+'Empresa da Requisicao';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.SEQ IS 
+'Sequencial';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.FORNECEDOR IS 
+'Fornecedor';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.PRODUTO IS 
+'Produto/Servico';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.QUANTIDADE IS 
+'Quantidade
+
+(Aceita valores decimais)';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.UNIDADE IS 
+'Unidade de Medida';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.VALOR_UNITARIO IS 
+'Valor Unitario';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.IPI_PERCENTUAL IS 
+'Percentual IPI';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.IPI_VALOR_TOTAL IS 
+'Valor Total do IPI';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.VALOR_TOTAL IS 
+'Valor Total = (Quantidade * Valor Unitario) + Valor Total IPI';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.CONFIRMADO_RECEBIMENTO IS 
+'Confirmado recebimento do produto/servico pela empresa:
+0 - Nao
+1 - Sim';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+COMMENT ON COLUMN TBREQUISITA_COMPRAITEM.USUARIO IS 
+'Usuario de lancamento';
+
+/*------ 16/10/2014 14:08:40 --------*/
+
+GRANT ALL ON TBREQUISITA_COMPRAITEM TO PUBLIC;
+
+
+/*------ SYSDBA 16/10/2014 14:19:05 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_autoriza_compra_recf for tbautoriza_compra
+active after update position 3
+AS
+  declare variable rec_ano DMN_SMALLINT_NN;
+  declare variable rec_cod DMN_BIGINT_NN;
+  declare variable rec_emp DMN_CNPJ_NN;
+begin
+  /* Autorizacao marcada como "Faturada (NF/NFS registrada no sistema referente a autorizacao)" (3) */
+  if ( (old.status <> new.status) and (new.status = 3) ) then
+  begin
+    for
+      Select
+          ar.requisicao_ano
+        , ar.requisicao_cod
+        , ar.requisicao_emp
+      from TBAUTORIZA_REQUISITA ar
+      Into
+          rec_ano
+        , rec_cod
+        , rec_emp
+    do
+    begin
+      Update TBREQUISITA_COMPRA r Set
+       r.status = new.status
+      where r.ano     = :rec_ano
+        and r.codigo  = :rec_cod
+        and r.empresa = :rec_emp;
+    end 
+  end 
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_AUTORIZA_COMPRA_RECF IS 'Trigger Marcar Faturada Autorizacao x Requisicao.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2014
+
+Trigger responsavel por marcar como "faturada" toda requisicao de compra/servico quando sua autorizaxao correspondem
+marcada de igual forma';
+
+
+
+
+/*------ SYSDBA 16/10/2014 14:19:45 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_autoriza_compra_recf for tbautoriza_compra
+active after update position 3
+AS
+  declare variable rec_ano DMN_SMALLINT_NN;
+  declare variable rec_cod DMN_BIGINT_NN;
+  declare variable rec_emp DMN_CNPJ_NN;
+begin
+  /* Autorizacao marcada como "Faturada (NF/NFS registrada no sistema referente a autorizacao)" (3) */
+  if ( (old.status <> new.status) and (new.status = 3) ) then
+  begin
+    for
+      Select
+          ar.requisicao_ano
+        , ar.requisicao_cod
+        , ar.requisicao_emp
+      from TBAUTORIZA_REQUISITA ar
+      where ar.autorizacao_ano = new.ano
+        and ar.autorizacao_cod = new.codigo
+        and ar.autorizacao_emp = new.empresa
+      Into
+          rec_ano
+        , rec_cod
+        , rec_emp
+    do
+    begin
+      Update TBREQUISITA_COMPRA r Set
+       r.status = new.status
+      where r.ano     = :rec_ano
+        and r.codigo  = :rec_cod
+        and r.empresa = :rec_emp;
+    end 
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 16/10/2014 14:20:08 --------*/
+
+DROP TRIGGER TG_AUTORIZA_COMPRA_RECF;
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_autoriza_compra_rec_fat for tbautoriza_compra
+active after update position 3
+AS
+  declare variable rec_ano DMN_SMALLINT_NN;
+  declare variable rec_cod DMN_BIGINT_NN;
+  declare variable rec_emp DMN_CNPJ_NN;
+begin
+  /* Autorizacao marcada como "Faturada (NF/NFS registrada no sistema referente a autorizacao)" (3) */
+  if ( (old.status <> new.status) and (new.status = 3) ) then
+  begin
+    for
+      Select
+          ar.requisicao_ano
+        , ar.requisicao_cod
+        , ar.requisicao_emp
+      from TBAUTORIZA_REQUISITA ar
+      where ar.autorizacao_ano = new.ano
+        and ar.autorizacao_cod = new.codigo
+        and ar.autorizacao_emp = new.empresa
+      Into
+          rec_ano
+        , rec_cod
+        , rec_emp
+    do
+    begin
+      Update TBREQUISITA_COMPRA r Set
+       r.status = new.status
+      where r.ano     = :rec_ano
+        and r.codigo  = :rec_cod
+        and r.empresa = :rec_emp;
+    end 
+  end 
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_AUTORIZA_COMPRA_REC_FAT IS 'Trigger Marcar Faturada Autorizacao x Requisicao.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2014
+
+Trigger responsavel por marcar como "faturada" toda requisicao de compra/servico quando sua autorizaxao correspondem
+marcada de igual forma';
+
+
+
+
+/*------ SYSDBA 16/10/2014 14:26:18 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_autoriza_compra_rec_fat for tbautoriza_compra
+active after update position 3
+AS
+  declare variable rec_ano DMN_SMALLINT_NN;
+  declare variable rec_cod DMN_BIGINT_NN;
+  declare variable rec_emp DMN_CNPJ_NN;
+begin
+  /* Autorizacao marcada como "Faturada (NF/NFS registrada no sistema referente a autorizacao)" (3) */
+  if ( (old.status <> new.status) and (new.status = 3) ) then
+  begin
+    for
+      Select
+          ar.requisicao_ano
+        , ar.requisicao_cod
+        , ar.requisicao_emp
+      from TBAUTORIZA_REQUISITA ar
+      where ar.autorizacao_ano = new.ano
+        and ar.autorizacao_cod = new.codigo
+        and ar.autorizacao_emp = new.empresa
+      Into
+          rec_ano
+        , rec_cod
+        , rec_emp
+    do
+    begin
+      Update TBREQUISITA_COMPRA r Set
+       r.status = new.status
+      where r.ano     = :rec_ano
+        and r.codigo  = :rec_cod
+        and r.empresa = :rec_emp
+        and r.status  = 2; -- Requisitada
+    end 
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 16/10/2014 14:27:05 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_autoriza_compra_rec_aut for tbautoriza_compra
+active after update position 4
+AS
+  declare variable rec_ano DMN_SMALLINT_NN;
+  declare variable rec_cod DMN_BIGINT_NN;
+  declare variable rec_emp DMN_CNPJ_NN;
+begin
+  /* Autorizacao marcada como "Autorizada*/
+  if ( (old.status <> new.status) and (new.status = 2) ) then
+  begin
+    for
+      Select
+          ar.requisicao_ano
+        , ar.requisicao_cod
+        , ar.requisicao_emp
+      from TBAUTORIZA_REQUISITA ar
+      where ar.autorizacao_ano = new.ano
+        and ar.autorizacao_cod = new.codigo
+        and ar.autorizacao_emp = new.empresa
+      Into
+          rec_ano
+        , rec_cod
+        , rec_emp
+    do
+    begin
+      Update TBREQUISITA_COMPRA r Set
+       r.status = new.status
+      where r.ano     = :rec_ano
+        and r.codigo  = :rec_cod
+        and r.empresa = :rec_emp
+        and r.status  = 3; -- Faturada
+    end 
+  end 
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_AUTORIZA_COMPRA_REC_AUT IS 'Trigger Marcar Requisitada Autorizacao x Requisicao.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2014
+
+Trigger responsavel por marcar como "requisitada" toda requisicao de compra/servico quando sua autorizaxao correspondem
+marcada como autorizada.';
+
+
+
+
+/*------ SYSDBA 16/10/2014 14:33:23 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_autoriza_compraitem_rec for tbautoriza_compraitem
+active after update position 5
+AS
+  declare variable rec_ano DMN_SMALLINT_NN;
+  declare variable rec_cod DMN_BIGINT_NN;
+  declare variable rec_emp DMN_CNPJ_NN;
+begin
+  if ( old.confirmado_recebimento <> new.confirmado_recebimento ) then
+  begin
+    for
+      Select
+          ar.requisicao_ano
+        , ar.requisicao_cod
+        , ar.requisicao_emp
+      from TBAUTORIZA_REQUISITA ar
+      where ar.autorizacao_ano = new.ano
+        and ar.autorizacao_cod = new.codigo
+        and ar.autorizacao_emp = new.empresa
+      Into
+          rec_ano
+        , rec_cod
+        , rec_emp
+    do
+    begin
+      Update TBREQUISITA_COMPRAITEM ri Set
+        ri.confirmado_recebimento = new.confirmado_recebimento
+      where ri.ano     = :rec_ano
+        and ri.codigo  = :rec_cod
+        and ri.empresa = :rec_emp
+        and ri.produto = new.produto;
+    end 
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 16/10/2014 14:35:25 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_autoriza_compraitem_rec for tbautoriza_compraitem
+active after update position 5
+AS
+  declare variable rec_ano DMN_SMALLINT_NN;
+  declare variable rec_cod DMN_BIGINT_NN;
+  declare variable rec_emp DMN_CNPJ_NN;
+begin
+  if ( old.confirmado_recebimento <> new.confirmado_recebimento ) then
+  begin
+    for
+      Select
+          ar.requisicao_ano
+        , ar.requisicao_cod
+        , ar.requisicao_emp
+      from TBAUTORIZA_REQUISITA ar
+      where ar.autorizacao_ano = new.ano
+        and ar.autorizacao_cod = new.codigo
+        and ar.autorizacao_emp = new.empresa
+      Into
+          rec_ano
+        , rec_cod
+        , rec_emp
+    do
+    begin
+      Update TBREQUISITA_COMPRAITEM ri Set
+        ri.confirmado_recebimento = new.confirmado_recebimento
+      where ri.ano     = :rec_ano
+        and ri.codigo  = :rec_cod
+        and ri.empresa = :rec_emp
+        and ri.produto = new.produto;
+    end 
+  end 
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_AUTORIZA_COMPRAITEM_REC IS 'Trigger Confirmar Recebimento Autorizacao x Requisicao.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2014
+
+Trigger responsavel por marca como recebido ou nao os produtos/servicos requisitados todas as vezes que este mesmo
+registro for alterado na autorizacao de compras/servicos.';
+
+
+
+
+/*------ SYSDBA 17/10/2014 09:55:27 --------*/
+
+CREATE VIEW VW_TIPO_REQUISICAO(
+    CODIGO,
+    DESCRICAO)
+AS
+Select 1 as Codigo , 'Requisição de Compra'         as Descricao from RDB$DATABASE Union
+Select 2 as Codigo , 'Requisição de Serviço'        as Descricao from RDB$DATABASE Union
+Select 3 as Codigo , 'Requisição de Compra/Serviço' as Descricao from RDB$DATABASE
+;
+
+GRANT ALL ON VW_TIPO_REQUISICAO TO "PUBLIC";
+
+
+
+/*------ SYSDBA 22/10/2014 14:37:53 --------*/
+
+ALTER TABLE TBCONDICAOPAGTO
+    ADD COND_QTDE_PARCELAS DMN_SMALLINT_N DEFAULT 0;
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_QTDE_PARCELAS IS
+'Quantidade de parcelas na condicao a prazo.';
+
+alter table TBCONDICAOPAGTO
+alter COND_COD position 1;
+
+alter table TBCONDICAOPAGTO
+alter COND_DESCRICAO position 2;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO position 3;
+
+alter table TBCONDICAOPAGTO
+alter COND_QTDE_PARCELAS position 4;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_01 position 5;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_02 position 6;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_03 position 7;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_04 position 8;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_05 position 9;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_06 position 10;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_07 position 11;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_08 position 12;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_09 position 13;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_10 position 14;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_11 position 15;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_12 position 16;
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:38:11 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_01 IS
+'Prazo em dias para a parcela 1.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:38:24 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_02 IS
+'Prazo em dias para a parcela 2.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:38:30 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_03 IS
+'Prazo em dias para a parcela 3.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:38:36 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_04 IS
+'Prazo em dias para a parcela 4.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:38:43 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_05 IS
+'Prazo em dias para a parcela 5.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:38:50 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_06 IS
+'Prazo em dias para a parcela 6.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:38:57 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_07 IS
+'Prazo em dias para a parcela 7.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:39:04 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_08 IS
+'Prazo em dias para a parcela 8.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:39:09 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_09 IS
+'Prazo em dias para a parcela 9.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:39:14 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_10 IS
+'Prazo em dias para a parcela 10.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:39:19 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_11 IS
+'Prazo em dias para a parcela 11.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:39:24 --------*/
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PRAZO_12 IS
+'Prazo em dias para a parcela 12.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:40:53 --------*/
+
+COMMENT ON TABLE TBCONDICAOPAGTO IS 'Tabela de Condicoes de Pagamnetos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :
+
+Tabela responsavel por armazenar as condicoes de pagamentos utilizadas nas movimentacoes de COMPRA e VENDA e seus
+respectivos parametros de comportamento.
+
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:43:59 --------*/
+
+COMMENT ON TABLE TBCONDICAOPAGTO IS 'Tabela de Condicoes de Pagamnetos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :
+
+Tabela responsavel por armazenar as condicoes de pagamentos utilizadas nas movimentacoes de COMPRA e VENDA e seus
+respectivos parametros de comportamento.
+
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    22/10/2014 - IMR :
+        + Criacao do campo COND_QTDE_PARCELAS pra armazenar o numero de parcelas da condicao de pagamento quando esta
+          for a prazo. Este dado influencia no funcionamento do sistema PDV no ato de finalizar a venda.';
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:46:24 --------*/
+
+DROP VIEW VW_CONDICAOPAGTO;
+
+CREATE VIEW VW_CONDICAOPAGTO(
+    COND_COD,
+    COND_DESCRICAO,
+    COND_PRAZO,
+    COND_QTDE_PARCELAS,
+    COND_PRAZO_01,
+    COND_PRAZO_02,
+    COND_PRAZO_03,
+    COND_PRAZO_04,
+    COND_PRAZO_05,
+    COND_PRAZO_06,
+    COND_PRAZO_07,
+    COND_PRAZO_08,
+    COND_PRAZO_09,
+    COND_PRAZO_10,
+    COND_PRAZO_11,
+    COND_PRAZO_12,
+    COND_DESCRICAO_FULL,
+    Cond_descricao_PDV)
+AS
+Select
+    c.Cond_cod
+  , c.Cond_descricao
+  , c.Cond_prazo
+  , c.Cond_qtde_parcelas
+  , c.Cond_prazo_01
+  , c.Cond_prazo_02
+  , c.Cond_prazo_03
+  , c.Cond_prazo_04
+  , c.Cond_prazo_05
+  , c.Cond_prazo_06
+  , c.Cond_prazo_07
+  , c.Cond_prazo_08
+  , c.Cond_prazo_09
+  , c.Cond_prazo_10
+  , c.Cond_prazo_11
+  , c.Cond_prazo_12
+  , c.Cond_descricao || ' [' ||
+      case when c.Cond_prazo_01 is not Null then c.Cond_prazo_01 else '' end ||
+      case when c.Cond_prazo_02 is not Null then ', ' || c.Cond_prazo_02 else '' end ||
+      case when c.Cond_prazo_03 is not Null then ', ' || c.Cond_prazo_03 else '' end ||
+      case when c.Cond_prazo_04 is not Null then ', ' || c.Cond_prazo_04 else '' end ||
+      case when c.Cond_prazo_05 is not Null then ', ' || c.Cond_prazo_05 else '' end ||
+      case when c.Cond_prazo_06 is not Null then ', ' || c.Cond_prazo_06 else '' end ||
+      case when c.Cond_prazo_07 is not Null then ', ' || c.Cond_prazo_07 else '' end ||
+      case when c.Cond_prazo_08 is not Null then ', ' || c.Cond_prazo_08 else '' end ||
+      case when c.Cond_prazo_09 is not Null then ', ' || c.Cond_prazo_09 else '' end ||
+      case when c.Cond_prazo_10 is not Null then ', ' || c.Cond_prazo_10 else '' end ||
+      case when c.Cond_prazo_11 is not Null then ', ' || c.Cond_prazo_11 else '' end ||
+      case when c.Cond_prazo_12 is not Null then ', ' || c.Cond_prazo_12 else '' end || ']'
+    as Cond_descricao_full
+  , Case when c.Cond_prazo = 0
+      then 'A VISTA'
+      else c.Cond_qtde_parcelas || 'x'
+    end as Cond_descricao_PDV
+from TBCONDICAOPAGTO c
+;
+
+GRANT SELECT, UPDATE, DELETE, INSERT, REFERENCES ON VW_CONDICAOPAGTO TO "PUBLIC";
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:47:10 --------*/
+
+DROP VIEW VW_CONDICAOPAGTO;
+
+CREATE VIEW VW_CONDICAOPAGTO(
+    COND_COD,
+    COND_DESCRICAO,
+    COND_PRAZO,
+    COND_QTDE_PARCELAS,
+    COND_PRAZO_01,
+    COND_PRAZO_02,
+    COND_PRAZO_03,
+    COND_PRAZO_04,
+    COND_PRAZO_05,
+    COND_PRAZO_06,
+    COND_PRAZO_07,
+    COND_PRAZO_08,
+    COND_PRAZO_09,
+    COND_PRAZO_10,
+    COND_PRAZO_11,
+    COND_PRAZO_12,
+    COND_DESCRICAO_FULL,
+    Cond_descricao_PDV)
+AS
+Select
+    c.Cond_cod
+  , c.Cond_descricao
+  , c.Cond_prazo
+  , c.Cond_qtde_parcelas
+  , c.Cond_prazo_01
+  , c.Cond_prazo_02
+  , c.Cond_prazo_03
+  , c.Cond_prazo_04
+  , c.Cond_prazo_05
+  , c.Cond_prazo_06
+  , c.Cond_prazo_07
+  , c.Cond_prazo_08
+  , c.Cond_prazo_09
+  , c.Cond_prazo_10
+  , c.Cond_prazo_11
+  , c.Cond_prazo_12
+  , c.Cond_descricao || ' [' ||
+      case when c.Cond_prazo_01 is not Null then c.Cond_prazo_01 else '' end ||
+      case when c.Cond_prazo_02 is not Null then ', ' || c.Cond_prazo_02 else '' end ||
+      case when c.Cond_prazo_03 is not Null then ', ' || c.Cond_prazo_03 else '' end ||
+      case when c.Cond_prazo_04 is not Null then ', ' || c.Cond_prazo_04 else '' end ||
+      case when c.Cond_prazo_05 is not Null then ', ' || c.Cond_prazo_05 else '' end ||
+      case when c.Cond_prazo_06 is not Null then ', ' || c.Cond_prazo_06 else '' end ||
+      case when c.Cond_prazo_07 is not Null then ', ' || c.Cond_prazo_07 else '' end ||
+      case when c.Cond_prazo_08 is not Null then ', ' || c.Cond_prazo_08 else '' end ||
+      case when c.Cond_prazo_09 is not Null then ', ' || c.Cond_prazo_09 else '' end ||
+      case when c.Cond_prazo_10 is not Null then ', ' || c.Cond_prazo_10 else '' end ||
+      case when c.Cond_prazo_11 is not Null then ', ' || c.Cond_prazo_11 else '' end ||
+      case when c.Cond_prazo_12 is not Null then ', ' || c.Cond_prazo_12 else '' end || ']'
+    as Cond_descricao_full
+  , Case when c.Cond_prazo = 0
+      then 'A VISTA'
+      else coalesce(c.Cond_qtde_parcelas, 1) || 'x'
+    end as Cond_descricao_PDV
+from TBCONDICAOPAGTO c
+;
+
+GRANT SELECT, UPDATE, DELETE, INSERT, REFERENCES ON VW_CONDICAOPAGTO TO "PUBLIC";
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:47:29 --------*/
+
+DROP VIEW VW_CONDICAOPAGTO;
+
+CREATE VIEW VW_CONDICAOPAGTO(
+    COND_COD,
+    COND_DESCRICAO,
+    COND_PRAZO,
+    COND_QTDE_PARCELAS,
+    COND_PRAZO_01,
+    COND_PRAZO_02,
+    COND_PRAZO_03,
+    COND_PRAZO_04,
+    COND_PRAZO_05,
+    COND_PRAZO_06,
+    COND_PRAZO_07,
+    COND_PRAZO_08,
+    COND_PRAZO_09,
+    COND_PRAZO_10,
+    COND_PRAZO_11,
+    COND_PRAZO_12,
+    COND_DESCRICAO_FULL,
+    Cond_descricao_PDV)
+AS
+Select
+    c.Cond_cod
+  , c.Cond_descricao
+  , c.Cond_prazo
+  , c.Cond_qtde_parcelas
+  , c.Cond_prazo_01
+  , c.Cond_prazo_02
+  , c.Cond_prazo_03
+  , c.Cond_prazo_04
+  , c.Cond_prazo_05
+  , c.Cond_prazo_06
+  , c.Cond_prazo_07
+  , c.Cond_prazo_08
+  , c.Cond_prazo_09
+  , c.Cond_prazo_10
+  , c.Cond_prazo_11
+  , c.Cond_prazo_12
+  , c.Cond_descricao || ' [' ||
+      case when c.Cond_prazo_01 is not Null then c.Cond_prazo_01 else '' end ||
+      case when c.Cond_prazo_02 is not Null then ', ' || c.Cond_prazo_02 else '' end ||
+      case when c.Cond_prazo_03 is not Null then ', ' || c.Cond_prazo_03 else '' end ||
+      case when c.Cond_prazo_04 is not Null then ', ' || c.Cond_prazo_04 else '' end ||
+      case when c.Cond_prazo_05 is not Null then ', ' || c.Cond_prazo_05 else '' end ||
+      case when c.Cond_prazo_06 is not Null then ', ' || c.Cond_prazo_06 else '' end ||
+      case when c.Cond_prazo_07 is not Null then ', ' || c.Cond_prazo_07 else '' end ||
+      case when c.Cond_prazo_08 is not Null then ', ' || c.Cond_prazo_08 else '' end ||
+      case when c.Cond_prazo_09 is not Null then ', ' || c.Cond_prazo_09 else '' end ||
+      case when c.Cond_prazo_10 is not Null then ', ' || c.Cond_prazo_10 else '' end ||
+      case when c.Cond_prazo_11 is not Null then ', ' || c.Cond_prazo_11 else '' end ||
+      case when c.Cond_prazo_12 is not Null then ', ' || c.Cond_prazo_12 else '' end || ']'
+    as Cond_descricao_full
+  , Case when c.Cond_prazo = 0
+      then '* A VISTA'
+      else coalesce(c.Cond_qtde_parcelas, 1) || 'x'
+    end as Cond_descricao_PDV
+from TBCONDICAOPAGTO c
+;
+
+GRANT SELECT, UPDATE, DELETE, INSERT, REFERENCES ON VW_CONDICAOPAGTO TO "PUBLIC";
+
+
+
+
+/*------ SYSDBA 22/10/2014 14:50:08 --------*/
+
+ALTER TABLE TBCONDICAOPAGTO
+    ADD COND_PDV DMN_LOGICO DEFAULT 0;
+
+COMMENT ON COLUMN TBCONDICAOPAGTO.COND_PDV IS
+'Usar condicao de pagamento no PDV:
+0 - Nao
+1 - Sim';
+
+alter table TBCONDICAOPAGTO
+alter COND_COD position 1;
+
+alter table TBCONDICAOPAGTO
+alter COND_DESCRICAO position 2;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO position 3;
+
+alter table TBCONDICAOPAGTO
+alter COND_PDV position 4;
+
+alter table TBCONDICAOPAGTO
+alter COND_QTDE_PARCELAS position 5;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_01 position 6;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_02 position 7;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_03 position 8;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_04 position 9;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_05 position 10;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_06 position 11;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_07 position 12;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_08 position 13;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_09 position 14;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_10 position 15;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_11 position 16;
+
+alter table TBCONDICAOPAGTO
+alter COND_PRAZO_12 position 17;
+
+
+
+
+/*------ SYSDBA 22/10/2014 15:12:49 --------*/
+
+DROP VIEW VW_CONDICAOPAGTO;
+
+CREATE VIEW VW_CONDICAOPAGTO(
+    COND_COD,
+    COND_DESCRICAO,
+    COND_PRAZO,
+    COND_QTDE_PARCELAS,
+    COND_PRAZO_01,
+    COND_PRAZO_02,
+    COND_PRAZO_03,
+    COND_PRAZO_04,
+    COND_PRAZO_05,
+    COND_PRAZO_06,
+    COND_PRAZO_07,
+    COND_PRAZO_08,
+    COND_PRAZO_09,
+    COND_PRAZO_10,
+    COND_PRAZO_11,
+    COND_PRAZO_12,
+    COND_DESCRICAO_FULL,
+    COND_DESCRICAO_PDV,
+    COND_PDV)
+AS
+Select
+    c.Cond_cod
+  , c.Cond_descricao
+  , c.Cond_prazo
+  , c.Cond_qtde_parcelas
+  , c.Cond_prazo_01
+  , c.Cond_prazo_02
+  , c.Cond_prazo_03
+  , c.Cond_prazo_04
+  , c.Cond_prazo_05
+  , c.Cond_prazo_06
+  , c.Cond_prazo_07
+  , c.Cond_prazo_08
+  , c.Cond_prazo_09
+  , c.Cond_prazo_10
+  , c.Cond_prazo_11
+  , c.Cond_prazo_12
+  , c.Cond_descricao || ' [' ||
+      case when c.Cond_prazo_01 is not Null then c.Cond_prazo_01 else '' end ||
+      case when c.Cond_prazo_02 is not Null then ', ' || c.Cond_prazo_02 else '' end ||
+      case when c.Cond_prazo_03 is not Null then ', ' || c.Cond_prazo_03 else '' end ||
+      case when c.Cond_prazo_04 is not Null then ', ' || c.Cond_prazo_04 else '' end ||
+      case when c.Cond_prazo_05 is not Null then ', ' || c.Cond_prazo_05 else '' end ||
+      case when c.Cond_prazo_06 is not Null then ', ' || c.Cond_prazo_06 else '' end ||
+      case when c.Cond_prazo_07 is not Null then ', ' || c.Cond_prazo_07 else '' end ||
+      case when c.Cond_prazo_08 is not Null then ', ' || c.Cond_prazo_08 else '' end ||
+      case when c.Cond_prazo_09 is not Null then ', ' || c.Cond_prazo_09 else '' end ||
+      case when c.Cond_prazo_10 is not Null then ', ' || c.Cond_prazo_10 else '' end ||
+      case when c.Cond_prazo_11 is not Null then ', ' || c.Cond_prazo_11 else '' end ||
+      case when c.Cond_prazo_12 is not Null then ', ' || c.Cond_prazo_12 else '' end || ']'
+    as Cond_descricao_full
+  , Case when c.Cond_prazo = 0
+      then '* A VISTA'
+      else coalesce(c.Cond_qtde_parcelas, 1) || 'x'
+    end as Cond_descricao_PDV
+  , coalesce(c.Cond_pdv, 0)
+from TBCONDICAOPAGTO c
+;
+
+GRANT SELECT, UPDATE, DELETE, INSERT, REFERENCES ON VW_CONDICAOPAGTO TO "PUBLIC";
+
