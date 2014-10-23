@@ -123,7 +123,6 @@ type
     frxCrossObject: TfrxCrossObject;
     frxChartObject: TfrxChartObject;
     ibdtstUsersVENDEDOR: TIntegerField;
-    EvUserAccess: TEvUserAccess;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }

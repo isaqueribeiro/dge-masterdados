@@ -46,7 +46,7 @@ type
     dbEstado: TRxDBComboEdit;
     pgcMaisDados: TPageControl;
     tbsContato: TTabSheet;
-    tbsFinanceiro: TTabSheet;
+    tbsCompra: TTabSheet;
     lblBairro: TLabel;
     dbBairro: TRxDBComboEdit;
     lblLogradouro: TLabel;
@@ -220,7 +220,6 @@ type
     UpdEstoqueSatelite: TIBUpdateSQL;
     DtsEstoqueSatelite: TDataSource;
     QryEstoqueSateliteCOD_PRODUTO: TIBStringField;
-    QryEstoqueSateliteQUANTIDADE: TIntegerField;
     QryEstoqueSateliteUSUARIO: TIBStringField;
     QryEstoqueSateliteANO_VENDA_ULT: TSmallintField;
     QryEstoqueSateliteCOD_VENDA_ULT: TIntegerField;
@@ -246,6 +245,28 @@ type
     lblTipoCNPJ: TLabel;
     dbTipoCNPJ: TDBLookupComboBox;
     QryEstoqueSateliteCOD_CLIENTE: TIntegerField;
+    IbDtstTabelaBANCO: TIBStringField;
+    IbDtstTabelaAGENCIA: TIBStringField;
+    IbDtstTabelaCC: TIBStringField;
+    IbDtstTabelaPRACA: TIBStringField;
+    IbDtstTabelaOBSERVACAO: TMemoField;
+    dtsBancoFebraban: TDataSource;
+    tbsDadoFinanceiro: TTabSheet;
+    lblBanco: TLabel;
+    dbBanco: TDBLookupComboBox;
+    lblAgencia: TLabel;
+    dbAgencia: TDBEdit;
+    lblContaCorrente: TLabel;
+    dbContaCorrente: TDBEdit;
+    lblPracaoCobranca: TLabel;
+    dbPracaoCobranca: TDBEdit;
+    tbsObservacao: TTabSheet;
+    dbObservacao: TDBMemo;
+    qryBancoFebraban: TIBQuery;
+    IbDtstTabelaNOMEFANT: TIBStringField;
+    lblNomeFantasia: TLabel;
+    dbNomeFantasia: TDBEdit;
+    QryEstoqueSateliteQUANTIDADE: TIBBCDField;
     procedure ProximoCampoKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure dbEstadoButtonClick(Sender: TObject);
@@ -286,6 +307,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btbtnExcluirClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     bApenasPossuiEstoque : Boolean;
@@ -293,10 +315,14 @@ type
     procedure GetComprasAbertas(iCodigoCliente : Integer);
     procedure HabilitarAbaEstoque;
     procedure EstoqueSateliteFiltarDados(const iTipoPesquisa : Integer);
+    procedure RegistrarNovaRotinaSistema;
 
     function GetUserVisualizaEstoque : Boolean;
+    function GetRotinaBloqueioID : String;
   public
     { Public declarations }
+    property RotinaBloqueioID : String read GetRotinaBloqueioID;
+
     procedure Update(Observeble: IObservable); overload;
     procedure Update(Observeble: IObservable; sMessage: string); overload;
     procedure FiltarDados(const iTipoPesquisa : Integer); overload;
@@ -466,10 +492,14 @@ begin
 
   tblVendedor.Open;
   tblTipoCnpj.Open;
+  qryBancoFebraban.Open;
 
   BloquearClientes;
 
+  RotinaID         := ROTINA_CAD_CLIENTE_ID;
   ControlFirstEdit := dbPessoaFisica;
+
+  DisplayFormatCodigo := '##0000';
 
   NomeTabela     := 'TBCLIENTE';
   CampoCodigo    := 'codigo';
@@ -490,8 +520,11 @@ begin
   dbEntregaFracionada.ReadOnly  := not GetEstoqueSateliteEmpresa(GetEmpresaIDDefault);
 
   tbsDadosAdcionais.TabVisible := (gSistema.Codigo = SISTEMA_GESTAO);
-  tbsFinanceiro.TabVisible     := (gSistema.Codigo = SISTEMA_GESTAO);
+  tbsCompra.TabVisible         := (gSistema.Codigo = SISTEMA_GESTAO);
   BtBtnProcesso.Visible        := (gSistema.Codigo = SISTEMA_GESTAO);
+
+  if ( gSistema.Codigo = SISTEMA_PDV ) then
+    CmbBxFiltrarTipo.ItemIndex := 1; // Pesquisar por CPF/CNPJ
 end;
 
 procedure TfrmGeCliente.ProximoCampoKeyPress(Sender: TObject;
@@ -500,12 +533,14 @@ begin
   if ( Key = #13 ) then
   begin
     Key := #0;
-    //  pgcMaisDados.SelectNextPage(False);
     if ( Sender = dbHome ) then
       pgcMaisDados.ActivePage := tbsDadosAdcionais
     else
     if ( Sender = dbEntregaFracionada ) then
-      pgcMaisDados.ActivePage := tbsFinanceiro;
+      pgcMaisDados.ActivePage := tbsDadoFinanceiro
+    else
+    if ( Sender = dbPracaoCobranca ) then
+      pgcMaisDados.ActivePage := tbsObservacao;
   end;
 end;
 
@@ -589,7 +624,26 @@ end;
 procedure TfrmGeCliente.IbDtstTabelaNewRecord(DataSet: TDataSet);
 begin
   inherited;
-  IbDtstTabelaPESSOA_FISICA.AsInteger    := 1;
+  if (gSistema.Codigo = SISTEMA_PDV) then
+    if (Trim(edtFiltrar.Text) <> EmptyStr) then
+      if StrIsCPF(Trim(edtFiltrar.Text)) then
+      begin
+        IbDtstTabelaPESSOA_FISICA.AsInteger := 1;
+        IbDtstTabelaCNPJ.AsString           := Trim(edtFiltrar.Text);
+      end
+      else
+      if StrIsCNPJ(Trim(edtFiltrar.Text)) then
+      begin
+        IbDtstTabelaPESSOA_FISICA.AsInteger := 0;
+        IbDtstTabelaCNPJ.AsString           := Trim(edtFiltrar.Text);
+      end
+      else
+        IbDtstTabelaPESSOA_FISICA.AsInteger := 1
+    else
+      IbDtstTabelaPESSOA_FISICA.AsInteger := 1
+  else
+    IbDtstTabelaPESSOA_FISICA.AsInteger  := 1;
+
   IbDtstTabelaTIPO.AsInteger             := 0;
   IbDtstTabelaVALOR_LIMITE_COMPRA.Value  := 0;
   IbDtstTabelaPAIS_ID.AsString           := GetPaisIDDefault;
@@ -597,6 +651,9 @@ begin
   IbDtstTabelaEST_COD.AsInteger          := GetEstadoIDDefault;
   IbDtstTabelaEST_NOME.AsString          := GetEstadoNomeDefault;
   IbDtstTabelaUF.AsString                := GetEstadoUF(GetEstadoIDDefault);
+  IbDtstTabelaCID_COD.AsInteger          := GetCidadeIDDefault;
+  IbDtstTabelaCID_NOME.AsString          := GetCidadeNomeDefault;
+  IbDtstTabelaCIDADE.AsString            := GetCidadeNomeDefault + ' (' + IbDtstTabelaUF.AsString + ')';
   IbDtstTabelaDTCAD.AsDateTime           := GetDateDB;
   IbDtstTabelaBLOQUEADO.AsInteger             := 0; // Ord(False);
   IbDtstTabelaEMITIR_NFE_DEVOLUCAO.AsInteger  := 0; // Ord(False);
@@ -607,6 +664,11 @@ begin
   IbDtstTabelaBLOQUEADO_DATA.Clear;
   IbDtstTabelaBLOQUEADO_MOTIVO.Clear;
   IbDtstTabelaBLOQUEADO_USUARIO.Clear;
+  IbDtstTabelaBANCO.Clear;
+  IbDtstTabelaAGENCIA.Clear;
+  IbDtstTabelaCC.Clear;
+  IbDtstTabelaPRACA.Clear;
+  IbDtstTabelaOBSERVACAO.Clear;
 end;
 
 procedure TfrmGeCliente.DtSrcTabelaStateChange(Sender: TObject);
@@ -835,6 +897,9 @@ end;
 
 procedure TfrmGeCliente.BtBtnProcessoClick(Sender: TObject);
 begin
+  if not GetPermissaoRotinaInterna(Sender, True) then
+    Abort;
+
   popProcesso.Popup(BtBtnProcesso.ClientOrigin.X, BtBtnProcesso.ClientOrigin.Y + BtBtnProcesso.Height);
 end;
 
@@ -1101,6 +1166,7 @@ begin
     begin
       IbDtstTabelaCNPJ.AsString       := StrOnlyNumbers(edCNPJ.Text);
       IbDtstTabelaNOME.AsString       := Copy(Trim(EditRazaoSocial.Text), 1, IbDtstTabelaNOME.Size);
+      IbDtstTabelaNOMEFANT.AsString   := Copy(Trim(EditFantasia.Text),    1, IbDtstTabelaNOMEFANT.Size);
       IbDtstTabelaEST_COD.AsInteger   := GetEstadoID( Trim(EditUF.Text) );
       IbDtstTabelaEST_NOME.AsString   := GetEstadoNome( Trim(EditUF.Text) );
       IbDtstTabelaUF.AsString         := Trim(EditUF.Text);
@@ -1240,9 +1306,9 @@ begin
       end;
 
       if ( Pos('where', SelectSQL.Text) > 0 ) then
-        Add( '  and (e.cod_cliente = ' + IbDtstTabelaCNPJ.AsString + ')' )
+        Add( '  and (e.cod_cliente = ' + IbDtstTabelaCODIGO.AsString + ')' )
       else
-        Add( 'where (e.cod_cliente = ' + IbDtstTabelaCNPJ.AsString + ')' );
+        Add( 'where (e.cod_cliente = ' + IbDtstTabelaCODIGO.AsString + ')' );
 
       if chkProdutoComEstoque.Checked then
         Add('  and (e.quantidade > 0)');
@@ -1307,6 +1373,7 @@ begin
 
   // inherited;
   FiltarDados(CmbBxFiltrarTipo.ItemIndex);
+  CentralizarCodigo;
 end;
 
 procedure TfrmGeCliente.FiltarDados(const iTipoPesquisa: Integer);
@@ -1337,8 +1404,12 @@ begin
             if ( StrToIntDef(Trim(edtFiltrar.Text), 0) > 0 ) then
               Add( 'where ' + CampoCodigo +  ' = ' + Trim(edtFiltrar.Text) )
             else
-              Add( 'where (upper(' + CampoDescricao +  ') like ' + QuotedStr('%' + UpperCase(Trim(edtFiltrar.Text)) + '%') +
-                   '    or upper(' + CampoDescricao +  ') like ' + QuotedStr('%' + UpperCase(FuncoesString.StrRemoveAllAccents(Trim(edtFiltrar.Text))) + '%') + ')');
+            begin
+              Add( 'where ((upper(cl.Nome) like ' + QuotedStr(UpperCase(Trim(edtFiltrar.Text)) + '%') +
+                   '     or upper(cl.Nome) like ' + QuotedStr(UpperCase(FuncoesString.StrRemoveAllAccents(Trim(edtFiltrar.Text))) + '%') + '))');
+              Add( '   or ((upper(cl.Nomefant) like ' + QuotedStr(UpperCase(Trim(edtFiltrar.Text)) + '%') +
+                   '     or upper(cl.Nomefant) like ' + QuotedStr(UpperCase(FuncoesString.StrRemoveAllAccents(Trim(edtFiltrar.Text))) + '%') + '))');
+            end;
 
           // Por CPF/CNPJ
           1:
@@ -1429,6 +1500,26 @@ begin
   end
   else
     inherited;
+end;
+
+procedure TfrmGeCliente.RegistrarNovaRotinaSistema;
+begin
+  if ( Trim(RotinaID) <> EmptyStr ) then
+  begin
+    if BtBtnProcesso.Visible then
+      SetRotinaSistema(ROTINA_TIPO_FUNCAO, RotinaBloqueioID, BtBtnProcesso.Hint, RotinaID);
+  end;
+end;
+
+function TfrmGeCliente.GetRotinaBloqueioID: String;
+begin
+  Result := GetRotinaInternaID(BtBtnProcesso);
+end;
+
+procedure TfrmGeCliente.FormShow(Sender: TObject);
+begin
+  inherited;
+  RegistrarNovaRotinaSistema;
 end;
 
 initialization
