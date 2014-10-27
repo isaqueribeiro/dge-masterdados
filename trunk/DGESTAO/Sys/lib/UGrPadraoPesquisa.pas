@@ -109,11 +109,12 @@ procedure TfrmGrPadraoPesquisa.dbgDadosKeyPress(Sender: TObject;
 begin
   inherited;
   if ( Key in ['0'..'9', 'a'..'z', 'A'..'Z', ' '] ) then
-  begin
-    edPesquisar.Text := Trim(Key);
-    edPesquisar.SetFocus;
-    edPesquisar.SelStart := Length(edPesquisar.Text);
-  end;
+    if edPesquisar.Visible and edPesquisar.Enabled then
+    begin
+      edPesquisar.Text := Trim(Key);
+      edPesquisar.SetFocus;
+      edPesquisar.SelStart := Length(edPesquisar.Text);
+    end;
 end;
 
 procedure TfrmGrPadraoPesquisa.FormClose(Sender: TObject;
@@ -125,7 +126,8 @@ end;
 
 procedure TfrmGrPadraoPesquisa.RegistrarRotinaSistema;
 begin
-  ;
+  if ( Trim(RotinaID) <> EmptyStr ) then
+    SetRotinaSistema(ROTINA_TIPO_TELA, RotinaID, Trim(Self.Caption), RotinaPaiID);
 end;
 
 end.
