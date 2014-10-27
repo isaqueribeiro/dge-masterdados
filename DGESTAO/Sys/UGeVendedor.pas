@@ -39,11 +39,13 @@ var
   frmGeVendedor: TfrmGeVendedor;
 
   procedure MostrarTabelaVendedores(const AOwner : TComponent);
+
   function SelecionarVendedor(const AOwner : TComponent; var Codigo : Integer; var Nome : String) : Boolean;
+  function SelecionarVendedorPDV(const AOwner : TComponent; var Codigo : Integer; var Nome : String) : Boolean;
 
 implementation
 
-uses UDMBusiness;
+uses UDMBusiness, UConstantesDGE;
 
 {$R *.dfm}
 
@@ -71,9 +73,32 @@ begin
   end;
 end;
 
+function SelecionarVendedorPDV(const AOwner : TComponent; var Codigo : Integer; var Nome : String) : Boolean;
+var
+  frm : TfrmGeVendedor;
+begin
+  frm := TfrmGeVendedor.Create(AOwner);
+  try
+    frm.btbtnIncluir.Visible  := False;
+    frm.btbtnAlterar.Visible  := False;
+    frm.btbtnExcluir.Visible  := False;
+    frm.btbtnCancelar.Visible := False;
+    frm.btbtnSalvar.Visible   := False;
+    frm.btbtnLista.Visible    := False;
+    frm.btbtnFechar.Visible   := False;
+
+    frm.AbrirTabelaAuto := True;
+
+    Result := frm.SelecionarRegistro(Codigo, Nome);
+  finally
+    frm.Destroy;
+  end;
+end;
+
 procedure TfrmGeVendedor.FormCreate(Sender: TObject);
 begin
   inherited;
+  RotinaID            := ROTINA_CAD_VENDEDOR_ID;
   ControlFirstEdit    := dbNome;
   DisplayFormatCodigo := '000';
   NomeTabela     := 'TBVENDEDOR';

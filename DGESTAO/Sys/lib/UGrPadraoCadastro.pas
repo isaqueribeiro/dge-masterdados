@@ -3,10 +3,13 @@ unit UGrPadraoCadastro;
 interface
 
 uses
+  {$IFDEF DGE}
+  EUserAcs,
+  {$ENDIF}
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DB, UGrPadrao, UInfoVersao, IBCustomDataSet, StdCtrls, Buttons, ExtCtrls, Grids,
   DBGrids, ComCtrls, ToolWin, Mask, DBCtrls, IBUpdateSQL, ImgList, TypInfo,
-  DBClient, frxClass, EUserAcs;
+  DBClient, frxClass;
 
 type
   TfrmGrPadraoCadastro = class(TfrmGrPadrao)
@@ -495,7 +498,7 @@ begin
             Add( 'where (upper(' + CampoDescricao +  ') like ' + QuotedStr('%' + UpperCase(Trim(edtFiltrar.Text)) + '%') +
                  '    or upper(' + CampoDescricao +  ') like ' + QuotedStr('%' + UpperCase(FuncoesString.StrRemoveAllAccents(Trim(edtFiltrar.Text))) + '%') + ')');
 
-        if ( fWhereAdditional <> EmptyStr ) then
+        if (WhereAdditional <> EmptyStr ) then
           if ( Pos('where', SelectSQL.Text) > 0 ) then
             Add( '  and (' + WhereAdditional + ')' )
           else
@@ -507,15 +510,16 @@ begin
 
         try
 
-          if ( not IsEmpty ) then
-            dbgDados.SetFocus
-          else
-          begin
-            ShowWarning('Não existe registros na tabela para este tipo de pesquisa');
+          if Showing then
+            if ( not IsEmpty ) then
+              dbgDados.SetFocus
+            else
+            begin
+              ShowWarning('Não existe registros na tabela para este tipo de pesquisa');
 
-            edtFiltrar.SetFocus;
-            edtFiltrar.SelectAll;
-          end;
+              edtFiltrar.SetFocus;
+              edtFiltrar.SelectAll;
+            end;
 
         except
         end;
@@ -777,7 +781,7 @@ begin
       RegistrarControleAcesso(Self, TEvUserAccess(Components[I]));
       GetControleAcesso(Self, TEvUserAccess(Components[I]));
     end;
-{$ENDIF}    
+{$ENDIF}
 end;
 
 procedure TfrmGrPadraoCadastro.SetVariablesDefault(

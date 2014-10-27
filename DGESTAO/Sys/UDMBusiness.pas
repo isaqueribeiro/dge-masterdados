@@ -3,12 +3,15 @@ unit UDMBusiness;
 interface
 
 uses
+  {$IFDEF DGE}
+  EUserAcs,
+  {$ENDIF}
   Windows, Forms, SysUtils, Classes, Controls, IBDatabase, DB, IBCustomDataSet, IniFIles,
   ShellApi, Printers, DateUtils, IBQuery, RpDefine, RpRave,
   frxClass, frxDBSet, EMsgDlg, IdBaseComponent, IdComponent, IdIPWatch, IBStoredProc,
   FuncoesFormulario, UConstantesDGE, IBUpdateSQL, DBClient,
   Provider, Dialogs, Registry, frxChart, frxCross, frxRich, frxExportMail,
-  frxExportImage, frxExportRTF, frxExportXLS, frxExportPDF, EUserAcs;
+  frxExportImage, frxExportRTF, frxExportXLS, frxExportPDF;
 
 type
   TSistema = record
@@ -123,6 +126,7 @@ type
     frxCrossObject: TfrxCrossObject;
     frxChartObject: TfrxChartObject;
     ibdtstUsersVENDEDOR: TIntegerField;
+    fastReport: TfrxReport;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -167,7 +171,9 @@ var
 
   function IfThen(AValue: Boolean; const ATrue: string; AFalse: string = ''): string; overload;
   function IfThen(AValue: Boolean; const ATrue: TDateTime; AFalse: TDateTime = 0): TDateTime; overload;
+  function IfThen(AValue: Boolean; const ATrue: Integer; AFalse: Integer = 0): Integer; overload;
   function NetWorkActive(const Alertar : Boolean = FALSE) : Boolean;
+  function DataBaseOnLine : Boolean;
 
   function ShowConfirmation(sTitle, sMsg : String) : Boolean; overload;
   function ShowConfirmation(sMsg : String) : Boolean; overload;
@@ -180,6 +186,7 @@ var
   procedure ShowStop(sTitulo, sMsg : String); overload;
   procedure ShowError(sMsg : String);
   procedure UpdateSequence(GeneratorName, NomeTabela, CampoChave : String; const sWhr : String = '');
+  procedure ExecuteScriptSQL(sScriptSQL : String);
   procedure CommitTransaction;
 
   procedure GetDataSet(const FDataSet : TClientDataSet; const sNomeTabela, sQuando, sOrdernarPor : String);
@@ -219,6 +226,7 @@ var
   function GetEstacaoEmitiBoleto : Boolean;
   function GetEstacaoEmitiNFe : Boolean;
   function GetCondicaoPagtoIDBoleto_Descontinuada : Integer;  // Descontinuada
+  function GetEmitirApenasOrcamento : Boolean;
   function GetEmitirCupom : Boolean;
   function GetEmitirCupomAutomatico : Boolean;
   function GetModeloEmissaoCupom : Integer;
@@ -312,6 +320,7 @@ var
   function GetExisteCPF_CNPJ(iCodigoCliente : Integer; sCpfCnpj : String; var iCodigo : Integer; var sRazao : String) : Boolean;
   function GetExisteNumeroAutorizacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
   function GetExisteNumeroCotacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+  function GetExisteNumeroRequisicao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
   function GetMenorVencimentoAPagar : TDateTime;
   function GetCarregarProdutoCodigoBarra(const sCNPJEmitente : String) : Boolean;
   function GetCarregarProdutoCodigoBarraLocal : Boolean;
@@ -332,7 +341,8 @@ const
   DB_USER_PASSWORD = 'masterkey';
   DB_LC_CTYPE      = 'ISO8859_2';
 
-  MODELO_CUPOM_POOLER = 0;
+  MODELO_CUPOM_POOLER    = 0;
+  MODELO_CUPOM_ORCAMENTO = 0;
 
   BOLETO_ARQUIVO_LOGOTIPO = 'Imagens\Emitente.gif'; //gif
   BOLETO_IMAGENS          = 'Imagens\';
@@ -360,9 +370,19 @@ const
   STATUS_AUTORIZACAO_FAT = 3;
   STATUS_AUTORIZACAO_CAN = 4;
 
+  STATUS_REQUISICAO_EDC = STATUS_AUTORIZACAO_EDC;
+  STATUS_REQUISICAO_ABR = STATUS_AUTORIZACAO_ABR;
+  STATUS_REQUISICAO_REQ = STATUS_AUTORIZACAO_AUT;
+  STATUS_REQUISICAO_FAT = STATUS_AUTORIZACAO_FAT;
+  STATUS_REQUISICAO_CAN = STATUS_AUTORIZACAO_CAN;
+
   TIPO_AUTORIZACAO_COMPRA         = 1;
   TIPO_AUTORIZACAO_SERVICO        = 2;
   TIPO_AUTORIZACAO_COMPRA_SERVICO = 3;
+
+  TIPO_REQUISICAO_COMPRA         = TIPO_AUTORIZACAO_COMPRA;
+  TIPO_REQUISICAO_SERVICO        = TIPO_AUTORIZACAO_SERVICO;
+  TIPO_REQUISICAO_COMPRA_SERVICO = TIPO_AUTORIZACAO_COMPRA_SERVICO;
 
   TIPO_COTACAO_COMPRA         = TIPO_AUTORIZACAO_COMPRA;
   TIPO_COTACAO_SERVICO        = TIPO_AUTORIZACAO_SERVICO;
@@ -394,6 +414,14 @@ begin
 end;
 
 function IfThen(AValue: Boolean; const ATrue: TDateTime; AFalse: TDateTime = 0): TDateTime; 
+begin
+  if AValue then
+    Result := ATrue
+  else
+    Result := AFalse;
+end;
+
+function IfThen(AValue: Boolean; const ATrue: Integer; AFalse: Integer = 0): Integer;
 begin
   if AValue then
     Result := ATrue
@@ -540,6 +568,11 @@ begin
   end;
 end;
 
+function DataBaseOnLine : Boolean;
+begin
+  Result := DMBusiness.ibdtbsBusiness.Connected;
+end;
+
 function ShowConfirmation(sTitle, sMsg : String) : Boolean;
 var
   fMsg : TfrmGeMessage;
@@ -548,7 +581,7 @@ begin
     try
       fMsg := TfrmGeMessage.Create(Application);
       fMsg.Confirmar(sTitle, sMsg);
-      
+
       Result := (fMsg.ShowModal = mrYes);
     finally
       fMsg.Free;
@@ -697,6 +730,19 @@ begin
     Close;
     SQL.Clear;
     SQL.Add('ALTER SEQUENCE ' + GeneratorName + ' RESTART WITH ' + IntToStr(ID));
+    ExecSQL;
+
+    CommitTransaction;
+  end;
+end;
+
+procedure ExecuteScriptSQL(sScriptSQL : String);
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add( Trim(sScriptSQL) );
     ExecSQL;
 
     CommitTransaction;
@@ -1180,6 +1226,11 @@ end;
 function GetCondicaoPagtoIDBoleto_Descontinuada : Integer; // Descontinuada
 begin
   Result := FileINI.ReadInteger('Boleto', INI_KEY_FORMA_PGTO, 1);
+end;
+
+function GetEmitirApenasOrcamento : Boolean;
+begin
+  Result := FileINI.ReadBool(INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_ORCAM, False);
 end;
 
 function GetEmitirCupom : Boolean;
@@ -2402,6 +2453,33 @@ begin
     SQL.Add('  and (not (');
     SQL.Add('           a.ano    = ' + IntToStr(iAno));
     SQL.Add('       and a.codigo = ' + IntToStr(iCodigo));
+    SQL.Add('  ))');
+    Open;
+
+    Result := (FieldByName('codigo').AsInteger > 0);
+
+    if Result then
+      sControleInterno := Trim(FieldByName('ano').AsString) + '/' + FormatFloat('###0000000', FieldByName('codigo').AsInteger);
+
+    Close;
+  end;
+end;
+
+function GetExisteNumeroRequisicao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('    r.ano');
+    SQL.Add('  , r.codigo');
+    SQL.Add('  , r.numero');
+    SQL.Add('from TBREQUISITA_COMPRA r');
+    SQL.Add('where r.Numero  = ' + QuotedStr(Trim(sNumero)));
+    SQL.Add('  and (not (');
+    SQL.Add('           r.ano    = ' + IntToStr(iAno));
+    SQL.Add('       and r.codigo = ' + IntToStr(iCodigo));
     SQL.Add('  ))');
     Open;
 
