@@ -30486,3 +30486,909 @@ order by
 
 GRANT SELECT, UPDATE, DELETE, INSERT, REFERENCES ON VW_TABELA_IBPT TO "PUBLIC";
 
+
+
+
+/*------ SYSDBA 29/10/2014 15:25:55 --------*/
+
+ALTER TABLE SYS_IBPT DROP CONSTRAINT UNQ_SYS_IBPT;
+
+
+
+
+/*------ SYSDBA 29/10/2014 15:26:09 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_VCHAR_10_KEY'
+where (RDB$FIELD_NAME = 'NCM_IBPT') and
+(RDB$RELATION_NAME = 'SYS_IBPT')
+;
+
+
+
+
+/*------ SYSDBA 29/10/2014 15:26:39 --------*/
+
+CREATE DOMAIN DMN_VCHAR_03_NN AS
+VARCHAR(3)
+NOT NULL;
+
+
+/*------ SYSDBA 29/10/2014 15:26:48 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_VCHAR_03_NN'
+where (RDB$FIELD_NAME = 'EX_IBPT') and
+(RDB$RELATION_NAME = 'SYS_IBPT')
+;
+
+
+
+
+/*------ SYSDBA 29/10/2014 15:26:55 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_VCHAR_03_NN'
+where (RDB$FIELD_NAME = 'TABELA_IBPT') and
+(RDB$RELATION_NAME = 'SYS_IBPT')
+;
+
+
+
+
+/*------ SYSDBA 29/10/2014 15:27:02 --------*/
+
+ALTER TABLE SYS_IBPT ADD IBE$$TEMP_COLUMN
+ VARCHAR(1) DEFAULT '0'
+;
+
+UPDATE RDB$RELATION_FIELDS F1
+SET
+F1.RDB$DEFAULT_VALUE  = (SELECT F2.RDB$DEFAULT_VALUE
+                         FROM RDB$RELATION_FIELDS F2
+                         WHERE (F2.RDB$RELATION_NAME = 'SYS_IBPT') AND
+                               (F2.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN')),
+F1.RDB$DEFAULT_SOURCE = (SELECT F3.RDB$DEFAULT_SOURCE FROM RDB$RELATION_FIELDS F3
+                         WHERE (F3.RDB$RELATION_NAME = 'SYS_IBPT') AND
+                               (F3.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN'))
+WHERE (F1.RDB$RELATION_NAME = 'SYS_IBPT') AND
+      (F1.RDB$FIELD_NAME = 'EX_IBPT');
+
+ALTER TABLE SYS_IBPT DROP IBE$$TEMP_COLUMN;
+
+
+
+
+/*------ SYSDBA 29/10/2014 15:27:10 --------*/
+
+ALTER TABLE SYS_IBPT ADD IBE$$TEMP_COLUMN
+ VARCHAR(1) DEFAULT '0'
+;
+
+UPDATE RDB$RELATION_FIELDS F1
+SET
+F1.RDB$DEFAULT_VALUE  = (SELECT F2.RDB$DEFAULT_VALUE
+                         FROM RDB$RELATION_FIELDS F2
+                         WHERE (F2.RDB$RELATION_NAME = 'SYS_IBPT') AND
+                               (F2.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN')),
+F1.RDB$DEFAULT_SOURCE = (SELECT F3.RDB$DEFAULT_SOURCE FROM RDB$RELATION_FIELDS F3
+                         WHERE (F3.RDB$RELATION_NAME = 'SYS_IBPT') AND
+                               (F3.RDB$FIELD_NAME = 'IBE$$TEMP_COLUMN'))
+WHERE (F1.RDB$RELATION_NAME = 'SYS_IBPT') AND
+      (F1.RDB$FIELD_NAME = 'TABELA_IBPT');
+
+ALTER TABLE SYS_IBPT DROP IBE$$TEMP_COLUMN;
+
+
+
+
+/*------ SYSDBA 29/10/2014 15:27:31 --------*/
+
+ALTER TABLE SYS_IBPT
+ADD CONSTRAINT UNQ_SYS_NCM_IBPT
+UNIQUE (NCM_IBPT,EX_IBPT);
+
+
+
+
+/*------ SYSDBA 30/10/2014 09:18:04 --------*/
+
+COMMENT ON COLUMN SYS_IBPT.TABELA_IBPT IS
+'Tipo Tabela:
+0    - Produtos
+1..2 - Servicos';
+
+
+
+
+/*------ SYSDBA 30/10/2014 09:58:10 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO DROP CONSTRAINT PK_TBNFE_CARTA_CORRECAO;
+
+
+
+
+/*------ SYSDBA 30/10/2014 09:59:29 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO
+ADD CONSTRAINT PK_TBNFE_CARTA_CORRECAO
+PRIMARY KEY (CCE_NUMERO);
+
+
+
+
+/*------ SYSDBA 30/10/2014 10:00:04 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO
+    ADD CCE_EMPRESA DMN_CNPJ_NN;
+
+COMMENT ON COLUMN TBNFE_CARTA_CORRECAO.CCE_EMPRESA IS
+'Empresa.';
+
+alter table TBNFE_CARTA_CORRECAO
+alter CCE_NUMERO position 1;
+
+alter table TBNFE_CARTA_CORRECAO
+alter CCE_EMPRESA position 2;
+
+alter table TBNFE_CARTA_CORRECAO
+alter CCE_DATA position 3;
+
+alter table TBNFE_CARTA_CORRECAO
+alter CCE_HORA position 4;
+
+alter table TBNFE_CARTA_CORRECAO
+alter NFE_SERIE position 5;
+
+alter table TBNFE_CARTA_CORRECAO
+alter NFE_NUMERO position 6;
+
+
+
+
+/*------ SYSDBA 30/10/2014 10:00:33 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO
+ADD CONSTRAINT FK_TBNFE_CARTA_CORRECAO_EMP
+FOREIGN KEY (CCE_EMPRESA)
+REFERENCES TBEMPRESA(CNPJ);
+
+
+
+
+/*------ SYSDBA 30/10/2014 10:00:47 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO DROP CONSTRAINT FK_TBNFE_CARTA_CORRECAO_EMP;
+
+ALTER TABLE TBNFE_CARTA_CORRECAO
+ADD CONSTRAINT FK_TBNFE_CARTA_CORRECAO_EMP
+FOREIGN KEY (CCE_EMPRESA)
+REFERENCES TBEMPRESA(CNPJ)
+ON UPDATE CASCADE
+USING INDEX FK_TBNFE_CARTA_CORRECAO_EMP;
+
+
+
+
+/*------ SYSDBA 30/10/2014 10:01:18 --------*/
+
+ALTER TABLE TBNFE_ENVIADA DROP CONSTRAINT PK_TBNFE_ENVIADA;
+
+
+/*------ SYSDBA 30/10/2014 10:02:46 --------*/
+
+Update TBNFE_ENVIADA nfx nfx.modelo = 0 WHere nfx nfx.modelo is null;
+
+/*!!! Error occured !!!
+Invalid token.
+Dynamic SQL Error.
+SQL error code = -104.
+Token unknown - line 1, column 26.
+nfx.
+
+*/
+
+/*------ SYSDBA 30/10/2014 10:02:57 --------*/
+
+Update TBNFE_ENVIADA nfx Set nfx.modelo = 0 WHere nfx nfx.modelo is null;
+
+/*!!! Error occured !!!
+Invalid token.
+Dynamic SQL Error.
+SQL error code = -104.
+Token unknown - line 1, column 55.
+nfx.
+
+*/
+
+/*------ SYSDBA 30/10/2014 10:03:05 --------*/
+
+Update TBNFE_ENVIADA nfx Set nfx.modelo = 0 WHere nfx.modelo is null;
+
+/*------ SYSDBA 30/10/2014 10:03:09 --------*/
+
+COMMIT WORK;
+
+
+
+/*------ SYSDBA 30/10/2014 10:04:58 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_SMALLINT_NN'
+where (RDB$FIELD_NAME = 'MODELO') and
+(RDB$RELATION_NAME = 'TBNFE_ENVIADA')
+;
+
+
+
+
+/*------ SYSDBA 30/10/2014 10:05:53 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_CNPJ_NN'
+where (RDB$FIELD_NAME = 'EMPRESA') and
+(RDB$RELATION_NAME = 'TBNFE_ENVIADA')
+;
+
+
+
+
+/*------ SYSDBA 30/10/2014 10:06:04 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$NULL_FLAG = 1
+where (RDB$FIELD_NAME = 'MODELO') and
+(RDB$RELATION_NAME = 'TBNFE_ENVIADA')
+;
+
+
+
+
+/*------ SYSDBA 30/10/2014 10:06:40 --------*/
+
+ALTER TABLE TBNFE_ENVIADA
+ADD CONSTRAINT PK_TBNFE_ENVIADA
+PRIMARY KEY (EMPRESA,SERIE,NUMERO,MODELO);
+
+
+
+
+/*------ SYSDBA 30/10/2014 10:08:57 --------*/
+
+DROP INDEX IDX_TBNFE_CARTA_CORRECAO;
+
+
+
+
+/*------ SYSDBA 30/10/2014 10:11:29 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO DROP NFE_SERIE;
+
+
+
+
+/*------ SYSDBA 30/10/2014 10:11:35 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO DROP NFE_NUMERO;
+
+
+
+
+/*------ SYSDBA 30/10/2014 13:28:02 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO
+    ADD CCE_ENVIADA DMN_LOGICO DEFAULT 0;
+
+COMMENT ON COLUMN TBNFE_CARTA_CORRECAO.CCE_ENVIADA IS
+'CC-e enviada:
+0 - Nao
+1 - Sim';
+
+
+
+
+/*------ SYSDBA 30/10/2014 14:28:40 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO
+    ADD NFE_SERIE DMN_VCHAR_03_NN,
+    ADD NFE_NUMERO DMN_BIGINT_NN,
+    ADD NFE_MODELO DMN_SMALLINT_NN DEFAULT 0 NOT NULL;
+
+COMMENT ON COLUMN TBNFE_CARTA_CORRECAO.NFE_SERIE IS
+'Serie da Nota Fiscal.';
+
+COMMENT ON COLUMN TBNFE_CARTA_CORRECAO.NFE_NUMERO IS
+'Numero da Nota Fiscal.';
+
+COMMENT ON COLUMN TBNFE_CARTA_CORRECAO.NFE_MODELO IS
+'Modelo da Nota Fiscal.';
+
+
+
+
+/*------ SYSDBA 30/10/2014 14:29:58 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO
+ADD CONSTRAINT FK_TBNFE_CARTA_CORRECAO_NFE
+FOREIGN KEY (CCE_EMPRESA,NFE_SERIE,NFE_NUMERO,NFE_MODELO)
+REFERENCES TBNFE_ENVIADA(EMPRESA,SERIE,NUMERO,MODELO);
+
+
+
+
+/*------ SYSDBA 30/10/2014 14:38:42 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO
+    ADD NUMERO DMN_BIGINT_N,
+    ADD PROTOCOLO DMN_VCHAR_250,
+    ADD XML DMN_TEXTO;
+
+COMMENT ON COLUMN TBNFE_CARTA_CORRECAO.NUMERO IS
+'Retorno CCe: Sequencial do Evento.';
+
+COMMENT ON COLUMN TBNFE_CARTA_CORRECAO.PROTOCOLO IS
+'Retorno CCe: Protocolo do Evento.';
+
+COMMENT ON COLUMN TBNFE_CARTA_CORRECAO.XML IS
+'Retorno CCe: XML de Resposta.';
+
+
+
+
+/*------ SYSDBA 30/10/2014 16:32:49 --------*/
+
+CREATE SEQUENCE GEN_CARTA_CORRECAO;
+
+COMMENT ON SEQUENCE GEN_CARTA_CORRECAO IS 'Sequencial para Carta de Correcao Eletronica de NF-e.';
+
+
+
+
+/*------ SYSDBA 30/10/2014 16:34:01 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_carta_correcao_nova for tbnfe_carta_correcao
+active before insert position 0
+AS
+begin
+  if ( new.cce_numero is null ) then
+    new.cce_numero = GEN_ID(GEN_CARTA_CORRECAO, 1);
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 30/10/2014 16:34:28 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_carta_correcao_nova for tbnfe_carta_correcao
+active before insert position 0
+AS
+begin
+  if ( coalesce(new.cce_numero, 0) = 0 ) then
+    new.cce_numero = GEN_ID(GEN_CARTA_CORRECAO, 1);
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 30/10/2014 16:35:28 --------*/
+
+DROP TRIGGER IBPT_BI;
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_ibpt_novo for sys_ibpt
+active before insert position 0
+as
+begin
+  if (new.id_ibpt is null) then
+    new.id_ibpt = gen_id(gen_ibpt_id, 1);
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 30/10/2014 16:36:00 --------*/
+
+DROP TRIGGER TG_IBPT_NOVO;
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_ibpt_cod for sys_ibpt
+active before insert position 0
+as
+begin
+  if (new.id_ibpt is null) then
+    new.id_ibpt = gen_id(gen_ibpt_id, 1);
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 30/10/2014 16:36:19 --------*/
+
+DROP TRIGGER TG_CARTA_CORRECAO_NOVA;
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_carta_correcao_cod for tbnfe_carta_correcao
+active before insert position 0
+AS
+begin
+  if ( coalesce(new.cce_numero, 0) = 0 ) then
+    new.cce_numero = GEN_ID(GEN_CARTA_CORRECAO, 1);
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 30/10/2014 16:36:37 --------*/
+
+COMMENT ON COLUMN TBNFE_CARTA_CORRECAO.CCE_NUMERO IS
+'Numero/Codigo.';
+
+
+
+
+/*------ SYSDBA 30/10/2014 16:37:05 --------*/
+
+DROP TRIGGER TG_DISTRITO_BI;
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_distrito_cod for tbdistrito
+active before insert position 0
+As
+Begin
+  If (New.Dis_cod Is Null) Then
+    New.Dis_cod = Gen_id(Gen_distrito_id, 1);
+End^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/11/2014 19:04:27 --------*/
+
+CREATE DOMAIN DMN_TEXTO_BINARY AS
+BLOB SUB_TYPE 0 SEGMENT SIZE 80;
+
+
+/*------ SYSDBA 03/11/2014 19:06:16 --------*/
+
+ALTER TABLE TBPRODUTO
+    ADD METAFONEMA DMN_VCHAR_100,
+    ADD ESPECIFICACAO DMN_TEXTO_BINARY;
+
+COMMENT ON COLUMN TBPRODUTO.METAFONEMA IS
+'Metafonema de [Descricao + Apresentacao]';
+
+COMMENT ON COLUMN TBPRODUTO.ESPECIFICACAO IS
+'Especificacao';
+
+alter table TBPRODUTO
+alter CODIGO position 1;
+
+alter table TBPRODUTO
+alter COD position 2;
+
+alter table TBPRODUTO
+alter DESCRI position 3;
+
+alter table TBPRODUTO
+alter APRESENTACAO position 4;
+
+alter table TBPRODUTO
+alter DESCRI_APRESENTACAO position 5;
+
+alter table TBPRODUTO
+alter METAFONEMA position 6;
+
+alter table TBPRODUTO
+alter MODELO position 7;
+
+alter table TBPRODUTO
+alter PRECO position 8;
+
+alter table TBPRODUTO
+alter PRECO_PROMOCAO position 9;
+
+alter table TBPRODUTO
+alter REFERENCIA position 10;
+
+alter table TBPRODUTO
+alter ESPECIFICACAO position 11;
+
+alter table TBPRODUTO
+alter SECAO position 12;
+
+alter table TBPRODUTO
+alter QTDE position 13;
+
+alter table TBPRODUTO
+alter FRACIONADOR position 14;
+
+alter table TBPRODUTO
+alter PESO_BRUTO position 15;
+
+alter table TBPRODUTO
+alter PESO_LIQUIDO position 16;
+
+alter table TBPRODUTO
+alter CUBAGEM position 17;
+
+alter table TBPRODUTO
+alter VENDA_FRACIONADA position 18;
+
+alter table TBPRODUTO
+alter CODUNIDADE_FRACIONADA position 19;
+
+alter table TBPRODUTO
+alter UNIDADE position 20;
+
+alter table TBPRODUTO
+alter ESTOQMIN position 21;
+
+alter table TBPRODUTO
+alter CODGRUPO position 22;
+
+alter table TBPRODUTO
+alter CODFABRICANTE position 23;
+
+alter table TBPRODUTO
+alter CUSTOMEDIO position 24;
+
+alter table TBPRODUTO
+alter PERCENTUAL_MARCKUP position 25;
+
+alter table TBPRODUTO
+alter PERCENTUAL_MARGEM position 26;
+
+alter table TBPRODUTO
+alter PRECO_SUGERIDO position 27;
+
+alter table TBPRODUTO
+alter CODEMP position 28;
+
+alter table TBPRODUTO
+alter CODSECAO position 29;
+
+alter table TBPRODUTO
+alter CODORIGEM position 30;
+
+alter table TBPRODUTO
+alter CODTRIBUTACAO position 31;
+
+alter table TBPRODUTO
+alter CST position 32;
+
+alter table TBPRODUTO
+alter CSOSN position 33;
+
+alter table TBPRODUTO
+alter CST_PIS position 34;
+
+alter table TBPRODUTO
+alter CST_COFINS position 35;
+
+alter table TBPRODUTO
+alter NCM_SH position 36;
+
+alter table TBPRODUTO
+alter CODIGO_NVE position 37;
+
+alter table TBPRODUTO
+alter CODCFOP position 38;
+
+alter table TBPRODUTO
+alter CODBARRA_EAN position 39;
+
+alter table TBPRODUTO
+alter CODUNIDADE position 40;
+
+alter table TBPRODUTO
+alter ALIQUOTA_TIPO position 41;
+
+alter table TBPRODUTO
+alter ALIQUOTA position 42;
+
+alter table TBPRODUTO
+alter ALIQUOTA_CSOSN position 43;
+
+alter table TBPRODUTO
+alter ALIQUOTA_PIS position 44;
+
+alter table TBPRODUTO
+alter ALIQUOTA_COFINS position 45;
+
+alter table TBPRODUTO
+alter VALOR_IPI position 46;
+
+alter table TBPRODUTO
+alter RESERVA position 47;
+
+alter table TBPRODUTO
+alter PRODUTO_NOVO position 48;
+
+alter table TBPRODUTO
+alter COR_VEICULO position 49;
+
+alter table TBPRODUTO
+alter COMBUSTIVEL_VEICULO position 50;
+
+alter table TBPRODUTO
+alter TIPO_VEICULO position 51;
+
+alter table TBPRODUTO
+alter ANO_MODELO_VEICULO position 52;
+
+alter table TBPRODUTO
+alter ANO_FABRICACAO_VEICULO position 53;
+
+alter table TBPRODUTO
+alter RENAVAM_VEICULO position 54;
+
+alter table TBPRODUTO
+alter CHASSI_VEICULO position 55;
+
+alter table TBPRODUTO
+alter KILOMETRAGEM_VEICULO position 56;
+
+alter table TBPRODUTO
+alter SITUACAO_ATUAL_VEICULO position 57;
+
+alter table TBPRODUTO
+alter SITUACAO_HISTORICO_VEICULO position 58;
+
+alter table TBPRODUTO
+alter PERCENTUAL_REDUCAO_BC position 59;
+
+alter table TBPRODUTO
+alter USUARIO position 60;
+
+alter table TBPRODUTO
+alter MOVIMENTA_ESTOQUE position 61;
+
+alter table TBPRODUTO
+alter COMPOR_FATURAMENTO position 62;
+
+alter table TBPRODUTO
+alter CUST_DESP_OFIC position 63;
+
+alter table TBPRODUTO
+alter CUST_DESP_GERAIS position 64;
+
+alter table TBPRODUTO
+alter CUST_DESP_ADM position 65;
+
+alter table TBPRODUTO
+alter CUST_COMISSAO position 66;
+
+alter table TBPRODUTO
+alter CUST_IMPOSTO position 67;
+
+alter table TBPRODUTO
+alter FI_RET_FINANC position 68;
+
+alter table TBPRODUTO
+alter FI_RET_PLANO position 69;
+
+
+
+
+/*------ SYSDBA 03/11/2014 19:08:03 --------*/
+
+COMMENT ON TABLE TBPRODUTO IS 'Tabela Produtos/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   01/01/2013
+
+Tabela responsavel por armazenar todos os registros de todos os produtos e/ou servicos necessarios as movimentacoes de
+entrada e saida.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    30/05/2014 - IMR :
+        + Criacao do campo COMPOR_FATURAMENTO que ira permitir ao sistema saber quais produtos/servicos haverao de compor
+          o faturamento da empresa e quais sao de consumo interno.
+    03/11/2014 - IMR :
+        + Criacao dos campos METAFONEMA para auxiliar da pesquisa de produtos homonimos e o campo ESPECIFICACAO como
+          campo para especificar de maneira textual o produto/servico.';
+
+
+
+
+/*------ SYSDBA 03/11/2014 19:08:16 --------*/
+
+COMMENT ON TABLE TBPRODUTO IS 'Tabela Produtos/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   01/01/2013
+
+Tabela responsavel por armazenar todos os registros de todos os produtos e/ou servicos necessarios as movimentacoes de
+entrada e saida.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    30/05/2014 - IMR :
+        + Criacao do campo COMPOR_FATURAMENTO que ira permitir ao sistema saber quais produtos/servicos haverao de compor
+          o faturamento da empresa e quais sao de consumo interno.
+
+    03/11/2014 - IMR :
+        + Criacao dos campos METAFONEMA para auxiliar da pesquisa de produtos homonimos e o campo ESPECIFICACAO como
+          campo para especificar de maneira textual o produto/servico.';
+
+
+
+
+/*------ SYSDBA 03/11/2014 19:08:33 --------*/
+
+COMMENT ON TABLE TBPRODUTO IS 'Tabela Produtos/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   01/01/2013
+
+Tabela responsavel por armazenar todos os registros de todos os produtos e/ou servicos necessarios as movimentacoes de
+entrada e saida.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    30/05/2014 - IMR :
+        + Criacao do campo COMPOR_FATURAMENTO que ira permitir ao sistema saber quais produtos/servicos haverao de compor
+          o faturamento da empresa e quais sao de consumo interno.
+
+    03/11/2014 - IMR :
+        + Criacao do campo METAFONEMA para auxiliar da pesquisa de produtos homonimos e o campo ESPECIFICACAO como
+          campo para especificar de maneira textual o produto/servico.';
+
+
+
+
+/*------ SYSDBA 03/11/2014 19:09:02 --------*/
+
+COMMENT ON TABLE TBPRODUTO IS 'Tabela Produtos/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   01/01/2013
+
+Tabela responsavel por armazenar todos os registros de todos os produtos e/ou servicos necessarios as movimentacoes de
+entrada e saida.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    30/05/2014 - IMR :
+        + Criacao do campo COMPOR_FATURAMENTO que ira permitir ao sistema saber quais produtos/servicos haverao de compor
+          o faturamento da empresa e quais sao de consumo interno.
+
+    03/11/2014 - IMR :
+        + Criacao do campo METAFONEMA para auxiliar da pesquisa de produtos homonimos e o campo ESPECIFICACAO como
+          campo para especificar de maneira textual o produto/servico, muito utilizado em processos de cotacao.';
+
+
+
+
+/*------ SYSDBA 03/11/2014 19:55:35 --------*/
+
+CREATE INDEX IDX_TBPRODUTO_DESCRICAO
+ON TBPRODUTO (DESCRI,APRESENTACAO,DESCRI_APRESENTACAO,METAFONEMA);
+
+
+
+
+/*------ SYSDBA 10/11/2014 16:58:24 --------*/
+
+ALTER TABLE TBNFE_CARTA_CORRECAO
+    ADD CCE_TEXTO DMN_TEXTO;
+
+COMMENT ON COLUMN TBNFE_CARTA_CORRECAO.CCE_TEXTO IS
+'Texto de correcao.';
+
+alter table TBNFE_CARTA_CORRECAO
+alter CCE_NUMERO position 1;
+
+alter table TBNFE_CARTA_CORRECAO
+alter CCE_EMPRESA position 2;
+
+alter table TBNFE_CARTA_CORRECAO
+alter CCE_DATA position 3;
+
+alter table TBNFE_CARTA_CORRECAO
+alter CCE_HORA position 4;
+
+alter table TBNFE_CARTA_CORRECAO
+alter CCE_ENVIADA position 5;
+
+alter table TBNFE_CARTA_CORRECAO
+alter CCE_TEXTO position 6;
+
+alter table TBNFE_CARTA_CORRECAO
+alter NFE_SERIE position 7;
+
+alter table TBNFE_CARTA_CORRECAO
+alter NFE_NUMERO position 8;
+
+alter table TBNFE_CARTA_CORRECAO
+alter NFE_MODELO position 9;
+
+alter table TBNFE_CARTA_CORRECAO
+alter NUMERO position 10;
+
+alter table TBNFE_CARTA_CORRECAO
+alter PROTOCOLO position 11;
+
+alter table TBNFE_CARTA_CORRECAO
+alter XML position 12;
+
+
+
+
+/*------ SYSDBA 10/11/2014 17:00:05 --------*/
+
+COMMENT ON TABLE TBNFE_CARTA_CORRECAO IS 'Tabela de Cartas de Correcao (CC-e).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   01/11/2014
+
+Tabela responsavel por armazenar os registros de cartas de correcai eletronica das NF-e emitidas no sistema.';
+
+
+
+
+/*------ SYSDBA 10/11/2014 17:01:10 --------*/
+
+COMMENT ON TABLE TBNFE_CARTA_CORRECAO IS 'Tabela de Cartas de Correcao (CC-e).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   01/11/2014
+
+Tabela responsavel por armazenar os registros de cartas de correcai eletronica das NF-e emitidas no sistema.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    10/11/2014 - IMR :
+        + Documentacao da tabela.';
+

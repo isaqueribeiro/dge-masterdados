@@ -142,6 +142,8 @@ type
     Listagem1: TMenuItem;
     CustoDetalhado1: TMenuItem;
     Comisso1: TMenuItem;
+    nmCartaCorrecaoNFe: TMenuItem;
+    N14: TMenuItem;
     procedure btnEmpresaClick(Sender: TObject);
     procedure btnClienteClick(Sender: TObject);
     procedure btnContaAReceberClick(Sender: TObject);
@@ -206,6 +208,7 @@ type
     procedure miConfigurarAmbienteClick(Sender: TObject);
     procedure RankingdeProdutos1Click(Sender: TObject);
     procedure Veculos1Click(Sender: TObject);
+    procedure nmCartaCorrecaoNFeClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -735,6 +738,11 @@ begin
   frmRelEstoqVeic.ibqryEstoqVeic.Close;
   frmRelEstoqVeic.Destroy;
 
+end;
+
+procedure TfrmPrinc.nmCartaCorrecaoNFeClick(Sender: TObject);
+begin
+  FormFunction.ShowModalForm(Self, 'frmGeCartaCorrecao');
 end;
 
 end.

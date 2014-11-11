@@ -103,7 +103,9 @@ uses
   UEcfFactory in 'lib\UEcfFactory.pas',
   UEcfGenerico in 'lib\UEcfGenerico.pas',
   UEcfWindowsPrinter in 'lib\UEcfWindowsPrinter.pas',
-  UDMCupom in 'UDMCupom.pas' {DMCupom: TDataModule};
+  UDMCupom in 'UDMCupom.pas' {DMCupom: TDataModule},
+  UGeCartaCorrecao in 'UGeCartaCorrecao.pas' {frmGeCartaCorrecao},
+  UGeNFEmitida in 'UGeNFEmitida.pas' {frmGeNFEmitida};
 
 {$R *.res}
 
