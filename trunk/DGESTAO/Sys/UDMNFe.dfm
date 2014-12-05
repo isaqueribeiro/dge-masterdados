@@ -9,17 +9,18 @@ object DMNFe: TDMNFe
     Configuracoes.Geral.PathSalvar = '..\Bin\'
     Configuracoes.Geral.ExibirErroSchema = True
     Configuracoes.Geral.FormatoAlerta = 'TAG:%TAGNIVEL% ID:%ID%/%TAG%(%DESCRICAO%) - %MSG%.'
+    Configuracoes.Geral.RetirarAcentos = True
     Configuracoes.Geral.VersaoDF = ve310
+    Configuracoes.Geral.ValidarDigest = False
     Configuracoes.WebServices.UF = 'PA'
     Configuracoes.WebServices.AguardarConsultaRet = 0
     Configuracoes.WebServices.IntervaloTentativas = 0
     Configuracoes.WebServices.AjustaAguardaConsultaRet = False
-    DANFE = rvDANFE
+    DANFE = ACBrNFeDANFeESCPOS
     Left = 24
     Top = 24
   end
   object rvDANFE: TACBrNFeDANFERave
-    ACBrNFe = ACBrNFe
     Sistema = 'Masterdados - Contatos: (91) 8717-1057/8129-1567'
     PathPDF = '..\Bin\'
     MostrarPreview = True
@@ -42,6 +43,7 @@ object DMNFe: TDMNFe
     NFeCancelada = False
     LocalImpCanhoto = 0
     ImprimeItens = True
+    ViaConsumidor = True
     EspessuraBorda = 1
     TamanhoFonte_RazaoSocial = 12
     TamanhoFonte_ANTT = 10
@@ -3538,6 +3540,7 @@ object DMNFe: TDMNFe
       '  , cp.Cond_descricao_pdv'
       '  , v.Venda_prazo'
       '  , v.valor_fpagto'
+      '  , v.valor_recebido'
       '  , v.Prazo_01'
       '  , v.Prazo_02'
       '  , v.Prazo_03'
@@ -3635,6 +3638,12 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 2
     end
+    object qryFormaPagtosVALOR_RECEBIDO: TIBBCDField
+      FieldName = 'VALOR_RECEBIDO'
+      Origin = '"TBVENDAS_FORMAPAGTO"."VALOR_RECEBIDO"'
+      Precision = 18
+      Size = 2
+    end
     object qryFormaPagtosPRAZO_01: TSmallintField
       FieldName = 'PRAZO_01'
       Origin = '"TBVENDAS_FORMAPAGTO"."PRAZO_01"'
@@ -3697,8 +3706,10 @@ object DMNFe: TDMNFe
       'CONDICAOPAGTO_COD=CONDICAOPAGTO_COD'
       'COND_DESCRICAO=COND_DESCRICAO'
       'COND_DESCRICAO_FULL=COND_DESCRICAO_FULL'
+      'COND_DESCRICAO_PDV=COND_DESCRICAO_PDV'
       'VENDA_PRAZO=VENDA_PRAZO'
       'VALOR_FPAGTO=VALOR_FPAGTO'
+      'VALOR_RECEBIDO=VALOR_RECEBIDO'
       'PRAZO_01=PRAZO_01'
       'PRAZO_02=PRAZO_02'
       'PRAZO_03=PRAZO_03'
@@ -17741,6 +17752,7 @@ object DMNFe: TDMNFe
     NFeCancelada = False
     LocalImpCanhoto = 0
     ImprimeItens = True
+    ViaConsumidor = True
     EspessuraBorda = 1
     ExibirTotalTributosItem = False
     ExibeCampoFatura = True
@@ -19452,5 +19464,198 @@ object DMNFe: TDMNFe
       '  CCE_NUMERO = :OLD_CCE_NUMERO')
     Left = 176
     Top = 552
+  end
+  object ACBrECF: TACBrECF
+    QuebraLinhaRodape = False
+    Modelo = ecfNaoFiscal
+    Porta = 'COM1'
+    MsgAguarde = 'Aguardando a resposta da Impressora: %d segundos'
+    MsgTrabalhando = 'Impressora est'#225' trabalhando'
+    MsgRelatorio = 'Imprimindo %s  %d'#170' Via '
+    MsgPausaRelatorio = 'Destaque a %d'#170' via, <ENTER> proxima, %d seg.'
+    PaginaDeCodigo = 0
+    FormMsgColor = clHighlight
+    FormMsgFonte.Charset = DEFAULT_CHARSET
+    FormMsgFonte.Color = clWindowText
+    FormMsgFonte.Height = -11
+    FormMsgFonte.Name = 'MS Sans Serif'
+    FormMsgFonte.Style = []
+    MemoParams.Strings = (
+      '[Cabecalho]'
+      'LIN000=<center><b>Nome da Empresa</b></center>'
+      'LIN001=<center>Nome da Rua , 1234  -  Bairro</center>'
+      'LIN002=<center>Cidade  -  UF  -  99999-999</center>'
+      
+        'LIN003=<center>CNPJ: 01.234.567/0001-22    IE: 012.345.678.90</c' +
+        'enter>'
+      
+        'LIN004=<table width=100%><tr><td align=left><code>Data</code> <c' +
+        'ode>Hora</code></td><td align=right>COO: <b><code>NumCupom</code' +
+        '></b></td></tr></table>'
+      'LIN005=<hr>'
+      ' '
+      '[Cabecalho_Item]'
+      'LIN000=ITEM   CODIGO      DESCRICAO'
+      'LIN001=QTD         x UNITARIO       Aliq     VALOR (R$)'
+      'LIN002=<hr>'
+      
+        'MascaraItem=III CCCCCCCCCCCCCC DDDDDDDDDDDDDDDDDDDDDDDDDDDDDQQQQ' +
+        'QQQQ UU x VVVVVVVVVVVVV AAAAAA TTTTTTTTTTTTT'
+      ' '
+      '[Rodape]'
+      'LIN000=<hr>'
+      
+        'LIN001=<table width=100%><tr><td align=left><code>Data</code> <c' +
+        'ode>Hora</code></td><td align=right>Projeto ACBr: <b><code>ACBR<' +
+        '/code></b></td></tr></table>'
+      'LIN002=<center>Obrigado Volte Sempre</center>'
+      'LIN003=<hr>'
+      ' '
+      '[Formato]'
+      'Colunas=48'
+      'HTML=1'
+      'HTML_Title_Size=2'
+      'HTML_Font=<font size="2" face="Lucida Console">')
+    Device.HandShake = hsRTS_CTS
+    Device.HardFlow = True
+    RFD = ACBrRFD
+    AAC = ACBrAAC
+    EAD = ACBrEAD
+    ECFVirtual = ACBrECFVirtualNaoFiscal
+    ConfigBarras.MostrarCodigo = True
+    ConfigBarras.LarguraLinha = 3
+    ConfigBarras.Altura = 10
+    InfoRodapeCupom.Imposto.ModoCompacto = False
+    Left = 736
+    Top = 104
+  end
+  object ACBrRFD: TACBrRFD
+    ECF = ACBrECF
+    Left = 736
+    Top = 56
+  end
+  object ACBrAAC: TACBrAAC
+    IdentPAF.Paf.TipoFuncionamento = tpfStandAlone
+    IdentPAF.Paf.TipoDesenvolvimento = tpdComercializavel
+    IdentPAF.Paf.IntegracaoPAFECF = tpiRetaguarda
+    IdentPAF.Paf.RealizaPreVenda = False
+    IdentPAF.Paf.RealizaDAVECF = False
+    IdentPAF.Paf.RealizaDAVNaoFiscal = False
+    IdentPAF.Paf.RealizaDAVOS = False
+    IdentPAF.Paf.DAVConfAnexoII = False
+    IdentPAF.Paf.RealizaLancamentoMesa = False
+    IdentPAF.Paf.IndiceTecnicoProd = False
+    IdentPAF.Paf.BarSimilarECFRestaurante = False
+    IdentPAF.Paf.BarSimilarECFComum = False
+    IdentPAF.Paf.BarSimilarBalanca = False
+    IdentPAF.Paf.UsaImpressoraNaoFiscal = False
+    IdentPAF.Paf.DAVDiscrFormula = False
+    IdentPAF.Paf.ImpedeVendaVlrZero = False
+    IdentPAF.Paf.AcumulaVolumeDiario = False
+    IdentPAF.Paf.ArmazenaEncerranteIniFinal = False
+    IdentPAF.Paf.EmiteContrEncerrAposREDZLEIX = False
+    IdentPAF.Paf.IntegradoComBombas = False
+    IdentPAF.Paf.CriaAbastDivergEncerrante = False
+    IdentPAF.Paf.CadastroPlacaBomba = False
+    IdentPAF.Paf.TransportePassageiro = False
+    IdentPAF.Paf.TotalizaValoresLista = False
+    IdentPAF.Paf.TransfPreVenda = False
+    IdentPAF.Paf.TransfDAV = False
+    IdentPAF.Paf.RecompoeGT = False
+    IdentPAF.Paf.RecompoeNumSerie = False
+    IdentPAF.Paf.EmitePED = False
+    IdentPAF.Paf.CupomMania = False
+    IdentPAF.Paf.MinasLegal = False
+    IdentPAF.Paf.NotaLegalDF = False
+    IdentPAF.Paf.ParaibaLegal = False
+    IdentPAF.Paf.TrocoEmCartao = False
+    Left = 736
+    Top = 16
+  end
+  object ACBrEAD: TACBrEAD
+    Left = 768
+    Top = 56
+  end
+  object ACBrECFVirtualNaoFiscal: TACBrECFVirtualNaoFiscal
+    ECF = ACBrECF
+    ExibeAvisoLegal = True
+    Colunas = 48
+    NumECF = 1
+    NumCRO = 1
+    CNPJ = '01.234.567/0001-22'
+    IE = '012.345.678.90'
+    IM = '1234-0'
+    CmdImpCondensado = '#15'
+    CmdImpExpandidoUmaLinha = '#14'
+    CmdImpFimExpandido = '#20'
+    CmdImpZera = '#27,#64'
+    CmdGaveta = '#27,#118,#150'
+    CmdCortaPapelCompleto = '#27,#119'
+    CmdCortaPapelParcial = '#27,#109'
+    Cabecalho.Strings = (
+      'Nome da Empresa'
+      'Nome da Rua , 1234  -  Bairro'
+      'Cidade  -  UF  -  99999-999')
+    CabecalhoItem.Strings = (
+      'ITEM   CODIGO             DESCRICAO'
+      '.             QTDxUNITARIO   Aliq    VALOR (R$)'
+      '------------------------------------------------')
+    MascaraItem = 
+      'III CCCCCCCCCCCCC DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD QQQQQQQQ U' +
+      'UxVVVVVVVVV AAAAAAA TTTTTTTTTTT'
+    Left = 800
+    Top = 56
+  end
+  object ACBrNFeDANFeESCPOS: TACBrNFeDANFeESCPOS
+    ACBrNFe = ACBrNFe
+    PathPDF = '..\Bin\'
+    MostrarPreview = True
+    MostrarStatus = True
+    TipoDANFE = tiRetrato
+    NumCopias = 1
+    ImprimirDescPorc = False
+    ImprimirTotalLiquido = True
+    MargemInferior = 0.800000000000000000
+    MargemSuperior = 0.800000000000000000
+    MargemEsquerda = 0.600000000000000000
+    MargemDireita = 0.510000000000000000
+    CasasDecimais._qCom = 2
+    CasasDecimais._vUnCom = 2
+    ExibirResumoCanhoto = False
+    FormularioContinuo = False
+    TamanhoFonte_DemaisCampos = 10
+    ProdutosPorPagina = 0
+    ImprimirDetalhamentoEspecifico = True
+    NFeCancelada = False
+    LocalImpCanhoto = 0
+    ImprimeItens = True
+    ViaConsumidor = True
+    ConfigBarras.MostrarCodigo = False
+    ConfigBarras.LarguraLinha = 0
+    ConfigBarras.Altura = 0
+    ImprimeEmUmaLinha = False
+    ImprimeDescAcrescItem = False
+    Left = 88
+    Top = 72
+  end
+  object ACBrSATExtratoESCPOS: TACBrSATExtratoESCPOS
+    ACBrSAT = ACBrSAT
+    Mask_qCom = '0.0000'
+    Mask_vUnCom = '0.000'
+    Left = 800
+    Top = 152
+  end
+  object ACBrSAT: TACBrSAT
+    Extrato = ACBrSATExtratoESCPOS
+    Config.infCFe_versaoDadosEnt = 0.050000000000000000
+    Config.ide_numeroCaixa = 0
+    Config.ide_tpAmb = taHomologacao
+    Config.emit_cRegTrib = RTSimplesNacional
+    Config.emit_cRegTribISSQN = RTISSMicroempresaMunicipal
+    Config.emit_indRatISSQN = irSim
+    Config.EhUTF8 = False
+    Config.PaginaDeCodigo = 0
+    Left = 800
+    Top = 104
   end
 end

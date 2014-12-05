@@ -55,6 +55,9 @@ type
     chkCarregarPeloEAN: TCheckBox;
     lblCupomNaoFiscalImpressora: TLabel;
     edCupomNaoFiscalImpressora: TComboBox;
+    chkOrcamentoEmitir: TCheckBox;
+    edNumeroCaixa: TEdit;
+    lblNumeroCaixa: TLabel;
     procedure ApenasNumerosKeyPress(Sender: TObject; var Key: Char);
     procedure btnCancelarClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -65,6 +68,7 @@ type
     procedure chkCupomNaoFiscalClick(Sender: TObject);
     procedure chkCupomEmitirClick(Sender: TObject);
     procedure edCupomNaoFiscalPortaChange(Sender: TObject);
+    procedure chkOrcamentoEmitirClick(Sender: TObject);
   private
     { Private declarations }
     procedure CarregarDadosINI;
@@ -130,10 +134,12 @@ begin
   edCFOPEntradaNome.Text := GetCfopNome( StrToIntDef(edCFOPEntrada.Text, 0) );
   edCFOPSaidaNome.Text   := GetCfopNome( StrToIntDef(edCFOPSaida.Text, 0) );
 
-  chkCarregarPeloEAN.Checked := FileINI.ReadBool(INI_SECAO_VENDA, INI_KEY_CODIGO_EAN, GetCarregarProdutoCodigoBarra(GetEmpresaIDDefault));
+  chkCarregarPeloEAN.Checked := FileINI.ReadBool  (INI_SECAO_VENDA, INI_KEY_CODIGO_EAN, GetCarregarProdutoCodigoBarra(GetEmpresaIDDefault));
+  edNumeroCaixa.Text         := FileINI.ReadString(INI_SECAO_VENDA, INI_KEY_NUMERO_CAIXA, '1');
 
   // PDV
 
+  chkOrcamentoEmitir.Checked      := FileINI.ReadBool   (INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_ORCAM, False);
   chkCupomEmitir.Checked          := FileINI.ReadBool   (INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_CUPOM, False);
   chkCupomAutomatico.Checked      := FileINI.ReadBool   (INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_CUPOM_AUTOMAT, False);
   chkCupomNaoFiscal.Checked       := FileINI.ReadBool   (INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_CUPOM_NFISCAL, False);
@@ -165,10 +171,12 @@ begin
   FileINI.WriteString(INI_SECAO_DEFAULT, INI_KEY_CFOP_ENT, edCFOPEntrada.Text);
   FileINI.WriteString(INI_SECAO_DEFAULT, INI_KEY_CFOP_SAI, edCFOPSaida.Text);
 
-  FileINI.WriteBool(INI_SECAO_VENDA, INI_KEY_CODIGO_EAN, chkCarregarPeloEAN.Checked);
+  FileINI.WriteBool (INI_SECAO_VENDA, INI_KEY_CODIGO_EAN,   chkCarregarPeloEAN.Checked);
+  FileINI.ReadString(INI_SECAO_VENDA, INI_KEY_NUMERO_CAIXA, edNumeroCaixa.Text);
 
   // PDV
 
+  FileINI.WriteBool   (INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_ORCAM, chkOrcamentoEmitir.Checked);
   FileINI.WriteBool   (INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_CUPOM, chkCupomEmitir.Checked);
   FileINI.WriteBool   (INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_CUPOM_AUTOMAT, chkCupomAutomatico.Checked);
   FileINI.WriteBool   (INI_SECAO_CUMPO_PDV, INI_KEY_EMITIR_CUPOM_NFISCAL, chkCupomNaoFiscal.Checked);
@@ -260,6 +268,14 @@ procedure TfrmGrConfigurarAmbiente.edCupomNaoFiscalPortaChange(
 begin
   lblCupomNaoFiscalImpressora.Enabled :=  (edCupomNaoFiscalPorta.ItemIndex = 0);
   edCupomNaoFiscalImpressora.Enabled  :=  (edCupomNaoFiscalPorta.ItemIndex = 0);
+end;
+
+procedure TfrmGrConfigurarAmbiente.chkOrcamentoEmitirClick(
+  Sender: TObject);
+begin
+  chkCupomEmitir.Checked := not chkOrcamentoEmitir.Checked;
+  chkCupomEmitir.Enabled := not chkOrcamentoEmitir.Checked;
+  chkCupomEmitirClick( chkCupomEmitir );
 end;
 
 initialization
