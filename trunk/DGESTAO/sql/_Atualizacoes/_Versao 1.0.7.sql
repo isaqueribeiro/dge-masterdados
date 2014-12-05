@@ -31392,3 +31392,1814 @@ Historico:
     10/11/2014 - IMR :
         + Documentacao da tabela.';
 
+
+
+
+/*------ SYSDBA 19/11/2014 18:08:26 --------*/
+
+CREATE TABLE TBCENTRO_CUSTO (
+    CODIGO DMN_BIGINT_NN NOT NULL,
+    DESCRICAO DMN_VCHAR_100,
+    ATIVO DMN_LOGICO DEFAULT 1,
+    CODCLIENTE DMN_INTEGER_N);
+
+ALTER TABLE TBCENTRO_CUSTO
+ADD CONSTRAINT PK_TBCENTRO_CUSTO
+PRIMARY KEY (CODIGO);
+
+COMMENT ON COLUMN TBCENTRO_CUSTO.CODIGO IS
+'Codigo';
+
+COMMENT ON COLUMN TBCENTRO_CUSTO.DESCRICAO IS
+'Descricao';
+
+COMMENT ON COLUMN TBCENTRO_CUSTO.ATIVO IS
+'Ativo:
+0 - Nao
+1 - Sim';
+
+COMMENT ON COLUMN TBCENTRO_CUSTO.CODCLIENTE IS
+'Cliente';
+
+GRANT ALL ON TBCENTRO_CUSTO TO "PUBLIC";
+
+
+
+/*------ SYSDBA 19/11/2014 18:10:40 --------*/
+
+COMMENT ON TABLE TBCENTRO_CUSTO IS 'Tabele de Centros de Custo.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   19/11/2014
+
+Tabela responsavel por armazenar os registros de Centros de Custos da empresa e/ou pertencentes a determinados clientes.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    19/11/2014 - IMR :
+        + Documentacao da tabela.';
+
+
+
+
+/*------ SYSDBA 19/11/2014 18:12:11 --------*/
+
+CREATE SEQUENCE GEN_CENTRO_CUSTO;
+
+COMMENT ON SEQUENCE GEN_CENTRO_CUSTO IS 'Sequenciador dos registros de Centro de Custo';
+
+
+
+
+/*------ SYSDBA 19/11/2014 18:13:10 --------*/
+
+SET TERM ^ ;
+
+CREATE trigger tg_centro_custo_novo for tbcentro_custo
+active before insert position 0
+AS
+begin
+  if (new.codigo is null) then
+    new.codigo = gen_id(GEN_CENTRO_CUSTO, 1);
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 19/11/2014 18:14:19 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_centro_custo_novo for tbcentro_custo
+active before insert position 0
+AS
+begin
+  if (new.codigo is null) then
+    new.codigo = gen_id(GEN_CENTRO_CUSTO, 1);
+end^
+
+SET TERM ; ^
+
+COMMENT ON TRIGGER TG_CENTRO_CUSTO_NOVO IS 'Trigger Centro de Custo (Gerar Codigo).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   19/11/2014
+
+Trigger responsavel por gerar o codigo para o novo registro de Centro de Custo quando este nao fora informado.';
+
+
+
+
+/*------ SYSDBA 19/11/2014 18:14:52 --------*/
+
+ALTER TABLE TBCENTRO_CUSTO
+ADD CONSTRAINT FK_TBCENTRO_CUSTO_CLIENTE
+FOREIGN KEY (CODCLIENTE)
+REFERENCES TBCLIENTE(CODIGO);
+
+
+
+
+/*------ SYSDBA 19/11/2014 18:30:09 --------*/
+
+COMMENT ON TABLE TBCENTRO_CUSTO IS 'Tabele de Departamentos / Centros de Custo.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   19/11/2014
+
+Tabela responsavel por armazenar os registros de Centros de Custos da empresa e/ou pertencentes a determinados clientes.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    19/11/2014 - IMR :
+        + Documentacao da tabela.';
+
+
+
+
+/*------ SYSDBA 19/11/2014 19:51:39 --------*/
+
+CREATE TABLE TBCENTRO_CUSTO_EMPRESA (
+    CENTRO_CUSTO DMN_BIGINT_NN NOT NULL,
+    EMPRESA DMN_CNPJ NOT NULL);
+
+ALTER TABLE TBCENTRO_CUSTO_EMPRESA
+ADD CONSTRAINT PK_TBCENTRO_CUSTO_EMPRESA
+PRIMARY KEY (CENTRO_CUSTO,EMPRESA);
+
+COMMENT ON COLUMN TBCENTRO_CUSTO_EMPRESA.CENTRO_CUSTO IS
+'Departamento / Centro de Custo';
+
+COMMENT ON COLUMN TBCENTRO_CUSTO_EMPRESA.EMPRESA IS
+'Empresa';
+
+GRANT ALL ON TBCENTRO_CUSTO_EMPRESA TO "PUBLIC";
+
+
+
+/*------ SYSDBA 19/11/2014 19:52:34 --------*/
+
+ALTER TABLE TBCENTRO_CUSTO_EMPRESA
+ADD CONSTRAINT FK_TBCENTRO_CUSTO_EMPRESA_CCT
+FOREIGN KEY (CENTRO_CUSTO)
+REFERENCES TBCENTRO_CUSTO(CODIGO)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE TBCENTRO_CUSTO_EMPRESA
+ADD CONSTRAINT FK_TBCENTRO_CUSTO_EMPRESA_EMP
+FOREIGN KEY (EMPRESA)
+REFERENCES TBEMPRESA(CNPJ)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+
+
+
+/*------ SYSDBA 19/11/2014 19:54:43 --------*/
+
+COMMENT ON TABLE TBCENTRO_CUSTO_EMPRESA IS 'Tabele de Departamentos / Centros de Custo x Empresa.
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   19/11/2014
+
+Tabela responsavel por armazenar os registros que relacionam o Centro de Custo e a Empresa, onde: Um mesmo centro de custo
+podera esta associado a varias empresa e uma mesma empresa associada a varios centros de custos (Relacionamento N para N).
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    19/11/2014 - IMR :
+        + Documentacao da tabela.';
+
+
+
+
+/*------ SYSDBA 19/11/2014 20:33:33 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+    ADD CENTRO_CUSTO DMN_BIGINT_N;
+
+COMMENT ON COLUMN TBAUTORIZA_COMPRA.CENTRO_CUSTO IS
+'Departamento / Centro de Custo';
+
+alter table TBAUTORIZA_COMPRA
+alter ANO position 1;
+
+alter table TBAUTORIZA_COMPRA
+alter CODIGO position 2;
+
+alter table TBAUTORIZA_COMPRA
+alter EMPRESA position 3;
+
+alter table TBAUTORIZA_COMPRA
+alter NUMERO position 4;
+
+alter table TBAUTORIZA_COMPRA
+alter FORNECEDOR position 5;
+
+alter table TBAUTORIZA_COMPRA
+alter NOME_CONTATO position 6;
+
+alter table TBAUTORIZA_COMPRA
+alter TIPO position 7;
+
+alter table TBAUTORIZA_COMPRA
+alter INSERCAO_DATA position 8;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_DATA position 9;
+
+alter table TBAUTORIZA_COMPRA
+alter EMISSAO_USUARIO position 10;
+
+alter table TBAUTORIZA_COMPRA
+alter VALIDADE position 11;
+
+alter table TBAUTORIZA_COMPRA
+alter COMPETENCIA position 12;
+
+alter table TBAUTORIZA_COMPRA
+alter DATA_FATURA position 13;
+
+alter table TBAUTORIZA_COMPRA
+alter MOVITO position 14;
+
+alter table TBAUTORIZA_COMPRA
+alter OBSERVACAO position 15;
+
+alter table TBAUTORIZA_COMPRA
+alter CLIENTE position 16;
+
+alter table TBAUTORIZA_COMPRA
+alter CENTRO_CUSTO position 17;
+
+alter table TBAUTORIZA_COMPRA
+alter ENDERECO_ENTREGA position 18;
+
+alter table TBAUTORIZA_COMPRA
+alter STATUS position 19;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_DATA position 20;
+
+alter table TBAUTORIZA_COMPRA
+alter AUTORIZADO_USUARIO position 21;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_DATA position 22;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_USUARIO position 23;
+
+alter table TBAUTORIZA_COMPRA
+alter CANCELADO_MOTIVO position 24;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_NOME position 25;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_CPF position 26;
+
+alter table TBAUTORIZA_COMPRA
+alter RECEBEDOR_FUNCAO position 27;
+
+alter table TBAUTORIZA_COMPRA
+alter FORMA_PAGTO position 28;
+
+alter table TBAUTORIZA_COMPRA
+alter CONDICAO_PAGTO position 29;
+
+alter table TBAUTORIZA_COMPRA
+alter TRANSPORTADOR position 30;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_BRUTO position 31;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_DESCONTO position 32;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL_FRETE position 33;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL_IPI position 34;
+
+alter table TBAUTORIZA_COMPRA
+alter VALOR_TOTAL position 35;
+
+
+
+
+/*------ SYSDBA 19/11/2014 20:33:59 --------*/
+
+ALTER TABLE TBAUTORIZA_COMPRA
+ADD CONSTRAINT FK_TBAUTORIZA_COMPRA_CNT_CUSTO
+FOREIGN KEY (CENTRO_CUSTO)
+REFERENCES TBCENTRO_CUSTO(CODIGO);
+
+
+
+
+/*------ SYSDBA 19/11/2014 20:35:17 --------*/
+
+COMMENT ON TABLE TBAUTORIZA_COMPRA IS 'Tabela Autorizacao de Compras/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Tabela responsavel por armazenar as autorizacoes de compras/servicos da empresa.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    20/05/2014 - IMR :
+        + Criacao dos campos NOME_CONTATO, TRANSPORTADOR, VALOR_TOTAL_FRETE e VALOR_TOTAL_IPI, uma vez que nos processos
+        de Autorizacao de Compra essas informacoes sao necessarias.
+
+    19/11/2014 - IMR:
+        + Criacao do campo CENTRO_CUSTO para que o departamento ou centro de custo seja informado em determindas
+          Autorizacoes de Compra/Servico.';
+
+
+
+
+/*------ SYSDBA 19/11/2014 20:36:17 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA
+    ADD CENTRO_CUSTO DMN_BIGINT_N;
+
+COMMENT ON COLUMN TBREQUISITA_COMPRA.CENTRO_CUSTO IS
+'Departamento / Centro de Custo';
+
+alter table TBREQUISITA_COMPRA
+alter ANO position 1;
+
+alter table TBREQUISITA_COMPRA
+alter CODIGO position 2;
+
+alter table TBREQUISITA_COMPRA
+alter EMPRESA position 3;
+
+alter table TBREQUISITA_COMPRA
+alter NUMERO position 4;
+
+alter table TBREQUISITA_COMPRA
+alter FORNECEDOR position 5;
+
+alter table TBREQUISITA_COMPRA
+alter NOME_CONTATO position 6;
+
+alter table TBREQUISITA_COMPRA
+alter TIPO position 7;
+
+alter table TBREQUISITA_COMPRA
+alter INSERCAO_DATA position 8;
+
+alter table TBREQUISITA_COMPRA
+alter EMISSAO_DATA position 9;
+
+alter table TBREQUISITA_COMPRA
+alter EMISSAO_USUARIO position 10;
+
+alter table TBREQUISITA_COMPRA
+alter VALIDADE position 11;
+
+alter table TBREQUISITA_COMPRA
+alter COMPETENCIA position 12;
+
+alter table TBREQUISITA_COMPRA
+alter DATA_FATURA position 13;
+
+alter table TBREQUISITA_COMPRA
+alter MOVITO position 14;
+
+alter table TBREQUISITA_COMPRA
+alter OBSERVACAO position 15;
+
+alter table TBREQUISITA_COMPRA
+alter CLIENTE position 16;
+
+alter table TBREQUISITA_COMPRA
+alter CENTRO_CUSTO position 17;
+
+alter table TBREQUISITA_COMPRA
+alter ENDERECO_ENTREGA position 18;
+
+alter table TBREQUISITA_COMPRA
+alter STATUS position 19;
+
+alter table TBREQUISITA_COMPRA
+alter REQUISITADO_DATA position 20;
+
+alter table TBREQUISITA_COMPRA
+alter REQUISITADO_USUARIO position 21;
+
+alter table TBREQUISITA_COMPRA
+alter CANCELADO_DATA position 22;
+
+alter table TBREQUISITA_COMPRA
+alter CANCELADO_USUARIO position 23;
+
+alter table TBREQUISITA_COMPRA
+alter CANCELADO_MOTIVO position 24;
+
+alter table TBREQUISITA_COMPRA
+alter RECEBEDOR_NOME position 25;
+
+alter table TBREQUISITA_COMPRA
+alter RECEBEDOR_CPF position 26;
+
+alter table TBREQUISITA_COMPRA
+alter RECEBEDOR_FUNCAO position 27;
+
+alter table TBREQUISITA_COMPRA
+alter FORMA_PAGTO position 28;
+
+alter table TBREQUISITA_COMPRA
+alter CONDICAO_PAGTO position 29;
+
+alter table TBREQUISITA_COMPRA
+alter TRANSPORTADOR position 30;
+
+alter table TBREQUISITA_COMPRA
+alter VALOR_BRUTO position 31;
+
+alter table TBREQUISITA_COMPRA
+alter VALOR_DESCONTO position 32;
+
+alter table TBREQUISITA_COMPRA
+alter VALOR_TOTAL_FRETE position 33;
+
+alter table TBREQUISITA_COMPRA
+alter VALOR_TOTAL_IPI position 34;
+
+alter table TBREQUISITA_COMPRA
+alter VALOR_TOTAL position 35;
+
+
+
+
+/*------ SYSDBA 19/11/2014 20:36:46 --------*/
+
+ALTER TABLE TBREQUISITA_COMPRA
+ADD CONSTRAINT FK_TBREQUISITA_COMPRA_CNT_CUSTO
+FOREIGN KEY (CENTRO_CUSTO)
+REFERENCES TBCENTRO_CUSTO(CODIGO);
+
+
+
+
+/*------ SYSDBA 19/11/2014 20:37:20 --------*/
+
+COMMENT ON TABLE TBREQUISITA_COMPRA IS 'Tabela Requisicao de Compras/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   16/10/2014
+
+Tabela responsavel por armazenar as requisicoes de compras/servicos da empresa.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    19/11/2014 - IMR:
+        + Criacao do campo CENTRO_CUSTO para que o departamento ou centro de custo seja informado em determindas
+          Requisicoes de Compra/Servico.';
+
+
+
+
+/*------ SYSDBA 19/11/2014 20:38:16 --------*/
+
+COMMENT ON TABLE TBAUTORIZA_COMPRA IS 'Tabela Autorizacao de Compras/Servicos
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   13/05/2014
+
+Tabela responsavel por armazenar as autorizacoes de compras/servicos da empresa.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    20/05/2014 - IMR :
+        + Criacao dos campos NOME_CONTATO, TRANSPORTADOR, VALOR_TOTAL_FRETE e VALOR_TOTAL_IPI, uma vez que nos processos
+        de Autorizacao de Compra essas informacoes sao necessarias.
+
+    19/11/2014 - IMR:
+        + Criacao do campo CENTRO_CUSTO para que o departamento ou centro de custo seja informado em determindas
+          Autorizacoes de Compra/Servico.';
+
+
+
+
+/*------ SYSDBA 28/11/2014 12:10:38 --------*/
+
+COMMENT ON COLUMN TBFORMPAGTO.FORMAPAGTO_NFCE IS
+'Forma de Pagamento para NFC-e (Campo Obrigatorio):
+01 - Dinheiro
+02 - Cheque
+03 - Cartao de Credito
+04 - Cartao de Debito
+05 - Credito Loja
+10 - Vale Alimentacao
+11 - Vale Refeicao
+12 - Vale Presente
+13 - Vale Combustivel
+99 - Outros
+
+  TpcnFormaPagamento = (fpDinheiro, fpCheque, fpCartaoCredito, fpCartaoDebito, fpCreditoLoja,
+                        fpValeAlimentacao, fpValeRefeicao, fpValePresente, fpValeCombustivel,
+                        fpOutro);';
+
+
+
+
+/*------ SYSDBA 28/11/2014 12:12:53 --------*/
+
+COMMENT ON COLUMN TBFORMPAGTO.FORMAPAGTO_NFCE IS
+'Forma de Pagamento para NFC-e (Campo Obrigatorio):
+01 - Dinheiro
+02 - Cheque
+03 - Cartao de Credito
+04 - Cartao de Debito
+05 - Credito Loja
+10 - Vale Alimentacao
+11 - Vale Refeicao
+12 - Vale Presente
+13 - Vale Combustivel
+99 - Outros
+
+TpcnFormaPagamento = (fpDinheiro, fpCheque, fpCartaoCredito, fpCartaoDebito, fpCreditoLoja,
+                    fpValeAlimentacao, fpValeRefeicao, fpValePresente, fpValeCombustivel,
+                    fpOutro)';
+
+
+
+
+/*------ SYSDBA 01/12/2014 12:53:16 --------*/
+
+ALTER TABLE TBPLANO_CONTA
+    ADD TIPO DMN_LOGICO DEFAULT 0,
+    ADD NIVEL DMN_SMALLINT_NN DEFAULT 1,
+    ADD CODIGO_CONTABIL DMN_VCHAR_30,
+    ADD SITUACAO DMN_LOGICO DEFAULT 1;
+
+COMMENT ON COLUMN TBPLANO_CONTA.TIPO IS
+'Tipo:
+ 0 - Agrupador
+ 1 - Lancamento';
+
+COMMENT ON COLUMN TBPLANO_CONTA.NIVEL IS
+'Nivel:
+1 - ...
+2 - ...
+3 - ...
+4 - ...
+5 - ...
+6 - ...
+7 - ...
+8 - ...';
+
+COMMENT ON COLUMN TBPLANO_CONTA.CODIGO_CONTABIL IS
+'Codigo Contabil';
+
+COMMENT ON COLUMN TBPLANO_CONTA.SITUACAO IS
+'Situacao:
+0 - Inativo
+1 - Ativo';
+
+alter table TBPLANO_CONTA
+alter CODIGO position 1;
+
+alter table TBPLANO_CONTA
+alter EXERCICIO position 2;
+
+alter table TBPLANO_CONTA
+alter GRUPO position 3;
+
+alter table TBPLANO_CONTA
+alter TIPO position 4;
+
+alter table TBPLANO_CONTA
+alter DESCRICAO_COMPLETA position 5;
+
+alter table TBPLANO_CONTA
+alter DESCRICAO_RESUMIDA position 6;
+
+alter table TBPLANO_CONTA
+alter NIVEL position 7;
+
+alter table TBPLANO_CONTA
+alter CODIGO_CONTABIL position 8;
+
+alter table TBPLANO_CONTA
+alter SITUACAO position 9;
+
+
+
+
+/*------ SYSDBA 01/12/2014 12:53:37 --------*/
+
+alter table TBPLANO_CONTA
+alter column CODIGO position 1;
+
+
+/*------ SYSDBA 01/12/2014 12:53:37 --------*/
+
+alter table TBPLANO_CONTA
+alter column EXERCICIO position 2;
+
+
+/*------ SYSDBA 01/12/2014 12:53:37 --------*/
+
+alter table TBPLANO_CONTA
+alter column GRUPO position 3;
+
+
+/*------ SYSDBA 01/12/2014 12:53:37 --------*/
+
+alter table TBPLANO_CONTA
+alter column NIVEL position 4;
+
+
+/*------ SYSDBA 01/12/2014 12:53:37 --------*/
+
+alter table TBPLANO_CONTA
+alter column TIPO position 5;
+
+
+/*------ SYSDBA 01/12/2014 12:53:37 --------*/
+
+alter table TBPLANO_CONTA
+alter column CODIGO_CONTABIL position 6;
+
+
+/*------ SYSDBA 01/12/2014 12:53:37 --------*/
+
+alter table TBPLANO_CONTA
+alter column DESCRICAO_COMPLETA position 7;
+
+
+/*------ SYSDBA 01/12/2014 12:53:37 --------*/
+
+alter table TBPLANO_CONTA
+alter column DESCRICAO_RESUMIDA position 8;
+
+
+/*------ SYSDBA 01/12/2014 12:53:37 --------*/
+
+alter table TBPLANO_CONTA
+alter column SITUACAO position 9;
+
+
+/*------ SYSDBA 01/12/2014 12:54:20 --------*/
+
+update RDB$RELATION_FIELDS set
+RDB$FIELD_SOURCE = 'DMN_BIGINT_N'
+where (RDB$FIELD_NAME = 'GRUPO') and
+(RDB$RELATION_NAME = 'TBPLANO_CONTA')
+;
+
+
+
+
+/*------ SYSDBA 01/12/2014 12:54:34 --------*/
+
+COMMENT ON COLUMN TBPLANO_CONTA.GRUPO IS
+'Grupo';
+
+
+
+
+/*------ SYSDBA 01/12/2014 12:54:57 --------*/
+
+ALTER TABLE TBPLANO_CONTA
+ADD CONSTRAINT FK_TBPLANO_CONTA_GRUPO
+FOREIGN KEY (GRUPO)
+REFERENCES TBPLANO_CONTA(CODIGO);
+
+
+
+
+/*------ SYSDBA 01/12/2014 13:16:25 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_plano_conta_novo for tbplano_conta
+active before insert position 0
+AS
+begin
+  if ( new.codigo is null ) then
+    new.codigo = GEN_ID(GEN_PLANO_CONTA, 1);
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 01/12/2014 16:11:41 --------*/
+
+alter table TBPLANO_CONTA
+alter column CODIGO position 1;
+
+
+/*------ SYSDBA 01/12/2014 16:11:41 --------*/
+
+alter table TBPLANO_CONTA
+alter column EXERCICIO position 2;
+
+
+/*------ SYSDBA 01/12/2014 16:11:41 --------*/
+
+alter table TBPLANO_CONTA
+alter column GRUPO position 3;
+
+
+/*------ SYSDBA 01/12/2014 16:11:41 --------*/
+
+alter table TBPLANO_CONTA
+alter column NIVEL position 4;
+
+
+/*------ SYSDBA 01/12/2014 16:11:41 --------*/
+
+alter table TBPLANO_CONTA
+alter column TIPO position 5;
+
+
+/*------ SYSDBA 01/12/2014 16:11:41 --------*/
+
+alter table TBPLANO_CONTA
+alter column CODIGO_CONTABIL position 6;
+
+
+/*------ SYSDBA 01/12/2014 16:11:41 --------*/
+
+alter table TBPLANO_CONTA
+alter column DESCRICAO_RESUMIDA position 7;
+
+
+/*------ SYSDBA 01/12/2014 16:11:41 --------*/
+
+alter table TBPLANO_CONTA
+alter column DESCRICAO_COMPLETA position 8;
+
+
+/*------ SYSDBA 01/12/2014 16:11:41 --------*/
+
+alter table TBPLANO_CONTA
+alter column SITUACAO position 9;
+
+
+/*------ SYSDBA 01/12/2014 16:12:13 --------*/
+
+ALTER TABLE TBPLANO_CONTA
+    ADD CODIGO_RESUMIDO DMN_VCHAR_10;
+
+COMMENT ON COLUMN TBPLANO_CONTA.CODIGO_RESUMIDO IS
+'Codigo Resumido';
+
+alter table TBPLANO_CONTA
+alter CODIGO position 1;
+
+alter table TBPLANO_CONTA
+alter EXERCICIO position 2;
+
+alter table TBPLANO_CONTA
+alter GRUPO position 3;
+
+alter table TBPLANO_CONTA
+alter NIVEL position 4;
+
+alter table TBPLANO_CONTA
+alter TIPO position 5;
+
+alter table TBPLANO_CONTA
+alter CODIGO_CONTABIL position 6;
+
+alter table TBPLANO_CONTA
+alter CODIGO_RESUMIDO position 7;
+
+alter table TBPLANO_CONTA
+alter DESCRICAO_RESUMIDA position 8;
+
+alter table TBPLANO_CONTA
+alter DESCRICAO_COMPLETA position 9;
+
+alter table TBPLANO_CONTA
+alter SITUACAO position 10;
+
+
+
+
+/*------ SYSDBA 01/12/2014 16:13:41 --------*/
+
+COMMENT ON TABLE TBPLANO_CONTA IS 'Tabela Plano de Contas (Contabilidade).
+
+    Autor   :   Isaque Marinho Ribeiro
+    Data    :   09/05/2014
+
+Tabela responsavel por armazenar o plano de contas adotado pela empresa. Informacoes estas lancadas pela Contabilidade.
+
+
+Historico:
+
+    Legendas:
+        + Novo objeto de banco (Campos, Triggers)
+        - Remocao de objeto de banco
+        * Modificacao no objeto de banco
+
+    01/12/2014 - IMR :
+        + Adequacao/atualizacao da esrutura da tabela.';
+
+
+
+
+/*------ SYSDBA 02/12/2014 09:19:05 --------*/
+
+CREATE VIEW VW_TIPO_PLANO_CONTA (
+    CODIGO,
+    DESCRICAO)
+AS
+Select First 1
+    0 as Codigo
+  , 'Agrupador' as Descricao
+from TBEMPRESA
+
+union
+
+Select First 1
+    1 as Codigo
+  , 'Lançamento' as Descricao
+from TBEMPRESA
+;
+
+GRANT ALL ON VW_TIPO_PLANO_CONTA TO "PUBLIC";
+
+/*!!! Error occured !!!
+Invalid token.
+Dynamic SQL Error.
+SQL error code = -104.
+Token unknown - line 4, column 6.
+VW_TIPO_PLANO_CONTA.
+
+*/
+
+/*!!! Error occured !!!
+Invalid token.
+Dynamic SQL Error.
+SQL error code = -104.
+Token unknown - line 4, column 6.
+VW_TIPO_PLANO_CONTA.
+
+*/
+
+
+
+/*------ SYSDBA 02/12/2014 09:21:20 --------*/
+
+DROP VIEW VW_TIPO_PLANO_CONTA;
+
+CREATE VIEW VW_TIPO_PLANO_CONTA(
+    CODIGO,
+    DESCRICAO)
+AS
+Select 0 as Codigo , 'Agrupador'  as Descricao from RDB$DATABASE Union
+Select 1 as Codigo , 'Lançamento' as Descricao from RDB$DATABASE
+;
+
+GRANT SELECT, UPDATE, DELETE, INSERT, REFERENCES ON VW_TIPO_PLANO_CONTA TO "PUBLIC";
+
+
+
+
+/*------ SYSDBA 02/12/2014 09:23:37 --------*/
+
+CREATE INDEX IDX_PLANO_CONTA_TIPO
+ON TBPLANO_CONTA (TIPO);
+
+
+
+
+/*------ SYSDBA 02/12/2014 09:24:14 --------*/
+
+CREATE INDEX IDX_PLANO_CONTA_CONTABIL
+ON TBPLANO_CONTA (CODIGO_CONTABIL,CODIGO_RESUMIDO);
+
+
+
+
+/*------ SYSDBA 02/12/2014 10:18:55 --------*/
+
+CREATE VIEW VW_NIVEL_PLANO_CONTA(
+    CODIGO,
+    DESCRICAO)
+AS
+Select 1 as Codigo , 'Nível 1'  as Descricao from RDB$DATABASE Union
+Select 2 as Codigo , 'Nível 2'  as Descricao from RDB$DATABASE Union
+Select 3 as Codigo , 'Nível 3'  as Descricao from RDB$DATABASE Union
+Select 4 as Codigo , 'Nível 4'  as Descricao from RDB$DATABASE Union
+Select 5 as Codigo , 'Nível 5'  as Descricao from RDB$DATABASE Union
+Select 6 as Codigo , 'Nível 6'  as Descricao from RDB$DATABASE Union
+Select 7 as Codigo , 'Nível 7'  as Descricao from RDB$DATABASE Union
+Select 8 as Codigo , 'Nível 8'  as Descricao from RDB$DATABASE
+;
+
+GRANT ALL ON VW_NIVEL_PLANO_CONTA TO "PUBLIC";
+
+/*!!! Error occured !!!
+Column does not belong to referenced table.
+Dynamic SQL Error.
+SQL error code = -206.
+Column unknown.
+TODOS_NIVEIS.
+At line 6, column 28.
+
+*/
+
+
+
+/*------ SYSDBA 03/12/2014 13:36:28 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_atualizar_estoque for tbcompras
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_produto numeric(15,2);
+  declare variable custo_compra numeric(15,2);
+  declare variable custo_medio numeric(15,2);
+  declare variable custo_final numeric(15,2);
+  declare variable preco_venda DMN_MONEY;
+  declare variable percentual_markup DMN_PERCENTUAL_3;
+  declare variable percentual_margem DMN_PERCENTUAL_3;
+  declare variable alterar_custo Smallint;
+  declare variable estoque_unico Smallint;
+  declare variable movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 2)) then
+  begin
+
+    -- Marcar como FATURADA a Autorizacao de Compra associada a Entrada
+    Update TBAUTORIZA_COMPRA ac Set
+        ac.status      = 3 -- 3. Faturada (NF/NFS registrada no sistema referente a autorizacao)
+      , ac.data_fatura = new.dtemiss
+    where ac.ano     = new.autorizacao_ano
+      and ac.codigo  = new.autorizacao_codigo
+      and ac.empresa = new.autorizacao_empresa;
+
+    -- Buscar FLAG de alteracao de custo de produto
+    Select
+      cf.cfop_altera_custo_produto
+    from TBCFOP cf
+    where cf.cfop_cod = new.nfcfop
+    Into
+        alterar_custo;
+
+    alterar_custo = coalesce(:alterar_custo, 1);
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Incrimentar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.Customedio, 0)
+        , p.percentual_marckup
+        , p.percentual_margem
+        , p.preco
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Custo_produto
+        , Percentual_markup
+        , Percentual_margem
+        , Preco_venda
+        , Movimentar
+    do
+    begin
+
+      -- Confirmar recebimento dos produtos autorizados na Autorizacao de Compras
+      Update TBAUTORIZA_COMPRAITEM aci Set
+        aci.confirmado_recebimento = 1
+      where aci.ano     = new.autorizacao_ano
+        and aci.codigo  = new.autorizacao_codigo
+        and aci.empresa = new.autorizacao_empresa
+        and aci.produto = :Produto;
+
+      if ( (:Custo_compra > 0) and (:Custo_produto > 0) and (:Estoque > 0) ) then
+        Custo_medio = (:Custo_compra + :Custo_produto) / 2;
+      else
+        Custo_medio = :Custo_compra;
+
+      if ( :Movimentar = 1 ) then
+        Custo_final = :Custo_medio;
+      else
+        Custo_final = :Custo_compra;
+
+      Percentual_markup = cast( ( ( (:Preco_venda - :Custo_final) / :Custo_final) * 100) as numeric(18,3) );
+
+      if ( coalesce(:Percentual_margem, 0.0) < 0 ) then
+        Percentual_margem = :Percentual_markup;
+
+      -- Incrementar estoque
+      Update TBPRODUTO p Set
+          p.Customedio = Case when :Alterar_custo = 1 then :Custo_final else p.Customedio end
+        , p.Qtde       = Case when :Movimentar = 1    then (:Estoque + :Quantidade) else :Estoque end
+        , p.percentual_marckup = Case when :Percentual_markup > :Percentual_margem then :Percentual_markup else :Percentual_margem end
+        , p.percentual_margem  = :Percentual_margem
+        , p.preco_sugerido     = cast( (:Custo_final + (:Custo_final * :Percentual_margem / 100)) as numeric(15,2) )
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TBCOMPRASITENS i Set
+          i.Qtdeantes = :Estoque
+        , i.Qtdefinal = :Estoque + :Quantidade
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('ENTRADA - COMPRA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque + :Quantidade
+        , new.Usuario
+        , replace('Custo Medio/Final no valor de R$ ' || :Custo_final, '.', ',')
+      );
+    end
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/12/2014 13:36:56 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_compras_cancelar for tbcompras
+active after update position 2
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable custo_compra numeric(15,2);
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then
+  begin
+
+    -- Marcar como AUTORIZADA a Autorizacao de Compra associada a Entrada que ja esta como FATURADA
+    Update TBAUTORIZA_COMPRA ac Set
+        ac.status      = 2  -- 2. Autorizada
+      , ac.data_fatura = null
+    where ac.ano     = coalesce(new.autorizacao_ano, 0)
+      and ac.codigo  = coalesce(new.autorizacao_codigo, 0)
+      and ac.empresa = coalesce(new.autorizacao_empresa, '0')
+      and ac.status  = 3; -- 3. Faturada
+
+    -- Decrementar Estoque do produto
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(i.Customedio, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TBCOMPRASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          Produto
+        , Empresa
+        , Quantidade
+        , Estoque
+        , Custo_compra
+        , Movimentar
+    do
+    begin
+      -- Remover a confirmacao de recebimento dos produtos autorizados na Autorizacao de Compras
+      Update TBAUTORIZA_COMPRAITEM aci Set
+        aci.confirmado_recebimento = 0
+      where aci.ano     = coalesce(new.autorizacao_ano, 0)
+        and aci.codigo  = coalesce(new.autorizacao_codigo, 0)
+        and aci.empresa = coalesce(new.autorizacao_empresa, '0')
+        and aci.produto = :Produto
+        and aci.confirmado_recebimento = 1;
+
+      -- Decrementar estoque
+      Update TBPRODUTO p Set
+        p.Qtde       = Case when :Movimentar = 1 then (:Estoque - :Quantidade) else :Estoque end
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('SAIDA - COMPRA CANCELADA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque
+        , :Quantidade
+        , :Estoque - :Quantidade
+        , new.Cancel_usuario
+        , replace('Custo Final no valor de R$ ' || :Custo_compra, '.', ',')
+      );
+    end
+     
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Fornecedor = new.Codforn
+      and m.Compra_ano = new.Ano
+      and m.Compra_num = new.Codcontrol;
+
+    -- Cancelar Duplicata (Contas A Pagar)
+    Update TBCONTPAG cp Set
+      cp.Situacao = 0 -- Cancelado
+    where cp.Empresa   = new.Codemp
+      and cp.codforn   = new.Codforn
+      and cp.anocompra = new.Ano
+      and cp.numcompra = new.Codcontrol
+      and cp.quitado   = 0;
+
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/12/2014 13:37:15 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_cancelar for tbvendas
+active after update position 3
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable valor_produto numeric(15,2);
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 5)) then /* 5. Cancelada */
+  begin
+
+    -- Retornar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Preco, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , valor_produto
+        , Movimentar
+    do
+    begin
+      estoque = Case when :Movimentar = 1 then (:Estoque + :Quantidade) else :Estoque end;
+
+      -- Retornar estoque
+      Update TBPRODUTO p Set
+        p.Qtde = :Estoque
+      where p.Cod    = :Produto
+        and p.Codemp = :Empresa;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('ENTRADA - VENDA CANCELADA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque - :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Cancel_usuario
+        , replace('Venda no valor de R$ ' || :Valor_produto, '.', ',')
+      );
+
+    end
+
+    -- Cancelar Contas A Receber (Apenas parcelas nao pagas)
+    Update TBCONTREC r Set
+        r.status   = 'CANCELADA'
+      , r.Situacao = 0 -- Cancelado
+      , r.enviado  = 0 -- Enviar boleto novamente para o banco
+    where r.anovenda = new.ano
+      and r.numvenda = new.codcontrol
+      and coalesce(r.Valorrectot, 0) = 0;
+
+    -- Cancelar Movimento Caixa
+    Update TBCAIXA_MOVIMENTO m Set
+      m.Situacao = 0 -- Cancelado
+    where m.Empresa = new.Codemp
+      and m.Cliente = new.Codcli
+      and m.Venda_ano = new.Ano
+      and m.Venda_num = new.Codcontrol;
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/12/2014 13:37:33 --------*/
+
+SET TERM ^ ;
+
+CREATE OR ALTER trigger tg_vendas_estoque_atualizar for tbvendas
+active after update position 1
+AS
+  declare variable produto varchar(10);
+  declare variable empresa varchar(18);
+  declare variable estoque    DMN_QUANTIDADE_D3;
+  declare variable quantidade DMN_QUANTIDADE_D3;
+  declare variable reserva    DMN_QUANTIDADE_D3;
+  declare variable valor_produto numeric(15,2);
+  declare variable estoque_unico Smallint;
+  declare variable Movimentar Smallint;
+begin
+  if ( (coalesce(old.Status, 0) <> coalesce(new.Status, 0)) and (new.Status = 3)) then /* 3. Finalizada */
+  begin
+
+    -- Buscar FLAG de estoque unico
+    Select
+      cnf.estoque_unico_empresas
+    from TBCONFIGURACAO cnf
+    where cnf.empresa = new.codemp
+    Into
+      estoque_unico;
+    estoque_unico = coalesce(:estoque_unico, 0);
+
+    -- Baixar produto do Estoque
+    for
+      Select
+          i.Codprod
+        , i.Codemp
+        , i.Qtde
+        , coalesce(p.Qtde, 0)
+        , coalesce(p.Reserva, 0)
+        , coalesce(p.Preco, 0)
+        , coalesce(p.movimenta_estoque, 1)
+      from TVENDASITENS i
+        inner join TBPRODUTO p on (p.Cod = i.Codprod)
+      where i.Ano = new.Ano
+        and i.Codcontrol = new.Codcontrol
+      into
+          produto
+        , empresa
+        , quantidade
+        , estoque
+        , reserva
+        , valor_produto
+        , Movimentar
+    do
+    begin
+      reserva = 0; -- :reserva - :Quantidade;  -- Descontinuada RESERVA
+      estoque = Case when :Movimentar = 1 then (:Estoque - :Quantidade) else :Estoque end;
+
+      -- Baixar estoque
+      Update TBPRODUTO p Set
+          p.Qtde    = :Estoque
+        --, p.Reserva = :Reserva               -- Descontinuada RESERVA
+      where (p.Cod     = :Produto)
+        and ((p.Codemp = :Empresa) or (:estoque_unico = 1)) ;
+
+      -- Gravar posicao de estoque
+      Update TVENDASITENS i Set
+        i.Qtdefinal = :Estoque
+      where i.Ano        = new.Ano
+        and i.Codcontrol = new.Codcontrol
+        and i.Codemp     = new.Codemp
+        and i.Codprod    = :Produto;
+
+      -- Gerar historico
+      Insert Into TBPRODHIST (
+          Codempresa
+        , Codprod
+        , Doc
+        , Historico
+        , Dthist
+        , Qtdeatual
+        , Qtdenova
+        , Qtdefinal
+        , Resp
+        , Motivo
+      ) values (
+          :Empresa
+        , :Produto
+        , new.Ano || '/' || new.Codcontrol
+        , Trim('SAIDA - VENDA ' || Case when :Movimentar = 1 then '' else '*' end)
+        , Current_time
+        , :Estoque + :Quantidade
+        , :Quantidade
+        , :Estoque
+        , new.Usuario
+        , replace('Venda no valor de R$ ' || :Valor_produto, '.', ',')
+      );
+    end
+     
+  end 
+end^
+
+SET TERM ; ^
+
+
+
+
+/*------ SYSDBA 03/12/2014 13:38:14 --------*/
+
+CREATE INDEX IDX_PRODHIST_DATAHORA
+ON TBPRODHIST (DTHIST);
+
+
+
+
+/*------ SYSDBA 04/12/2014 13:16:28 --------*/
+
+ALTER TABLE TBVENDAS_FORMAPAGTO
+    ADD VALOR_RECEBIDO DMN_MONEY DEFAULT 0;
+
+COMMENT ON COLUMN TBVENDAS_FORMAPAGTO.VALOR_RECEBIDO IS
+'Valor Recebido.
+
+Apenas em PDV quando o TRONO se torna necessario.';
+
+alter table TBVENDAS_FORMAPAGTO
+alter ANO_VENDA position 1;
+
+alter table TBVENDAS_FORMAPAGTO
+alter CONTROLE_VENDA position 2;
+
+alter table TBVENDAS_FORMAPAGTO
+alter FORMAPAGTO_COD position 3;
+
+alter table TBVENDAS_FORMAPAGTO
+alter CONDICAOPAGTO_COD position 4;
+
+alter table TBVENDAS_FORMAPAGTO
+alter VENDA_PRAZO position 5;
+
+alter table TBVENDAS_FORMAPAGTO
+alter VALOR_FPAGTO position 6;
+
+alter table TBVENDAS_FORMAPAGTO
+alter VALOR_RECEBIDO position 7;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_01 position 8;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_02 position 9;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_03 position 10;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_04 position 11;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_05 position 12;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_06 position 13;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_07 position 14;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_08 position 15;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_09 position 16;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_10 position 17;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_11 position 18;
+
+alter table TBVENDAS_FORMAPAGTO
+alter PRAZO_12 position 19;
+
+
+
+
+/*------ SYSDBA 05/12/2014 11:52:14 --------*/
+
+create view vw_produto_demanda_anual (
+    empresa_cnpj
+  , empresa_razao
+  , tipo
+  , tipo_desc
+  , cod
+  , cod_x
+  , descri
+  , apresentacao
+  , descri_apresentacao
+  , modelo
+  , referencia
+  , grupo_cod
+  , grupo_desc
+  , secao_cod
+  , secao_desc
+  , fabricante_cod
+  , fabricante_nome
+  , especificacao
+  , und_compra
+  , valor_customedio
+  , valor_venda
+
+  , percentual_marckup
+  , percentual_margem
+  , compor_faturamento
+  , produto_novo
+  , movimenta_estoque
+
+  , estoque_minimo
+  , estoque
+
+  , ano
+
+  , cjan
+  , vjan
+  , ajan
+  , sjan
+
+  , cfev
+  , vfev
+  , afev
+  , sfev
+
+  , cmar
+  , vmar
+  , amar
+  , smar
+
+  , cabr
+  , vabr
+  , aabr
+  , sabr
+
+  , cmai
+  , vmai
+  , amai
+  , smai
+
+  , cjun
+  , vjun
+  , ajun
+  , sjun
+
+  , cjul
+  , vjul
+  , ajul
+  , sjul
+
+  , cago
+  , vago
+  , aago
+  , sago
+
+  , cset
+  , vset
+  , aset
+  , sset
+
+  , cout
+  , vout
+  , aout
+  , sout
+
+  , cnov
+  , vnov
+  , anov
+  , snov
+
+  , cdez
+  , vdez
+  , adez
+  , sdez
+)
+as
+Select
+    p.codemp as empresa_cnpj
+  , e.rzsoc  as empresa_razao
+  , case when p.aliquota_tipo = 0 then 'P' else 'S' end as tipo
+  , case when p.aliquota_tipo = 0 then 'Produto(s)' else 'Serviço(s)' end as tipo_desc
+  , p.cod
+  , coalesce(pc.item, pv.item, pa.item) as cod_x
+  , p.descri
+  , p.apresentacao
+  , p.descri_apresentacao
+  , p.modelo
+  , p.referencia
+  , coalesce(p.codgrupo, 0) as grupo_cod
+  , coalesce(g.descri, '* Indefinido')   as grupo_desc
+  , coalesce(p.codsecao, 0)                     as secao_cod
+  , coalesce(s.scp_descricao, '* Indefinida')   as secao_desc
+  , coalesce(p.codfabricante, 0)     as fabricante_cod
+  , coalesce(f.nome, '* Indefinido') as fabricante_nome
+  , p.especificacao
+  , substring(coalesce(nullif(trim(u.unp_sigla), ''), trim(u.unp_descricao)) from 1 for 3) as und_compra
+  , p.customedio as valor_customedio
+  , p.preco      as valor_venda
+
+  , p.percentual_marckup
+  , p.percentual_margem
+  , p.compor_faturamento
+  , p.produto_novo
+  , p.movimenta_estoque
+
+  , p.estoqmin as estoque_minimo
+  , p.qtde     as estoque
+
+  , coalesce(pc.ano, pv.ano, pa.ano) as ano
+
+  , coalesce(pc.jan, 0.0) as cjan
+  , coalesce(pv.jan, 0.0) as vjan
+  , coalesce(pa.jan, 0.0) as ajan
+  , coalesce(pc.jan, 0.0) - coalesce(pv.jan, 0.0) + coalesce(pa.jan, 0.0) as sjan
+
+  , coalesce(pc.fev, 0.0) as cfev
+  , coalesce(pv.fev, 0.0) as vfev
+  , coalesce(pa.fev, 0.0) as afev
+  , coalesce(pc.fev, 0.0) - coalesce(pv.fev, 0.0) + coalesce(pa.fev, 0.0) as sfev
+
+  , coalesce(pc.mar, 0.0) as cmar
+  , coalesce(pv.mar, 0.0) as vmar
+  , coalesce(pa.mar, 0.0) as amar
+  , coalesce(pc.mar, 0.0) - coalesce(pv.mar, 0.0) + coalesce(pa.mar, 0.0) as smar
+
+  , coalesce(pc.abr, 0.0) as cabr
+  , coalesce(pv.abr, 0.0) as vabr
+  , coalesce(pa.abr, 0.0) as aabr
+  , coalesce(pc.abr, 0.0) - coalesce(pv.abr, 0.0) + coalesce(pa.abr, 0.0) as sabr
+
+  , coalesce(pc.mai, 0.0) as cmai
+  , coalesce(pv.mai, 0.0) as vmai
+  , coalesce(pa.mai, 0.0) as amai
+  , coalesce(pc.mai, 0.0) - coalesce(pv.mai, 0.0) + coalesce(pa.mai, 0.0) as smai
+
+  , coalesce(pc.jun, 0.0) as cjun
+  , coalesce(pv.jun, 0.0) as vjun
+  , coalesce(pa.jun, 0.0) as ajun
+  , coalesce(pc.jun, 0.0) - coalesce(pv.jun, 0.0) + coalesce(pa.jun, 0.0) as sjun
+
+  , coalesce(pc.jul, 0.0) as cjul
+  , coalesce(pv.jul, 0.0) as vjul
+  , coalesce(pa.jul, 0.0) as ajul
+  , coalesce(pc.jul, 0.0) - coalesce(pv.jul, 0.0) + coalesce(pa.jul, 0.0) as sjul
+
+  , coalesce(pc.ago, 0.0) as cago
+  , coalesce(pv.ago, 0.0) as vago
+  , coalesce(pa.ago, 0.0) as aago
+  , coalesce(pc.ago, 0.0) - coalesce(pv.ago, 0.0) + coalesce(pa.ago, 0.0) as sago
+
+  , coalesce(pc.se, 0.0)  as cset
+  , coalesce(pv.se, 0.0)  as vset
+  , coalesce(pa.se, 0.0)  as aset
+  , coalesce(pc.se, 0.0) - coalesce(pv.se, 0.0) + coalesce(pa.se, 0.0) as sset
+
+  , coalesce(pc.out, 0.0) as cout
+  , coalesce(pv.out, 0.0) as vout
+  , coalesce(pa.out, 0.0) as aout
+  , coalesce(pc.out, 0.0) - coalesce(pv.out, 0.0) + coalesce(pa.out, 0.0) as sout
+
+  , coalesce(pc.nov, 0.0) as cnov
+  , coalesce(pv.nov, 0.0) as vnov
+  , coalesce(pa.nov, 0.0) as anov
+  , coalesce(pc.nov, 0.0) - coalesce(pv.nov, 0.0) + coalesce(pa.nov, 0.0) as snov
+
+  , coalesce(pc.dez, 0.0) as cdez
+  , coalesce(pv.dez, 0.0) as vdez
+  , coalesce(pa.dez, 0.0) as adez
+  , coalesce(pc.dez, 0.0) - coalesce(pv.dez, 0.0) + coalesce(pa.dez, 0.0) as sdez
+from TBEMPRESA e
+
+  /* Vendas */
+  left join (
+
+    select
+        vi.codprod as item
+      , vi.codemp as empresa
+      , extract(year from vi.dtvenda) as ano
+      , sum(case when extract(month from vi.dtvenda) = 1 then vi.qtde else 0 end) as JAN,
+              sum(case when extract(month from vi.dtvenda) = 2 then vi.qtde else 0 end) as FEV,
+              sum(case when extract(month from vi.dtvenda) = 3 then vi.qtde else 0 end) as MAR,
+              sum(case when extract(month from vi.dtvenda) = 4 then vi.qtde else 0 end) as ABR,
+              sum(case when extract(month from vi.dtvenda) = 5 then vi.qtde else 0 end) as MAI,
+              sum(case when extract(month from vi.dtvenda) = 6 then vi.qtde else 0 end) as JUN,
+              sum(case when extract(month from vi.dtvenda) = 7 then vi.qtde else 0 end) as JUL,
+              sum(case when extract(month from vi.dtvenda) = 8 then vi.qtde else 0 end) as AGO,
+              sum(case when extract(month from vi.dtvenda) = 9 then vi.qtde else 0 end) as SE,
+              sum(case when extract(month from vi.dtvenda) = 10 then vi.qtde else 0 end) as OUT,
+              sum(case when extract(month from vi.dtvenda) = 11 then vi.qtde else 0 end) as NOV,
+              sum(case when extract(month from vi.dtvenda) = 12 then vi.qtde else 0 end) as DEZ
+    from TBVENDAS v
+      inner join TVENDASITENS vi on (v.ano = vi.ano and v.codcontrol = vi.codcontrol and v.codemp = vi.codemp)
+    where v.status in (3, 4)
+    group by
+        vi.codprod
+      , vi.codemp
+      , extract(year from vi.dtvenda)
+
+  ) PV on (pv.empresa = e.cnpj)
+
+  /* Compras */
+  left join (
+
+    select
+        ci.codprod as item
+      , ci.codemp as empresa
+      , extract(year from ci.dtent) as ano
+      , sum(case when extract(month from ci.dtent) = 1 then ci.qtde else 0 end) as JAN
+      , sum(case when extract(month from ci.dtent) = 2 then ci.qtde else 0 end) as FEV
+      , sum(case when extract(month from ci.dtent) = 3 then ci.qtde else 0 end) as MAR
+      , sum(case when extract(month from ci.dtent) = 4 then ci.qtde else 0 end) as ABR
+      , sum(case when extract(month from ci.dtent) = 5 then ci.qtde else 0 end) as MAI
+      , sum(case when extract(month from ci.dtent) = 6 then ci.qtde else 0 end) as JUN
+      , sum(case when extract(month from ci.dtent) = 7 then ci.qtde else 0 end) as JUL
+      , sum(case when extract(month from ci.dtent) = 8 then ci.qtde else 0 end) as AGO
+      , sum(case when extract(month from ci.dtent) = 9 then ci.qtde else 0 end) as SE
+      , sum(case when extract(month from ci.dtent) = 10 then ci.qtde else 0 end) as OUT
+      , sum(case when extract(month from ci.dtent) = 11 then ci.qtde else 0 end) as NOV
+      , sum(case when extract(month from ci.dtent) = 12 then ci.qtde else 0 end) as DEZ
+    from TBCOMPRAS c
+      inner join TBCOMPRASITENS ci on (c.ano = ci.ano and c.codcontrol = ci.codcontrol and c.codemp = ci.codemp)
+    where c.status in (2,4)
+    group by
+        ci.codprod
+      , ci.codemp
+      , extract(year from ci.dtent)
+
+  ) PC on (pc.empresa = e.cnpj and pc.item = pv.item and pc.ano = pc.ano)
+
+  /* Ajustes */
+  left join (
+
+    select
+        a.codprod as item
+      , a.codempresa as empresa
+      , extract(year from a.dtajust) as ano
+      , sum(case when extract(month from a.dtajust) = 1 then a.qtdeatual else 0 end) as JAN,
+        sum(case when extract(month from a.dtajust) = 2 then a.qtdeatual else 0 end) as FEV,
+        sum(case when extract(month from a.dtajust) = 3 then a.qtdeatual else 0 end) as MAR,
+        sum(case when extract(month from a.dtajust) = 4 then a.qtdeatual else 0 end) as ABR,
+        sum(case when extract(month from a.dtajust) = 5 then a.qtdeatual else 0 end) as MAI,
+        sum(case when extract(month from a.dtajust) = 6 then a.qtdeatual else 0 end) as JUN,
+        sum(case when extract(month from a.dtajust) = 7 then a.qtdeatual else 0 end) as JUL,
+        sum(case when extract(month from a.dtajust) = 8 then a.qtdeatual else 0 end) as AGO,
+        sum(case when extract(month from a.dtajust) = 9 then a.qtdeatual else 0 end) as SE,
+        sum(case when extract(month from a.dtajust) = 10 then a.qtdeatual else 0 end) as OUT,
+        sum(case when extract(month from a.dtajust) = 11 then a.qtdeatual else 0 end) as NOV,
+        sum(case when extract(month from a.dtajust) = 12 then a.qtdeatual else 0 end) as DEZ
+    from TBAJUSTESTOQ a
+    group by
+        a.codprod
+      , a.codempresa
+      , extract(year from a.dtajust)
+
+  ) PA on (pa.empresa = e.cnpj and pa.item = pv.item and pa.ano = pv.ano)
+
+  inner join TBPRODUTO p on (p.cod = coalesce(pv.item, pc.item, pa.item))
+
+  left join TBGRUPOPROD g on (g.cod = p.codgrupo)
+  left join TBSECAOPROD s on (s.scp_cod = p.codsecao)
+  left join TBFABRICANTE f on (f.cod = p.codfabricante)
+  left join TBUNIDADEPROD u on (u.unp_cod = p.codunidade)
+
+order by
+    e.rzsoc
+  , p.aliquota_tipo
+  , coalesce(g.descri, '* Indefinido')
+  , coalesce(f.nome, '* Indefinido')
+  , p.descri_apresentacao
+  , coalesce(pc.ano, pv.ano, pa.ano)
+;
+
+GRANT ALL ON VW_PRODUTO_DEMANDA_ANUAL TO "PUBLIC";
