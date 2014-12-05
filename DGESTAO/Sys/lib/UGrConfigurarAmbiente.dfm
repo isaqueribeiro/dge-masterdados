@@ -1,6 +1,6 @@
 inherited frmGrConfigurarAmbiente: TfrmGrConfigurarAmbiente
-  Left = 676
-  Top = 269
+  Left = 476
+  Top = 224
   BorderStyle = bsDialog
   BorderWidth = 4
   Caption = 'Configurar Ambiente (Esta'#231#227'o)'
@@ -161,7 +161,7 @@ inherited frmGrConfigurarAmbiente: TfrmGrConfigurarAmbiente
     Top = 0
     Width = 430
     Height = 488
-    ActivePage = TbsPDV
+    ActivePage = TbsGeral
     Align = alClient
     TabOrder = 0
     object TbsGeral: TTabSheet
@@ -312,6 +312,16 @@ inherited frmGrConfigurarAmbiente: TfrmGrConfigurarAmbiente
           ParentFont = False
           Transparent = True
         end
+        object lblNumeroCaixa: TLabel
+          Left = 73
+          Top = 364
+          Width = 71
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'N'#250'mero Caixa:'
+          FocusControl = edNumeroCaixa
+          Transparent = True
+        end
         object edPais: TEdit
           Left = 72
           Top = 48
@@ -450,6 +460,14 @@ inherited frmGrConfigurarAmbiente: TfrmGrConfigurarAmbiente
           Caption = 'Or'#231'amento/Venda - Carregar pelo C'#243'digo EAN do Produto'
           TabOrder = 16
         end
+        object edNumeroCaixa: TEdit
+          Left = 152
+          Top = 360
+          Width = 65
+          Height = 21
+          TabOrder = 17
+          OnKeyPress = ApenasNumerosKeyPress
+        end
       end
     end
     object TbsPDV: TTabSheet
@@ -457,7 +475,7 @@ inherited frmGrConfigurarAmbiente: TfrmGrConfigurarAmbiente
       ImageIndex = 1
       object GrpBxImpressaoCupomNFiscal: TGroupBox
         Left = 0
-        Top = 65
+        Top = 89
         Width = 422
         Height = 112
         Align = alTop
@@ -539,27 +557,36 @@ inherited frmGrConfigurarAmbiente: TfrmGrConfigurarAmbiente
         Left = 0
         Top = 0
         Width = 422
-        Height = 65
+        Height = 89
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
         object chkCupomAutomatico: TCheckBox
           Left = 88
-          Top = 34
+          Top = 58
           Width = 329
           Height = 17
           Caption = 'Emitir cupom automaticamente ap'#243's a finaliza'#231#227'o da venda'
           Enabled = False
-          TabOrder = 1
+          TabOrder = 2
         end
         object chkCupomEmitir: TCheckBox
           Left = 88
-          Top = 10
+          Top = 34
           Width = 145
           Height = 17
           Caption = 'Emitir Cupom (Geral)'
-          TabOrder = 0
+          TabOrder = 1
           OnClick = chkCupomEmitirClick
+        end
+        object chkOrcamentoEmitir: TCheckBox
+          Left = 88
+          Top = 10
+          Width = 225
+          Height = 17
+          Caption = 'Esta'#231#227'o emite apenas or'#231'amentos'
+          TabOrder = 0
+          OnClick = chkOrcamentoEmitirClick
         end
       end
     end
