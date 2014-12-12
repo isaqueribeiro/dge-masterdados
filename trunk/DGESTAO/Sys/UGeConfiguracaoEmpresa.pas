@@ -64,6 +64,13 @@ type
     IbDtstTabelaNFE_EMITIR: TSmallintField;
     chkNFE_SalvarNotaDenegada: TDBCheckBox;
     IbDtstTabelaNFE_ACEITAR_NOTA_DENEGADA: TSmallintField;
+    IbDtstTabelaNFCE_TOKEN_ID: TIBStringField;
+    IbDtstTabelaNFCE_TOKEN: TIBStringField;
+    grpBxToken: TGroupBox;
+    lblTokenId: TLabel;
+    edTokenId: TDBEdit;
+    lblToken: TLabel;
+    edToken: TDBEdit;
     procedure FormCreate(Sender: TObject);
     procedure DtSrcTabelaStateChange(Sender: TObject);
     procedure IbDtstTabelaEMPRESAGetText(Sender: TField; var Text: String;
@@ -173,7 +180,7 @@ begin
   IbDtstTabelaEMAIL_REQUER_AUTENTICACAO.AsInteger := 0;
   IbDtstTabelaEMAIL_CONEXAO_SSL.AsInteger         := 0;
 
-  IbDtstTabelaNFE_ACEITAR_NOTA_DENEGADA.AsInteger := 0;
+  IbDtstTabelaNFE_ACEITAR_NOTA_DENEGADA.AsInteger := 1;
   IbDtstTabelaNFE_SOLICITA_DH_SAIDA.AsInteger     := 0;
   IbDtstTabelaNFE_IMPRIMIR_COD_CLIENTE.AsInteger  := 0;
   IbDtstTabelaCLIENTE_PERMITIR_DUPLICAR_CNPJ.AsInteger := 0;
@@ -182,6 +189,9 @@ begin
   IbDtstTabelaESTOQUE_UNICO_EMPRESAS.AsInteger     := 0;
   IbDtstTabelaESTOQUE_SATELITE_CLIENTE.AsInteger   := 0;
   IbDtstTabelaAUTORIZA_INFORMA_CLIENTE.AsInteger   := 0;
+
+  IbDtstTabelaNFCE_TOKEN_ID.Clear;
+  IbDtstTabelaNFCE_TOKEN.Clear;
 end;
 
 procedure TfrmGeConfiguracaoEmpresa.btbtnAlterarClick(Sender: TObject);
