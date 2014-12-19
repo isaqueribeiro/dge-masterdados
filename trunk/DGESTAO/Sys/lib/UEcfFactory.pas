@@ -3,11 +3,12 @@ unit UEcfFactory;
 interface
 
 Uses
-  Classes, UEcfAgil, UEcfWindowsPrinter, Printers;
+  Classes, UInfoVersao, UEcfAgil, UEcfWindowsPrinter{$IFDEF PDV}, UEcfBematechNaoFiscal{$ENDIF}, Printers;
 
   Type
     TEcfConfiguracao = record
-      Impressora,
+      Impressora       : String;
+      ModeloEspecifico : Integer;
       Dll       ,
       Porta     ,
       Empresa   ,
@@ -19,10 +20,16 @@ Uses
       Cnpj      ,
       InscEstadual,
       ID       : String;
-      ImprimirGliche : Boolean
+      ImprimirGliche : Boolean;
+      ArquivoLogo   ,
+      ArquivoQRCode ,
+      SoftHouse ,
+      Sistema   ,
+      Versao    : String;
     end;
 
-    TEcfTipo = (ecfPadraoWindows, ecfLPT1, ecfLPT2, ecfLPT3, ecfLPT4, ecfLPT5, ecfTEXTO, ecfDaruma, ecfBematech);
+    TEcfTipo = (ecfPadraoWindows, ecfLPTX, ecfTEXTO, ecfDaruma, ecfBematech);
+    TEcfBematech = (ecfBema_Nenhum, ecfBema_MP_20_CI, ecfBema_MP_20_MI, ecfBema_MP_20_TH, ecfBema_MP_2000_CI, ecfBema_MP_2000_TH, ecfBema_MP_2100_TH, ecfBema_MP_4000_TH, ecfBema_MP_4200_TH, ecfBema_MP_2500_TH);
 
     TEcfFactory = class
     private
@@ -46,12 +53,17 @@ uses
 { TEcfFactory }
 
 constructor TEcfFactory.Create;
+var
+  ver : TInfoVersao;
 begin
   inherited Create;
 
+  ver := TInfoVersao.GetInstance;
+
   with aConfiguracao do
   begin
-    Impressora     := Printer.Printers.Strings[Printer.PrinterIndex];
+    Impressora       := Printer.Printers.Strings[Printer.PrinterIndex];
+    ModeloEspecifico := 0;
     Dll            := EmptyStr;
     Porta          := 'C:\CUPOM.TXT';
     Empresa        := 'ÁGIL SOLUÇÕES EM SOFTWARES';
@@ -64,6 +76,11 @@ begin
     InscEstadual   := 'ISENTO';
     ID             := FormatFloat('##00000', RandomRange(1, 99999));
     ImprimirGliche := False;
+    ArquivoLogo    := EmptyStr;
+    ArquivoQRCode  := EmptyStr;
+    SoftHouse      := ver.getPropertyValue(ivCOMPANY_NAME);
+    Sistema        := ver.getPropertyValue(ivPRODUCT_NAME);
+    Versao         := ver.getPropertyValue(ivPRODUCT_VERSION);
   end;
 end;
 
@@ -75,8 +92,9 @@ begin
   Case aEcfTipo of
     ecfPadraoWindows:
       aEcf := TEcfWindowsPrinter.Criar(
-        aConfiguracao.Impressora,
         aConfiguracao.Dll,
+        aConfiguracao.Impressora,
+        aConfiguracao.ModeloEspecifico,
         aConfiguracao.Porta,
         aConfiguracao.Empresa,
         aConfiguracao.Endereco,
@@ -87,12 +105,14 @@ begin
         aConfiguracao.Cnpj,
         aConfiguracao.InscEstadual,
         aConfiguracao.ID,
+        aConfiguracao.ArquivoLogo,
         aConfiguracao.ImprimirGliche);
 
-    ecfLPT1, ecfLPT2, ecfLPT3, ecfLPT4, ecfLPT5, ecfTEXTO:
+    ecfLPTX, ecfTEXTO:
       aEcf := TEcfGenerico.Criar(
-        aConfiguracao.Impressora,
         aConfiguracao.Dll,
+        aConfiguracao.Impressora,
+        aConfiguracao.ModeloEspecifico,
         aConfiguracao.Porta,
         aConfiguracao.Empresa,
         aConfiguracao.Endereco,
@@ -103,8 +123,30 @@ begin
         aConfiguracao.Cnpj,
         aConfiguracao.InscEstadual,
         aConfiguracao.ID,
+        aConfiguracao.ArquivoLogo,
         aConfiguracao.ImprimirGliche);
+
+    ecfBematech:
+      aEcf := TEcfBematechNaoFiscal.Criar(
+        aConfiguracao.Dll,
+        aConfiguracao.Impressora,
+        aConfiguracao.ModeloEspecifico,
+        aConfiguracao.Porta,
+        aConfiguracao.Empresa,
+        aConfiguracao.Endereco,
+        aConfiguracao.Bairro,
+        aConfiguracao.Fone,
+        aConfiguracao.Cep,
+        aConfiguracao.Cidade,
+        aConfiguracao.Cnpj,
+        aConfiguracao.InscEstadual,
+        aConfiguracao.ID,
+        aConfiguracao.ArquivoLogo,
+        aConfiguracao.ImprimirGliche);
+
   end;
+
+  aEcf.QRCode   := aConfiguracao.ArquivoQRCode;
 end;
 
 destructor TEcfFactory.Destroy;
