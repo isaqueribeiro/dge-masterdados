@@ -8,9 +8,10 @@ Uses
   Type
     TEcfWindowsPrinter = class(TEcfAgil)
     private
-
+      procedure ImprimirCabecalho;
     public
-      constructor Criar(sDll, sNomeImpressora, sPorta, sEmp, sEndereco, sBairro, sFone, sCep, sCid, sCnpj, sInscEstadual, sID : String; bImp_Gliche : Boolean); override;
+      constructor Criar(sDll, sNomeImpressora : String; iModeloEspecifico : Integer;
+        sPorta, sEmp, sEndereco, sBairro, sFone, sCep, sCid, sCnpj, sInscEstadual, sID, sArquivoLogotipo : String; bImp_Gliche : Boolean); override;
 
       procedure Compactar_Fonte; override;
       procedure Descompactar_Fonte; override;
@@ -18,6 +19,7 @@ Uses
       procedure Gliche(Imprimir : Boolean); override;
       procedure Incluir_Item(Item, Codigo, Descricao, Quant, V_Unitario, ST, Total_Item : String); override;
       procedure Incluir_Forma_Pgto(Descricao, Valor : String); override;
+      procedure Incluir_Texto_Valor(Descricao, Valor : String); override;
       procedure SubTotalVenda(Valor : String; const LinhaSobre : Boolean); override;
       procedure Desconto(Valor : String); override;
       procedure TotalVenda(Valor : String); override;
@@ -27,6 +29,7 @@ Uses
       procedure MSG_Cupom(Msg1, Msg2, Msg3 : String); override;
       procedure Emitir_Cupom_Conv(Emitir : Boolean; Convenio, Conveniado, Valor : String); override;
       procedure Titulo_Cupom(Str : String); override;
+      procedure Titulo_Cupom_DANFE(sTitulo1, sTitulo2, sTitulo3, sTitulo4 : String); override;
       procedure Identifica_Cupom(Data : TDateTime; sID, sNomeVendedor : String); override;
       procedure Identifica_Consumidor(sCNPJ_CPF, sNome, sEndereco : String); override;
       procedure Linha; override;
@@ -43,12 +46,14 @@ implementation
 
 { TEcfWindowsPrinter }
 
-constructor TEcfWindowsPrinter.Criar(sDll, sNomeImpressora, sPorta, sEmp, sEndereco, sBairro, sFone,
-  sCep, sCid, sCnpj, sInscEstadual, sID: String; bImp_Gliche: Boolean);
+constructor TEcfWindowsPrinter.Criar(sDll, sNomeImpressora: String;
+  iModeloEspecifico: Integer; sPorta, sEmp, sEndereco, sBairro, sFone, sCep,
+  sCid, sCnpj, sInscEstadual, sID, sArquivoLogotipo : String; bImp_Gliche: Boolean);
 begin
   Self.Create;
 
-  Num_Colunas    := 50;
+  Num_Colunas      := 50;
+  ModeloEspecifico := iModeloEspecifico;
   NomeImpressora := sNomeImpressora;
   Dll            := sDll;
   Porta          := sPorta;
@@ -61,6 +66,8 @@ begin
   CNPJ           := sCnpj;
   Insc_Estadual  := sInscEstadual;
   ID_Venda       := sID;
+  Logotipo       := sArquivoLogotipo;
+  QRCode         := EmptyStr;
 
   // Definir a impressora de acordo com a configuração
   myPrinter.PrinterIndex := myPrinter.Printers.IndexOf(PChar(NomeImpressora));
@@ -112,11 +119,11 @@ procedure TEcfWindowsPrinter.Incluir_Item(Item, Codigo, Descricao, Quant,
 var
   esp_desc : Integer;
 begin
-  esp_desc := Num_Colunas - 13;
+  esp_desc := Num_Colunas - 18;
 
   Texto_Cupom.Add(
     Alinhar_Esquerda(3, Item)    +
-    Alinhar_Esquerda(10, Codigo) +
+    Alinhar_Esquerda(14, Codigo) +
     Alinhar_Esquerda(esp_desc, Copy(RemoveAcentos(Descricao), 1, esp_desc)) );
 
   Texto_Cupom.Add(
@@ -174,6 +181,8 @@ end;
 procedure TEcfWindowsPrinter.Identifica_Consumidor(sCNPJ_CPF, sNome,
   sEndereco: String);
 begin
+  Texto_Cupom.Add( '\n' + Centralizar(Num_Colunas, 'CONSUMIDOR') );
+
   Texto_Cupom.Add( Alinhar_Esquerda(10, 'CNPJ/CPF: ') +
     Alinhar_Esquerda(Num_Colunas - 10, sCNPJ_CPF) );
 
@@ -227,15 +236,7 @@ procedure TEcfWindowsPrinter.Titulo_Cupom(Str: String);
 begin
   Texto_Cupom.Add( '\n'+ Centralizar(Num_Colunas, Str) );
 
-  Texto_Cupom.Add(
-    Alinhar_Esquerda( 7, 'ITEM') +
-    Alinhar_Esquerda(10, 'CODIGO') +
-    Alinhar_Esquerda(20, 'DESCRICAO') );
-
-  Texto_Cupom.Add( Alinhar_Direita(20, 'QTD x UNITARIO') +
-    Alinhar_Direita(10, 'ST') +
-    Alinhar_Direita(Num_Colunas - 30, 'VALOR(R$)') );
-
+  Self.ImprimirCabecalho;
   Self.Linha;
 end;
 
@@ -278,6 +279,10 @@ procedure TEcfWindowsPrinter.Finalizar;
 begin
   Self.Linha;
 
+  Texto_Cupom.Add( Centralizar(Num_Colunas, RemoveAcentos(SoftHouse)) );
+  Texto_Cupom.Add( Centralizar(Num_Colunas, RemoveAcentos(Sistema)) );
+  Texto_Cupom.Add( Centralizar(Num_Colunas, 'Versao ' + Versao) );
+
   Texto_Cupom.Add( ' *' );
   Texto_Cupom.Add( ' *' );
   Texto_Cupom.Add( ' *' );
@@ -307,6 +312,38 @@ end;
 procedure TEcfWindowsPrinter.Texto_Livre_Negrito(Str: String);
 begin
   Self.Texto_Livre( '\n' + Str );
+end;
+
+procedure TEcfWindowsPrinter.Incluir_Texto_Valor(Descricao, Valor: String);
+begin
+  if (Length(Trim(Descricao)) <> 0) then
+    Texto_Cupom.Add(
+      Alinhar_Esquerda(24, Descricao) +
+      Alinhar_Direita(Num_Colunas - 25, Valor) );
+end;
+
+procedure TEcfWindowsPrinter.Titulo_Cupom_DANFE(sTitulo1, sTitulo2, sTitulo3, sTitulo4: String);
+begin
+  Texto_Cupom.Add( '\n'+ Centralizar(Num_Colunas, sTitulo1) );
+  Texto_Cupom.Add( Centralizar(Num_Colunas, sTitulo2) );
+  Texto_Cupom.Add( Centralizar(Num_Colunas, sTitulo3) );
+  Texto_Cupom.Add( Centralizar(Num_Colunas, sTitulo4) );
+
+  Self.Linha;
+  Self.ImprimirCabecalho;
+  Self.Linha;
+end;
+
+procedure TEcfWindowsPrinter.ImprimirCabecalho;
+begin
+  Texto_Cupom.Add(
+    Alinhar_Esquerda( 7, 'ITEM') +
+    Alinhar_Esquerda(10, 'CODIGO') +
+    Alinhar_Esquerda(20, 'DESCRICAO') );
+
+  Texto_Cupom.Add( Alinhar_Direita(20, 'QTD x UNITARIO') +
+    Alinhar_Direita(10, 'ST') +
+    Alinhar_Direita(Num_Colunas - 30, 'VALOR(R$)') );
 end;
 
 end.
