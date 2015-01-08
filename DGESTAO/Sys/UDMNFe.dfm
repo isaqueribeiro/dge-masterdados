@@ -17773,6 +17773,7 @@ object DMNFe: TDMNFe
     ImprimirUnQtVlComercial = False
     Detalhado = False
     DescricaoViaEstabelec = 'Via do Consumidor'
+    ExpandirDadosAdicionaisAuto = False
     Left = 56
     Top = 72
   end
@@ -19645,6 +19646,8 @@ object DMNFe: TDMNFe
     ConfigBarras.MostrarCodigo = False
     ConfigBarras.LarguraLinha = 0
     ConfigBarras.Altura = 0
+    MarcaImpressora = iBematech
+    LinhasEntreCupons = 10
     ImprimeEmUmaLinha = False
     ImprimeDescAcrescItem = False
     Left = 88
@@ -19654,6 +19657,8 @@ object DMNFe: TDMNFe
     ACBrSAT = ACBrSAT
     Mask_qCom = '0.0000'
     Mask_vUnCom = '0.000'
+    MarcaImpressora = iBematech
+    LinhasEntreCupons = 10
     Left = 800
     Top = 152
   end
@@ -19667,6 +19672,11 @@ object DMNFe: TDMNFe
     Config.emit_indRatISSQN = irSim
     Config.EhUTF8 = False
     Config.PaginaDeCodigo = 0
+    Rede.tipoInter = infETHE
+    Rede.seg = segNONE
+    Rede.tipoLan = lanDHCP
+    Rede.proxy = 0
+    Rede.proxy_porta = 0
     Left = 800
     Top = 104
   end
