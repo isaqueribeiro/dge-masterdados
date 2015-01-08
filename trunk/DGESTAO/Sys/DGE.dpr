@@ -105,7 +105,11 @@ uses
   UEcfWindowsPrinter in 'lib\UEcfWindowsPrinter.pas',
   UDMCupom in 'UDMCupom.pas' {DMCupom: TDataModule},
   UGeCartaCorrecao in 'UGeCartaCorrecao.pas' {frmGeCartaCorrecao},
-  UGeNFEmitida in 'UGeNFEmitida.pas' {frmGeNFEmitida};
+  UGeNFEmitida in 'UGeNFEmitida.pas' {frmGeNFEmitida},
+  UEcfBematechNaoFiscal in 'lib\UEcfBematechNaoFiscal.pas',
+  pngimage in 'lib\PngImage.pas',
+  pnglang in 'lib\pnglang.pas',
+  pngzlib in 'lib\pngzlib.pas';
 
 {$R *.res}
 

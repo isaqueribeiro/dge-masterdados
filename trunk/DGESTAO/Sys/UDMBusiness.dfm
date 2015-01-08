@@ -1,12 +1,12 @@
 object DMBusiness: TDMBusiness
   OldCreateOrder = True
   OnCreate = DataModuleCreate
-  Left = 393
-  Top = 215
+  Left = 445
+  Top = 247
   Height = 617
   Width = 812
   object ibdtbsBusiness: TIBDatabase
-    DatabaseName = 'localhost:AGIL_COMERCIO'
+    DatabaseName = 'localhost:BUSINESS'
     Params.Strings = (
       'user_name=SYSDBA'
       'Password=masterkey'
