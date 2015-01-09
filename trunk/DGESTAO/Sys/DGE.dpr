@@ -109,7 +109,9 @@ uses
   UEcfBematechNaoFiscal in 'lib\UEcfBematechNaoFiscal.pas',
   pngimage in 'lib\PngImage.pas',
   pnglang in 'lib\pnglang.pas',
-  pngzlib in 'lib\pngzlib.pas';
+  pngzlib in 'lib\pngzlib.pas',
+  uMath in 'lib\uMath.pas',
+  uTypes in 'lib\uTypes.pas';
 
 {$R *.res}
 
