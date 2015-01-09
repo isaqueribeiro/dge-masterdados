@@ -1,8 +1,8 @@
 object DMNFe: TDMNFe
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Left = 409
-  Top = 217
+  Left = 221
+  Top = 61
   Height = 704
   Width = 931
   object ACBrNFe: TACBrNFe
@@ -17833,16 +17833,10 @@ object DMNFe: TDMNFe
     Top = 216
     Datasets = <
       item
-        DataSet = dmACBrNFeFR.frxDestinatario
-        DataSetName = 'Destinatario'
       end
       item
-        DataSet = dmACBrNFeFR.frxEmitente
-        DataSetName = 'Emitente'
       end
       item
-        DataSet = dmACBrNFeFR.frxEventos
-        DataSetName = 'Eventos'
       end>
     Variables = <
       item
@@ -18484,8 +18478,6 @@ object DMNFe: TDMNFe
         Height = 222.992270000000000000
         Top = 684.094930000000000000
         Width = 718.110700000000000000
-        DataSet = dmACBrNFeFR.frxEventos
-        DataSetName = 'Eventos'
         RowCount = 0
         Stretched = True
         object memJustificativaCorrecao: TfrxMemoView
