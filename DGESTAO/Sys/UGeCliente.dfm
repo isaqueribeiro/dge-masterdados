@@ -32,6 +32,7 @@ inherited frmGeCliente: TfrmGeCliente
       Left = 689
     end
     object BtBtnProcesso: TBitBtn
+      Tag = 11
       Left = 693
       Top = 2
       Width = 120
@@ -122,6 +123,7 @@ inherited frmGeCliente: TfrmGeCliente
           item
             Expanded = False
             FieldName = 'CODIGO'
+            Width = 50
             Visible = True
           end
           item
@@ -132,15 +134,14 @@ inherited frmGeCliente: TfrmGeCliente
           end
           item
             Expanded = False
-            FieldName = 'CNPJ'
+            FieldName = 'NOMEFANT'
             Width = 150
             Visible = True
           end
           item
             Expanded = False
-            FieldName = 'INSCEST'
-            Title.Caption = 'RG / Ins. Estadual'
-            Width = 130
+            FieldName = 'CNPJ'
+            Width = 150
             Visible = True
           end
           item
@@ -278,15 +279,21 @@ inherited frmGeCliente: TfrmGeCliente
           FocusControl = dbRazao
         end
         object lblIE: TLabel [3]
-          Left = 16
+          Left = 264
           Top = 64
           Width = 115
           Height = 13
           Caption = 'RG / Inscri'#231#227'o Estadual:'
           FocusControl = dbIE
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
         end
         object lblIM: TLabel [4]
-          Left = 192
+          Left = 408
           Top = 64
           Width = 93
           Height = 13
@@ -308,21 +315,35 @@ inherited frmGeCliente: TfrmGeCliente
           ParentFont = False
         end
         object lblVendedor: TLabel [6]
-          Left = 352
+          Left = 552
           Top = 64
           Width = 111
           Height = 13
           Caption = 'Vendedor respons'#225'vel:'
           FocusControl = dbVendedor
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
         end
         object lblTipoCNPJ: TLabel [7]
-          Left = 664
+          Left = 696
           Top = 64
           Width = 52
           Height = 13
           Caption = 'Tipo CNPJ:'
           Enabled = False
           FocusControl = dbTipoCNPJ
+        end
+        object lblNomeFantasia: TLabel [8]
+          Left = 16
+          Top = 64
+          Width = 75
+          Height = 13
+          Caption = 'Nome Fantasia:'
+          FocusControl = dbNomeFantasia
         end
         inherited dbCodigo: TDBEdit
           Color = clMoneyGreen
@@ -363,9 +384,9 @@ inherited frmGeCliente: TfrmGeCliente
           TabOrder = 3
         end
         object dbIE: TDBEdit
-          Left = 16
+          Left = 264
           Top = 80
-          Width = 169
+          Width = 137
           Height = 21
           CharCase = ecUpperCase
           DataField = 'INSCEST'
@@ -376,12 +397,12 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 5
+          TabOrder = 6
         end
         object dbIM: TDBEdit
-          Left = 192
+          Left = 408
           Top = 80
-          Width = 153
+          Width = 137
           Height = 21
           CharCase = ecUpperCase
           DataField = 'INSCMUN'
@@ -392,7 +413,7 @@ inherited frmGeCliente: TfrmGeCliente
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 6
+          TabOrder = 7
         end
         object dbDataCadastro: TDBEdit
           Left = 728
@@ -413,9 +434,9 @@ inherited frmGeCliente: TfrmGeCliente
           TabOrder = 4
         end
         object dbVendedor: TDBLookupComboBox
-          Left = 352
+          Left = 552
           Top = 80
-          Width = 305
+          Width = 137
           Height = 21
           DataField = 'VENDEDOR_COD'
           DataSource = DtSrcTabela
@@ -429,7 +450,7 @@ inherited frmGeCliente: TfrmGeCliente
           ListField = 'NOME'
           ListSource = dtsVendedor
           ParentFont = False
-          TabOrder = 7
+          TabOrder = 8
         end
         object dbCNPJ: TRxDBComboEdit
           Left = 192
@@ -503,9 +524,9 @@ inherited frmGeCliente: TfrmGeCliente
           OnButtonClick = dbCNPJButtonClick
         end
         object dbTipoCNPJ: TDBLookupComboBox
-          Left = 664
+          Left = 696
           Top = 80
-          Width = 153
+          Width = 121
           Height = 21
           DataField = 'TIPO'
           DataSource = DtSrcTabela
@@ -520,7 +541,23 @@ inherited frmGeCliente: TfrmGeCliente
           ListField = 'DESCRICAO'
           ListSource = dtsTipoCnpj
           ParentFont = False
-          TabOrder = 8
+          TabOrder = 9
+        end
+        object dbNomeFantasia: TDBEdit
+          Left = 16
+          Top = 80
+          Width = 241
+          Height = 21
+          CharCase = ecUpperCase
+          DataField = 'NOMEFANT'
+          DataSource = DtSrcTabela
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 5
         end
       end
       object GroupBox1: TGroupBox
@@ -1025,7 +1062,7 @@ inherited frmGeCliente: TfrmGeCliente
         TabOrder = 2
         TabStop = False
         object tbsContato: TTabSheet
-          Caption = 'Contato'
+          Caption = '&1. Contato'
           object lblFoneFixo: TLabel
             Left = 8
             Top = 0
@@ -1152,7 +1189,7 @@ inherited frmGeCliente: TfrmGeCliente
           end
         end
         object tbsDadosAdcionais: TTabSheet
-          Caption = 'Outras Informa'#231#245'es'
+          Caption = '&2. Outras Informa'#231#245'es'
           ImageIndex = 2
           object dbNFeDevolucao: TDBCheckBox
             Left = 5
@@ -1267,8 +1304,126 @@ inherited frmGeCliente: TfrmGeCliente
             OnKeyPress = ProximoCampoKeyPress
           end
         end
-        object tbsFinanceiro: TTabSheet
-          Caption = 'Financeiro'
+        object tbsDadoFinanceiro: TTabSheet
+          Caption = '&3. Dados Financeiro'
+          ImageIndex = 3
+          object lblBanco: TLabel
+            Left = 8
+            Top = 0
+            Width = 33
+            Height = 13
+            Caption = 'Banco:'
+            FocusControl = dbBanco
+          end
+          object lblAgencia: TLabel
+            Left = 464
+            Top = 0
+            Width = 42
+            Height = 13
+            Caption = 'Ag'#234'ncia:'
+            FocusControl = dbAgencia
+          end
+          object lblContaCorrente: TLabel
+            Left = 640
+            Top = 0
+            Width = 33
+            Height = 13
+            Caption = 'Conta:'
+            FocusControl = dbContaCorrente
+          end
+          object lblPracaoCobranca: TLabel
+            Left = 8
+            Top = 40
+            Width = 95
+            Height = 13
+            Caption = 'Pra'#231'a de Cobran'#231'a:'
+            FocusControl = dbPracaoCobranca
+          end
+          object dbBanco: TDBLookupComboBox
+            Left = 8
+            Top = 16
+            Width = 449
+            Height = 21
+            DataField = 'BANCO'
+            DataSource = DtSrcTabela
+            DropDownRows = 10
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            KeyField = 'CODIGO'
+            ListField = 'NOME_CODIGO'
+            ListSource = dtsBancoFebraban
+            ParentFont = False
+            TabOrder = 0
+          end
+          object dbAgencia: TDBEdit
+            Left = 464
+            Top = 16
+            Width = 169
+            Height = 21
+            CharCase = ecUpperCase
+            DataField = 'AGENCIA'
+            DataSource = DtSrcTabela
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+          end
+          object dbContaCorrente: TDBEdit
+            Left = 640
+            Top = 16
+            Width = 169
+            Height = 21
+            CharCase = ecUpperCase
+            DataField = 'CC'
+            DataSource = DtSrcTabela
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 2
+          end
+          object dbPracaoCobranca: TDBEdit
+            Left = 8
+            Top = 56
+            Width = 801
+            Height = 21
+            CharCase = ecUpperCase
+            DataField = 'PRACA'
+            DataSource = DtSrcTabela
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 3
+            OnKeyPress = ProximoCampoKeyPress
+          end
+        end
+        object tbsObservacao: TTabSheet
+          Caption = '&4. Observa'#231#245'es'
+          ImageIndex = 4
+          object dbObservacao: TDBMemo
+            Left = 0
+            Top = 0
+            Width = 828
+            Height = 161
+            Align = alClient
+            DataField = 'OBSERVACAO'
+            DataSource = DtSrcTabela
+            TabOrder = 0
+          end
+        end
+        object tbsCompra: TTabSheet
+          Caption = '&5. Compras'
           ImageIndex = 1
           DesignSize = (
             828
@@ -2319,6 +2474,13 @@ inherited frmGeCliente: TfrmGeCliente
           end
           item
             Expanded = False
+            FieldName = 'VALOR_MEDIO'
+            Title.Caption = 'Valor M'#233'dio (R$)'
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
             FieldName = 'NOME_FABRICANTE'
             Title.Caption = 'Fabricante'
             Width = 150
@@ -2430,6 +2592,7 @@ inherited frmGeCliente: TfrmGeCliente
       '  , cl.Cnpj'
       '  , cl.Tipo'
       '  , cl.Nome'
+      '  , cl.NomeFant'
       '  , cl.Inscest'
       '  , cl.Inscmun'
       '  , cl.Ender'
@@ -2464,6 +2627,11 @@ inherited frmGeCliente: TfrmGeCliente
       '  , cl.custo_oper_frete'
       '  , cl.custo_oper_outros'
       '  , cl.entrega_fracionada_venda'
+      '  , cl.banco'
+      '  , cl.agencia'
+      '  , cl.cc'
+      '  , cl.praca'
+      '  , cl.observacao'
       
         '  , coalesce( cast(coalesce(coalesce(t.Tlg_sigla, t.Tlg_descrica' +
         'o) || '#39' '#39', '#39#39') || l.Log_nome as varchar(250)), cl.Ender ) as Log' +
@@ -2510,6 +2678,13 @@ inherited frmGeCliente: TfrmGeCliente
       Origin = 'TBCLIENTE.NOME'
       Required = True
       Size = 60
+    end
+    object IbDtstTabelaNOMEFANT: TIBStringField
+      DisplayLabel = 'Nome Fantasia'
+      FieldName = 'NOMEFANT'
+      Origin = '"TBCLIENTE"."NOMEFANT"'
+      ProviderFlags = [pfInUpdate]
+      Size = 100
     end
     object IbDtstTabelaINSCEST: TIBStringField
       DisplayLabel = 'RG / Inscri'#231#227'o Estadual'
@@ -2732,6 +2907,42 @@ inherited frmGeCliente: TfrmGeCliente
       Origin = '"TBCLIENTE"."USUARIO"'
       Size = 50
     end
+    object IbDtstTabelaBANCO: TIBStringField
+      DisplayLabel = 'Banco'
+      FieldName = 'BANCO'
+      Origin = '"TBCLIENTE"."BANCO"'
+      ProviderFlags = [pfInUpdate]
+      Size = 10
+    end
+    object IbDtstTabelaAGENCIA: TIBStringField
+      DisplayLabel = 'Ag'#234'ncia'
+      FieldName = 'AGENCIA'
+      Origin = '"TBCLIENTE"."AGENCIA"'
+      ProviderFlags = [pfInUpdate]
+      Size = 10
+    end
+    object IbDtstTabelaCC: TIBStringField
+      DisplayLabel = 'C/C'
+      FieldName = 'CC'
+      Origin = '"TBCLIENTE"."CC"'
+      ProviderFlags = [pfInUpdate]
+      Size = 10
+    end
+    object IbDtstTabelaPRACA: TIBStringField
+      DisplayLabel = 'Pra'#231'a de Cobran'#231'a'
+      FieldName = 'PRACA'
+      Origin = '"TBCLIENTE"."PRACA"'
+      ProviderFlags = [pfInUpdate]
+      Size = 250
+    end
+    object IbDtstTabelaOBSERVACAO: TMemoField
+      DisplayLabel = 'Observa'#231#245'es'
+      FieldName = 'OBSERVACAO'
+      Origin = '"TBCLIENTE"."OBSERVACAO"'
+      ProviderFlags = [pfInUpdate]
+      BlobType = ftMemo
+      Size = 8
+    end
   end
   inherited DtSrcTabela: TDataSource
     OnDataChange = DtSrcTabelaDataChange
@@ -2741,9 +2952,11 @@ inherited frmGeCliente: TfrmGeCliente
     RefreshSQL.Strings = (
       'Select '
       '  CODIGO,'
+      '  TIPO,'
       '  PESSOA_FISICA,'
       '  CNPJ,'
       '  NOME,'
+      '  NOMEFANT,'
       '  INSCEST,'
       '  INSCMUN,'
       '  ENDER,'
@@ -2770,26 +2983,34 @@ inherited frmGeCliente: TfrmGeCliente
       '  BLOQUEADO_MOTIVO,'
       '  BLOQUEADO_USUARIO,'
       '  DESBLOQUEADO_DATA,'
-      '  DTCAD,'
       '  VENDEDOR_COD,'
       '  USUARIO,'
       '  EMITIR_NFE_DEVOLUCAO,'
       '  CUSTO_OPER_PERCENTUAL,'
       '  CUSTO_OPER_FRETE,'
       '  CUSTO_OPER_OUTROS,'
-      '  ENTREGA_FRACIONADA_VENDA'
+      '  ENTREGA_FRACIONADA_VENDA,'
+      '  BANCO,'
+      '  AGENCIA,'
+      '  CC,'
+      '  PRACA,'
+      '  OBSERVACAO,'
+      '  DTCAD'
       'from TBCLIENTE '
       'where'
       '  CODIGO = :CODIGO')
     ModifySQL.Strings = (
       'update TBCLIENTE'
       'set'
+      '  AGENCIA = :AGENCIA,'
       '  BAI_COD = :BAI_COD,'
       '  BAIRRO = :BAIRRO,'
+      '  BANCO = :BANCO,'
       '  BLOQUEADO = :BLOQUEADO,'
       '  BLOQUEADO_DATA = :BLOQUEADO_DATA,'
       '  BLOQUEADO_MOTIVO = :BLOQUEADO_MOTIVO,'
       '  BLOQUEADO_USUARIO = :BLOQUEADO_USUARIO,'
+      '  CC = :CC,'
       '  CEP = :CEP,'
       '  CID_COD = :CID_COD,'
       '  CIDADE = :CIDADE,'
@@ -2813,10 +3034,14 @@ inherited frmGeCliente: TfrmGeCliente
       '  INSCMUN = :INSCMUN,'
       '  LOG_COD = :LOG_COD,'
       '  NOME = :NOME,'
+      '  NOMEFANT = :NOMEFANT,'
       '  NUMERO_END = :NUMERO_END,'
+      '  OBSERVACAO = :OBSERVACAO,'
       '  PAIS_ID = :PAIS_ID,'
       '  PESSOA_FISICA = :PESSOA_FISICA,'
+      '  PRACA = :PRACA,'
       '  SITE = :SITE,'
+      '  TIPO = :TIPO,'
       '  TLG_TIPO = :TLG_TIPO,'
       '  UF = :UF,'
       '  USUARIO = :USUARIO,'
@@ -2827,42 +3052,48 @@ inherited frmGeCliente: TfrmGeCliente
     InsertSQL.Strings = (
       'insert into TBCLIENTE'
       
-        '  (BAI_COD, BAIRRO, BLOQUEADO, BLOQUEADO_DATA, BLOQUEADO_MOTIVO,' +
-        ' BLOQUEADO_USUARIO, '
+        '  (AGENCIA, BAI_COD, BAIRRO, BANCO, BLOQUEADO, BLOQUEADO_DATA, B' +
+        'LOQUEADO_MOTIVO, '
       
-        '   CEP, CID_COD, CIDADE, CNPJ, CODIGO, COMPLEMENTO, CUSTO_OPER_F' +
-        'RETE, CUSTO_OPER_OUTROS, '
+        '   BLOQUEADO_USUARIO, CC, CEP, CID_COD, CIDADE, CNPJ, CODIGO, CO' +
+        'MPLEMENTO, '
       
-        '   CUSTO_OPER_PERCENTUAL, DESBLOQUEADO_DATA, DTCAD, EMAIL, EMITI' +
-        'R_NFE_DEVOLUCAO, '
+        '   CUSTO_OPER_FRETE, CUSTO_OPER_OUTROS, CUSTO_OPER_PERCENTUAL, D' +
+        'ESBLOQUEADO_DATA, '
       
-        '   ENDER, ENTREGA_FRACIONADA_VENDA, EST_COD, FONE, FONECEL, FONE' +
-        'COMERC, '
+        '   DTCAD, EMAIL, EMITIR_NFE_DEVOLUCAO, ENDER, ENTREGA_FRACIONADA' +
+        '_VENDA, '
       
-        '   INSCEST, INSCMUN, LOG_COD, NOME, NUMERO_END, PAIS_ID, PESSOA_' +
-        'FISICA, '
+        '   EST_COD, FONE, FONECEL, FONECOMERC, INSCEST, INSCMUN, LOG_COD' +
+        ', NOME, '
       
-        '   SITE, TLG_TIPO, UF, USUARIO, VALOR_LIMITE_COMPRA, VENDEDOR_CO' +
+        '   NOMEFANT, NUMERO_END, OBSERVACAO, PAIS_ID, PESSOA_FISICA, PRA' +
+        'CA, SITE, '
+      
+        '   TIPO, TLG_TIPO, UF, USUARIO, VALOR_LIMITE_COMPRA, VENDEDOR_CO' +
         'D)'
       'values'
       
-        '  (:BAI_COD, :BAIRRO, :BLOQUEADO, :BLOQUEADO_DATA, :BLOQUEADO_MO' +
-        'TIVO, :BLOQUEADO_USUARIO, '
+        '  (:AGENCIA, :BAI_COD, :BAIRRO, :BANCO, :BLOQUEADO, :BLOQUEADO_D' +
+        'ATA, :BLOQUEADO_MOTIVO, '
       
-        '   :CEP, :CID_COD, :CIDADE, :CNPJ, :CODIGO, :COMPLEMENTO, :CUSTO' +
-        '_OPER_FRETE, '
+        '   :BLOQUEADO_USUARIO, :CC, :CEP, :CID_COD, :CIDADE, :CNPJ, :COD' +
+        'IGO, :COMPLEMENTO, '
       
-        '   :CUSTO_OPER_OUTROS, :CUSTO_OPER_PERCENTUAL, :DESBLOQUEADO_DAT' +
-        'A, :DTCAD, '
+        '   :CUSTO_OPER_FRETE, :CUSTO_OPER_OUTROS, :CUSTO_OPER_PERCENTUAL' +
+        ', :DESBLOQUEADO_DATA, '
       
-        '   :EMAIL, :EMITIR_NFE_DEVOLUCAO, :ENDER, :ENTREGA_FRACIONADA_VE' +
-        'NDA, :EST_COD, '
+        '   :DTCAD, :EMAIL, :EMITIR_NFE_DEVOLUCAO, :ENDER, :ENTREGA_FRACI' +
+        'ONADA_VENDA, '
       
-        '   :FONE, :FONECEL, :FONECOMERC, :INSCEST, :INSCMUN, :LOG_COD, :' +
-        'NOME, :NUMERO_END, '
+        '   :EST_COD, :FONE, :FONECEL, :FONECOMERC, :INSCEST, :INSCMUN, :' +
+        'LOG_COD, '
       
-        '   :PAIS_ID, :PESSOA_FISICA, :SITE, :TLG_TIPO, :UF, :USUARIO, :V' +
-        'ALOR_LIMITE_COMPRA, '
+        '   :NOME, :NOMEFANT, :NUMERO_END, :OBSERVACAO, :PAIS_ID, :PESSOA' +
+        '_FISICA, '
+      
+        '   :PRACA, :SITE, :TIPO, :TLG_TIPO, :UF, :USUARIO, :VALOR_LIMITE' +
+        '_COMPRA, '
       '   :VENDEDOR_COD)')
     DeleteSQL.Strings = (
       'delete from TBCLIENTE'
@@ -2882,8 +3113,8 @@ inherited frmGeCliente: TfrmGeCliente
       '  , g.Valor_compras_abertas'
       '  , g.Valor_limite_disponivel'
       'from GET_LIMITE_DISPONIVEL_CLIENTE(:CLIENTE) g')
-    Left = 680
-    Top = 9
+    Left = 520
+    Top = 281
     ParamData = <
       item
         DataType = ftUnknown
@@ -2914,8 +3145,8 @@ inherited frmGeCliente: TfrmGeCliente
   end
   object cdsTotalComprasAbertas: TDataSource
     DataSet = qryTotalComprasAbertas
-    Left = 712
-    Top = 9
+    Left = 552
+    Top = 281
   end
   object qryTitulos: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
@@ -2957,8 +3188,8 @@ inherited frmGeCliente: TfrmGeCliente
       'where r.Baixado = 0'
       '  and r.Parcela > 0'
       '  and r.Cliente = :cliente')
-    Left = 680
-    Top = 41
+    Left = 520
+    Top = 313
     ParamData = <
       item
         DataType = ftString
@@ -3075,20 +3306,20 @@ inherited frmGeCliente: TfrmGeCliente
   end
   object dtsTitulos: TDataSource
     DataSet = qryTitulos
-    Left = 712
-    Top = 41
+    Left = 552
+    Top = 313
   end
   object tblVendedor: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     TableName = 'TBVENDEDOR'
-    Left = 744
-    Top = 8
+    Left = 584
+    Top = 280
   end
   object dtsVendedor: TDataSource
     DataSet = tblVendedor
-    Left = 776
-    Top = 8
+    Left = 616
+    Top = 280
   end
   object popProcesso: TPopupMenu
     Images = ImgList
@@ -3107,13 +3338,13 @@ inherited frmGeCliente: TfrmGeCliente
   end
   object ACBrConsultaCNPJ: TACBrConsultaCNPJ
     ProxyPort = '8080'
-    Left = 650
-    Top = 265
+    Left = 770
+    Top = 345
   end
   object ACBrConsultaCPF: TACBrConsultaCPF
     ProxyPort = '8080'
-    Left = 648
-    Top = 310
+    Left = 776
+    Top = 302
   end
   object QryEstoqueSatelite: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
@@ -3174,15 +3405,19 @@ inherited frmGeCliente: TfrmGeCliente
       Required = True
       Size = 10
     end
-    object QryEstoqueSateliteQUANTIDADE: TIntegerField
+    object QryEstoqueSateliteQUANTIDADE: TIBBCDField
       FieldName = 'QUANTIDADE'
       Origin = '"TBCLIENTE_ESTOQUE"."QUANTIDADE"'
       ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.###'
+      Precision = 18
+      Size = 3
     end
     object QryEstoqueSateliteVALOR_MEDIO: TIBBCDField
       FieldName = 'VALOR_MEDIO'
       Origin = '"TBCLIENTE_ESTOQUE"."VALOR_MEDIO"'
       ProviderFlags = [pfInUpdate]
+      DisplayFormat = ',0.00'
       Precision = 18
       Size = 4
     end
@@ -3337,12 +3572,33 @@ inherited frmGeCliente: TfrmGeCliente
     Transaction = DMBusiness.ibtrnsctnBusiness
     TableName = 'VW_TIPO_CNPJ'
     TableTypes = [ttView]
-    Left = 744
-    Top = 40
+    Left = 584
+    Top = 312
   end
   object dtsTipoCnpj: TDataSource
     DataSet = tblTipoCnpj
-    Left = 776
-    Top = 40
+    Left = 616
+    Top = 312
+  end
+  object dtsBancoFebraban: TDataSource
+    DataSet = qryBancoFebraban
+    Left = 616
+    Top = 344
+  end
+  object qryBancoFebraban: TIBQuery
+    Database = DMBusiness.ibdtbsBusiness
+    Transaction = DMBusiness.ibtrnsctnBusiness
+    SQL.Strings = (
+      'Select'
+      '    b.codigo'
+      '  , b.nome'
+      '  , b.codigo_nome'
+      '  , b.nome_codigo'
+      'from VW_BANCO_FEBRABAN b'
+      ''
+      'order by'
+      '    b.nome')
+    Left = 584
+    Top = 345
   end
 end
