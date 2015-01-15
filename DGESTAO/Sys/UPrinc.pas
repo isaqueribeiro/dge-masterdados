@@ -112,7 +112,7 @@ type
     nmUsuarioAlterarSenha: TMenuItem;
     btnEmpresa: TRxSpeedButton;
     menuUtilitarios: TMenuItem;
-    ExportarNFeGeradas1: TMenuItem;
+    nmExportarNFeGerada: TMenuItem;
     mnRelatorioEstoque: TMenuItem;
     mnRelatorioEstoqueProduto: TMenuItem;
     mnRelatorioFinanceiroPorFormaPagto: TMenuItem;
@@ -144,6 +144,7 @@ type
     Comisso1: TMenuItem;
     nmCartaCorrecaoNFe: TMenuItem;
     N14: TMenuItem;
+    nmUsuarioPerfil: TMenuItem;
     procedure btnEmpresaClick(Sender: TObject);
     procedure btnClienteClick(Sender: TObject);
     procedure btnContaAReceberClick(Sender: TObject);
@@ -191,7 +192,7 @@ type
     procedure mnRelatorioFaturamentoVendasClick(Sender: TObject);
     procedure nmFabricanteProdutoClick(Sender: TObject);
     procedure nmUsuarioAlterarSenhaClick(Sender: TObject);
-    procedure ExportarNFeGeradas1Click(Sender: TObject);
+    procedure nmExportarNFeGeradaClick(Sender: TObject);
     procedure mnRelatorioEstoqueProdutoClick(Sender: TObject);
     procedure mnRelatorioFinanceiroPorFormaPagtoClick(Sender: TObject);
     procedure mnRelatorioEstoqueDemandaClick(Sender: TObject);
@@ -209,10 +210,14 @@ type
     procedure RankingdeProdutos1Click(Sender: TObject);
     procedure Veculos1Click(Sender: TObject);
     procedure nmCartaCorrecaoNFeClick(Sender: TObject);
+    procedure nmUsuarioPerfilClick(Sender: TObject);
+    procedure nmUsuarioClick(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+    FAcesso : Boolean;
+    procedure RegistrarRotinasMenu;
   end;
 
 var
@@ -551,6 +556,10 @@ begin
     eap.IdApplication := 99832505;
     eap.Active := True;
   end;
+
+  FAcesso := False;
+  SetSistema(0, Application.Title, GetVersion);
+  RegistrarRotinasMenu;
 end;
 
 procedure TfrmPrinc.nmGerarBoletoClick(Sender: TObject);
@@ -621,7 +630,7 @@ begin
     Self.Update;
 end;
 
-procedure TfrmPrinc.ExportarNFeGeradas1Click(Sender: TObject);
+procedure TfrmPrinc.nmExportarNFeGeradaClick(Sender: TObject);
 begin
   FormFunction.ShowModalForm(Self, 'frmGeExportarNFeGerada');
 end;
@@ -743,6 +752,90 @@ end;
 procedure TfrmPrinc.nmCartaCorrecaoNFeClick(Sender: TObject);
 begin
   FormFunction.ShowModalForm(Self, 'frmGeCartaCorrecao');
+end;
+
+procedure TfrmPrinc.nmUsuarioPerfilClick(Sender: TObject);
+begin
+  FormFunction.ShowModalForm(Self, 'frmGrUsuarioPerfil');
+end;
+
+procedure TfrmPrinc.RegistrarRotinasMenu;
+begin
+  // Menus
+
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_CADASTRO_ID,   'Cadastro', EmptyStr);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_ENTRADA_ID,    'Estoque',  EmptyStr);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_MOVIMENTO_ID,  'Faturamento', EmptyStr);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_NOTAFISCAL_ID, 'Notas Fiscais', EmptyStr);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_CONSULTA_ID,   'Consultas',  EmptyStr);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_FINANCEIRO_ID, 'Financeiro', EmptyStr);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_RELATORIO_ID,  'Relatórios', EmptyStr);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_AJUDA_ID,      'Ajuda',      EmptyStr);
+
+  // Sub-menus
+
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_TAB_AUXILIAR_ID,    'Tabelas Auxiliares',        ROTINA_MENU_CADASTRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_REL_ESTOQUE_ID,     'Relatórios de Estoque',     ROTINA_MENU_RELATORIO_ID);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_REL_ENTRADA_ID,     'Relatórios de Entradas',    ROTINA_MENU_RELATORIO_ID);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_REL_FATURAMENTO_ID, 'Relatórios de Faturamento', ROTINA_MENU_RELATORIO_ID);
+  SetRotinaSistema(ROTINA_TIPO_MENU, ROTINA_MENU_REL_FINANCEIRO_ID,  'Relatórios do Financeiro',  ROTINA_MENU_RELATORIO_ID);
+
+  // Cadastros
+
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_CAD_EMPRESA_ID,    'Cadastro da Empresa(s)',   ROTINA_MENU_CADASTRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_CAD_CLIENTE_ID,    'Cadastro da Clientes',     ROTINA_MENU_CADASTRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_CAD_FORNECEDOR_ID, 'Cadastro da Fornecedores', ROTINA_MENU_CADASTRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_CAD_VENDEDOR_ID,   'Cadastro da Vendedores',   ROTINA_MENU_CADASTRO_ID);
+
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_CAD_CONFIG_EMP_ID, Trim(nmConfiguracaoEmpresa.Caption), ROTINA_MENU_CADASTRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_CAD_CONFIG_NFE_ID, Trim(nmConfigurarNFeACBr.Caption),   ROTINA_MENU_CADASTRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_CAD_CONFIG_AMB_ID, Trim(miConfigurarAmbiente.Caption),  ROTINA_MENU_CADASTRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_CAD_GERAR_SENH_ID, Trim(nmSenhaAutorizacao.Caption),    ROTINA_MENU_CADASTRO_ID);
+
+  // Entradas
+
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_ENT_AJUSTE_ID, Trim(nmAjusteManual.Caption), ROTINA_MENU_ENTRADA_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_ENT_KARDEX_ID, Trim(nmKardex.Caption),       ROTINA_MENU_ENTRADA_ID);
+
+  // Notas Fiscais
+
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_NFE_INUTILIZAR_NRO_ID,  Trim(nmInutilizarNumeroNFe.Caption),    ROTINA_MENU_NOTAFISCAL_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_NFE_CONSULTA_RECIBO_ID, Trim(nmConsultarLoteNFe.Caption),       ROTINA_MENU_NOTAFISCAL_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_NFE_EXPORTAR_NFE_ID,    Trim(nmExportarNFeGerada.Caption),      ROTINA_MENU_NOTAFISCAL_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_NFE_GERAR_ARQUI_NFC_ID, Trim(nmGerarArquivoNFC.Caption),        ROTINA_MENU_NOTAFISCAL_ID);
+
+  // Consultas
+
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_CNS_CONSULTA_VENDA_ID,       Trim(nmConultarVendaItem.Caption), ROTINA_MENU_CONSULTA_ID);
+
+  // Financeiro
+
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_FIN_ABRIR_CAIXA_ID,     Trim(nmAberturaCaixa.Caption),            ROTINA_MENU_FINANCEIRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_FIN_ENCERRAR_CAIXA_ID,  Trim(nmEncerramentoCaixa.Caption),        ROTINA_MENU_FINANCEIRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_FIN_GERAR_BOLETO_ID,    Trim(nmGerarBoleto.Caption),              ROTINA_MENU_FINANCEIRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_FIN_GERAR_REMESSA_ID,   Trim(nmRemessaBoleto.Caption),            ROTINA_MENU_FINANCEIRO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_FIN_PROCESSA_RETORN_ID, Trim(nmRetornoBoleto.Caption),            ROTINA_MENU_FINANCEIRO_ID);
+
+  // Relatórios
+
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_REL_CLIENTE_ID,      Trim(nmRelatorioCliente.Caption),        ROTINA_MENU_RELATORIO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_REL_FORNECEDOR_ID,   Trim(nmRelatorioFornecedor.Caption),     ROTINA_MENU_RELATORIO_ID);
+  SetRotinaSistema(ROTINA_TIPO_TELA, ROTINA_REL_PRODUTO_ID,      Trim(nmRelatorioProduto.Caption),        ROTINA_MENU_RELATORIO_ID);
+
+  // Relatórios -> Faturamento
+
+
+  // Relatórios -> Entradas
+
+
+  // Relatórios -> Financeiro
+
+
+end;
+
+procedure TfrmPrinc.nmUsuarioClick(Sender: TObject);
+begin
+  FormFunction.ShowModalForm(Self, 'frmGrUsuario');
 end;
 
 end.

@@ -77,7 +77,16 @@ begin
     edSenha.setfocus;
     Exit;
   end;
-  
+
+  gUsuarioLogado.Login    := DMBusiness.ibdtstUsersNOME.AsString;
+  gUsuarioLogado.Nome     := DMBusiness.ibdtstUsersNOMECOMPLETO.AsString;
+  gUsuarioLogado.Funcao   := DMBusiness.ibdtstUsersCODFUNCAO.AsInteger;
+  gUsuarioLogado.Empresa  := GetEmpresaIDDefault;
+  gUsuarioLogado.Vendedor := DMBusiness.ibdtstUsersVENDEDOR.AsInteger;
+
+  gSistema.Codigo := 0;
+  gSistema.Nome   := Application.Title;
+
   frmPrinc.Enabled := True;
   frmPrinc.stbMain.Panels[1].Text := 'Usuário: ' + edNome.Text;
 
