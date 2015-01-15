@@ -111,7 +111,10 @@ uses
   pnglang in 'lib\pnglang.pas',
   pngzlib in 'lib\pngzlib.pas',
   uMath in 'lib\uMath.pas',
-  uTypes in 'lib\uTypes.pas';
+  uTypes in 'lib\uTypes.pas',
+  UGrUsuarioPerfil in 'lib\UGrUsuarioPerfil.pas' {frmGrUsuarioPerfil},
+  UGrUsuarioCopiarPerfil in 'lib\UGrUsuarioCopiarPerfil.pas' {frmGrUsuarioCopiarPerfil},
+  UGrUsuario in 'lib\UGrUsuario.pas' {frmGrUsuario};
 
 {$R *.res}
 
@@ -122,8 +125,8 @@ begin
   Application.Title := 'DGE - Sistema Integrado de Gestão Empresarial';
   Application.CreateForm(TDMBusiness, DMBusiness);
   Application.CreateForm(TDMNFe, DMNFe);
+  Application.CreateForm(TDMCupom, DMCupom);
   Application.CreateForm(TfrmPrinc, frmPrinc);
   Application.CreateForm(TfrmPesq, frmPesq);
-  Application.CreateForm(TDMCupom, DMCupom);
   Application.Run;
 end.
