@@ -277,7 +277,7 @@ end;
 procedure TfrmPrinc.btnSairClick(Sender: TObject);
 begin
   if Application.MessageBox('Deseja SAIR do Sistema?', 'Confirmação ...', MB_YESNO + MB_ICONQUESTION + MB_DEFBUTTON1) = ID_YES then
-  //  Application.Terminate;
+  Application.Terminate;
 end;
 
 procedure TfrmPrinc.btnProdutoClick(Sender: TObject);
