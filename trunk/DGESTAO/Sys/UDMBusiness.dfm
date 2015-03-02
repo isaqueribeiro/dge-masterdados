@@ -1,8 +1,8 @@
 object DMBusiness: TDMBusiness
   OldCreateOrder = True
   OnCreate = DataModuleCreate
-  Left = 395
-  Top = 216
+  Left = 315
+  Top = 144
   Height = 617
   Width = 812
   object ibdtbsBusiness: TIBDatabase
