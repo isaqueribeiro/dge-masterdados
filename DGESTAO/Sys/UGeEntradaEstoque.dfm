@@ -1,5 +1,6 @@
 inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
-  Top = 188
+  Left = 114
+  Top = 11
   Width = 1115
   Height = 716
   ActiveControl = nil

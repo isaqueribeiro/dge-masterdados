@@ -515,7 +515,7 @@ var
 begin
   Self.Caption           := 'DGE - Sistema Integrado de Gestão Empresarial ' + VERSION_NUMBER;
   Self.Version.Caption   := 'Versão ' + VERSION_NUMBER;
-  Self.Copyright.Caption := '© 2012 | 2014 - Masterdados Tecnologia da Informação' + #13 + 'Todos os direitos reservados.';
+  Self.Copyright.Caption := '© 2012 | 2015 - Masterdados Tecnologia da Informação' + #13 + 'Todos os direitos reservados.';
 
   // Carregar Imagem de Fundo da Tele Principal
 
