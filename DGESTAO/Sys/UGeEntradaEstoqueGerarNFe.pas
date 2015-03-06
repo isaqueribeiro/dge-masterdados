@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, UGrPadrao, DB, IBCustomDataSet, IBUpdateSQL, StdCtrls, Mask,
-  DBCtrls, ExtCtrls, Buttons;
+  DBCtrls, ExtCtrls, Buttons, cxGraphics, cxLookAndFeels,
+  cxLookAndFeelPainters, Menus, cxButtons;
 
 type
   TfrmGeEntradaEstoqueGerarNFe = class(TfrmGrPadrao)
@@ -28,8 +29,6 @@ type
     Bevel1: TBevel;
     GrpBxImposto: TGroupBox;
     Bevel2: TBevel;
-    btnConfirmar: TBitBtn;
-    btnCancelar: TBitBtn;
     lblBaseICMS: TLabel;
     dbBaseICMS: TDBEdit;
     lblValorICMS: TLabel;
@@ -56,7 +55,6 @@ type
     dbValorCOFINS: TDBEdit;
     lblTotalNota: TLabel;
     dbTotalNota: TDBEdit;
-    btnCalcular: TBitBtn;
     lblInforme: TLabel;
     cdsCompraANO: TSmallintField;
     cdsCompraCODCONTROL: TIntegerField;
@@ -80,22 +78,25 @@ type
     cdsCompraVALORPIS: TIBBCDField;
     cdsCompraVALORCOFINS: TIBBCDField;
     cdsCompraOUTROSCUSTOS: TIBBCDField;
+    cdsCompraTOTALNF: TIBBCDField;
     cdsCompraHREMISS: TTimeField;
     cdsCompraIPI: TIBBCDField;
+    cdsCompraVALOR_TOTAL_IPI: TIBBCDField;
+    cdsCompraVALOR_TOTAL_BRUTO: TIBBCDField;
+    cdsCompraVALOR_TOTAL_DESCONTO: TIBBCDField;
+    cdsCompraVALOR_TOTAL_LIQUIDO: TIBBCDField;
+    cdsCompraVALOR_BASE_ICMS_NORMAL_ENTRADA: TIBBCDField;
+    cdsCompraVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TIBBCDField;
+    cdsCompraVALOR_BASE_ICMS_NORMAL_SAIDA: TIBBCDField;
+    cdsCompraVALOR_TOTAL_ICMS_NORMAL_SAIDA: TFloatField;
+    cdsCompraVALOR_TOTAL_ICMS_NORMAL_DEVIDO: TFloatField;
+    cdsCompraVALOR_TOTAL_PIS: TIBBCDField;
+    cdsCompraVALOR_TOTAL_COFINS: TIBBCDField;
     cdsCompraNFSERIE: TIBStringField;
     TmrAlerta: TTimer;
-    cdsCompraTOTALNF: TIBBCDField;
-    cdsCompraVALOR_TOTAL_IPI: TIBBCDField;
-    cdsCompraVALOR_TOTAL_BRUTO: TFMTBCDField;
-    cdsCompraVALOR_TOTAL_DESCONTO: TIBBCDField;
-    cdsCompraVALOR_TOTAL_LIQUIDO: TFMTBCDField;
-    cdsCompraVALOR_BASE_ICMS_NORMAL_ENTRADA: TFMTBCDField;
-    cdsCompraVALOR_TOTAL_ICMS_NORMAL_ENTRADA: TFMTBCDField;
-    cdsCompraVALOR_BASE_ICMS_NORMAL_SAIDA: TFMTBCDField;
-    cdsCompraVALOR_TOTAL_ICMS_NORMAL_SAIDA: TFMTBCDField;
-    cdsCompraVALOR_TOTAL_ICMS_NORMAL_DEVIDO: TFMTBCDField;
-    cdsCompraVALOR_TOTAL_PIS: TFMTBCDField;
-    cdsCompraVALOR_TOTAL_COFINS: TFMTBCDField;
+    btnConfirmar: TcxButton;
+    btnCancelar: TcxButton;
+    btnCalcular: TcxButton;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnCalcularClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
