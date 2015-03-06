@@ -1,8 +1,8 @@
 object DMNFe: TDMNFe
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Left = 410
-  Top = 218
+  Left = 241
+  Top = 78
   Height = 704
   Width = 931
   object ACBrNFe: TACBrNFe
