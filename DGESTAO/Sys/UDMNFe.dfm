@@ -4942,17 +4942,17 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 2
     end
-    object qryEntradaDadosProdutoDESCONTO: TIBBCDField
+    object qryEntradaDadosProdutoDESCONTO: TFMTBCDField
       FieldName = 'DESCONTO'
       ProviderFlags = []
       Precision = 18
-      Size = 4
+      Size = 10
     end
-    object qryEntradaDadosProdutoDESCONTO_VALOR: TIBBCDField
+    object qryEntradaDadosProdutoDESCONTO_VALOR: TFMTBCDField
       FieldName = 'DESCONTO_VALOR'
       ProviderFlags = []
       Precision = 18
-      Size = 2
+      Size = 5
     end
     object qryEntradaDadosProdutoPFINAL: TIBBCDField
       FieldName = 'PFINAL'
@@ -5026,17 +5026,17 @@ object DMNFe: TDMNFe
       Precision = 18
       Size = 4
     end
-    object qryEntradaDadosProdutoTOTAL_BRUTO: TIBBCDField
+    object qryEntradaDadosProdutoTOTAL_BRUTO: TFMTBCDField
       FieldName = 'TOTAL_BRUTO'
       ProviderFlags = []
       Precision = 18
-      Size = 2
+      Size = 5
     end
-    object qryEntradaDadosProdutoTOTAL_LIQUIDO: TIBBCDField
+    object qryEntradaDadosProdutoTOTAL_LIQUIDO: TFMTBCDField
       FieldName = 'TOTAL_LIQUIDO'
       ProviderFlags = []
       Precision = 18
-      Size = 2
+      Size = 5
     end
     object qryEntradaDadosProdutoTOTAL_DESCONTO: TIBBCDField
       FieldName = 'TOTAL_DESCONTO'
@@ -18176,16 +18176,10 @@ object DMNFe: TDMNFe
     Top = 216
     Datasets = <
       item
-        DataSet = dmACBrNFeFR.frxDestinatario
-        DataSetName = 'Destinatario'
       end
       item
-        DataSet = dmACBrNFeFR.frxEmitente
-        DataSetName = 'Emitente'
       end
       item
-        DataSet = dmACBrNFeFR.frxEventos
-        DataSetName = 'Eventos'
       end>
     Variables = <
       item
@@ -18827,8 +18821,6 @@ object DMNFe: TDMNFe
         Height = 222.992270000000000000
         Top = 684.094930000000000000
         Width = 718.110700000000000000
-        DataSet = dmACBrNFeFR.frxEventos
-        DataSetName = 'Eventos'
         RowCount = 0
         Stretched = True
         object memJustificativaCorrecao: TfrxMemoView
