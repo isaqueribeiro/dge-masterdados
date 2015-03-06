@@ -7,13 +7,12 @@ uses
   Dialogs, UGrPadrao, StdCtrls, Buttons, ExtCtrls, ComCtrls, OleCtrls,
   SHDocVw, TypInfo,
 
-  pcnConversao;
+  pcnConversao, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Menus,
+  cxButtons;
 
 type
   TfrmGeConfigurarNFeACBr = class(TfrmGrPadrao)
     Bevel1: TBevel;
-    btnSalvar: TBitBtn;
-    btnCancelar: TBitBtn;
     grpBxConfigurar: TGroupBox;
     pgcGuias: TPageControl;
     TabSheet1: TTabSheet;
@@ -93,12 +92,10 @@ type
     cbEmailSSL: TCheckBox;
     mmEmailMsg: TMemo;
     opnDialog: TOpenDialog;
-    btnServico: TBitBtn;
     WBResposta: TWebBrowser;
     rgModoGerarNFe: TRadioGroup;
     lblInfoFisco: TLabel;
     edInfoFisco: TEdit;
-    btnValidadeCertificado: TBitBtn;
     lblPathSchemas: TLabel;
     edPathSchemas: TEdit;
     spPathSchemas: TSpeedButton;
@@ -112,6 +109,10 @@ type
     lblToken: TLabel;
     edToken: TEdit;
     ckEmitirNFCe: TCheckBox;
+    btnServico: TcxButton;
+    btnSalvar: TcxButton;
+    btnCancelar: TcxButton;
+    btnValidadeCertificado: TcxButton;
     procedure btnCancelarClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnSalvarClick(Sender: TObject);
@@ -150,15 +151,19 @@ var
  K : TpcnVersaoDF;
 begin
   cbFormaEmissao.Items.Clear ;
+
   For I := Low(TpcnTipoEmissao) to High(TpcnTipoEmissao) do
      cbFormaEmissao.Items.Add( GetEnumName(TypeInfo(TpcnTipoEmissao), integer(I) ) ) ;
-  cbFormaEmissao.Items[0] := 'teNormal' ;
+
+  cbFormaEmissao.Items[0]  := 'teNormal' ;
   cbFormaEmissao.ItemIndex := 0 ;
 
   cbVersaoDF.Items.Clear ;
+
   For K := Low(TpcnVersaoDF) to High(TpcnVersaoDF) do
      cbVersaoDF.Items.Add( GetEnumName(TypeInfo(TpcnVersaoDF), integer(K) ) ) ;
-  cbVersaoDF.Items[0] := 've200' ;
+
+  cbVersaoDF.Items[0]  := 've200' ;
   cbVersaoDF.ItemIndex := 0 ;
 
   inherited;
