@@ -340,6 +340,9 @@ type
     nmPpArquivoNFe: TMenuItem;
     IbDtstTabelaVERIFICADOR_NFE: TIBStringField;
     IbDtstTabelaXML_NFE_FILENAME: TIBStringField;
+    IbDtstTabelaCANCEL_USUARIO: TIBStringField;
+    IbDtstTabelaCANCEL_DATAHORA: TDateTimeField;
+    IbDtstTabelaCANCEL_MOTIVO: TMemoField;
     btbtnFinalizar: TBitBtn;
     btbtnGerarNFe: TBitBtn;
     btbtnCancelarENT: TBitBtn;
@@ -565,7 +568,7 @@ begin
   {$ENDIF}
 
   {$IFNDEF DGE}
-  if not (GetSegmentoID(GetEmpresaIDDefault) in [SEGMENTO_INDUSTRIA_METAL_ID, SEGMENTO_INDUSTRIA_GERAL_ID]) then
+  if not (GetSegmentoID(gUsuarioLogado.Empresa) in [SEGMENTO_INDUSTRIA_METAL_ID, SEGMENTO_INDUSTRIA_GERAL_ID]) then
     OcutarCampoAutorizacao;
   {$ENDIF}
 
@@ -630,7 +633,7 @@ begin
   IbDtstTabelaAno.Value     := YearOf(Now);
   IbDtstTabelaDTENT.Value   := Date;
   IbDtstTabelaDTLANCAMENTO.Value := Now;
-  IbDtstTabelaCODEMP.Value  := GetEmpresaIDDefault;
+  IbDtstTabelaCODEMP.Value       := gUsuarioLogado.Empresa;
   IbDtstTabelaFORMAPAGTO_COD.Value    := GetFormaPagtoIDDefault;
   IbDtstTabelaCONDICAOPAGTO_COD.Value := GetCondicaoPagtoIDDefault;
 
@@ -661,7 +664,7 @@ begin
   IbDtstTabelaDESCONTO.Value       := 0;
   IbDtstTabelaTOTALNF.Value        := 0;
   IbDtstTabelaTOTALPROD.Value      := 0;
-  IbDtstTabelaUSUARIO.Value        := GetUserApp;
+  IbDtstTabelaUSUARIO.Value        := gUsuarioLogado.Login;
   IbDtstTabelaVERIFICADOR_NFE.Clear;
   IbDtstTabelaXML_NFE_FILENAME.Clear;
   IbDtstTabelaCODFORN.Clear;
