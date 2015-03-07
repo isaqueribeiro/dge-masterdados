@@ -230,7 +230,6 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
   inherited pgcGuias: TPageControl
     Width = 1114
     Height = 635
-    ActivePage = tbsCadastro
     OnChange = pgcGuiasChange
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
@@ -1471,7 +1470,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
         Top = 416
         Width = 1106
         Height = 190
-        ActivePage = tbsPagamento
+        ActivePage = TbsInformeNFe
         Align = alBottom
         HotTrack = True
         TabOrder = 4
@@ -2473,7 +2472,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             TabStop = False
             Color = clMoneyGreen
             DataField = 'DATAEMISSAO'
-            DataSource = DtSrcTabela
+            DataSource = dtsNFE
             Font.Charset = ANSI_CHARSET
             Font.Color = clBlack
             Font.Height = -11
@@ -2491,7 +2490,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             TabStop = False
             Color = clMoneyGreen
             DataField = 'HORAEMISSAO'
-            DataSource = DtSrcTabela
+            DataSource = dtsNFE
             Font.Charset = ANSI_CHARSET
             Font.Color = clBlack
             Font.Height = -11
@@ -2635,7 +2634,6 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             Height = 21
             TabStop = False
             Color = clMoneyGreen
-            DataField = 'NFE_DENEGADA_MOTIVO'
             DataSource = DtSrcTabela
             Font.Charset = ANSI_CHARSET
             Font.Color = clBlack
@@ -3685,6 +3683,9 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  , c.AUTORIZACAO_ANO'
       '  , c.AUTORIZACAO_CODIGO'
       '  , c.AUTORIZACAO_EMPRESA'
+      '  , c.Cancel_usuario'
+      '  , c.Cancel_datahora'
+      '  , c.Cancel_motivo'
       '  , f.Nomeforn'
       '  , f.Cnpj'
       '  , n.Cfop_descricao'
@@ -4024,6 +4025,24 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       Origin = '"TBCOMPRAS"."AUTORIZACAO_EMPRESA"'
       ProviderFlags = [pfInUpdate]
       Size = 18
+    end
+    object IbDtstTabelaCANCEL_USUARIO: TIBStringField
+      FieldName = 'CANCEL_USUARIO'
+      Origin = '"TBCOMPRAS"."CANCEL_USUARIO"'
+      ProviderFlags = []
+      Size = 50
+    end
+    object IbDtstTabelaCANCEL_DATAHORA: TDateTimeField
+      FieldName = 'CANCEL_DATAHORA'
+      Origin = '"TBCOMPRAS"."CANCEL_DATAHORA"'
+      ProviderFlags = []
+    end
+    object IbDtstTabelaCANCEL_MOTIVO: TMemoField
+      FieldName = 'CANCEL_MOTIVO'
+      Origin = '"TBCOMPRAS"."CANCEL_MOTIVO"'
+      ProviderFlags = []
+      BlobType = ftMemo
+      Size = 8
     end
     object IbDtstTabelaNOMEFORN: TIBStringField
       DisplayLabel = 'Fornecedor'
