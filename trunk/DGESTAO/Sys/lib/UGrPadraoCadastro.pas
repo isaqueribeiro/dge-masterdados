@@ -128,6 +128,7 @@ type
     procedure UpdateGenerator(const sWhr : String = '');
     procedure RedimencionarBevel(const ToolBar : TToolBar; const bvl : TBevel);
     procedure RegistrarRotinaSistema; override;
+    procedure pgcGuiasOnChange; virtual;
   protected
     procedure CentralizarCodigo;
     procedure SetVariablesDefault(const pFastReport : TfrxReport);
@@ -949,6 +950,11 @@ begin
     Result := Copy(CampoCodigo, pos('.', CampoCodigo) + 1, Length(CampoCodigo))
   else
     Result := Trim(CampoCodigo);
+end;
+
+procedure TfrmGrPadraoCadastro.pgcGuiasOnChange;
+begin
+  ;
 end;
 
 end.

@@ -275,9 +275,6 @@ type
     lblTipoEntrada: TLabel;
     dbTipoEntrada: TDBLookupComboBox;
     IbDtstTabelaTIPO_MOVIMENTO: TSmallintField;
-    btbtnFinalizar: TcxButton;
-    btbtnGerarNFe: TcxButton;
-    btbtnCancelarENT: TcxButton;
     e1Data: TJvDateEdit;
     e2Data: TJvDateEdit;
     dbFornecedor: TJvDBComboEdit;
@@ -343,6 +340,9 @@ type
     nmPpArquivoNFe: TMenuItem;
     IbDtstTabelaVERIFICADOR_NFE: TIBStringField;
     IbDtstTabelaXML_NFE_FILENAME: TIBStringField;
+    btbtnFinalizar: TBitBtn;
+    btbtnGerarNFe: TBitBtn;
+    btbtnCancelarENT: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);

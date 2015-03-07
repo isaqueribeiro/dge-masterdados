@@ -94,9 +94,9 @@ type
     cdsCompraVALOR_TOTAL_COFINS: TIBBCDField;
     cdsCompraNFSERIE: TIBStringField;
     TmrAlerta: TTimer;
-    btnConfirmar: TcxButton;
-    btnCancelar: TcxButton;
-    btnCalcular: TcxButton;
+    btnCalcular: TBitBtn;
+    btnConfirmar: TBitBtn;
+    btnCancelar: TBitBtn;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnCalcularClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
