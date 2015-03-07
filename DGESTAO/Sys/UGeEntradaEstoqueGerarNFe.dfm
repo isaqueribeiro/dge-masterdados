@@ -661,7 +661,7 @@ inherited frmGeEntradaEstoqueGerarNFe: TfrmGeEntradaEstoqueGerarNFe
       ParentFont = False
       TabOrder = 13
     end
-    object btnCalcular: TcxButton
+    object btnCalcular: TBitBtn
       Left = 216
       Top = 232
       Width = 169
@@ -733,7 +733,7 @@ inherited frmGeEntradaEstoqueGerarNFe: TfrmGeEntradaEstoqueGerarNFe
       NumGlyphs = 2
     end
   end
-  object btnConfirmar: TcxButton
+  object btnConfirmar: TBitBtn
     Left = 408
     Top = 377
     Width = 92
@@ -795,7 +795,7 @@ inherited frmGeEntradaEstoqueGerarNFe: TfrmGeEntradaEstoqueGerarNFe
       FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF00}
     NumGlyphs = 2
   end
-  object btnCancelar: TcxButton
+  object btnCancelar: TBitBtn
     Left = 504
     Top = 377
     Width = 92

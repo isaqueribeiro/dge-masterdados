@@ -23,7 +23,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       Caption = 'Imprimir'
       Visible = True
     end
-    object btbtnFinalizar: TcxButton
+    object btbtnFinalizar: TBitBtn
       Tag = 11
       Left = 726
       Top = 2
@@ -88,7 +88,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
         00FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF}
       NumGlyphs = 2
     end
-    object btbtnGerarNFe: TcxButton
+    object btbtnGerarNFe: TBitBtn
       Tag = 12
       Left = 846
       Top = 2
@@ -153,7 +153,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
         FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF0000FF00}
       NumGlyphs = 2
     end
-    object btbtnCancelarENT: TcxButton
+    object btbtnCancelarENT: TBitBtn
       Tag = 13
       Left = 966
       Top = 2

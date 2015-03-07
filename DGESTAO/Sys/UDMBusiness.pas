@@ -172,6 +172,7 @@ var
   function IfThen(AValue: Boolean; const ATrue: string; AFalse: string = ''): string; overload;
   function IfThen(AValue: Boolean; const ATrue: TDateTime; AFalse: TDateTime = 0): TDateTime; overload;
   function IfThen(AValue: Boolean; const ATrue: Integer; AFalse: Integer = 0): Integer; overload;
+  function IfThen(AValue: Boolean; const ATrue: Currency; AFalse: Currency = 0.0): Currency; overload;
   function NetWorkActive(const Alertar : Boolean = FALSE) : Boolean;
   function DataBaseOnLine : Boolean;
 
@@ -199,11 +200,13 @@ var
   procedure DesbloquearCliente(iCodigoCliente : Integer; const Motivo : String = '');
   procedure BloquearCliente(iCodigoCliente : Integer; const Motivo : String = '');
   procedure RegistrarSegmentos(Codigo : Integer; Descricao : String);
+  procedure RegistrarCaixaNaVenda(const AnoVenda, NumVenda, AnoCaixa, NumCaixa : Integer; const IsPDV : Boolean);
   {$IFDEF DGE}
   procedure RegistrarControleAcesso(const AOnwer : TComponent; const EvUserAcesso : TEvUserAccess);
   {$ENDIF}
   procedure CarregarConfiguracoesEmpresa(CNPJ : String; Mensagem : String; var AssinaturaHtml, AssinaturaTXT : String);
   procedure SetEmpresaIDDefault(CNPJ : String);
+  procedure SetSegmento(const iCodigo : Integer; const sDescricao : String);
   procedure SetSistema(iCodigo : Smallint; sNome, sVersao : String);
   procedure SetRotinaSistema(iTipo : Smallint; sCodigo, sDescricao, sRotinaPai : String);
 
@@ -246,7 +249,7 @@ var
   function GetPermitirDuplicarCNPJCliente(const sCNPJEmpresa : String) : Boolean;
   function GetAutorizacaoInformarCliente(const sCNPJEmpresa : String) : Boolean;
   function GetSimplesNacionalInsEmpresa(const sCNPJEmpresa : String) : Boolean;
-  function GetEstoqueUnicoEmpresa(const sCNPJEmpresa : String) : Boolean;
+  function GetEstoqueUnificadoEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetEstoqueSateliteEmpresa(const sCNPJEmpresa : String) : Boolean;
   function GetRegimeEmpresa(const sCNPJEmpresa : String) : TTipoRegime;
   function GetRazaoSocialEmpresa(const sCNPJEmpresa : String) : String;
@@ -271,6 +274,7 @@ var
 
   function GetGeneratorID(const GeneratorName : String) : Integer;
   function GetNextID(NomeTabela, CampoChave : String; const sWhere : String = '') : Largeint;
+  function GetGuidID38 : String;
   function GetPaisNomeDefault : String;
   function GetEstadoNomeDefault : String;
   function GetEstadoNome(const iEstado : Integer) : String; overload;
@@ -323,8 +327,12 @@ var
   function GetExisteCPF_CNPJ(iCodigoCliente : Integer; sCpfCnpj : String; var iCodigo : Integer; var sRazao : String) : Boolean;
   function GetExisteNumeroAutorizacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
   function GetExisteNumeroCotacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+  function GetExisteNumeroSolicitacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
   function GetExisteNumeroRequisicao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+  function GetExisteNumeroApropriacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+  function GetExisteNumeroRequisicaoAlmox(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
   function GetMenorVencimentoAPagar : TDateTime;
+  function GetMenorDataEmissaoReqAlmoxEnviada : TDateTime;
   function GetCarregarProdutoCodigoBarra(const sCNPJEmitente : String) : Boolean;
   function GetCarregarProdutoCodigoBarraLocal : Boolean;
   function GetPermissaoRotinaSistema(sRotina : String; const Alertar : Boolean = FALSE) : Boolean;
@@ -394,6 +402,18 @@ const
   TIPO_COTACAO_SERVICO        = TIPO_AUTORIZACAO_SERVICO;
   TIPO_COTACAO_COMPRA_SERVICO = TIPO_AUTORIZACAO_COMPRA_SERVICO;
 
+  TIPO_SOLICITACAO_COMPRA         = TIPO_AUTORIZACAO_COMPRA;
+  TIPO_SOLICITACAO_SERVICO        = TIPO_AUTORIZACAO_SERVICO;
+  TIPO_SOLICITACAO_COMPRA_SERVICO = TIPO_AUTORIZACAO_COMPRA_SERVICO;
+
+  TIPO_APROPRIACAO_GERAL   = 0;
+  TIPO_APROPRIACAO_ENTRADA = 1;
+  TIPO_APROPRIACAO_AUTORIZ = 2;
+
+  TIPO_REQUISICAO_ALMOX_CI = 0;
+  TIPO_REQUISICAO_ALMOX_CP = 1;
+  TIPO_REQUISICAO_ALMOX_TE = 2;
+
   STATUS_COTACAO_EDC = 0;
   STATUS_COTACAO_ABR = 1;
   STATUS_COTACAO_COT = 2;
@@ -404,6 +424,30 @@ const
   STATUS_APROPRIACAO_ESTOQUE_ABR = 1;
   STATUS_APROPRIACAO_ESTOQUE_ENC = 2;
   STATUS_APROPRIACAO_ESTOQUE_CAN = 3;
+
+  STATUS_REQUISICAO_ALMOX_EDC = 0;
+  STATUS_REQUISICAO_ALMOX_ABR = 1;
+  STATUS_REQUISICAO_ALMOX_ENV = 2;
+  STATUS_REQUISICAO_ALMOX_REC = 3;
+  STATUS_REQUISICAO_ALMOX_ATD = 4;
+  STATUS_REQUISICAO_ALMOX_CAN = 5;
+
+  STATUS_ITEM_REQUISICAO_ALMOX_PEN = 0;
+  STATUS_ITEM_REQUISICAO_ALMOX_AGU = 1;
+  STATUS_ITEM_REQUISICAO_ALMOX_ATE = 2;
+  STATUS_ITEM_REQUISICAO_ALMOX_ENT = 3;
+  STATUS_ITEM_REQUISICAO_ALMOX_CAN = 4;
+
+  STATUS_INVENTARIO_ALMOX_EML = 0;
+  STATUS_INVENTARIO_ALMOX_EMC = 1;
+  STATUS_INVENTARIO_ALMOX_ENC = 2;
+  STATUS_INVENTARIO_ALMOX_CAN = 3;
+
+  STATUS_SOLICITACAO_EDC = 0;
+  STATUS_SOLICITACAO_ABR = 1;
+  STATUS_SOLICITACAO_FIN = 2;
+  STATUS_SOLICITACAO_APR = 3;
+  STATUS_SOLICITACAO_CAN = 4;
 
   // Mensagens padrões do sistema
   CLIENTE_BLOQUEADO_PORDEBITO = 'Cliente bloqueado, automaticamente, pelo sistema por se encontrar com títulos vencidos. Favor buscar mais informações junto ao FINANCEIRO.';
@@ -433,6 +477,14 @@ begin
 end;
 
 function IfThen(AValue: Boolean; const ATrue: Integer; AFalse: Integer = 0): Integer;
+begin
+  if AValue then
+    Result := ATrue
+  else
+    Result := AFalse;
+end;
+
+function IfThen(AValue: Boolean; const ATrue: Currency; AFalse: Currency = 0.0): Currency;
 begin
   if AValue then
     Result := ATrue
@@ -598,7 +650,8 @@ begin
       fMsg.Free;
     end
   else
-    Result := (Application.MessageBox(PChar(sMsg), PChar(sTitle), MB_ICONQUESTION + MB_YESNO + MB_DEFBUTTON2) = ID_YES);
+    Result := (MessageDlg(PChar(sMsg), mtConfirmation, [mbYes, mbNo], 0) = ID_YES);
+//    Result := (Application.MessageBox(PChar(sMsg), PChar(sTitle), MB_ICONQUESTION + MB_YESNO + MB_DEFBUTTON2) = ID_YES);
 end;
 
 function ShowConfirmation(sMsg : String) : Boolean;
@@ -901,7 +954,7 @@ begin
     Close;
     SQL.Clear;
     SQL.Add('Update TBCLIENTE Set Dtcad = coalesce(Dtcad, Current_date), Desbloqueado_data = Current_date, Bloqueado = 0, Bloqueado_data = Null, Bloqueado_usuario = Null,');
-    SQL.Add('  Usuario = ' + QuotedStr(GetUserApp) + ',');
+    SQL.Add('  Usuario = ' + QuotedStr(gUsuarioLogado.Login) + ',');
 
     if Trim(Motivo) = EmptyStr then
       SQL.Add('  Bloqueado_motivo = Null')
@@ -921,8 +974,8 @@ begin
   begin
     Close;
     SQL.Clear;
-    SQL.Add('Update TBCLIENTE Set Dtcad = coalesce(Dtcad, Current_date), Desbloqueado_data = Null, Bloqueado = 1, Bloqueado_data = Current_date, Bloqueado_usuario = ' + QuotedStr(GetUserApp) + ',');
-    SQL.Add('  Usuario = ' + QuotedStr(GetUserApp) + ',');
+    SQL.Add('Update TBCLIENTE Set Dtcad = coalesce(Dtcad, Current_date), Desbloqueado_data = Null, Bloqueado = 1, Bloqueado_data = Current_date, Bloqueado_usuario = ' + QuotedStr(gUsuarioLogado.Login) + ',');
+    SQL.Add('  Usuario = ' + QuotedStr(gUsuarioLogado.Login) + ',');
 
     if Trim(Motivo) = EmptyStr then
       SQL.Add('  Bloqueado_motivo = Null')
@@ -943,6 +996,28 @@ begin
     Close;
     SQL.Clear;
     SQL.Add('Execute Procedure SET_SEGMENTO(' + IntToStr(Codigo) + ', ' + QuotedStr(Trim(Descricao)) + ')');
+    ExecSQL;
+
+    CommitTransaction;
+  end;
+end;
+
+procedure RegistrarCaixaNaVenda(const AnoVenda, NumVenda, AnoCaixa, NumCaixa : Integer;
+  const IsPDV : Boolean);
+begin
+  if (AnoVenda = 0) or (NumVenda = 0) or (AnoCaixa = 0) or (NumCaixa = 0) then
+    Exit;
+
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Update TBVENDAS Set');
+    SQL.Add('    caixa_ano = ' + IntToStr(AnoCaixa));
+    SQL.Add('  , caixa_num = ' + IntToStr(NumCaixa));
+    SQL.Add('  , caixa_PDV = ' + IfThen(IsPDV, '1', '0'));
+    SQL.Add('where ano        = ' + IntToStr(AnoVenda));
+    SQL.Add('  and codcontrol = ' + IntToStr(NumVenda));
     ExecSQL;
 
     CommitTransaction;
@@ -1082,6 +1157,26 @@ procedure SetEmpresaIDDefault(CNPJ : String);
 begin
   FileINI.WriteString(INI_SECAO_DEFAULT, INI_KEY_EMPRESA, CNPJ);
   FileINI.UpdateFile;
+end;
+
+procedure SetSegmento(const iCodigo : Integer; const sDescricao : String);
+begin
+  try
+    with DMBusiness, qryBusca do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('Execute Procedure SET_SEGMENTO_EMPRESA(' + IntToStr(iCodigo) + ', ' + QuotedStr(Trim(sDescricao)) + ')');
+      ExecSQL;
+
+      CommitTransaction;
+
+      Close;
+    end;
+  except
+    On E : Exception do
+      ShowError('SetSegmento() - ' + E.Message + #13#13 + DMBusiness.qryBusca.SQL.Text);
+  end;
 end;
 
 procedure SetSistema(iCodigo : Smallint; sNome, sVersao : String);
@@ -1416,7 +1511,7 @@ begin
   end;
 end;
 
-function GetEstoqueUnicoEmpresa(const sCNPJEmpresa : String) : Boolean;
+function GetEstoqueUnificadoEmpresa(const sCNPJEmpresa : String) : Boolean;
 begin
   with DMBusiness, qryBusca do
   begin
@@ -1738,7 +1833,7 @@ begin
       SEGMENTO_MERCADO_CARRO_ID:
         S := 'Veículos';
       SEGMENTO_INDUSTRIA_METAL_ID, SEGMENTO_INDUSTRIA_GERAL_ID:
-        s := 'Produtos/Serviços'  
+        s := 'Produto/Serviço'  
       else
         S := 'Produtos';
     end;
@@ -1836,6 +1931,20 @@ begin
     Open;
 
     Result := FieldByName('ID').AsInteger + 1;
+  end;
+end;
+function GetGuidID38 : String;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select g.hex_uuid_format from GET_GUID_UUID_HEX g');
+    Open;
+
+    Result := FieldByName('hex_uuid_format').AsString;
+
+    Close;
   end;
 end;
 
@@ -2502,6 +2611,33 @@ begin
   end;
 end;
 
+function GetExisteNumeroSolicitacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('    s.ano');
+    SQL.Add('  , s.codigo');
+    SQL.Add('  , s.numero');
+    SQL.Add('from TBSOLICITACAO s');
+    SQL.Add('where s.Numero  = ' + QuotedStr(Trim(sNumero)));
+    SQL.Add('  and (not (');
+    SQL.Add('           s.ano    = ' + IntToStr(iAno));
+    SQL.Add('       and s.codigo = ' + IntToStr(iCodigo));
+    SQL.Add('  ))');
+    Open;
+
+    Result := (FieldByName('codigo').AsInteger > 0);
+
+    if Result then
+      sControleInterno := Trim(FieldByName('ano').AsString) + '/' + FormatFloat('###0000000', FieldByName('codigo').AsInteger);
+
+    Close;
+  end;
+end;
+
 function GetExisteNumeroRequisicao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
 begin
   with DMBusiness, qryBusca do
@@ -2529,6 +2665,60 @@ begin
   end;
 end;
 
+function GetExisteNumeroApropriacao(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('    a.ano');
+    SQL.Add('  , a.controle');
+    SQL.Add('  , a.numero');
+    SQL.Add('from TBAPROPRIACAO_ALMOX a');
+    SQL.Add('where a.Numero  = ' + QuotedStr(Trim(sNumero)));
+    SQL.Add('  and (not (');
+    SQL.Add('           a.ano      = ' + IntToStr(iAno));
+    SQL.Add('       and a.controle = ' + IntToStr(iCodigo));
+    SQL.Add('  ))');
+    Open;
+
+    Result := (FieldByName('controle').AsInteger > 0);
+
+    if Result then
+      sControleInterno := Trim(FieldByName('ano').AsString) + '/' + FormatFloat('###0000000', FieldByName('controle').AsInteger);
+
+    Close;
+  end;
+end;
+
+function GetExisteNumeroRequisicaoAlmox(iAno, iCodigo : Integer; sNumero : String; var sControleInterno : String) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('    r.ano');
+    SQL.Add('  , r.controle');
+    SQL.Add('  , r.numero');
+    SQL.Add('from TBREQUISICAO_ALMOX r');
+    SQL.Add('where r.Numero  = ' + QuotedStr(Trim(sNumero)));
+    SQL.Add('  and (not (');
+    SQL.Add('           r.ano      = ' + IntToStr(iAno));
+    SQL.Add('       and r.controle = ' + IntToStr(iCodigo));
+    SQL.Add('  ))');
+    Open;
+
+    Result := (FieldByName('controle').AsInteger > 0);
+
+    if Result then
+      sControleInterno := Trim(FieldByName('ano').AsString) + '/' + FormatFloat('###0000000', FieldByName('controle').AsInteger);
+
+    Close;
+  end;
+end;
+
 function GetMenorVencimentoAPagar : TDateTime;
 begin
   with DMBusiness, qryBusca do
@@ -2544,6 +2734,28 @@ begin
 
     if not IsEmpty then
       Result := FieldByName('vencimento').AsDateTime
+    else
+      Result := GetDateDB;
+
+    Close;
+  end;
+end;
+
+function GetMenorDataEmissaoReqAlmoxEnviada : TDateTime;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select');
+    SQL.Add('  min(r.data_emissao) as data_emissao');
+    SQL.Add('from TBREQUISICAO_ALMOX r');
+    SQL.Add('where r.empresa = ' + QuotedStr(GetEmpresaIDDefault));
+    SQL.Add('  and r.status in (' + IntToStr(STATUS_REQUISICAO_ALMOX_ENV) + ', ' + IntToStr(STATUS_REQUISICAO_ALMOX_REC) + ')');
+    Open;
+
+    if not FieldByName('data_emissao').IsNull then
+      Result := FieldByName('data_emissao').AsDateTime
     else
       Result := GetDateDB;
 
@@ -2930,6 +3142,13 @@ begin
     gLicencaSistema.Competencia  := StrToIntDef(ini.ReadString('Licenca', 'edCompetencia', FormatDateTime('yyyymm', Date + 30)), 0);
     gLicencaSistema.DataBloqueio := ini.ReadDateTime('Licenca', 'edDataBloqueio', Date + 45);
 
+    SetSegmento(SEGMENTO_PADRAO_ID,          SEGMENTO_PADRAO_DS);
+    SetSegmento(SEGMENTO_VAREJO_ATACADO_ID,  SEGMENTO_VAREJO_ATACADO_DS);
+    SetSegmento(SEGMENTO_MERCADO_CARRO_ID,   SEGMENTO_MERCADO_CARRO_DS);
+    SetSegmento(SEGMENTO_SERVICOS_ID,        SEGMENTO_SERVICOS_DS);
+    SetSegmento(SEGMENTO_VAREJO_SERVICOS_ID, SEGMENTO_VAREJO_SERVICOS_DS);
+    SetSegmento(SEGMENTO_INDUSTRIA_METAL_ID, SEGMENTO_INDUSTRIA_METAL_DS);
+    SetSegmento(SEGMENTO_INDUSTRIA_GERAL_ID, SEGMENTO_INDUSTRIA_GERAL_DS);
   finally
     ini.Free;
     Arquivo.Free;

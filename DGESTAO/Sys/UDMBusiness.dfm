@@ -1,9 +1,9 @@
 object DMBusiness: TDMBusiness
   OldCreateOrder = True
   OnCreate = DataModuleCreate
-  Left = 315
-  Top = 144
-  Height = 617
+  Left = 381
+  Top = 209
+  Height = 620
   Width = 812
   object ibdtbsBusiness: TIBDatabase
     DatabaseName = 'localhost:BUSINESS'
@@ -1003,34 +1003,49 @@ object DMBusiness: TDMBusiness
     Top = 120
     Datasets = <
       item
+        DataSetName = 'CalculoImposto'
       end
       item
+        DataSetName = 'DadosProdutos'
       end
       item
+        DataSetName = 'Destinatario'
       end
       item
+        DataSetName = 'Duplicatas'
       end
       item
+        DataSetName = 'Emitente'
       end
       item
+        DataSetName = 'Fatura'
       end
       item
+        DataSetName = 'Identificacao'
       end
       item
+        DataSetName = 'InformacoesAdicionais'
       end
       item
+        DataSetName = 'ISSQN'
       end
       item
+        DataSetName = 'LocalEntrega'
       end
       item
+        DataSetName = 'LocalRetirada'
       end
       item
+        DataSetName = 'Parametros'
       end
       item
+        DataSetName = 'Transportador'
       end
       item
+        DataSetName = 'Veiculo'
       end
       item
+        DataSetName = 'Volumes'
       end>
     Variables = <
       item
@@ -1066,6 +1081,7 @@ object DMBusiness: TDMBusiness
         Top = 1058.268400000000000000
         Width = 744.567410000000000000
         OnAfterPrint = 'DadosProdutosOnAfterPrint'
+        DataSetName = 'DadosProdutos'
         RowCount = 0
         Stretched = True
         object Memo131: TfrxMemoView
@@ -1482,6 +1498,7 @@ object DMBusiness: TDMBusiness
           ShowHint = False
           BarType = bcCode128C
           DataField = 'Contingencia_ID'
+          DataSetName = 'Parametros'
           Rotation = 0
           ShowText = False
           Text = '123456789012345678901234567890123456'
@@ -1536,6 +1553,7 @@ object DMBusiness: TDMBusiness
           ShowHint = False
           BarType = bcCode128C
           DataField = 'Id'
+          DataSetName = 'Identificacao'
           Rotation = 0
           ShowText = False
           Text = '12345678901234567890123456789012345678901234'
@@ -1898,6 +1916,7 @@ object DMBusiness: TDMBusiness
           ShowHint = False
           Center = True
           DataField = 'LogoCarregado'
+          DataSetName = 'Parametros'
           HightQuality = False
           Transparent = False
           TransparentColor = clWhite
@@ -2016,6 +2035,7 @@ object DMBusiness: TDMBusiness
         Height = 96.267762910000000000
         Top = 355.275820000000000000
         Width = 744.567410000000000000
+        DataSetName = 'Identificacao'
         RowCount = 1
         object Memo29: TfrxMemoView
           Top = 16.897650000000000000
@@ -2482,6 +2502,7 @@ object DMBusiness: TDMBusiness
         Height = 40.440944880000000000
         Top = 612.283860000000000000
         Width = 744.567410000000000000
+        DataSetName = 'Fatura'
         RowCount = 0
         object Memo190: TfrxMemoView
           Top = 3.779527560000000000
@@ -2529,6 +2550,7 @@ object DMBusiness: TDMBusiness
         Width = 744.567410000000000000
         Columns = 5
         ColumnWidth = 151.181102362205000000
+        DataSetName = 'Duplicatas'
         RowCount = 0
         object Shape2: TfrxShapeView
           Align = baClient
@@ -3032,6 +3054,7 @@ object DMBusiness: TDMBusiness
         Top = 778.583180000000000000
         Width = 744.567410000000000000
         OnBeforePrint = 'ImpostoOnBeforePrint'
+        DataSetName = 'CalculoImposto'
         RowCount = 1
         object Memo58: TfrxMemoView
           Top = 3.779530000000000000
@@ -3541,6 +3564,7 @@ object DMBusiness: TDMBusiness
         Height = 96.378045510000000000
         Top = 873.071430000000000000
         Width = 744.567410000000000000
+        DataSetName = 'Transportador'
         RowCount = 1
         object Memo82: TfrxMemoView
           Top = 3.779530000000000000
@@ -4484,6 +4508,7 @@ object DMBusiness: TDMBusiness
         Height = 43.354342910000000000
         Top = 476.220780000000000000
         Width = 744.567410000000000000
+        DataSetName = 'LocalRetirada'
         RowCount = 0
         object Memo10: TfrxMemoView
           Top = 16.897650000000000000
@@ -4581,6 +4606,7 @@ object DMBusiness: TDMBusiness
         Height = 43.354342910000000000
         Top = 544.252320000000000000
         Width = 744.567410000000000000
+        DataSetName = 'LocalEntrega'
         RowCount = 0
         object Memo54: TfrxMemoView
           Top = 16.897650000000000000
@@ -4699,6 +4725,7 @@ object DMBusiness: TDMBusiness
         Height = 43.354342910000000000
         Top = 18.897650000000000000
         Width = 718.110700000000000000
+        DataSetName = 'ISSQN'
         RowCount = 0
         object Memo5: TfrxMemoView
           Top = 3.779530000000000000
