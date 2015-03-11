@@ -1157,12 +1157,12 @@ begin
   begin
     lblReferencia.Caption               := 'Placa:';
     IbDtstTabelaREFERENCIA.DisplayLabel := 'Placa';
-    lblDescricao.Caption := 'Veículo Modelo:';
-    IbDtstTabelaDESCRI.DisplayLabel := 'Veículo Modelo';
-    lblApresentacao.Caption := 'Linha:';
-    IbDtstTabelaAPRESENTACAO.DisplayLabel := 'Chassi';
+    lblDescricao.Caption                := 'Veículo Modelo:';
+    IbDtstTabelaDESCRI.DisplayLabel     := 'Veículo Modelo';
+    lblApresentacao.Caption               := 'Linha:';
+    IbDtstTabelaAPRESENTACAO.DisplayLabel := 'Linha';
     IbDtstTabelaDESCRI_APRESENTACAO.DisplayLabel := 'Veículo + Chassi';
-    lblGrupo.Caption := 'Família:';
+    lblGrupo.Caption                         := 'Família:';
     IbDtstTabelaDESCRICAO_GRUPO.DisplayLabel := 'Família';
   end;
 

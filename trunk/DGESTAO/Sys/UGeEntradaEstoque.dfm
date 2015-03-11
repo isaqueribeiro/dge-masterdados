@@ -230,6 +230,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
   inherited pgcGuias: TPageControl
     Width = 1114
     Height = 635
+    ActivePage = tbsCadastro
     OnChange = pgcGuiasChange
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
@@ -5127,7 +5128,6 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
     object qryNFEANOVENDA: TSmallintField
       FieldName = 'ANOVENDA'
       Origin = 'TBNFE_ENVIADA.ANOVENDA'
-      Required = True
     end
     object qryNFENUMVENDA: TIntegerField
       FieldName = 'NUMVENDA'
