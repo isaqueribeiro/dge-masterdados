@@ -1159,7 +1159,7 @@ begin
     IbDtstTabelaREFERENCIA.DisplayLabel := 'Placa';
     lblDescricao.Caption := 'Veículo Modelo:';
     IbDtstTabelaDESCRI.DisplayLabel := 'Veículo Modelo';
-    lblApresentacao.Caption := 'Chassi:';
+    lblApresentacao.Caption := 'Linha:';
     IbDtstTabelaAPRESENTACAO.DisplayLabel := 'Chassi';
     IbDtstTabelaDESCRI_APRESENTACAO.DisplayLabel := 'Veículo + Chassi';
     lblGrupo.Caption := 'Família:';

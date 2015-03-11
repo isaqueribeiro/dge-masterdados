@@ -82,7 +82,6 @@ type
     cdsCompraHREMISS: TTimeField;
     cdsCompraIPI: TIBBCDField;
     cdsCompraVALOR_TOTAL_IPI: TIBBCDField;
-    cdsCompraVALOR_TOTAL_BRUTO: TIBBCDField;
     cdsCompraVALOR_TOTAL_DESCONTO: TIBBCDField;
     cdsCompraVALOR_TOTAL_LIQUIDO: TIBBCDField;
     cdsCompraVALOR_BASE_ICMS_NORMAL_ENTRADA: TIBBCDField;
@@ -97,6 +96,7 @@ type
     btnCalcular: TBitBtn;
     btnConfirmar: TBitBtn;
     btnCancelar: TBitBtn;
+    cdsCompraVALOR_TOTAL_BRUTO: TFMTBCDField;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnCalcularClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);

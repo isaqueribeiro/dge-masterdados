@@ -1149,11 +1149,11 @@ inherited frmGeEntradaEstoqueGerarNFe: TfrmGeEntradaEstoqueGerarNFe
       Precision = 18
       Size = 2
     end
-    object cdsCompraVALOR_TOTAL_BRUTO: TIBBCDField
+    object cdsCompraVALOR_TOTAL_BRUTO: TFMTBCDField
       FieldName = 'VALOR_TOTAL_BRUTO'
-      DisplayFormat = ',0.00'
+      ProviderFlags = []
       Precision = 18
-      Size = 2
+      Size = 5
     end
     object cdsCompraVALOR_TOTAL_DESCONTO: TIBBCDField
       FieldName = 'VALOR_TOTAL_DESCONTO'
