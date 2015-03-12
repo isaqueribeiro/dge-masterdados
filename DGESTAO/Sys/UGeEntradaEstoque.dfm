@@ -545,7 +545,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           ParentFont = False
         end
         object lblEmpresa: TLabel [2]
-          Left = 240
+          Left = 241
           Top = 24
           Width = 45
           Height = 13
