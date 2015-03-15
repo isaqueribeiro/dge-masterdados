@@ -509,7 +509,7 @@ begin
 
     frm.TipoMovimento     := tmeProduto;
     frm.ApenasFinalizadas := True;
-    frm.Caption           := 'Controle de Entradas de Produtos';
+    frm.Caption           := 'Controle de Entradas de Produtos' + IfThen(GetSegmentoID(GetEmpresaIDDefault) = SEGMENTO_MERCADO_CARRO_ID, '/Veículos', EmptyStr);
     frm.RotinaID          := ROTINA_ENT_PRODUTO_ID;
 
     frm.btbtnIncluir.Visible  := False;
@@ -830,9 +830,9 @@ begin
     nmGerarDANFEXML.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_CMP_NFE);
 
     TbsInformeNFe.TabVisible    := (Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) <> EmptyStr);
-    nmPpLimparDadosNFe.Enabled  := (Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) <> EmptyStr) and (IbDtstTabelaNF.AsCurrency = 0);
-    BtnLimparDadosNFe.Enabled   := (Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) <> EmptyStr) and (IbDtstTabelaNF.AsCurrency = 0);
-    BtnCorrigirDadosNFe.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_CMP_FIN) and (IbDtstTabelaNF.AsCurrency = 0);
+    nmPpLimparDadosNFe.Enabled  := (Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) <> EmptyStr) and ((IbDtstTabelaXML_NFE_FILENAME.AsString) = EmptyStr);
+    BtnLimparDadosNFe.Enabled   := (Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) <> EmptyStr) and ((IbDtstTabelaXML_NFE_FILENAME.AsString) = EmptyStr);
+    BtnCorrigirDadosNFe.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_CMP_FIN)          and ((IbDtstTabelaXML_NFE_FILENAME.AsString) = EmptyStr);
   end
   else
   begin
@@ -844,9 +844,9 @@ begin
     nmGerarDANFEXML.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_CMP_NFE);
 
     TbsInformeNFe.TabVisible    := (Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) <> EmptyStr);
-    nmPpLimparDadosNFe.Enabled  := (Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) <> EmptyStr) and (IbDtstTabelaNF.AsCurrency = 0);
-    BtnLimparDadosNFe.Enabled   := (Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) <> EmptyStr) and (IbDtstTabelaNF.AsCurrency = 0);
-    BtnCorrigirDadosNFe.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_CMP_FIN) and (IbDtstTabelaNF.AsCurrency = 0);
+    nmPpLimparDadosNFe.Enabled  := (Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) <> EmptyStr) and ((IbDtstTabelaXML_NFE_FILENAME.AsString) = EmptyStr);
+    BtnLimparDadosNFe.Enabled   := (Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) <> EmptyStr) and ((IbDtstTabelaXML_NFE_FILENAME.AsString) = EmptyStr);
+    BtnCorrigirDadosNFe.Enabled := (IbDtstTabelaSTATUS.AsInteger = STATUS_CMP_FIN)          and ((IbDtstTabelaXML_NFE_FILENAME.AsString) = EmptyStr);
   end;
 end;
 
@@ -1457,7 +1457,7 @@ begin
 
   if ( IbDtstTabelaLOTE_NFE_NUMERO.AsInteger > 0 ) then
   begin
-    ShowWarning('O processo de geração de NF-e para esta venda já foi solicitado, mas não fora concluído.' + #13 +
+    ShowWarning('O processo de geração de NF-e para esta entrada já foi solicitado, mas não fora concluído.' + #13 +
       'Favor consultar junto a SEFA e processar o Recibo/Lote de número ' +
         IbDtstTabelaLOTE_NFE_RECIBO.AsString + '/' +
         FormatFloat('#########0', IbDtstTabelaLOTE_NFE_NUMERO.AsInteger));
@@ -1702,6 +1702,7 @@ begin
     dbValorIPIProduto.Enabled  := False;
 
     GrpBxDadosProduto.Caption := 'Dados do serviço';
+    
     lblProduto.Caption := 'Serviço';
     dbgProdutos.Columns[1].Title.Caption := 'Serviço';
     dbgProdutos.Columns[2].Title.Caption := 'Descrição do Serviço';

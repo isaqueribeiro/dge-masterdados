@@ -131,8 +131,8 @@ type
     IbDtstTabelaVALORSALDO: TIBBCDField;
     lblSaldoAPagar: TLabel;
     dbSaldoAPagar: TDBEdit;
-    dbEmissao: TDBDateEdit;
-    dbVencimento: TDBDateEdit;
+    dbEmissao: TDBEdit;
+    dbVencimento: TDBEdit;
     procedure FormCreate(Sender: TObject);
     procedure dbFornecedorButtonClick(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
