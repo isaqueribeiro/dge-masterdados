@@ -1,6 +1,6 @@
 inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
-  Left = 239
-  Top = 35
+  Left = 220
+  Top = 162
   Width = 1130
   Height = 716
   ActiveControl = nil
@@ -427,7 +427,6 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ImageKind = ikCustom
             NumGlyphs = 2
             PopupColor = clBtnFace
-            ShowNullDate = False
             TabOrder = 0
           end
           object e2Data: TJvDateEdit
@@ -484,7 +483,6 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
             ImageKind = ikCustom
             NumGlyphs = 2
             PopupColor = clBtnFace
-            ShowNullDate = False
             TabOrder = 1
           end
         end
@@ -1102,7 +1100,6 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           NumGlyphs = 2
           ParentFont = False
           PopupColor = clBtnFace
-          ShowNullDate = False
           TabOrder = 5
         end
         object dbDataEntrada: TJvDBDateEdit
@@ -1167,7 +1164,6 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
           NumGlyphs = 2
           ParentFont = False
           PopupColor = clBtnFace
-          ShowNullDate = False
           TabOrder = 9
         end
       end

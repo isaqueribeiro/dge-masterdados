@@ -1,6 +1,6 @@
 inherited frmGeContasAPagar: TfrmGeContasAPagar
-  Left = 341
-  Top = 138
+  Left = 370
+  Top = 197
   Width = 950
   Height = 600
   ActiveControl = dbCodigo
@@ -24,6 +24,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
       OnClick = btbtnListaClick
     end
     object btbtnEfetuarPagto: TBitBtn
+      Tag = 11
       Left = 726
       Top = 2
       Width = 120
@@ -790,6 +791,7 @@ inherited frmGeContasAPagar: TfrmGeContasAPagar
         end
       end
       object dbgPagamentos: TDBGrid
+        Tag = 12
         Left = 0
         Top = 205
         Width = 926
