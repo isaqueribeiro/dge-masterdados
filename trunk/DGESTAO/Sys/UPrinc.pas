@@ -145,6 +145,8 @@ type
     nmCartaCorrecaoNFe: TMenuItem;
     N14: TMenuItem;
     nmUsuarioPerfil: TMenuItem;
+    nmNotaFiscalComplementar: TMenuItem;
+    N15: TMenuItem;
     procedure btnEmpresaClick(Sender: TObject);
     procedure btnClienteClick(Sender: TObject);
     procedure btnContaAReceberClick(Sender: TObject);
@@ -407,7 +409,7 @@ end;
 
 procedure TfrmPrinc.nmConfigurarNFeACBrClick(Sender: TObject);
 begin
-  ConfigurarNFeACBr;
+  ConfigurarNFeACBr(gUsuarioLogado.Empresa);
 end;
 
 procedure TfrmPrinc.nmTipoDespesaClick(Sender: TObject);

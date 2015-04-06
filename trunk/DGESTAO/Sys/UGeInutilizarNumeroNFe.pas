@@ -160,11 +160,11 @@ begin
   if ShowConfirm('Confirma a initilização do intervalor de numeração de NF-e informado?') then
   begin
 
-    if not DMNFe.GetValidadeCertificado then
+    if not DMNFe.GetValidadeCertificado(gUsuarioLogado.Empresa) then
       Exit;
 
     sRetorno := EmptyStr;
-    if DMNFe.InutilizaNumeroNFeACBr(GetEmpresaIDDefault, iAno, iModelo, iSerie, iNroInicial, iNroFinal, sJustific, sRetorno ) then
+    if DMNFe.InutilizaNumeroNFeACBr(gUsuarioLogado.Empresa, iAno, iModelo, iSerie, iNroInicial, iNroFinal, sJustific, sRetorno ) then
     begin
 
       with cdsLOG do

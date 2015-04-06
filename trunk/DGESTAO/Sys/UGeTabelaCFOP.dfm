@@ -1,39 +1,33 @@
 inherited frmGeTabelaCFOP: TfrmGeTabelaCFOP
-  Left = 391
-  Top = 217
+  Left = 398
+  Top = 210
+  Width = 744
+  Height = 484
+  ActiveControl = dbCodigo
   Caption = 'Tabela CFOP (C'#243'digo Fiscal de Opera'#231#245'es e Presta'#231#245'es)'
-  ClientHeight = 446
-  ClientWidth = 728
   OldCreateOrder = True
-  ExplicitWidth = 744
-  ExplicitHeight = 485
   PixelsPerInch = 96
   TextHeight = 13
   inherited Bevel1: TBevel
     Top = 442
     Width = 728
-    ExplicitTop = 443
-    ExplicitWidth = 728
   end
   inherited Bevel3: TBevel
     Top = 403
     Width = 728
-    ExplicitTop = 404
-    ExplicitWidth = 728
+  end
+  inherited tlbBotoes: TToolBar
+    Top = 407
+    Width = 728
   end
   inherited pgcGuias: TPageControl
     Width = 728
     Height = 403
-    ExplicitWidth = 728
-    ExplicitHeight = 403
+    ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
-      ExplicitWidth = 720
-      ExplicitHeight = 374
       inherited Bevel4: TBevel
         Top = 308
         Width = 720
-        ExplicitTop = 309
-        ExplicitWidth = 720
       end
       inherited dbgDados: TDBGrid
         Width = 720
@@ -54,41 +48,27 @@ inherited frmGeTabelaCFOP: TfrmGeTabelaCFOP
       inherited pnlFiltros: TPanel
         Top = 312
         Width = 720
-        ExplicitTop = 312
-        ExplicitWidth = 720
         inherited grpBxFiltro: TGroupBox
           Left = 464
-          ExplicitLeft = 464
           inherited lbltFiltrar: TLabel
             Width = 31
             Caption = 'CFOP:'
-            ExplicitWidth = 31
           end
           inherited edtFiltrar: TEdit
             Left = 48
             Width = 155
-            ExplicitLeft = 48
-            ExplicitWidth = 155
           end
         end
       end
     end
     inherited tbsCadastro: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 25
-      ExplicitWidth = 720
-      ExplicitHeight = 374
       inherited Bevel8: TBevel
         Top = 225
         Width = 720
-        ExplicitTop = 225
-        ExplicitWidth = 720
       end
       inherited GrpBxDadosNominais: TGroupBox
         Width = 720
         Height = 225
-        ExplicitWidth = 720
-        ExplicitHeight = 225
         object lblNome: TLabel [1]
           Left = 88
           Top = 24
@@ -263,32 +243,6 @@ inherited frmGeTabelaCFOP: TfrmGeTabelaCFOP
           ValueUnchecked = '0'
         end
       end
-    end
-  end
-  inherited tlbBotoes: TPanel
-    Top = 407
-    Width = 728
-    ExplicitTop = 407
-    ExplicitWidth = 728
-    inherited bvlTool3: TBevel
-      Left = 645
-      ExplicitLeft = 645
-    end
-    inherited bvlTool4: TBevel
-      Left = 724
-      ExplicitLeft = 724
-    end
-    inherited btbtnExcluir: TcxButton
-      ExplicitLeft = 154
-      ExplicitTop = 0
-    end
-    inherited btbtnFechar: TcxButton
-      Left = 649
-      ExplicitLeft = 649
-    end
-    inherited btbtnSelecionar: TcxButton
-      Left = 525
-      ExplicitLeft = 525
     end
   end
   inherited IbDtstTabela: TIBDataSet
@@ -1865,9 +1819,6 @@ inherited frmGeTabelaCFOP: TfrmGeTabelaCFOP
   object QryCST: TIBQuery
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'Select'
       '    c.codigo'

@@ -105,13 +105,17 @@ HostApplication=
 Launcher=
 UseLauncher=0
 DebugCWD=
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=1
 MinorVer=0
-Release=2
-Build=12
+Release=9
+Build=1
 Debug=0
 PreRelease=0
 Special=0
@@ -122,17 +126,18 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=Masterdados Tecnologia da Informação
 FileDescription=Sistema Integrado de Gestão Empresarial
-FileVersion=1.0.2.12
+FileVersion=1.0.9.1
 InternalName=DGE
 LegalCopyright=Copyright 2012 © Dorivaldo M. Vieira Jr, Inc.
 LegalTrademarks=
 OriginalFilename=DGE.EXE
 ProductName=DGE - Sistema de Gestão Empresarial
-ProductVersion=1.0.2.0
+ProductVersion=1.0.9.0
 Comments=
 System Analisty=Isaque Marinho Ribeiro
 ReleaseDate=30/05/2012
 Contacts=(91) 8717-1057 / 8129-1567
+Owner=Isaque Marinho Ribeiro e Dorivaldo Vieira
 [Excluded Packages]
 c:\program files (x86)\borland\delphi7\Projects\Bpl\RVDBPkgD7.bpl=RichView DataAware
 [HistoryLists\hlConditionals]
