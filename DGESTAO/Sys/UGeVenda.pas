@@ -557,7 +557,8 @@ begin
                         QuotedStr( FormatDateTime('yyyy-mm-dd', e1Data.Date) ) + ' and ' +
                         QuotedStr( FormatDateTime('yyyy-mm-dd', e2Data.Date) );
 
-  UpdateGenerator( 'where Ano = ' + FormatFloat('0000', YearOf(Date)) );
+  // A tela de vendas não pode atualizar generator porque este processo está gerando erros
+  //UpdateGenerator( 'where Ano = ' + FormatFloat('0000', YearOf(Date)) );
 
   // Configurar Legendas de acordo com o segmento
   btnConsultarProduto.Caption := StrDescricaoProduto;
@@ -1775,7 +1776,7 @@ begin
 
   RecarregarRegistro;
 
-  if not DMNFe.GetValidadeCertificado then
+  if not DMNFe.GetValidadeCertificado(IbDtstTabelaCODEMP.AsString) then
     Exit;
 
   if ( IbDtstTabelaLOTE_NFE_NUMERO.AsInteger > 0 ) then

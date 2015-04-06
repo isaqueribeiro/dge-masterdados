@@ -288,14 +288,14 @@ begin
 
     PesquisarLote(0, 0, Trim(edNumeroRecibo.Text), iAnoMov, iCodMov, sDestinatarioCNPJ);
 
-    if not DMNFe.GetValidadeCertificado then
+    if not DMNFe.GetValidadeCertificado(gUsuarioLogado.Empresa) then
       Exit;
 
     sRetorno := EmptyStr;
 
     // Executar Consulta por Recibo para obter a Chave NF-e
 
-    if DMNFe.ConsultarNumeroLoteNFeACBr(GetEmpresaIDDefault, Trim(edNumeroRecibo.Text), sChaveNFE, sProtocoloTMP, sRetorno, dDataEnvio ) then
+    if DMNFe.ConsultarNumeroLoteNFeACBr(gUsuarioLogado.Empresa, Trim(edNumeroRecibo.Text), sChaveNFE, sProtocoloTMP, sRetorno, dDataEnvio ) then
     begin
 
       edChaveNFe.Text     := Trim(sChaveNFE);
@@ -311,7 +311,7 @@ begin
 
       // Executar Consulta por Chave NF-e para obter o arquivo e o Protocolo
 
-      if ( DMNFe.ConsultarChaveNFeACBr(GetEmpresaIDDefault, sChaveNFE, iSerieNFe, iNumeroNFe, iTipoNFe,
+      if ( DMNFe.ConsultarChaveNFeACBr(gUsuarioLogado.Empresa, sChaveNFE, iSerieNFe, iNumeroNFe, iTipoNFe,
         sDestinatarioCNPJ, sFileNameXML, sChaveNFE, sProtocoloNFE, dDataEmissao) ) then
       begin
         sMensagem := sMensagem + #13#13 + 'Arquivo a processar:' + #13#13 + sFileNameXML;

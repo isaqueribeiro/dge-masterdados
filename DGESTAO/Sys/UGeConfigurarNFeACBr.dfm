@@ -61,7 +61,7 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
           object lbltSenha: TLabel
             Left = 8
             Top = 56
-            Width = 30
+            Width = 31
             Height = 13
             Caption = 'Senha'
           end
@@ -218,7 +218,7 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
           object lbltLogoMarca: TLabel
             Left = 8
             Top = 296
-            Width = 55
+            Width = 57
             Height = 13
             Anchors = [akLeft, akBottom]
             Caption = 'Logo Marca'
@@ -270,7 +270,7 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
           object lblPathSchemas: TLabel
             Left = 8
             Top = 399
-            Width = 198
+            Width = 199
             Height = 13
             Anchors = [akLeft, akBottom]
             Caption = 'Diret'#243'rios com os arquivos XSD(Schemas)'
@@ -309,7 +309,7 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
           object lblVersaoDF: TLabel
             Left = 8
             Top = 117
-            Width = 134
+            Width = 136
             Height = 13
             Caption = 'Vers'#227'o do Documento Fiscal'
             FocusControl = cbVersaoDF
@@ -317,7 +317,7 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
           object lblIdToken: TLabel
             Left = 8
             Top = 163
-            Width = 85
+            Width = 87
             Height = 13
             Caption = 'Id Token / Id CSC'
             Enabled = False
@@ -580,7 +580,7 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
           object lbltProxyPorta: TLabel
             Left = 208
             Top = 16
-            Width = 26
+            Width = 25
             Height = 13
             Caption = 'Porta'
           end
@@ -594,7 +594,7 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
           object lbltProxySenha: TLabel
             Left = 138
             Top = 56
-            Width = 30
+            Width = 31
             Height = 13
             Caption = 'Senha'
           end
@@ -649,35 +649,35 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
         object lbltEmitCNPJ: TLabel
           Left = 8
           Top = 4
-          Width = 25
+          Width = 27
           Height = 13
           Caption = 'CNPJ'
         end
         object lbltEmitIE: TLabel
           Left = 136
           Top = 4
-          Width = 43
+          Width = 41
           Height = 13
           Caption = 'Insc.Est.'
         end
         object lbltEmitRazao: TLabel
           Left = 8
           Top = 44
-          Width = 60
+          Width = 63
           Height = 13
           Caption = 'Raz'#227'o Social'
         end
         object lbltEmitFantasia: TLabel
           Left = 8
           Top = 84
-          Width = 41
+          Width = 40
           Height = 13
           Caption = 'Fantasia'
         end
         object lbltEmitLogradouro: TLabel
           Left = 8
           Top = 164
-          Width = 55
+          Width = 54
           Height = 13
           Caption = 'Logradouro'
         end
@@ -691,21 +691,21 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
         object lbltEmitComp: TLabel
           Left = 8
           Top = 204
-          Width = 65
+          Width = 64
           Height = 13
           Caption = 'Complemento'
         end
         object lbltEmitBairro: TLabel
           Left = 136
           Top = 204
-          Width = 28
+          Width = 27
           Height = 13
           Caption = 'Bairro'
         end
         object lbltEmitCodCidade: TLabel
           Left = 8
           Top = 244
-          Width = 62
+          Width = 61
           Height = 13
           Caption = 'C'#243'd. Cidade '
         end
@@ -719,14 +719,14 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
         object lbltEmitUF: TLabel
           Left = 225
           Top = 244
-          Width = 13
+          Width = 14
           Height = 13
           Caption = 'UF'
         end
         object lbltEmitCEP: TLabel
           Left = 136
           Top = 124
-          Width = 19
+          Width = 21
           Height = 13
           Caption = 'CEP'
         end
@@ -740,7 +740,7 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
         object lblInfoFisco: TLabel
           Left = 8
           Top = 284
-          Width = 101
+          Width = 99
           Height = 13
           Caption = 'Informa'#231#227'o ao Fisco:'
         end
@@ -864,14 +864,14 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
           object lbltSmtpHost: TLabel
             Left = 8
             Top = 16
-            Width = 69
+            Width = 72
             Height = 13
             Caption = 'Servidor SMTP'
           end
           object lbltSmtpPort: TLabel
             Left = 206
             Top = 16
-            Width = 26
+            Width = 25
             Height = 13
             Caption = 'Porta'
           end
@@ -885,21 +885,21 @@ inherited frmGeConfigurarNFeACBr: TfrmGeConfigurarNFeACBr
           object lbltSmtpPass: TLabel
             Left = 137
             Top = 56
-            Width = 30
+            Width = 31
             Height = 13
             Caption = 'Senha'
           end
           object lbltEmailAssunto: TLabel
             Left = 8
             Top = 96
-            Width = 122
+            Width = 121
             Height = 13
             Caption = 'Assunto do email enviado'
           end
           object lblEmailMsg: TLabel
             Left = 8
             Top = 168
-            Width = 93
+            Width = 95
             Height = 13
             Caption = 'Mensagem do Email'
           end

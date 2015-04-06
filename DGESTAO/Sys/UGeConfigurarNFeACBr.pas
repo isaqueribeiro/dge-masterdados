@@ -135,7 +135,7 @@ var
 
 implementation
 
-uses UDMNFe, FileCtrl, DateUtils;
+uses UDMNFe, FileCtrl, DateUtils, UDMBusiness;
 
 {$R *.dfm}
 
@@ -225,7 +225,7 @@ end;
 procedure TfrmGeConfigurarNFeACBr.btnValidadeCertificadoClick(
   Sender: TObject);
 begin
-  DMNFe.GetValidadeCertificado(True);
+  DMNFe.GetValidadeCertificado(gUsuarioLogado.Empresa, True);
 end;
 
 procedure TfrmGeConfigurarNFeACBr.RegistrarRotinaSistema;
