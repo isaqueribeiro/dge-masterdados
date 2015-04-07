@@ -1,6 +1,6 @@
 object frmPrinc: TfrmPrinc
-  Left = 389
-  Top = 214
+  Left = 307
+  Top = 52
   Width = 916
   Height = 613
   Caption = 'DGE - Sistema Integrado de Gest'#227'o Empresarial'
@@ -28,7 +28,7 @@ object frmPrinc: TfrmPrinc
     Font.Style = [fsBold]
     Panels = <
       item
-        Text = 'Masterdados - Fone: (91) 8717-1057/8129-1567'
+        Text = 'Contatos: (91) 98717-1057 / 98129-1567'
         Width = 450
       end
       item
