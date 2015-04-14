@@ -449,7 +449,7 @@ type
     procedure AbrirNotaFiscal(const Empresa : String; const AnoVenda : Smallint; const ControleVenda : Integer);
     procedure GerarTitulos(const AnoVenda : Smallint; const ControleVenda : Integer);
     procedure CarregarDadosProduto( Codigo : String );
-    procedure CarregarDadosCFOP( iCodigo : Integer );
+    procedure CarregarDadosCFOP( iCodigo : Integer; const Alertar : Boolean );
     procedure HabilitarDesabilitar_Btns;
     procedure GetComprasAbertas(iCodigoCliente : Integer);
     procedure ZerarFormaPagto;
@@ -662,7 +662,7 @@ begin
   IbDtstTabelaNFE_PLACA_VEICULO.Required  := False;
   IbDtstTabelaNFE_PLACA_UF.Required       := False;
 
-  CarregarDadosCFOP( cdsTabelaItensCFOP_COD.AsInteger );
+  CarregarDadosCFOP( cdsTabelaItensCFOP_COD.AsInteger, False );
 end;
 
 procedure TfrmGeVenda.dbClienteButtonClick(Sender: TObject);
@@ -858,6 +858,9 @@ begin
         if ( FieldByName('Codunidade').AsInteger > 0 ) then
           cdsTabelaItensUNID_COD.AsInteger   := FieldByName('Codunidade').AsInteger;
 
+        if not qryCFOP.Active then
+          CarregarDadosCFOP( FieldByName('Codcfop').AsInteger, False );
+
         if ( FieldByName('Codcfop').AsInteger > 0 ) then
           cdsTabelaItensCFOP_COD.AsInteger := FieldByName('Codcfop').AsInteger;
 
@@ -910,7 +913,7 @@ begin
   end;
 end;
 
-procedure TfrmGeVenda.CarregarDadosCFOP( iCodigo : Integer );
+procedure TfrmGeVenda.CarregarDadosCFOP( iCodigo : Integer; const Alertar : Boolean );
 begin
   with qryCFOP do
   begin
@@ -926,6 +929,7 @@ begin
       if not IsEmpty then
         cdsTabelaItensCFOP_DESCRICAO.AsString := FieldByName('cfop_descricao').AsString
       else
+      if Alertar then
       begin
         ShowWarning('Código CFOP não cadastrado');
         cdsTabelaItensCFOP_COD.Clear;
@@ -1369,11 +1373,11 @@ begin
 
   if ( Sender = dbCFOP ) then
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
-      CarregarDadosCFOP( cdsTabelaItensCFOP_COD.AsInteger );
+      CarregarDadosCFOP( cdsTabelaItensCFOP_COD.AsInteger, True );
 
   if ( Sender = dbCFOPVenda ) then
     if ( IbDtstTabela.State in [dsEdit, dsInsert] ) then
-      CarregarDadosCFOP( IbDtstTabelaCFOP.AsInteger );
+      CarregarDadosCFOP( IbDtstTabelaCFOP.AsInteger, True );
 
   if ( (Sender = dbQuantidade) or (Sender = dbValorUnit) or (Sender = dbDesconto) ) then
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
@@ -2625,6 +2629,7 @@ begin
           FrECFPooler.PrepareReport;
           FrECFPooler.Print;
         end;
+        
         Exit;
       end;
 
