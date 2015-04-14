@@ -230,7 +230,7 @@ inherited frmGeTabelaCFOP: TfrmGeTabelaCFOP
           Width = 154
           Height = 17
           Caption = 'CFOP de Devolu'#231#227'o'
-          DataField = 'CFOP_DESCRICAO'
+          DataField = 'CFOP_DEVOLUCAO'
           DataSource = DtSrcTabela
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
