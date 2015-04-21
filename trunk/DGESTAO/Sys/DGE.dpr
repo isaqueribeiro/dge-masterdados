@@ -114,7 +114,8 @@ uses
   uTypes in 'lib\uTypes.pas',
   UGrUsuarioPerfil in 'lib\UGrUsuarioPerfil.pas' {frmGrUsuarioPerfil},
   UGrUsuarioCopiarPerfil in 'lib\UGrUsuarioCopiarPerfil.pas' {frmGrUsuarioCopiarPerfil},
-  UGrUsuario in 'lib\UGrUsuario.pas' {frmGrUsuario};
+  UGrUsuario in 'lib\UGrUsuario.pas' {frmGrUsuario},
+  UGeVendaDevolucaoNF in 'UGeVendaDevolucaoNF.pas' {frmGeVendaDevolucaoNF};
 
 {$R *.res}
 

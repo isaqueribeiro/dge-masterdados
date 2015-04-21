@@ -221,6 +221,7 @@ var
   function GetCidadeIDDefault : Integer;
   function GetCfopIDDefault : Integer;
   function GetCfopEntradaIDDefault : Integer;
+  function GetCfopDevolucao(const iCfop : Integer) : Boolean;
   function GetEmpresaIDDefault : String;
   function GetClienteIDDefault : Integer;
   function GetVendedorIDDefault : Integer;
@@ -1283,6 +1284,21 @@ end;
 function GetCfopEntradaIDDefault : Integer;
 begin
   Result := FileINI.ReadInteger(INI_SECAO_DEFAULT, INI_KEY_CFOP_ENT, StrToInt(INI_KEY_CFOP_ENT_VALUE));
+end;
+
+function GetCfopDevolucao(const iCfop : Integer) : Boolean;
+begin
+  with DMBusiness, qryBusca do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('Select cfop_devolucao from TBCFOP where cfop_cod = ' + IntToStr(iCfop));
+    Open;
+
+    Result := (FieldByName('cfop_devolucao').AsInteger = 1);
+
+    Close;
+  end;
 end;
 
 function GetEmpresaIDDefault : String;

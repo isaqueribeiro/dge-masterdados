@@ -395,6 +395,7 @@ type
     procedure nmPpArquivoNFeClick(Sender: TObject);
   private
     { Private declarations }
+    FEmpresa : String;
     FTipoMovimento : TTipoMovimentoEntrada;
     FApenasFinalizadas : Boolean;
     SQL_Itens   ,
@@ -431,6 +432,8 @@ var
   procedure MostrarControleCompraServicos(const AOwner : TComponent);
 
   function SelecionarEntrada(const AOwner : TComponent; var Ano, Controle : Integer; var Empresa : String) : Boolean;
+  function SelecionarNFParaDevolver(const AOwner : TComponent; var Ano, Controle : Integer;
+    var Empresa : String; var Emissao : TDateTime; var Serie, Numero, UF, Cnpj, IE : String) : Boolean;
 
 implementation
 
@@ -550,6 +553,61 @@ begin
   end;
 end;
 
+function SelecionarNFParaDevolver(const AOwner : TComponent; var Ano, Controle : Integer;
+  var Empresa : String; var Emissao : TDateTime; var Serie, Numero, UF, Cnpj, IE : String) : Boolean;
+var
+  sWhr  : String;
+  AForm : TfrmGeEntradaEstoque;
+begin
+  AForm := TfrmGeEntradaEstoque.Create(AOwner);
+  try
+    with AForm do
+    begin
+      btbtnSelecionar.Visible := True;
+
+      TipoMovimento     := tmeProduto;
+      ApenasFinalizadas := True;
+      FEmpresa          := Trim(Empresa);
+      Caption           := 'Controle de Entradas de Produtos';
+      RotinaID          := ROTINA_ENT_PRODUTO_ID;
+
+      btbtnIncluir.Visible  := False;
+      btbtnAlterar.Visible  := False;
+      btbtnExcluir.Visible  := False;
+      btbtnFinalizar.Visible   := False;
+      btbtnCancelarENT.Visible := False;
+      btbtnGerarNFe.Visible    := False;
+
+      sWhr :=
+        '(c.status in (' + IntToStr(STATUS_CMP_FIN) + ', ' + IntToStr(STATUS_CMP_NFE) + ')) and ' +
+        '(c.tipo_movimento = ' + IntToStr(Ord(TipoMovimento)) + ') and cast(c.dtent as date) between ' +
+        QuotedStr( FormatDateTime('yyyy-mm-dd', e1Data.Date) ) + ' and ' +
+        QuotedStr( FormatDateTime('yyyy-mm-dd', e2Data.Date) ) + ' and ' +
+        '(c.codemp = ' + QuotedStr(FEmpresa) + ')';
+
+      WhereAdditional := sWhr;
+
+      Result := (ShowModal = mrOk);
+
+      if Result then
+      begin
+        Ano      := IbDtstTabelaANO.AsInteger;
+        Controle := IbDtstTabelaCODCONTROL.AsInteger;
+        Empresa  := IbDtstTabelaCODEMP.AsString;
+        Emissao  := IbDtstTabelaDTEMISS.AsDateTime;
+        Serie    := IbDtstTabelaNFSERIE.AsString;
+        Numero   := FormatFloat('###0000000', IbDtstTabelaNF.AsInteger);
+        UF       := EmptyStr;
+        Cnpj     := IbDtstTabelaCNPJ.AsString;
+        IE       := EmptyStr;
+      end;
+    end;
+
+  finally
+    AForm.Free;
+  end;
+end;
+
 procedure TfrmGeEntradaEstoque.FormCreate(Sender: TObject);
 
   procedure OcutarCampoAutorizacao;
@@ -577,6 +635,7 @@ begin
   inherited;
 
   AbrirTabelaAuto := True;
+  FEmpresa        := EmptyStr;
 
   SQL_Itens := TStringList.Create;
   SQL_Itens.Clear;
@@ -617,13 +676,16 @@ begin
   if ApenasFinalizadas then
     WhereAdditional := '(c.status in (' + IntToStr(STATUS_CMP_FIN) + ', ' + IntToStr(STATUS_CMP_NFE) + ')) and '
   else
-    WhereAdditional := EmptyStr;  
+    WhereAdditional := EmptyStr;
 
   WhereAdditional := WhereAdditional +
     '(c.tipo_movimento = ' + IntToStr(Ord(TipoMovimento)) + ') and cast(c.dtent as date) between ' +
     QuotedStr( FormatDateTime('yyyy-mm-dd', e1Data.Date) ) + ' and ' +
     QuotedStr( FormatDateTime('yyyy-mm-dd', e2Data.Date) );
-    
+
+  if ( Trim(FEmpresa) <> EmptyStr ) then
+    WhereAdditional := WhereAdditional + ' and (c.codemp = ' + QuotedStr(FEmpresa) +')';
+
   inherited;
 end;
 
