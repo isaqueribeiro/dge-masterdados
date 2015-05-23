@@ -3149,7 +3149,7 @@ begin
         Ide.finNFe  := fnNormal;
 
       if ( Ide.finNFe  = fnDevolucao ) then
-        with Ide.NFref.Add, qryEntradaCalculoImposto do
+        with Ide.NFref.Add, qryEntradaCalculoImporto do
           Case TFormaNFDevolucao(FieldByName('DNFE_FORMA').AsInteger) of
             fdNFeEletronica:
               refNFe := FieldByName('DNFE_CHAVE').AsString; // Nota Fiscal Eletronica
