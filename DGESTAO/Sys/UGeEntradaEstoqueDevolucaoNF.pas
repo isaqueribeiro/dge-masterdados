@@ -3,20 +3,9 @@ unit UGeEntradaEstoqueDevolucaoNF;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UGrPadrao, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.Mask, Vcl.DBCtrls, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
-  Vcl.Menus, cxButtons, Data.DB, IBX.IBCustomDataSet, IBX.IBUpdateSQL,
-  JvExMask, JvToolEdit, JvDBControls, IBX.IBTable,
-
-  dxSkinsCore, dxSkinBlueprint, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinHighContrast, dxSkinMcSkin, dxSkinMetropolis,
-  dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
-  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
-  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
-  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
-  dxSkinOffice2013White, dxSkinSevenClassic, dxSkinSharpPlus,
-  dxSkinTheAsphaltWorld, dxSkinVS2010, dxSkinWhiteprint;
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, UGrPadrao, DB, IBCustomDataSet, IBUpdateSQL, ExtCtrls, StdCtrls,
+  Mask, DBCtrls, Buttons, IBTable, JvExMask, JvToolEdit, JvDBControls;
 
 type
   TfrmGeEntradaEstoqueDevolucaoNF = class(TfrmGrPadrao)
@@ -24,8 +13,6 @@ type
     lblCodigo: TLabel;
     dbCodigo: TDBEdit;
     Bevel1: TBevel;
-    btnConfirmar: TcxButton;
-    btFechar: TcxButton;
     cdsCompra: TIBDataSet;
     updCompra: TIBUpdateSQL;
     dtsCompra: TDataSource;
@@ -84,6 +71,8 @@ type
     cdsCompraDECF_MODELO: TSmallintField;
     cdsCompraDECF_NUMERO: TIntegerField;
     cdsCompraDECF_COO: TIntegerField;
+    btnConfirmar: TBitBtn;
+    btFechar: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure cdsCompraCODCONTROLGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
