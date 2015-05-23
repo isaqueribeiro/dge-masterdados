@@ -276,3 +276,157 @@ Select 3 as Codigo, '2D - Cupom Fiscal emitido por ECF' as Descricao from RDB$DA
 ;
 
 GRANT ALL ON VW_MODELO_CUPOM_FISCAL TO "PUBLIC";
+
+/*------ SYSDBA 23/05/2015 09:09:11 --------*/
+
+Alter Table TBCOMPRAS
+ add column DNFE_ENTRADA_ANO            DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+ add column DNFE_ENTRADA_COD            DMN_BIGINT_N /* DMN_BIGINT_N = INTEGER */,
+ add column DNFE_FORMA                 DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+ add column DNFE_UF                    DMN_UF /* DMN_UF = CHAR(2) */,
+ add column DNFE_CNPJ_CPF              DMN_CNPJ /* DMN_CNPJ = VARCHAR(18) */,
+ add column DNFE_IE                    DMN_VCHAR_20 /* DMN_VCHAR_20 = VARCHAR(20) */,
+ add column DNFE_COMPETENCIA           DMN_VCHAR_04 /* DMN_VCHAR_04 = VARCHAR(4) */,
+ add column DNFE_SERIE                 DMN_VCHAR_04 /* DMN_VCHAR_04 = VARCHAR(4) */,
+ add column DNFE_NUMERO                DMN_BIGINT_N /* DMN_BIGINT_N = INTEGER */,
+ add column DNFE_MODELO                DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+ add column DNFE_CHAVE                 DMN_VCHAR_250 /* DMN_VCHAR_250 = VARCHAR(250) */,
+ add column DECF_MODELO                DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+ add column DECF_NUMERO                DMN_BIGINT_N /* DMN_BIGINT_N = INTEGER */,
+ add column DECF_COO                   DMN_BIGINT_N /* DMN_BIGINT_N = INTEGER */;
+
+/*------ SYSDBA 23/05/2015 09:09:11 --------*/
+
+/*!!! Error occured !!!
+Invalid token.
+Dynamic SQL Error.
+SQL error code = -104.
+Token unknown - line 2, column 6.
+column.
+
+*/
+
+/*------ SYSDBA 23/05/2015 09:10:46 --------*/
+
+Alter Table TBCOMPRAS
+ add DNFE_ENTRADA_ANO            DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+ add DNFE_ENTRADA_COD            DMN_BIGINT_N /* DMN_BIGINT_N = INTEGER */,
+ add DNFE_FORMA                 DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+ add DNFE_UF                    DMN_UF /* DMN_UF = CHAR(2) */,
+ add DNFE_CNPJ_CPF              DMN_CNPJ /* DMN_CNPJ = VARCHAR(18) */,
+ add DNFE_IE                    DMN_VCHAR_20 /* DMN_VCHAR_20 = VARCHAR(20) */,
+ add DNFE_COMPETENCIA           DMN_VCHAR_04 /* DMN_VCHAR_04 = VARCHAR(4) */,
+ add DNFE_SERIE                 DMN_VCHAR_04 /* DMN_VCHAR_04 = VARCHAR(4) */,
+ add DNFE_NUMERO                DMN_BIGINT_N /* DMN_BIGINT_N = INTEGER */,
+ add DNFE_MODELO                DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+ add DNFE_CHAVE                 DMN_VCHAR_250 /* DMN_VCHAR_250 = VARCHAR(250) */,
+ add DECF_MODELO                DMN_SMALLINT_N /* DMN_SMALLINT_N = SMALLINT */,
+ add DECF_NUMERO                DMN_BIGINT_N /* DMN_BIGINT_N = INTEGER */,
+ add DECF_COO                   DMN_BIGINT_N /* DMN_BIGINT_N = INTEGER */;
+
+/*------ SYSDBA 23/05/2015 09:10:49 --------*/
+
+COMMIT WORK;
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_ENTRADA_ANO IS
+'Devolucao -> Ano Entrada';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_ENTRADA_COD IS
+'Devolucao -> Codigo Entrada';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_FORMA IS 
+'Devolucao -> Forma/modelo de devolucao:
+0 - NFe Eletronica
+1 - NFe Modelo 1/1A
+2 - NF produtor Rural
+3 - Cupom Fiscal';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_UF IS 
+'Devolucao -> UF da NF devolvida';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_CNPJ_CPF IS 
+'Devolucao -> CPF/CNPJ da NF devolvida';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_IE IS 
+'Devolucao -> IE da NF devolvida';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_COMPETENCIA IS 
+'Devolucao -> Competencia de emissao da NF devolvida
+Obs.: Formato AAMM.';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_SERIE IS 
+'Devolucao -> Serie da NF devolvida';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_NUMERO IS
+'Devolucao -> Numero DF da NF devolvida:
+0 - moNFe  (Nota Fiscal Eletronica)
+1 - moNFCe (Nota Fiscal do Consumidor Eletronica)';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_MODELO IS 
+'Devolucao -> Modelo da NF devolvida';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DNFE_CHAVE IS 
+'Devolucao -> Chave da NF-e devolvida';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DECF_MODELO IS 
+'Devolucao -> Modelo do cupom fiscal devolvido:
+0 - (ECFModRefVazio)
+1 - 2B = Cupom Fiscal emitido por maquina registradora (ECFModRef2B)
+2 - 2C = Cupom Fiscal PDV (ECFModRef2C)
+3 - 2D = Cupom Fiscal emitido por ECF (ECFModRef2D)';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DECF_NUMERO IS 
+'Devolucao -> Numero da ECF do cupom fiscal devolvido';
+
+/*------ 23/05/2015 09:12:48 --------*/
+
+COMMENT ON COLUMN TBCOMPRAS.DECF_COO IS 
+'Devolucao -> Numero COO do cupom fiscal devolvido';
+
+
+/*------ SYSDBA 23/05/2015 09:15:42 --------*/
+
+ALTER TABLE TBCOMPRAS
+ADD CONSTRAINT FK_TBCOMPRAS_DEVOLVER_ENTRADA
+FOREIGN KEY (DNFE_ENTRADA_ANO,DNFE_ENTRADA_COD,CODEMP)
+REFERENCES TBCOMPRAS(ANO,CODCONTROL,CODEMP);
+
+
+
+/*------ SYSDBA 23/05/2015 09:50:52 --------*/
+
+/*!!! Error occured !!!
+Column does not belong to referenced table.
+Dynamic SQL Error.
+SQL error code = -206.
+Column unknown.
+C.DNFE_COMPRA_ANO.
+At line 5, column 7.
+
+*/
