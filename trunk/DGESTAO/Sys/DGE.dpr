@@ -115,7 +115,8 @@ uses
   UGrUsuarioPerfil in 'lib\UGrUsuarioPerfil.pas' {frmGrUsuarioPerfil},
   UGrUsuarioCopiarPerfil in 'lib\UGrUsuarioCopiarPerfil.pas' {frmGrUsuarioCopiarPerfil},
   UGrUsuario in 'lib\UGrUsuario.pas' {frmGrUsuario},
-  UGeVendaDevolucaoNF in 'UGeVendaDevolucaoNF.pas' {frmGeVendaDevolucaoNF};
+  UGeVendaDevolucaoNF in 'UGeVendaDevolucaoNF.pas' {frmGeVendaDevolucaoNF},
+  UGeEntradaEstoqueDevolucaoNF in 'UGeEntradaEstoqueDevolucaoNF.pas' {frmGeEntradaEstoqueDevolucaoNF};
 
 {$R *.res}
 

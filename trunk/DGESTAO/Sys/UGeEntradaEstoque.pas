@@ -1580,7 +1580,7 @@ begin
 
         if ( FileExists(sFileNameXML) ) then
         begin
-          CorrigirXML_NFe(EmptyWideStr, sFileNameXML);
+          CorrigirXML_NFe(sFileNameXML);
 
           qryNFEXML_FILENAME.Value := ExtractFileName( sFileNameXML );
           qryNFEXML_FILE.LoadFromFile( sFileNameXML );
