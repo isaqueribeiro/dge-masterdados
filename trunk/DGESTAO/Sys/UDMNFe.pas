@@ -3097,6 +3097,11 @@ begin
 
   IMR - 31/03/2015 :
     Inclusão da TAG "Ide.finNFe := fnDevolucao" quando a NF-e for de devolução
+
+  IMR - 23/05/2015 :
+    Inclusão do bloco de código para verificar se o CFOP da venda corresponde
+    a uma operação de devolução. Caso esta situação seja confirmada, a NF-e de
+    origem será solicitada.
 *)
 
   try
@@ -3143,6 +3148,40 @@ begin
       else
         Ide.finNFe  := fnNormal;
 
+      if ( Ide.finNFe  = fnDevolucao ) then
+        with Ide.NFref.Add, qryEntradaCalculoImposto do
+          Case TFormaNFDevolucao(FieldByName('DNFE_FORMA').AsInteger) of
+            fdNFeEletronica:
+              refNFe := FieldByName('DNFE_CHAVE').AsString; // Nota Fiscal Eletronica
+
+            fdNFeModelo1_1A:
+              begin
+                RefNF.cUF    := NotaUtil.UFtoCUF(FieldByName('DNFE_UF').AsString); // |
+                RefNF.AAMM   := FieldByName('DNFE_COMPETENCIA').AsString;          // |
+                RefNF.CNPJ   := FieldByName('DNFE_CNPJ_CPF').AsString;             // |
+                RefNF.modelo := FieldByName('DNFE_MODELO').AsInteger;              // |- NF Modelo 1/1A
+                RefNF.serie  := FieldByName('DNFE_SERIE').AsInteger;               // |  * O modelo padrão é 1
+                RefNF.nNF    := FieldByName('DNFE_NUMERO').AsInteger;              // |
+              end;
+
+            fdNFProdutorRural:
+              begin
+                RefNFP.cUF     := NotaUtil.UFtoCUF(FieldByName('DNFE_UF').AsString);       // |
+                RefNFP.AAMM    := FieldByName('DNFE_COMPETENCIA').AsString;                // |
+                RefNFP.CNPJCPF := FieldByName('DNFE_CNPJ_CPF').AsString;                   // |
+                RefNFP.IE      := FieldByName('DNFE_IE').AsString;                         // |- NF produtor Rural
+                RefNFP.modelo  := FormatFloat('00', FieldByName('DNFE_MODELO').AsInteger); // | * O modelo padrão é 04
+                RefNFP.serie   := FieldByName('DNFE_SERIE').AsInteger;                     // |
+                RefNFP.nNF     := FieldByName('DNFE_NUMERO').AsInteger;                    // |
+              end;
+
+            fdCupomFiscal:
+              begin
+                RefECF.modelo  := TpcnECFModRef(FieldByName('DECF_MODELO').AsInteger); // | (ECFModRefVazio, ECFModRef2B, ECFModRef2C, ECFModRef2D)
+                RefECF.nECF    := FieldByName('DECF_NUMERO').AsString;                 // |- Cupom Fiscal
+                RefECF.nCOO    := FieldByName('DECF_COO').AsString;                    // |
+              end;
+          end;
 
   //     Ide.dhCont := date;
   //     Ide.xJust  := 'Justificativa Contingencia';
