@@ -430,3 +430,73 @@ C.DNFE_COMPRA_ANO.
 At line 5, column 7.
 
 */
+
+/*------ SYSDBA 11/06/2015 09:01:14 --------*/
+
+ALTER TABLE TBCOMPRASITENS
+    ADD TOTAL_BRUTO DMN_MONEY,
+    ADD TOTAL_LIQUIDO DMN_MONEY;
+
+
+
+
+/*------ SYSDBA 11/06/2015 09:01:35 --------*/
+
+COMMENT ON COLUMN TBCOMPRASITENS.TOTAL_BRUTO IS
+'Valor Total Produto.';
+
+
+
+
+/*------ SYSDBA 11/06/2015 09:02:23 --------*/
+
+COMMENT ON COLUMN TBCOMPRASITENS.TOTAL_LIQUIDO IS
+'Valor Total Liquido.';
+
+
+
+
+/*------ SYSDBA 11/06/2015 09:03:33 --------*/
+
+COMMENT ON COLUMN TBCOMPRASITENS.TOTAL_LIQUIDO IS
+'Valor Total Liquido (Total Bruto Produto - Valor Total Desconto).';
+
+
+
+/*------ SYSDBA 11/06/2015 09:50:08 --------*/
+
+execute block
+as
+  declare variable ano Smallint;
+  declare variable cod Integer;
+  declare variable emp DMN_CNPJ;
+  declare variable seq Smallint;
+  declare variable tot DMN_MONEY;
+begin
+  for
+    Select
+        ci.ano
+      , ci.codcontrol
+      , ci.codemp
+      , ci.seq
+      , ci.qtde * ci.precounit
+    from TBCOMPRASITENS ci
+    Into
+        ano
+      , cod
+      , emp
+      , seq
+      , tot
+  do
+  begin
+    Update TBCOMPRASITENS ci Set
+       ci.total_bruto   = :tot
+     , ci.total_liquido = :tot - ci.valor_desconto
+    where ci.ano        = :ano
+      and ci.codcontrol = :cod
+      and ci.codemp     = :emp
+      and ci.seq        = :seq;
+  end 
+end;
+
+/*------ SYSDBA 11/06/2015 09:50:13 --------*/
