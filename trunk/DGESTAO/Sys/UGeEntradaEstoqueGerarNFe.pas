@@ -147,8 +147,8 @@ begin
       begin
         cdsCompra.Edit;
 
-        cdsCompraICMSBASE.Value   := cdsCompraVALOR_BASE_ICMS_NORMAL_ENTRADA.AsCurrency;
-        cdsCompraICMSVALOR.Value  := cdsCompraVALOR_TOTAL_ICMS_NORMAL_ENTRADA.AsCurrency;
+//        cdsCompraICMSBASE.Value   := cdsCompraVALOR_BASE_ICMS_NORMAL_ENTRADA.AsCurrency;
+//        cdsCompraICMSVALOR.Value  := cdsCompraVALOR_TOTAL_ICMS_NORMAL_ENTRADA.AsCurrency;
         cdsCompraICMSSUBSTBASE.Value  := 0;
         cdsCompraICMSSUBSTVALOR.Value := 0;
 
