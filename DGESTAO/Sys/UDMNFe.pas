@@ -2200,7 +2200,7 @@ begin
                     CST := cst90;
                 end;
 
-                ICMS.modBC   := dbiValorOperacao;
+                ICMS.modBC := dbiValorOperacao;
 
                 if (qryCalculoImporto.FieldByName('CFOP_DEVOLUCAO').AsInteger = 1) then
                   ICMS.pRedBC := 0.0
@@ -2208,15 +2208,15 @@ begin
                 if (qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency <= 0) then
                   ICMS.pRedBC := 0.0
                 else
-                  ICMS.pRedBC := (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency);
+                  ICMS.pRedBC := (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency); // qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency;
 
-                if ( ICMS.pRedBC > 0 ) then
-                  ICMS.vBC   := qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
+                if (ICMS.pRedBC > 0) then
+                  ICMS.vBC := qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
                 else
-                  ICMS.vBC   := qryDadosProduto.FieldByName('PFINAL').AsCurrency;
+                  ICMS.vBC := qryDadosProduto.FieldByName('PFINAL').AsCurrency;
 
-                ICMS.pICMS   := qryDadosProduto.FieldByName('ALIQUOTA').AsCurrency;
-                ICMS.vICMS   := ICMS.vBC * ICMS.pICMS / 100;
+                ICMS.pICMS := qryDadosProduto.FieldByName('ALIQUOTA').AsCurrency;
+                ICMS.vICMS := ICMS.vBC * ICMS.pICMS / 100.0;
 
               end;
 
@@ -3500,24 +3500,24 @@ begin
                     CST := cst90;
                 end;
 
-                ICMS.modBC   := dbiValorOperacao;
+                ICMS.modBC := dbiValorOperacao;
 
                 if (qryEntradaCalculoImporto.FieldByName('CFOP_DEVOLUCAO').AsInteger = 1) then
-                  ICMS.pRedBC  := 0.0
+                  ICMS.pRedBC := 0.0
                 else
                 if (qryEntradaDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency <= 0) then
-                  ICMS.pRedBC  :=  0.0
+                  ICMS.pRedBC := 0.0
                 else
-                  ICMS.pRedBC  :=  (100.0 - qryEntradaDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency);
+                  ICMS.pRedBC := (100.0 - qryEntradaDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency); // qryEntradaDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency;
 
 
-                if ( ICMS.pRedBC > 0 ) then
-                  ICMS.vBC   := qryEntradaDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
+                if (ICMS.pRedBC > 0) then
+                  ICMS.vBC := qryEntradaDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
                 else
-                  ICMS.vBC   := qryEntradaDadosProduto.FieldByName('PFINAL').AsCurrency;
+                  ICMS.vBC := qryEntradaDadosProduto.FieldByName('PFINAL').AsCurrency;
 
-                ICMS.pICMS   := qryEntradaDadosProduto.FieldByName('ALIQUOTA').AsCurrency;
-                ICMS.vICMS   := ICMS.vBC * ICMS.pICMS / 100;
+                ICMS.pICMS := qryEntradaDadosProduto.FieldByName('ALIQUOTA').AsCurrency;
+                ICMS.vICMS := ICMS.vBC * ICMS.pICMS / 100.0;
 
               end;
 
@@ -5413,7 +5413,7 @@ begin
                     CST := cst90;
                 end;
 
-                ICMS.modBC   := dbiValorOperacao;
+                ICMS.modBC := dbiValorOperacao;
 
                 if (qryCalculoImporto.FieldByName('CFOP_DEVOLUCAO').AsInteger = 1) then
                   ICMS.pRedBC := 0.0
@@ -5421,16 +5421,16 @@ begin
                 if (qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency <= 0) then
                   ICMS.pRedBC := 0.0
                 else
-                  ICMS.pRedBC := (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency);
+                  ICMS.pRedBC := (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency); // qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency;
 
 
-                if ( ICMS.pRedBC > 0 ) then
-                  ICMS.vBC   := qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
+                if (ICMS.pRedBC > 0) then
+                  ICMS.vBC := qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
                 else
-                  ICMS.vBC   := qryDadosProduto.FieldByName('PFINAL').AsCurrency;
+                  ICMS.vBC := qryDadosProduto.FieldByName('PFINAL').AsCurrency;
 
-                ICMS.pICMS   := qryDadosProduto.FieldByName('ALIQUOTA').AsCurrency;
-                ICMS.vICMS   := ICMS.vBC * ICMS.pICMS / 100;
+                ICMS.pICMS := qryDadosProduto.FieldByName('ALIQUOTA').AsCurrency;
+                ICMS.vICMS := ICMS.vBC * ICMS.pICMS / 100.0;
 
               end;
 
