@@ -1259,9 +1259,9 @@ begin
 
       IbDtstTabelaNFE_VALOR_BASE_ICMS.AsCurrency := cValorBaseIcms;
       IbDtstTabelaNFE_VALOR_ICMS.AsCurrency      := cValorIcms;
-      IbDtstTabelaTOTALVENDA_BRUTA.AsCurrency := cTotalBruto;
-      IbDtstTabelaDESCONTO.AsCurrency         := cTotalDesconto;
-      IbDtstTabelaTOTALVENDA.AsCurrency       := cTotalLiquido;
+      IbDtstTabelaTOTALVENDA_BRUTA.AsCurrency    := cTotalBruto;
+      IbDtstTabelaDESCONTO.AsCurrency            := cTotalDesconto;
+      IbDtstTabelaTOTALVENDA.AsCurrency          := cTotalLiquido;
 
       if ( cdsVendaFormaPagto.RecordCount <= 1 ) then
       begin
