@@ -2,7 +2,6 @@ inherited frmGeNFEmitida: TfrmGeNFEmitida
   Left = 700
   Top = 273
   Height = 510
-  ActiveControl = dbCodigo
   Caption = 'Notas Fiscais Emitidas'
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -36,7 +35,6 @@ inherited frmGeNFEmitida: TfrmGeNFEmitida
   end
   inherited pgcGuias: TPageControl
     Height = 429
-    ActivePage = tbsCadastro
     inherited tbsTabela: TTabSheet
       inherited Bevel4: TBevel
         Top = 334
@@ -81,6 +79,19 @@ inherited frmGeNFEmitida: TfrmGeNFEmitida
       end
       inherited pnlFiltros: TPanel
         Top = 338
+        object lblNotaCancelada: TLabel [0]
+          Left = 2
+          Top = 4
+          Width = 108
+          Height = 13
+          Caption = '* Notas canceladas'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clRed
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
         inherited grpBxFiltro: TGroupBox
           Left = 152
           Width = 571
@@ -196,8 +207,13 @@ inherited frmGeNFEmitida: TfrmGeNFEmitida
       
         '    coalesce(lpad(nf.numero, 7, '#39'0'#39') || '#39'-'#39' || nf.serie, '#39#39') as ' +
         'nfe_destinatario'
+      
+        '  , coalesce(vn.codcliente, cp.codforn)  as nfe_destinatario_cod' +
+        'igo'
       '  , coalesce(cl.nome, fn.nomeforn)  as nfe_destinatario_razao'
       '  , coalesce(cl.cnpj, fn.cnpj) as nfe_destinatario_cnpj'
+      '  , coalesce(cl.inscest, fn.inscest) as nfe_destinatario_inscest'
+      '  , coalesce(cl.uf, fn.uf) as nfe_destinatario_uf'
       
         '  , coalesce(vn.nfe_valor_total_nota, cp.totalnf) as nfe_valor_t' +
         'otal'
@@ -217,6 +233,7 @@ inherited frmGeNFEmitida: TfrmGeNFEmitida
       '  , nf.numcompra'
       '  , nf.xml_filename'
       '  , nf.xml_file'
+      '  , nf.cancelada'
       'from TBNFE_ENVIADA nf'
       ''
       
@@ -235,6 +252,10 @@ inherited frmGeNFEmitida: TfrmGeNFEmitida
       ProviderFlags = []
       Size = 12
     end
+    object IbDtstTabelaNFE_DESTINATARIO_CODIGO: TIntegerField
+      FieldName = 'NFE_DESTINATARIO_CODIGO'
+      ProviderFlags = []
+    end
     object IbDtstTabelaNFE_DESTINATARIO_RAZAO: TIBStringField
       FieldName = 'NFE_DESTINATARIO_RAZAO'
       ProviderFlags = []
@@ -245,6 +266,16 @@ inherited frmGeNFEmitida: TfrmGeNFEmitida
       ProviderFlags = []
       OnGetText = IbDtstTabelaNFE_DESTINATARIO_CNPJGetText
       Size = 18
+    end
+    object IbDtstTabelaNFE_DESTINATARIO_INSCEST: TIBStringField
+      FieldName = 'NFE_DESTINATARIO_INSCEST'
+      ProviderFlags = []
+    end
+    object IbDtstTabelaNFE_DESTINATARIO_UF: TIBStringField
+      FieldName = 'NFE_DESTINATARIO_UF'
+      ProviderFlags = []
+      FixedChar = True
+      Size = 2
     end
     object IbDtstTabelaNFE_VALOR_TOTAL: TIBBCDField
       FieldName = 'NFE_VALOR_TOTAL'
@@ -332,6 +363,10 @@ inherited frmGeNFEmitida: TfrmGeNFEmitida
       ProviderFlags = [pfInUpdate]
       BlobType = ftMemo
       Size = 8
+    end
+    object IbDtstTabelaCANCELADA: TSmallintField
+      FieldName = 'CANCELADA'
+      Origin = '"TBNFE_ENVIADA"."CANCELADA"'
     end
   end
   inherited DtSrcTabela: TDataSource
