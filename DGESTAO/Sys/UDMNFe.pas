@@ -2201,7 +2201,14 @@ begin
                 end;
 
                 ICMS.modBC   := dbiValorOperacao;
-                ICMS.pRedBC  := qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency;
+
+                if (qryCalculoImporto.FieldByName('CFOP_DEVOLUCAO').AsInteger = 1) then
+                  ICMS.pRedBC  := 0.0
+                else
+                if (qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency <= 0) then
+                  ICMS.pRedBC  :=  0.0
+                else
+                  ICMS.pRedBC  :=  (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency);
 
                 if ( ICMS.pRedBC > 0 ) then
                   ICMS.vBC   := qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
@@ -3248,9 +3255,9 @@ begin
   //Adicionando Produtos
 
       vTotalTributoAprox := 0.0;
-      
+
       qryEntradaDadosProduto.First;
-      
+
       while not qryEntradaDadosProduto.Eof do
       begin
 
@@ -3284,7 +3291,7 @@ begin
             Prod.cEANTrib := qryEntradaDadosProduto.FieldByName('CODBARRA_EAN').AsString
           else
             Prod.cEANTrib := EmptyStr;
-              
+
           Prod.uTrib     := qryEntradaDadosProduto.FieldByName('UNP_SIGLA').AsString;
           Prod.qTrib     := qryEntradaDadosProduto.FieldByName('QTDE').AsCurrency;
 
@@ -3304,7 +3311,7 @@ begin
           Prod.vDesc     := qryEntradaDadosProduto.FieldByName('TOTAL_DESCONTO').AsCurrency; // I17 - Valor do Desconto
 
           // Informação Adicional do Produto
-          
+
           if ( GetSegmentoID(qryEmitenteCNPJ.AsString) <> SEGMENTO_MERCADO_CARRO_ID ) then
             if ( Trim(qryEntradaDadosProduto.FieldByName('REFERENCIA').AsString) <> EmptyStr ) then
               infAdProd    := 'Ref.: ' + qryEntradaDadosProduto.FieldByName('REFERENCIA').AsString
@@ -3318,7 +3325,7 @@ begin
                               'Combustivel: ' + qryEntradaDadosProduto.FieldByName('COMBUSTIVEL_VEICULO_DESCRICAO').AsString;
 
   //Declaração de Importação. Pode ser adicionada várias através do comando Prod.DI.Add
-  
+
   {         with Prod.DI.Add do
             begin
               nDi         := '';
@@ -3456,7 +3463,7 @@ begin
               begin
 
                 // csosnVazio, csosn101, csosn102, csosn103, csosn201, csosn202, csosn203, csosn300, csosn400, csosn500, csosn900
-                
+
                 Case qryEntradaDadosProduto.FieldByName('CSOSN').AsInteger of
                   101 : CSOSN := csosn101;
                   102 : CSOSN := csosn102;
@@ -3494,7 +3501,15 @@ begin
                 end;
 
                 ICMS.modBC   := dbiValorOperacao;
-                ICMS.pRedBC  := qryEntradaDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency;
+
+                if (qryEntradaCalculoImporto.FieldByName('CFOP_DEVOLUCAO').AsInteger = 1) then
+                  ICMS.pRedBC  := 0.0
+                else
+                if (qryEntradaDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency <= 0) then
+                  ICMS.pRedBC  :=  0.0
+                else
+                  ICMS.pRedBC  :=  (100.0 - qryEntradaDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency);
+
 
                 if ( ICMS.pRedBC > 0 ) then
                   ICMS.vBC   := qryEntradaDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
@@ -5399,7 +5414,15 @@ begin
                 end;
 
                 ICMS.modBC   := dbiValorOperacao;
-                ICMS.pRedBC  := qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency;
+
+                if (qryCalculoImporto.FieldByName('CFOP_DEVOLUCAO').AsInteger = 1) then
+                  ICMS.pRedBC  := 0.0
+                else
+                if (qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency <= 0) then
+                  ICMS.pRedBC  :=  0.0
+                else
+                  ICMS.pRedBC  :=  (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency);
+
 
                 if ( ICMS.pRedBC > 0 ) then
                   ICMS.vBC   := qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency

@@ -1155,7 +1155,7 @@ end;
 
 procedure TfrmGeVenda.btnProdutoSalvarClick(Sender: TObject);
 
-  procedure GetToTais(var Total_Bruto, Total_Desconto, Total_Liquido: Currency);
+  procedure GetToTais(var Total_Bruto, Total_Desconto, Total_Liquido, vBC_ICMS, vICMS: Currency);
   var
     Item : Integer;
   begin
@@ -1163,6 +1163,8 @@ procedure TfrmGeVenda.btnProdutoSalvarClick(Sender: TObject);
     Total_Bruto    := 0.0;
     Total_desconto := 0.0;
     Total_Liquido  := 0.0;
+    vBC_ICMS       := 0.0;
+    vICMS          := 0.0;
 
     cdsTabelaItens.First;
 
@@ -1170,6 +1172,18 @@ procedure TfrmGeVenda.btnProdutoSalvarClick(Sender: TObject);
     begin
       Total_Bruto    := Total_Bruto    + cdsTabelaItensTOTAL_BRUTO.AsCurrency;
       Total_desconto := Total_desconto + cdsTabelaItensTOTAL_DESCONTO.AsCurrency;
+
+      if ( cdsTabelaItensPERCENTUAL_REDUCAO_BC.AsCurrency > 0 ) then
+      begin
+        vBC_ICMS := vBC_ICMS + (cdsTabelaItensTOTAL_BRUTO.AsCurrency * cdsTabelaItensPERCENTUAL_REDUCAO_BC.AsCurrency / 100);
+        vICMS    := vICMS    + (((cdsTabelaItensTOTAL_BRUTO.AsCurrency * cdsTabelaItensPERCENTUAL_REDUCAO_BC.AsCurrency / 100)) * cdsTabelaItensALIQUOTA.AsCurrency / 100);
+      end  
+      else
+      begin
+        vBC_ICMS := vBC_ICMS + cdsTabelaItensTOTAL_BRUTO.AsCurrency;
+        vICMS    := vICMS    + (cdsTabelaItensTOTAL_BRUTO.AsCurrency * cdsTabelaItensALIQUOTA.AsCurrency / 100);
+      end;
+
 
       cdsTabelaItens.Next;
     end;
@@ -1183,7 +1197,9 @@ var
   cDescontos    ,
   cTotalBruto   ,
   cTotalDesconto,
-  cTotalLiquido : Currency;
+  cTotalLiquido ,
+  cValorBaseIcms,
+  cValorIcms    : Currency;
 begin
   if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
   begin
@@ -1232,10 +1248,10 @@ begin
 
       if ( Trim(cdsTabelaItensCST.AsString) = EmptyStr ) then
         cdsTabelaItensCST.Clear;
-        
+
       cdsTabelaItens.Post;
 
-      GetToTais(cTotalBruto, cTotalDesconto, cTotalLiquido);
+      GetToTais(cTotalBruto, cTotalDesconto, cTotalLiquido, cValorBaseIcms, cValorIcms);
 
       IbDtstTabelaTOTALVENDA_BRUTA.AsCurrency := cTotalBruto;
       IbDtstTabelaDESCONTO.AsCurrency         := cTotalDesconto;
@@ -1245,7 +1261,7 @@ begin
       begin
         if ( not (cdsVendaFormaPagto.State in [dsEdit, dsInsert]) ) then
           cdsVendaFormaPagto.Edit;
-          
+
         cdsVendaFormaPagtoVALOR_FPAGTO.Value := cTotalLiquido;
       end;
 
