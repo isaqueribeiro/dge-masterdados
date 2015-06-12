@@ -373,6 +373,8 @@ type
     ppCorrigirDadosNFe: TPopupMenu;
     nmPpCorrigirDadosNFeCFOP: TMenuItem;
     BtnCorrigirDadosNFe: TSpeedButton;
+    IbDtstTabelaNFE_VALOR_BASE_ICMS: TIBBCDField;
+    IbDtstTabelaNFE_VALOR_ICMS: TIBBCDField;
     procedure ImprimirOpcoesClick(Sender: TObject);
     procedure ImprimirOrcamentoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -658,6 +660,8 @@ begin
   IbDtstTabelaLOTE_NFE_NUMERO.Clear;
   IbDtstTabelaNFE_TRANSPORTADORA.Clear;
   IbDtstTabelaNFE_DENEGADA_MOTIVO.Clear;
+  IbDtstTabelaNFE_VALOR_BASE_ICMS.Clear;
+  IbDtstTabelaNFE_VALOR_ICMS.Clear;
 
   IbDtstTabelaNFE_TRANSPORTADORA.Required := False;
   IbDtstTabelaNFE_PLACA_VEICULO.Required  := False;
@@ -1253,6 +1257,8 @@ begin
 
       GetToTais(cTotalBruto, cTotalDesconto, cTotalLiquido, cValorBaseIcms, cValorIcms);
 
+      IbDtstTabelaNFE_VALOR_BASE_ICMS.AsCurrency := cValorBaseIcms;
+      IbDtstTabelaNFE_VALOR_ICMS.AsCurrency      := cValorIcms;
       IbDtstTabelaTOTALVENDA_BRUTA.AsCurrency := cTotalBruto;
       IbDtstTabelaDESCONTO.AsCurrency         := cTotalDesconto;
       IbDtstTabelaTOTALVENDA.AsCurrency       := cTotalLiquido;
