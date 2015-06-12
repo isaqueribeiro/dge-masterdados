@@ -1970,7 +1970,7 @@ procedure TfrmGeEntradaEstoque.nmPpLimparDadosNFeClick(Sender: TObject);
 begin
   if not IbDtstTabela.IsEmpty then
   begin
-    if ( Trim(IbDtstTabelaLOTE_NFE_RECIBO.AsString) = EmptyStr ) then
+    if ( IbDtstTabelaSTATUS.AsInteger = STATUS_CMP_NFE ) then
       Exit;
 
     if ( IbDtstTabelaNF.AsCurrency > 0 ) then

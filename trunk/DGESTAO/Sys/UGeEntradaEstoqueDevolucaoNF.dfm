@@ -746,7 +746,8 @@ inherited frmGeEntradaEstoqueDevolucaoNF: TfrmGeEntradaEstoqueDevolucaoNF
       '')
     GeneratorField.Field = 'CODCONTROL'
     UpdateObject = updCompra
-    Left = 288
+    Left = 360
+    Top = 168
     object cdsCompraANO: TSmallintField
       FieldName = 'ANO'
       Origin = '"TBCOMPRAS"."ANO"'
@@ -949,39 +950,41 @@ inherited frmGeEntradaEstoqueDevolucaoNF: TfrmGeEntradaEstoqueDevolucaoNF
       '  ANO = :OLD_ANO and'
       '  CODCONTROL = :OLD_CODCONTROL and'
       '  CODEMP = :OLD_CODEMP')
-    Left = 320
+    Left = 392
+    Top = 168
   end
   object dtsCompra: TDataSource
     AutoEdit = False
     DataSet = cdsCompra
     OnDataChange = dtsCompraDataChange
-    Left = 352
+    Left = 424
+    Top = 168
   end
   object tblFormaDevolucao: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     TableName = 'VW_FORMA_DEVOLUCAO'
     TableTypes = [ttView]
-    Left = 317
-    Top = 32
+    Left = 389
+    Top = 200
   end
   object dtsFormaDevolucao: TDataSource
     DataSet = tblFormaDevolucao
-    Left = 349
-    Top = 32
+    Left = 421
+    Top = 200
   end
   object tblUF: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     TableName = 'TBESTADO'
     TableTypes = [ttView]
-    Left = 317
-    Top = 64
+    Left = 389
+    Top = 232
   end
   object dtsUF: TDataSource
     DataSet = tblUF
-    Left = 349
-    Top = 64
+    Left = 421
+    Top = 232
   end
   object qryCompetencia: TIBDataSet
     Database = DMBusiness.ibdtbsBusiness
@@ -1003,25 +1006,25 @@ inherited frmGeEntradaEstoqueDevolucaoNF: TfrmGeEntradaEstoqueDevolucaoNF
       '    1')
     ModifySQL.Strings = (
       '')
-    Left = 317
-    Top = 98
+    Left = 389
+    Top = 266
   end
   object dtsCompetencia: TDataSource
     DataSet = qryCompetencia
-    Left = 349
-    Top = 96
+    Left = 421
+    Top = 264
   end
   object tblModeloCupom: TIBTable
     Database = DMBusiness.ibdtbsBusiness
     Transaction = DMBusiness.ibtrnsctnBusiness
     TableName = 'VW_MODELO_CUPOM_FISCAL'
     TableTypes = [ttView]
-    Left = 317
-    Top = 128
+    Left = 389
+    Top = 296
   end
   object dtsModeloCupom: TDataSource
     DataSet = tblModeloCupom
-    Left = 349
-    Top = 128
+    Left = 421
+    Top = 296
   end
 end

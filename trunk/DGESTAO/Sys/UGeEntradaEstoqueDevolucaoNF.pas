@@ -94,7 +94,7 @@ type
 implementation
 
 uses
-  UDMBusiness, UDMNFe, UFuncoes, UGrCampoRequisitado, UGeEntradaEstoque;
+  UDMBusiness, UDMNFe, UFuncoes, UGrCampoRequisitado, UGeNFEmitida;
 
 {$R *.dfm}
 
@@ -178,24 +178,25 @@ var
   iControle : Integer;
   sEmpresa,
   sSerie  ,
-  sNumero ,
-  sUF  ,
-  sCnpj,
-  sIE  : String;
+  sChave  : String;
   dEmissao  : TDateTime;
+  iNumero   ,
+  iModelo   : Integer;
+  fDestinatario : TDestinatarioNF;
 begin
   sEmpresa := cdsCompraCODEMP.AsString;
   if ( cdsCompra.State = dsEdit ) then
-    if SelecionarNFParaDevolver(Self, iANo, iControle, sEmpresa, dEmissao, sSerie, sNumero, sUF, sCnpj, sIE) then
+    if SelecionarNFe(Self, sEmpresa, sSerie, sChave, iNumero, iModelo, dEmissao, fDestinatario) then
     begin
       cdsCompraDNFE_ENTRADA_ANO.AsInteger := iAno;
       cdsCompraDNFE_ENTRADA_COD.AsInteger := iControle;
-      cdsCompraDNFE_COMPETENCIA.AsString := FormatDateTime('yymm', dEmissao);
+      cdsCompraDNFE_COMPETENCIA.AsString  := FormatDateTime('yymm', dEmissao);
       cdsCompraDNFE_SERIE.AsString    := sSerie;
-      cdsCompraDNFE_NUMERO.AsInteger  := StrToInt(sNumero);
-      cdsCompraDNFE_UF.AsString       := sUF;
-      cdsCompraDNFE_CNPJ_CPF.AsString := sCnpj;
-      cdsCompraDNFE_IE.AsString       := sIE;
+      cdsCompraDNFE_NUMERO.AsInteger  := iNumero;
+      cdsCompraDNFE_CHAVE.AsString    := sChave;
+      cdsCompraDNFE_UF.AsString       := fDestinatario.UF;
+      cdsCompraDNFE_CNPJ_CPF.AsString := fDestinatario.CpfCnpj;
+      cdsCompraDNFE_IE.AsString       := fDestinatario.InsEstadual;
     end;
 end;
 
