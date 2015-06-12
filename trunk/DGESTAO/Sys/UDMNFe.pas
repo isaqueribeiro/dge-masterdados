@@ -2203,12 +2203,12 @@ begin
                 ICMS.modBC   := dbiValorOperacao;
 
                 if (qryCalculoImporto.FieldByName('CFOP_DEVOLUCAO').AsInteger = 1) then
-                  ICMS.pRedBC  := 0.0
+                  ICMS.pRedBC := 0.0
                 else
                 if (qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency <= 0) then
-                  ICMS.pRedBC  :=  0.0
+                  ICMS.pRedBC := 0.0
                 else
-                  ICMS.pRedBC  :=  (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency);
+                  ICMS.pRedBC := (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency);
 
                 if ( ICMS.pRedBC > 0 ) then
                   ICMS.vBC   := qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
@@ -5077,7 +5077,7 @@ begin
       Ide.tpNF      := tnSaida;
       Ide.tpEmis    := ACBrNFe.Configuracoes.Geral.FormaEmissao;
       Ide.tpAmb     := ACBrNFe.Configuracoes.WebServices.Ambiente;
-      Ide.verProc   := GetExeVersion( ParamStr(0) ); 
+      Ide.verProc   := GetExeVersion( ParamStr(0) );
       Ide.cUF       := NotaUtil.UFtoCUF( qryEmitenteEST_SIGLA.AsString );
       Ide.cMunFG    := qryEmitenteCID_IBGE.AsInteger ;
       Ide.finNFe    := fnNormal;
@@ -5416,12 +5416,12 @@ begin
                 ICMS.modBC   := dbiValorOperacao;
 
                 if (qryCalculoImporto.FieldByName('CFOP_DEVOLUCAO').AsInteger = 1) then
-                  ICMS.pRedBC  := 0.0
+                  ICMS.pRedBC := 0.0
                 else
                 if (qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency <= 0) then
-                  ICMS.pRedBC  :=  0.0
+                  ICMS.pRedBC := 0.0
                 else
-                  ICMS.pRedBC  :=  (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency);
+                  ICMS.pRedBC := (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency);
 
 
                 if ( ICMS.pRedBC > 0 ) then
