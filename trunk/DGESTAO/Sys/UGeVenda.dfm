@@ -3675,6 +3675,8 @@ inherited frmGeVenda: TfrmGeVenda
       '  , v.nfe_placa_veiculo'
       '  , v.nfe_placa_uf'
       '  , v.nfe_placa_rntc'
+      '  , v.nfe_valor_base_icms'
+      '  , v.nfe_valor_icms'
       '  , v.gerar_estoque_cliente'
       '  , t.nomeforn as transp_nome'
       '  , t.cnpj     as transp_cnpj'
@@ -3996,6 +3998,20 @@ inherited frmGeVenda: TfrmGeVenda
       Origin = '"TBVENDAS"."NFE_PLACA_RNTC"'
       Size = 10
     end
+    object IbDtstTabelaNFE_VALOR_BASE_ICMS: TIBBCDField
+      FieldName = 'NFE_VALOR_BASE_ICMS'
+      Origin = '"TBVENDAS"."NFE_VALOR_BASE_ICMS"'
+      ProviderFlags = [pfInUpdate]
+      Precision = 18
+      Size = 2
+    end
+    object IbDtstTabelaNFE_VALOR_ICMS: TIBBCDField
+      FieldName = 'NFE_VALOR_ICMS'
+      Origin = '"TBVENDAS"."NFE_VALOR_ICMS"'
+      ProviderFlags = [pfInUpdate]
+      Precision = 18
+      Size = 2
+    end
     object IbDtstTabelaGERAR_ESTOQUE_CLIENTE: TSmallintField
       FieldName = 'GERAR_ESTOQUE_CLIENTE'
       Origin = '"TBVENDAS"."GERAR_ESTOQUE_CLIENTE"'
@@ -4128,7 +4144,24 @@ inherited frmGeVenda: TfrmGeVenda
       '  GERAR_ESTOQUE_CLIENTE,'
       '  SITUACAO,'
       '  TOTALACRESCIMO,'
-      '  TOTALDESCONTO'
+      '  TOTALDESCONTO,'
+      '  CAIXA_ANO,'
+      '  CAIXA_NUM,'
+      '  CAIXA_PDV,'
+      '  DNFE_COMPRA_ANO,'
+      '  DNFE_COMPRA_COD,'
+      '  DNFE_FORMA,'
+      '  DNFE_UF,'
+      '  DNFE_CNPJ_CPF,'
+      '  DNFE_IE,'
+      '  DNFE_COMPETENCIA,'
+      '  DNFE_SERIE,'
+      '  DNFE_NUMERO,'
+      '  DNFE_MODELO,'
+      '  DNFE_CHAVE,'
+      '  DECF_MODELO,'
+      '  DECF_NUMERO,'
+      '  DECF_COO'
       'from TBVENDAS '
       'where'
       '  ANO = :ANO and'
@@ -4167,6 +4200,8 @@ inherited frmGeVenda: TfrmGeVenda
       '  NFE_PLACA_UF = :NFE_PLACA_UF,'
       '  NFE_PLACA_VEICULO = :NFE_PLACA_VEICULO,'
       '  NFE_TRANSPORTADORA = :NFE_TRANSPORTADORA,'
+      '  NFE_VALOR_BASE_ICMS = :NFE_VALOR_BASE_ICMS,'
+      '  NFE_VALOR_ICMS = :NFE_VALOR_ICMS,'
       '  OBS = :OBS,'
       '  PRAZO_01 = :PRAZO_01,'
       '  PRAZO_02 = :PRAZO_02,'
@@ -4211,15 +4246,17 @@ inherited frmGeVenda: TfrmGeVenda
         '   NFE_ENVIADA, NFE_MODALIDADE_FRETE, NFE_PLACA_RNTC, NFE_PLACA_' +
         'UF, NFE_PLACA_VEICULO, '
       
-        '   NFE_TRANSPORTADORA, OBS, PRAZO_01, PRAZO_02, PRAZO_03, PRAZO_' +
-        '04, PRAZO_05, '
+        '   NFE_TRANSPORTADORA, NFE_VALOR_BASE_ICMS, NFE_VALOR_ICMS, OBS,' +
+        ' PRAZO_01, '
       
-        '   PRAZO_06, PRAZO_07, PRAZO_08, PRAZO_09, PRAZO_10, PRAZO_11, P' +
-        'RAZO_12, '
+        '   PRAZO_02, PRAZO_03, PRAZO_04, PRAZO_05, PRAZO_06, PRAZO_07, P' +
+        'RAZO_08, '
       
-        '   SERIE, STATUS, TOTALVENDA, TOTALVENDA_BRUTA, USUARIO, VENDA_P' +
-        'RAZO, VENDEDOR_COD, '
-      '   VERIFICADOR_NFE, XML_NFE, XML_NFE_FILENAME)'
+        '   PRAZO_09, PRAZO_10, PRAZO_11, PRAZO_12, SERIE, STATUS, TOTALV' +
+        'ENDA, TOTALVENDA_BRUTA, '
+      
+        '   USUARIO, VENDA_PRAZO, VENDEDOR_COD, VERIFICADOR_NFE, XML_NFE,' +
+        ' XML_NFE_FILENAME)'
       'values'
       
         '  (:ANO, :CANCEL_DATAHORA, :CANCEL_MOTIVO, :CANCEL_USUARIO, :CFO' +
@@ -4240,17 +4277,18 @@ inherited frmGeVenda: TfrmGeVenda
         '   :NFE_MODALIDADE_FRETE, :NFE_PLACA_RNTC, :NFE_PLACA_UF, :NFE_P' +
         'LACA_VEICULO, '
       
-        '   :NFE_TRANSPORTADORA, :OBS, :PRAZO_01, :PRAZO_02, :PRAZO_03, :' +
-        'PRAZO_04, '
+        '   :NFE_TRANSPORTADORA, :NFE_VALOR_BASE_ICMS, :NFE_VALOR_ICMS, :' +
+        'OBS, :PRAZO_01, '
       
-        '   :PRAZO_05, :PRAZO_06, :PRAZO_07, :PRAZO_08, :PRAZO_09, :PRAZO' +
-        '_10, :PRAZO_11, '
+        '   :PRAZO_02, :PRAZO_03, :PRAZO_04, :PRAZO_05, :PRAZO_06, :PRAZO' +
+        '_07, :PRAZO_08, '
       
-        '   :PRAZO_12, :SERIE, :STATUS, :TOTALVENDA, :TOTALVENDA_BRUTA, :' +
-        'USUARIO, '
+        '   :PRAZO_09, :PRAZO_10, :PRAZO_11, :PRAZO_12, :SERIE, :STATUS, ' +
+        ':TOTALVENDA, '
       
-        '   :VENDA_PRAZO, :VENDEDOR_COD, :VERIFICADOR_NFE, :XML_NFE, :XML' +
-        '_NFE_FILENAME)')
+        '   :TOTALVENDA_BRUTA, :USUARIO, :VENDA_PRAZO, :VENDEDOR_COD, :VE' +
+        'RIFICADOR_NFE, '
+      '   :XML_NFE, :XML_NFE_FILENAME)')
     DeleteSQL.Strings = (
       'delete from TBVENDAS'
       'where'
