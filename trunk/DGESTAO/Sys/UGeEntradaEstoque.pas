@@ -252,8 +252,6 @@ type
     cdsTabelaItensQTDEANTES: TIBBCDField;
     cdsTabelaItensQTDEFINAL: TIBBCDField;
     cdsTabelaItensESTOQUE: TIBBCDField;
-    cdsTabelaItensTOTAL_BRUTO: TFMTBCDField;
-    cdsTabelaItensTOTAL_LIQUIDO: TFMTBCDField;
     lblAutorizacao: TLabel;
     IbDtstTabelaAUTORIZACAO_ANO: TSmallintField;
     IbDtstTabelaAUTORIZACAO_CODIGO: TIntegerField;
@@ -346,6 +344,8 @@ type
     btbtnFinalizar: TBitBtn;
     btbtnGerarNFe: TBitBtn;
     btbtnCancelarENT: TBitBtn;
+    cdsTabelaItensTOTAL_BRUTO: TIBBCDField;
+    cdsTabelaItensTOTAL_LIQUIDO: TIBBCDField;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -1062,6 +1062,8 @@ begin
 end;
 
 procedure TfrmGeEntradaEstoque.ControlEditExit(Sender: TObject);
+var
+  cPrecoUN : Currency;
 begin
   inherited;
 
@@ -1081,8 +1083,10 @@ begin
   begin
     if ( cdsTabelaItens.State in [dsEdit, dsInsert] ) then
     begin
-      cdsTabelaItensCUSTOMEDIO.AsCurrency  := cdsTabelaItensPRECOUNIT.AsCurrency + cdsTabelaItensVALOR_IPI.AsCurrency;
-      cdsTabelaItensTOTAL_BRUTO.AsCurrency := cdsTabelaItensPRECOUNIT.AsCurrency * cdsTabelaItensQTDE.AsCurrency;
+      cPrecoUN := cdsTabelaItensPRECOUNIT.AsCurrency;
+
+      cdsTabelaItensCUSTOMEDIO.AsCurrency  := cPrecoUN + cdsTabelaItensVALOR_IPI.AsCurrency;
+      cdsTabelaItensTOTAL_BRUTO.AsCurrency := cPrecoUN * cdsTabelaItensQTDE.AsCurrency;
 
       if ( IbDtstTabelaTOTALPROD.AsCurrency > 0 ) then
       begin
@@ -1091,7 +1095,7 @@ begin
         cdsTabelaItensVALOR_DESCONTO.Value     := cdsTabelaItensPERC_PARTICIPACAO.Value * IbDtstTabelaDESCONTO.Value / 100;
         cdsTabelaItensVALOR_OUTROS.Value       := cdsTabelaItensPERC_PARTICIPACAO.Value * IbDtstTabelaOUTROSCUSTOS.Value / 100;
 
-        cdsTabelaItensTOTAL_LIQUIDO.AsCurrency := cdsTabelaItensCUSTOMEDIO.AsCurrency * cdsTabelaItensQTDE.AsCurrency;
+        cdsTabelaItensTOTAL_LIQUIDO.AsCurrency := cdsTabelaItensTOTAL_BRUTO.AsCurrency - cdsTabelaItensVALOR_DESCONTO.AsCurrency; //cdsTabelaItensCUSTOMEDIO.AsCurrency * cdsTabelaItensQTDE.AsCurrency;
       end;
     end;
   end;
@@ -1099,7 +1103,6 @@ begin
   if ( Sender = dbTotalBruto ) then
     if ( btnProdutoSalvar.Visible and btnProdutoSalvar.Enabled ) then
       btnProdutoSalvar.SetFocus;
-
 end;
 
 procedure TfrmGeEntradaEstoque.pgcGuiasChange(Sender: TObject);
