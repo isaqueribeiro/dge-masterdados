@@ -2210,7 +2210,7 @@ begin
                 else
                   ICMS.pRedBC := (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency); // qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency;
 
-                if (ICMS.pRedBC > 0) then
+                if (ICMS.pRedBC > 0) or (qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency > 0) then
                   ICMS.vBC := qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
                 else
                   ICMS.vBC := qryDadosProduto.FieldByName('PFINAL').AsCurrency;
@@ -3511,7 +3511,7 @@ begin
                   ICMS.pRedBC := (100.0 - qryEntradaDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency); // qryEntradaDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency;
 
 
-                if (ICMS.pRedBC > 0) then
+                if (ICMS.pRedBC > 0) or (qryEntradaDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency > 0) then
                   ICMS.vBC := qryEntradaDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
                 else
                   ICMS.vBC := qryEntradaDadosProduto.FieldByName('PFINAL').AsCurrency;
@@ -5424,7 +5424,7 @@ begin
                   ICMS.pRedBC := (100.0 - qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency); // qryDadosProduto.FieldByName('PERCENTUAL_REDUCAO_BC').AsCurrency;
 
 
-                if (ICMS.pRedBC > 0) then
+                if (ICMS.pRedBC > 0) or (qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency > 0) then
                   ICMS.vBC := qryDadosProduto.FieldByName('VALOR_REDUCAO_BC').AsCurrency
                 else
                   ICMS.vBC := qryDadosProduto.FieldByName('PFINAL').AsCurrency;

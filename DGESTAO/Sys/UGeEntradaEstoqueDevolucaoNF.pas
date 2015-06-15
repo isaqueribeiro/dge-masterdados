@@ -184,12 +184,23 @@ var
   iModelo   : Integer;
   fDestinatario : TDestinatarioNF;
 begin
-  sEmpresa := cdsCompraCODEMP.AsString;
+  iAno      := 0;
+  iControle := 0;
+  sEmpresa  := cdsCompraCODEMP.AsString;
   if ( cdsCompra.State = dsEdit ) then
-    if SelecionarNFe(Self, sEmpresa, sSerie, sChave, iNumero, iModelo, dEmissao, fDestinatario) then
+    if SelecionarNFe(Self, sEmpresa, sSerie, sChave, iNumero, iModelo, dEmissao, fDestinatario, iAno, iControle) then
     begin
-      cdsCompraDNFE_ENTRADA_ANO.AsInteger := iAno;
-      cdsCompraDNFE_ENTRADA_COD.AsInteger := iControle;
+      if (fDestinatario.Tipo = dtFornecedor) then
+      begin
+        cdsCompraDNFE_ENTRADA_ANO.AsInteger := iAno;
+        cdsCompraDNFE_ENTRADA_COD.AsInteger := iControle;
+      end
+      else
+      begin
+        cdsCompraDNFE_ENTRADA_ANO.Clear;
+        cdsCompraDNFE_ENTRADA_COD.Clear;
+      end;
+      
       cdsCompraDNFE_COMPETENCIA.AsString  := FormatDateTime('yymm', dEmissao);
       cdsCompraDNFE_SERIE.AsString    := sSerie;
       cdsCompraDNFE_NUMERO.AsInteger  := iNumero;

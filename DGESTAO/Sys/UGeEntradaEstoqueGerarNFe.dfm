@@ -877,6 +877,7 @@ inherited frmGeEntradaEstoqueGerarNFe: TfrmGeEntradaEstoqueGerarNFe
       '  , c.hremiss'
       '  , c.nfserie'
       '  , c.nf'
+      '  , c.nfcfop'
       '  , c.status'
       '  , c.icmsbase'
       '  , c.icmsvalor'
@@ -960,6 +961,7 @@ inherited frmGeEntradaEstoqueGerarNFe: TfrmGeEntradaEstoqueGerarNFe
       '  , c.hremiss'
       '  , c.nfserie'
       '  , c.nf'
+      '  , c.nfcfop'
       '  , c.status'
       '  , c.icmsbase'
       '  , c.icmsvalor'
@@ -1034,6 +1036,11 @@ inherited frmGeEntradaEstoqueGerarNFe: TfrmGeEntradaEstoqueGerarNFe
       FieldName = 'NFSERIE'
       Origin = 'TBCOMPRAS.NFSERIE'
       Size = 4
+    end
+    object cdsCompraNFCFOP: TIntegerField
+      FieldName = 'NFCFOP'
+      Origin = '"TBCOMPRAS"."NFCFOP"'
+      ProviderFlags = [pfInUpdate]
     end
     object cdsCompraSTATUS: TSmallintField
       FieldName = 'STATUS'

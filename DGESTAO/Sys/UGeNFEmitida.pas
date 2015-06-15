@@ -69,7 +69,8 @@ var
   function SelecionarNFe(const AOnwer : TComponent; var pEmpresa, pSerie, pChave : String;
     var pNumero, pModelo : Integer;
     var pDataEmissao : TDateTime;
-    var pDestinatario : TDestinatarioNF) : Boolean;
+    var pDestinatario : TDestinatarioNF;
+    var MovimentoAno, MovimentoCodigo : Integer) : Boolean;
 
 implementation
 
@@ -80,7 +81,8 @@ uses UDMBusiness, UConstantesDGE;
 function SelecionarNFe(const AOnwer : TComponent; var pEmpresa, pSerie, pChave : String;
   var pNumero, pModelo : Integer;
   var pDataEmissao  : TDateTime;
-  var pDestinatario : TDestinatarioNF) : Boolean;
+  var pDestinatario : TDestinatarioNF;
+  var MovimentoAno, MovimentoCodigo : Integer) : Boolean;
 var
   AForm : TfrmGeNFEmitida;
   iCodigo    : Integer;
@@ -119,10 +121,18 @@ begin
       pDestinatario.UF          := AForm.IbDtstTabelaNFE_DESTINATARIO_UF.Value;
 
       if (AForm.IbDtstTabelaANOVENDA.AsInteger > 0) then
-        pDestinatario.Tipo := dtCliente
+      begin
+        pDestinatario.Tipo := dtCliente;
+        MovimentoAno       := AForm.IbDtstTabelaANOVENDA.Value;
+        MovimentoCodigo    := AForm.IbDtstTabelaNUMVENDA.Value;
+      end
       else
       if (AForm.IbDtstTabelaANOCOMPRA.AsInteger > 0) then
-        pDestinatario.Tipo := dtFornecedor
+      begin
+        pDestinatario.Tipo := dtFornecedor;
+        MovimentoAno       := AForm.IbDtstTabelaANOCOMPRA.Value;
+        MovimentoCodigo    := AForm.IbDtstTabelaNUMCOMPRA.Value;
+      end
       else
         pDestinatario.Tipo := dtNull;
     end;

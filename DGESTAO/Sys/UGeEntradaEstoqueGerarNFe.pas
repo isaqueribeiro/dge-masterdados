@@ -97,6 +97,7 @@ type
     cdsCompraVALOR_BASE_ICMS_NORMAL_SAIDA: TFloatField;
     cdsCompraVALOR_TOTAL_PIS: TFMTBCDField;
     cdsCompraVALOR_TOTAL_COFINS: TFMTBCDField;
+    cdsCompraNFCFOP: TIntegerField;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnCalcularClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
@@ -147,8 +148,17 @@ begin
       begin
         cdsCompra.Edit;
 
-        cdsCompraICMSBASE.Value   := cdsCompraVALOR_BASE_ICMS_NORMAL_ENTRADA.AsCurrency;
-        cdsCompraICMSVALOR.Value  := cdsCompraVALOR_TOTAL_ICMS_NORMAL_ENTRADA.AsCurrency;
+        if GetCfopDevolucao( cdsCompraNFCFOP.AsInteger ) then
+        begin
+          cdsCompraICMSBASE.Value   := cdsCompraVALOR_BASE_ICMS_NORMAL_SAIDA.AsCurrency;
+          cdsCompraICMSVALOR.Value  := cdsCompraVALOR_TOTAL_ICMS_NORMAL_SAIDA.AsCurrency;
+        end
+        else
+        begin
+          cdsCompraICMSBASE.Value   := cdsCompraVALOR_BASE_ICMS_NORMAL_ENTRADA.AsCurrency;
+          cdsCompraICMSVALOR.Value  := cdsCompraVALOR_TOTAL_ICMS_NORMAL_ENTRADA.AsCurrency;
+        end;
+
         cdsCompraICMSSUBSTBASE.Value  := 0;
         cdsCompraICMSSUBSTVALOR.Value := 0;
 
