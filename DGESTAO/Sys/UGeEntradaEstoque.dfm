@@ -4291,6 +4291,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  , p.Codorigem'
       '  , p.Codtributacao'
       '  , p.Cst'
+      '  , p.Csosn'
       '  , p.Codcfop'
       '  , p.Codbarra_ean'
       '  , p.Codunidade'
@@ -4397,6 +4398,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  , i.Unid_cod'
       '  , i.Ncm_sh'
       '  , i.Cst'
+      '  , i.Csosn'
       '  , i.Cfop'
       '  , i.aliquota'
       '  , i.aliquota_csosn'
@@ -4552,6 +4554,12 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       Origin = 'TBCOMPRASITENS.CST'
       Size = 3
     end
+    object cdsTabelaItensCSOSN: TIBStringField
+      FieldName = 'CSOSN'
+      Origin = '"TBCOMPRASITENS"."CSOSN"'
+      ProviderFlags = [pfInUpdate]
+      Size = 3
+    end
     object cdsTabelaItensCFOP: TIntegerField
       FieldName = 'CFOP'
       Origin = 'TBCOMPRASITENS.CFOP'
@@ -4648,6 +4656,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  UNID_COD,'
       '  NCM_SH,'
       '  CST,'
+      '  CSOSN,'
       '  CFOP,'
       '  ALIQUOTA,'
       '  ALIQUOTA_CSOSN,'
@@ -4675,6 +4684,7 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
       '  CODEMP = :CODEMP,'
       '  CODFORN = :CODFORN,'
       '  CODPROD = :CODPROD,'
+      '  CSOSN = :CSOSN,'
       '  CST = :CST,'
       '  CUSTOMEDIO = :CUSTOMEDIO,'
       '  DTENT = :DTENT,'
@@ -4705,25 +4715,25 @@ inherited frmGeEntradaEstoque: TfrmGeEntradaEstoque
         '  (ALIQUOTA, ALIQUOTA_COFINS, ALIQUOTA_CSOSN, ALIQUOTA_PIS, ANO,' +
         ' CFOP, '
       
-        '   CODCONTROL, CODEMP, CODFORN, CODPROD, CST, CUSTOMEDIO, DTENT,' +
-        ' NCM_SH, '
+        '   CODCONTROL, CODEMP, CODFORN, CODPROD, CSOSN, CST, CUSTOMEDIO,' +
+        ' DTENT, '
       
-        '   NF, PERC_PARTICIPACAO, PERCENTUAL_REDUCAO_BC, PRECOUNIT, QTDE' +
-        ', QTDEANTES, '
+        '   NCM_SH, NF, PERC_PARTICIPACAO, PERCENTUAL_REDUCAO_BC, PRECOUN' +
+        'IT, QTDE, '
       
-        '   QTDEFINAL, SEQ, TOTAL_BRUTO, TOTAL_LIQUIDO, UNID_COD, VALOR_D' +
-        'ESCONTO, '
+        '   QTDEANTES, QTDEFINAL, SEQ, TOTAL_BRUTO, TOTAL_LIQUIDO, UNID_C' +
+        'OD, VALOR_DESCONTO, '
       '   VALOR_FRETE, VALOR_IPI, VALOR_OUTROS)'
       'values'
       
         '  (:ALIQUOTA, :ALIQUOTA_COFINS, :ALIQUOTA_CSOSN, :ALIQUOTA_PIS, ' +
         ':ANO, :CFOP, '
       
-        '   :CODCONTROL, :CODEMP, :CODFORN, :CODPROD, :CST, :CUSTOMEDIO, ' +
-        ':DTENT, '
+        '   :CODCONTROL, :CODEMP, :CODFORN, :CODPROD, :CSOSN, :CST, :CUST' +
+        'OMEDIO, '
       
-        '   :NCM_SH, :NF, :PERC_PARTICIPACAO, :PERCENTUAL_REDUCAO_BC, :PR' +
-        'ECOUNIT, '
+        '   :DTENT, :NCM_SH, :NF, :PERC_PARTICIPACAO, :PERCENTUAL_REDUCAO' +
+        '_BC, :PRECOUNIT, '
       
         '   :QTDE, :QTDEANTES, :QTDEFINAL, :SEQ, :TOTAL_BRUTO, :TOTAL_LIQ' +
         'UIDO, :UNID_COD, '

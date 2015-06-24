@@ -499,4 +499,92 @@ begin
   end 
 end;
 
-/*------ SYSDBA 11/06/2015 09:50:13 --------*/
+/*------ SYSDBA 24/06/2015 02:25:13 --------*/
+
+
+ALTER TABLE TBCOMPRASITENS
+    ADD CSOSN DMN_VCHAR_03;
+
+alter table TBCOMPRASITENS
+alter ANO position 1;
+
+alter table TBCOMPRASITENS
+alter CODCONTROL position 2;
+
+alter table TBCOMPRASITENS
+alter CODEMP position 3;
+
+alter table TBCOMPRASITENS
+alter SEQ position 4;
+
+alter table TBCOMPRASITENS
+alter CODFORN position 5;
+
+alter table TBCOMPRASITENS
+alter CODPROD position 6;
+
+alter table TBCOMPRASITENS
+alter QTDE position 7;
+
+alter table TBCOMPRASITENS
+alter PRECOUNIT position 8;
+
+alter table TBCOMPRASITENS
+alter CUSTOMEDIO position 9;
+
+alter table TBCOMPRASITENS
+alter DTENT position 10;
+
+alter table TBCOMPRASITENS
+alter NF position 11;
+
+alter table TBCOMPRASITENS
+alter QTDEANTES position 12;
+
+alter table TBCOMPRASITENS
+alter QTDEFINAL position 13;
+
+alter table TBCOMPRASITENS
+alter PERC_PARTICIPACAO position 14;
+
+alter table TBCOMPRASITENS
+alter VALOR_FRETE position 15;
+
+alter table TBCOMPRASITENS
+alter VALOR_DESCONTO position 16;
+
+alter table TBCOMPRASITENS
+alter VALOR_OUTROS position 17;
+
+alter table TBCOMPRASITENS
+alter VALOR_IPI position 18;
+
+alter table TBCOMPRASITENS
+alter UNID_COD position 19;
+
+alter table TBCOMPRASITENS
+alter NCM_SH position 20;
+
+alter table TBCOMPRASITENS
+alter CST position 21;
+
+alter table TBCOMPRASITENS
+alter CSOSN position 22;
+
+alter table TBCOMPRASITENS
+alter CFOP position 23;
+
+alter table TBCOMPRASITENS
+alter ALIQUOTA position 24;
+
+alter table TBCOMPRASITENS
+alter ALIQUOTA_CSOSN position 25;
+
+alter table TBCOMPRASITENS
+alter ALIQUOTA_PIS position 26;
+
+alter table TBCOMPRASITENS
+alter ALIQUOTA_COFINS position 27;
+
+alter table TBCOMPRASITENS
+alter PERCENTUAL_REDUCAO_BC position 28;

@@ -346,6 +346,7 @@ type
     btbtnCancelarENT: TBitBtn;
     cdsTabelaItensTOTAL_BRUTO: TIBBCDField;
     cdsTabelaItensTOTAL_LIQUIDO: TIBBCDField;
+    cdsTabelaItensCSOSN: TIBStringField;
     procedure FormCreate(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
     procedure IbDtstTabelaNewRecord(DataSet: TDataSet);
@@ -863,6 +864,9 @@ begin
 
         if ( Trim(FieldByName('Cst').AsString) <> EmptyStr ) then
           cdsTabelaItensCST.AsString       := FieldByName('Cst').AsString;
+
+        if ( Trim(FieldByName('Csosn').AsString) <> EmptyStr ) then
+          cdsTabelaItensCSOSN.AsString     := FieldByName('Csosn').AsString;
 
         if ( (qryCFOP.FieldByName('Cfop_cst_padrao_entrada').AsString) <> EmptyStr ) then
           cdsTabelaItensCST.AsString := Trim(qryCFOP.FieldByName('Cfop_cst_padrao_entrada').AsString);
